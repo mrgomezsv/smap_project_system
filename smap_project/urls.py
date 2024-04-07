@@ -20,6 +20,6 @@ from t_app_product import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.helloworld),
-    path('singup/', views.helloworld, name='singup'),
+    path('', views.home, name='home'),
+    path('signup/', views.home, name='signup'),
 ]
