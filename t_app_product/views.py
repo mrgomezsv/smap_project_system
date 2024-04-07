@@ -45,13 +45,18 @@ def create_product(request):
         'form': ProductForm
         })
     else:
-        print(request.POST)
-        return render(request, 'create_product.html', {
-        'form': ProductForm
-        })
+        try:
+            form = ProductForm(request.POST)
+            new_product = form.save(commit=False)
+            new_product.user = request.user
+            new_product.save()
+            return redirect('product')
+        except ValueError:
+            return render(request, 'create_product.html', {
+            'form': ProductForm,
+            'error': 'Please provide valida data'
+            })
     
-    
-
 def signout(request):
     logout(request)
     return redirect('home')
