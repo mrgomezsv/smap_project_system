@@ -21,4 +21,5 @@ from t_app_product import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.helloworld),
+    path('singup/', views.helloworld, name='singup'),
 ]

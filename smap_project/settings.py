@@ -55,7 +55,7 @@ ROOT_URLCONF = 'smap_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 't_app_product' / 'templates'],  # Agregar esta línea
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
