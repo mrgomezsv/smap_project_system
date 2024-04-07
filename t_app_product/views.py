@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.db import IntegrityError
 
-
 def home(request):
     return render(request, 'home.html')
 
@@ -20,7 +19,7 @@ def signup(request):
                 )
                 user.save()
                 login(request, user)
-                return redirect('product')
+                return redirect('home')  # Redirigir a 'home' después del inicio de sesión
             except IntegrityError:
                 return render(
                     request,
