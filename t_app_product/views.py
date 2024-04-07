@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.db import IntegrityError
 
 def home(request):
@@ -36,3 +36,7 @@ def signup(request):
 
 def product(request):
     return render(request, 'product.html')
+
+def signout(request):
+    logout(request)
+    return redirect('home')
