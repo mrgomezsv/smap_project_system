@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
+from .forms import ProductForm
 
 def home(request):
     return render(request, 'home.html')
@@ -36,6 +37,20 @@ def signup(request):
 
 def product(request):
     return render(request, 'product.html')
+
+def create_product(request):
+    
+    if request.method == 'GET':
+        return render(request, 'create_product.html', {
+        'form': ProductForm
+        })
+    else:
+        print(request.POST)
+        return render(request, 'create_product.html', {
+        'form': ProductForm
+        })
+    
+    
 
 def signout(request):
     logout(request)
