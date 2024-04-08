@@ -8,7 +8,7 @@
     <form action="/product/create/" method="POST">
         {% csrf_token %}
 
-        {{form}}
+        {{form.as_p}}
 
         <button>
             Save

@@ -82,6 +82,13 @@ def product_detail(request, product_id):
         except ValueError:
             return render(request, 'product_detail.html', {'product': product, 'form': form, 'error': "Error updating product"})
 
+def delete_product(request, product_id):
+    # product = get_object_or_404(Product, pk=product_id, user=request.user) #para eliminar productos solo de ese usuario
+    product = get_object_or_404(Product, pk=product_id)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('product')
+
 def signout(request):
     logout(request)
     return redirect('home')

@@ -15,4 +15,12 @@
         </button>
     </form>
 
+    <form action="{% url 'delete_product' product.id %}" method="POST">
+        {% csrf_token %}
+
+        <button>
+            Delete
+        </button>
+    </form>
+
     {% endblock %}
