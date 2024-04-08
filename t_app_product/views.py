@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
@@ -63,7 +63,13 @@ def create_product(request):
             'form': ProductForm,
             'error': 'Please provide valida data'
             })
-    
+
+def product_detail(request, product_id):
+    print(product_id)
+    #product = Product.objects.get(pk=product_id)
+    product = get_object_or_404(Product, pk=product_id)
+    return render(request, 'product_detail.html', {'product': product})
+
 def signout(request):
     logout(request)
     return redirect('home')

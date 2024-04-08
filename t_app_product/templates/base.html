@@ -9,13 +9,16 @@
 
     <nav>
         <ul>
+            {% if user.is_authenticated %}
             <li>
                 <a href="/">Home</a>
             </li>
             <li>
                 <a href="/product">Product</a>
             </li>
-            {% if user.is_authenticated %}
+            <li>
+                <a href="/product/create/">Create Product</a>
+            </li>
             <li>
                 <a href="/logout">Logout</a>
             </li>

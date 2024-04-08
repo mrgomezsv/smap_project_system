@@ -26,4 +26,6 @@ urlpatterns = [
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
     path('product/create/', views.create_product, name='create_product'),
+    #path('product/<int:product_id>/', views.product_detail, name='product_detail'),
+    path('product/<int:product_id>/', views.product_detail, name='product_detail'),
 ]
