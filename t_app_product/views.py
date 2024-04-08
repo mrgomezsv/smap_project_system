@@ -65,10 +65,22 @@ def create_product(request):
             })
 
 def product_detail(request, product_id):
-    print(product_id)
-    #product = Product.objects.get(pk=product_id)
-    product = get_object_or_404(Product, pk=product_id)
-    return render(request, 'product_detail.html', {'product': product})
+    if request.method == 'GET':
+        print(product_id)
+        #product = Product.objects.get(pk=product_id)
+        product = get_object_or_404(Product, pk=product_id)
+        #product = get_object_or_404(Product, pk=product_id, user=request.user) #para buscar los productos solo de ese usuario
+        form = ProductForm(instance=product)
+        return render(request, 'product_detail.html', {'product': product, 'form': form})
+    else:
+        try:
+            product = get_object_or_404(Product, pk=product_id)
+            #product = get_object_or_404(Product, pk=product_id, user=request.user) #para buscar los productos solo de ese usuario
+            form = ProductForm(request.POST, instance=product)
+            form.save()
+            return redirect('product')
+        except ValueError:
+            return render(request, 'product_detail.html', {'product': product, 'form': form, 'error': "Error updating product"})
 
 def signout(request):
     logout(request)

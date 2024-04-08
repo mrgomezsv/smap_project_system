@@ -5,6 +5,7 @@
 
 <ul>
     {% for product in products %}
+        {% csrf_token %}
         <li>
             <a href="{% url 'product_detail' product.id %}">
                 <h1>
