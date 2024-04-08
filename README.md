@@ -22,3 +22,5 @@ Asegúrate de tener Python instalado en tu sistema. Puedes descargarlo desde pyt
     
     python manage.py runserver
 
+##### Video de referencia:
+    https://www.youtube.com/watch?v=e6PkGDH4wWA&t=5736s

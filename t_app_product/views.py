@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .forms import ProductForm
+from .models import Product
 
 def home(request):
     return render(request, 'home.html')
@@ -35,8 +36,14 @@ def signup(request):
                 {"form": UserCreationForm(), "error": "Passwords do not match"},
             )
 
+# Si quisiera filtrar que se muestren solo los productos creados correspondientes a cada usuario...!!!
+# def product(request):
+#     products = Product.objects.filter(user=request.user)
+#     return render(request, 'product.html', {'products': products})
+
 def product(request):
-    return render(request, 'product.html')
+    products = Product.objects.all()
+    return render(request, 'product.html', {'products': products})
 
 def create_product(request):
     
