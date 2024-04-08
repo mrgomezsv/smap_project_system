@@ -5,7 +5,9 @@ from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .forms import ProductForm
 from .models import Product
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def home(request):
     return render(request, 'home.html')
 
@@ -41,10 +43,12 @@ def signup(request):
 #     products = Product.objects.filter(user=request.user)
 #     return render(request, 'product.html', {'products': products})
 
+@login_required
 def product(request):
     products = Product.objects.all()
     return render(request, 'product.html', {'products': products})
 
+@login_required
 def create_product(request):
     
     if request.method == 'GET':
@@ -64,6 +68,7 @@ def create_product(request):
             'error': 'Please provide valida data'
             })
 
+@login_required
 def product_detail(request, product_id):
     if request.method == 'GET':
         print(product_id)
@@ -82,6 +87,7 @@ def product_detail(request, product_id):
         except ValueError:
             return render(request, 'product_detail.html', {'product': product, 'form': form, 'error': "Error updating product"})
 
+@login_required
 def delete_product(request, product_id):
     # product = get_object_or_404(Product, pk=product_id, user=request.user) #para eliminar productos solo de ese usuario
     product = get_object_or_404(Product, pk=product_id)
@@ -89,6 +95,7 @@ def delete_product(request, product_id):
         product.delete()
         return redirect('product')
 
+@login_required
 def signout(request):
     logout(request)
     return redirect('home')
