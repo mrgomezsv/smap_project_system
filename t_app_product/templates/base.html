@@ -46,18 +46,18 @@
                 <p class="section-title">Section</p>
                 <a href="#" id="opcion7">Ticket Master</a>
             </li>
-                
-                
-                
+
+
+
 {#            <li>#}
 {#                <p class="section-title">Section</p>#}
 {#                <a href="/logout">Logout</a>#}
 {#            </li>#}
-                
+
             <div class="user-profile">
                 <div class="profile-info" onclick="toggleDropdown()">
                     <img src="{% static 'assets/profile.jpeg' %}" alt="Imagen de Perfil">
-                    <span>Bienvenido {{ user.username }}</span> <!-- Utiliza la variable user de Django para mostrar el nombre de usuario -->
+                    <span>Bienvenido  &#9650 {{ user.username }}</span> <!-- Utiliza la variable user de Django para mostrar el nombre de usuario -->
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <ul>
@@ -66,9 +66,9 @@
                     </ul>
                 </div>
             </div>
-    
-                
-                
+
+
+
             {% else %}
             <li>
                 <p class="section-title">Section</p>

@@ -86,12 +86,12 @@
 
 .dropdown-menu {
     position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    padding: 12px 16px;
-    z-index: 1;
-    right: 0; /* Alinea el menú desplegable a la derecha */
-    top: 100%; /* Ajusta para que el menú desplegable aparezca hacia arriba */
+    bottom: calc(100% + 10px); /* Ajusta según sea necesario */
+    right: 0; /* Ajusta la posición a la derecha */
+    display: none; /* Por defecto, ocultar el menú */
+    background-color: #fff; /* Color de fondo */
+    border: 1px solid #ccc; /* Borde */
+    padding: 10px; /* Espaciado interno */
 }
+
 
