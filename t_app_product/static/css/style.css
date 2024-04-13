@@ -1,0 +1,38 @@
+.sidebar {
+    position: fixed; /* Fija la barra lateral en su posición */
+    top: 0; /* Alinea la barra lateral en la parte superior */
+    left: 0; /* Alinea la barra lateral en el lado izquierdo */
+    width: 250px; /* Ancho de la barra lateral */
+    height: 100%; /* Altura de la barra lateral para que ocupe todo el alto de la pantalla */
+    background-color: #42444e; /* Color de fondo */
+    color: #fff; /* Color del texto */
+    padding: 20px; /* Espacio interior */
+    box-sizing: border-box; /* Incluye el padding en el ancho y alto */
+    font-family: 'whitney ssm a', 'whitney ssm b', 'lucida grande', 'lucida sans', 'Verdana', 'Helvetica', 'Arial', sans-serif; /* Tipo de letra */
+}
+
+/* Estilos para los elementos de la barra lateral */
+.sidebar ul {
+    list-style-type: none; /* Elimina los puntos de la lista */
+    padding: 0; /* Elimina el espacio interno */
+}
+
+.sidebar ul li a {
+    color: #fff; /* Color del texto */
+    text-decoration: none; /* Elimina el subrayado de los enlaces */
+}
+
+.sidebar ul li a:hover {
+    color: #2db34a; /* Cambia el color del texto al pasar el mouse */
+}
+
+/* Estilos para el contenido a la derecha de la barra lateral */
+.content {
+    margin-left: 270px; /* Ajusta el margen izquierdo para dejar espacio para la barra lateral */
+    padding: 20px; /* Espacio interior */
+}
+
+.content-container {
+    margin-left: 270px; /* Ajusta el margen izquierdo para dejar espacio para la barra lateral */
+    padding: 20px; /* Espacio interior */
+}
