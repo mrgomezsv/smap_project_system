@@ -26,6 +26,19 @@
     color: #2db34a; /* Cambia el color del texto al pasar el mouse */
 }
 
+.sidebar ul .li-title {
+    text-align: center; /* Centra el contenido horizontalmente */
+    margin-bottom: 50px;
+}
+
+.sidebar ul .li-title p {
+    color: #9799a7; /* Cambia el color del texto de la etiqueta p a naranja */
+}
+
+.sidebar ul .li-title a {
+    color: #fff; /* Cambia el color del texto de la etiqueta a a azul */
+}
+
 /* Estilos para el contenido a la derecha de la barra lateral */
 .content {
     margin-left: 270px; /* Ajusta el margen izquierdo para dejar espacio para la barra lateral */
@@ -41,3 +54,44 @@
     color: #9799a7;
     margin: 0;
 }
+
+.sidebar ul .li-item {
+    margin-bottom: 35px; /* Agrega un margen inferior de 10px entre cada elemento li con la clase "li-item" */
+}
+
+.sidebar ul .li-title a {
+    font-size: 45px; /* Cambia el tamaño del texto del h1 a 24px */
+    font-weight: bold;
+}
+
+.user-profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profile-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    cursor: pointer; /* Añadir esta línea para mostrar el puntero del ratón */
+}
+
+.dropdown-menu {
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 1;
+    right: 0; /* Alinea el menú desplegable a la derecha */
+    top: 100%; /* Ajusta para que el menú desplegable aparezca hacia arriba */
+}
+
