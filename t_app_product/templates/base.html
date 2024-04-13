@@ -14,22 +14,51 @@
         <ul>
             {% if user.is_authenticated %}
             <li>
-                <a href="/">Home</a>
+                <p>Sistema de Manejo de Aplicaciones Móviles</p>
+                <a href="/">SMAP</a>
             </li>
             <li>
+                <p class="section-title">Section</p>
                 <a href="/product">Product</a>
             </li>
             <li>
+                <p class="section-title">Section</p>
                 <a href="/product/create/">Create Product</a>
             </li>
             <li>
+                <p class="section-title">Section</p>
+                <a href="#" id="opcion2">Envio de Notificaciones Push</a>
+            </li>
+            <li>
+                <p class="section-title">Section</p>
+                <a href="#" id="opcion4">Servicios</a>
+            </li>
+            <li>
+                <p class="section-title">Section</p>
+                <a href="#" id="opcion5">Descargo de Responsabilidad</a>
+            </li>
+            <li>
+                <p class="section-title">Section</p>
+                <a href="#" id="opcion6">Anticipos</a>
+            </li>
+            <li>
+                <p class="section-title">Section</p>
+                <a href="#" id="opcion7">Ticket Master</a>
+            </li>
+                
+                
+                
+            <li>
+                <p class="section-title">Section</p>
                 <a href="/logout">Logout</a>
             </li>
             {% else %}
             <li>
+                <p class="section-title">Section</p>
                 <a href="/signup">Signup</a>
             </li>
             <li>
+                <p class="section-title">Section</p>
                 <a href="/signin">Signin</a>
             </li>
             {% endif %}
