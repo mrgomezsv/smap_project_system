@@ -1,8 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1>Productos</h1>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <h1 class="navbar-brand" href="#">Productos</h1>
+        <div class="d-flex ml-auto">
+            <a id="crearProductoBtn" class="btn btn-primary">Crear Producto</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Productos -->
+<div class="container mt-5"> <!-- Agregar margen superior de 50px -->
     <div class="row">
         {% for product in products %}
         <div class="col-md-4 mb-4">
@@ -24,4 +34,25 @@
         {% endfor %}
     </div>
 </div>
+
+<!-- Estilos personalizados para el botón "Crear Producto" -->
+<style>
+    #crearProductoBtn {
+        color: #fff;
+        background-color: #007bff; /* Color azul */
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+        transition: transform 0.3s ease; /* Animación al pulsar */
+    }
+
+    #crearProductoBtn:hover {
+        transform: translateY(0); /* Evitar que el botón se mueva al pasar el mouse */
+    }
+
+    #crearProductoBtn:active {
+        transform: translateY(2px); /* Animación al pulsar */
+    }
+</style>
 {% endblock %}
