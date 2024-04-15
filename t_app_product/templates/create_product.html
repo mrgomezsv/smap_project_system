@@ -12,17 +12,26 @@
 
     <form id="createProductForm" action="/product/create/" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="form-group">
-            <label for="image" class="d-block text-center mb-2">Image:</label>
-            <input type="file" id="imageInput" name="image" accept="image/*" class="form-control-file mx-auto" style="width: fit-content;" onchange="previewImage(event)">
-            <img id="imagePreview" src="#" alt="Product Image" class="img-thumbnail mx-auto mt-2" style="display: none; max-width: 300px;">
-        </div>
-        {{ form.as_p }}
+        <!-- Renderiza manualmente los campos del formulario, excepto el campo de subida de archivos -->
+        {% for field in form %}
+            {% if field.name != 'image' %}
+                <div class="form-group">
+                    {{ field.errors }}
+                    {{ field.label_tag }} {{ field }}
+                </div>
+            {% endif %}
+        {% endfor %}
         <div class="modal-footer mt-4">
             <a href="{% url 'product' %}" class="btn btn-secondary mr-2">Close</a>
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
     </form>
+    <!-- Añade manualmente el campo de subida de archivos -->
+    <div class="form-group">
+{#        <label for="image" class="d-block text-center mb-2">Image:</label>#}
+{#        <input type="file" id="imageInput" name="image" accept="image/*" class="form-control-file mx-auto" style="width: fit-content;" onchange="previewImage(event)">#}
+{#        <img id="imagePreview" src="#" alt="Product Image" class="img-thumbnail mx-auto mt-2" style="display: none; max-width: 300px;">#}
+    </div>
 </div>
 
 <script>
