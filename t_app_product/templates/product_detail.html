@@ -1,49 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{{ product.title }}</h1>
-
-    {% if error %}
-        <div class="alert alert-danger" role="alert">
-            {{ error }}
-        </div>
-    {% endif %}
-
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="image">Image:</label>
-            <div class="image-container">
-                {% if product.img %}
-                    <img src="{{ product.img.url }}" alt="Product Image">
-                {% else %}
-                    <p>No image available</p>
-                {% endif %}
+    <div class="card">
+        <div class="card-body">
+            <div class="grid text-center">
+                <div class="g-col-6">
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    {% if error %}
+                        <div class="alert alert-danger mb-3" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <!-- Renderiza manualmente los campos del formulario, excepto el campo de subida de archivos -->
+                        {% for field in form %}
+                            {% if field.name != 'image' %}
+                                <div class="form-group">
+                                    {{ field.errors }}
+                                    {{ field.label_tag }} {{ field }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary mr-2">Update</button>
+                            <button type="submit" class="btn btn-danger" formaction="{% url 'delete_product' product.id %}">Delete</button>
+                        </div>
+                        <!-- Añade manualmente el campo de subida de archivos -->
+{#                        <div class="form-group">#}
+{#                            <label for="image">Image:</label>#}
+{#                            <input type="file" class="form-control-file" id="image" name="image">#}
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Update</button>
-    </form>
-
-    <form action="{% url 'delete_product' product.id %}" method="POST">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
-
-    <style>
-        .image-container {
-            width: 300px; /* Ajusta el ancho según tus necesidades */
-            height: auto; /* Esto asegura que la altura se ajuste automáticamente según el ancho */
-            border: 1px solid #ccc; /* Agrega un borde al contenedor */
-            padding: 10px; /* Espacio alrededor de la imagen */
-            margin-bottom: 20px; /* Espacio entre la imagen y otros elementos */
-        }
-
-        .image-container img {
-            max-width: 100%; /* La imagen se ajusta al ancho del contenedor */
-            height: auto; /* La altura se ajusta automáticamente para mantener la proporción de aspecto */
-            display: block; /* La imagen se muestra como un bloque para alinearla correctamente */
-            margin: 0 auto; /* Centra la imagen horizontalmente dentro del contenedor */
-        }
-    </style>
+    </div>
 {% endblock %}
