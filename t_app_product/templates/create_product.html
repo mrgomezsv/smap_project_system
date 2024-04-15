@@ -1,54 +1,58 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Create Product</h1>
+    <main class="container mt-5">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h1 class="text-center mb-4">Nuevo Producto</h1>
 
-    {% if error %}
-    <div class="alert alert-danger" role="alert">
-        {{ error }}
-    </div>
-    {% endif %}
+                        {% if error %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endif %}
 
-    <form id="createProductForm" action="/product/create/" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <!-- Renderiza manualmente los campos del formulario, excepto el campo de subida de archivos -->
-        {% for field in form %}
-            {% if field.name != 'image' %}
-                <div class="form-group">
-                    {{ field.errors }}
-                    {{ field.label_tag }} {{ field }}
+                        <form id="createProductForm" action="/product/create/" method="POST"
+                              enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <!-- Renderiza manualmente los campos del formulario, excepto el campo de subida de archivos -->
+                            {% for field in form %}
+                                {% if field.name != 'image' %}
+                                    <div class="form-group">
+                                        {{ field.errors }}
+                                        {{ field.label_tag }} {{ field }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            <div class="modal-footer mt-4">
+                                <a href="{% url 'product' %}" class="btn btn-secondary mr-2">Close</a>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            {% endif %}
-        {% endfor %}
-        <div class="modal-footer mt-4">
-            <a href="{% url 'product' %}" class="btn btn-secondary mr-2">Close</a>
-            <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+
         </div>
-    </form>
-    <!-- Añade manualmente el campo de subida de archivos -->
-    <div class="form-group">
-{#        <label for="image" class="d-block text-center mb-2">Image:</label>#}
-{#        <input type="file" id="imageInput" name="image" accept="image/*" class="form-control-file mx-auto" style="width: fit-content;" onchange="previewImage(event)">#}
-{#        <img id="imagePreview" src="#" alt="Product Image" class="img-thumbnail mx-auto mt-2" style="display: none; max-width: 300px;">#}
-    </div>
-</div>
+    </main>
 
-<script>
-function previewImage(event) {
-    var imageInput = event.target;
-    var imagePreview = document.getElementById('imagePreview');
+    <script>
+        function previewImage(event) {
+            var imageInput = event.target;
+            var imagePreview = document.getElementById('imagePreview');
 
-    if (imageInput.files && imageInput.files[0]) {
-        var reader = new FileReader();
+            if (imageInput.files && imageInput.files[0]) {
+                var reader = new FileReader();
 
-        reader.onload = function (e) {
-            imagePreview.src = e.target.result;
-            imagePreview.style.display = 'block';
-        };
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
 
-        reader.readAsDataURL(imageInput.files[0]);
-    }
-}
-</script>
+                reader.readAsDataURL(imageInput.files[0]);
+            }
+        }
+    </script>
 {% endblock %}
