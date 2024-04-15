@@ -16,6 +16,9 @@
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <!-- Renderiza manualmente los campos del formulario, excepto el campo de subida de archivos -->
+                        <div class="image-container">
+                            <img src="{{ product.img.url }}" alt="Product Image" class="img-fluid">
+                        </div>
                         {% for field in form %}
                             {% if field.name != 'image' %}
                                 <div class="form-group">
