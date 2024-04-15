@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
@@ -68,8 +70,15 @@ def product_detail(request, product_id):
     else:
         try:
             product = get_object_or_404(Product, pk=product_id, user=request.user)
+            old_image_path = product.img.path  # Actualiza para usar el campo 'img'
             form = ProductForm(request.POST, request.FILES, instance=product)
             form.save()
+
+            # Elimina la imagen antigua del directorio de destino si se actualizó la imagen
+            if 'img' in request.FILES:  # Actualiza para usar el campo 'img'
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+
             return redirect('product')
         except ValueError:
             return render(request, 'product_detail.html', {'product': product, 'form': form, 'error': "Error updating product"})
@@ -78,8 +87,17 @@ def product_detail(request, product_id):
 def delete_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id, user=request.user)
     if request.method == 'POST':
+        # Guarda la ruta de la imagen antes de eliminar el producto
+        image_path = product.img.path  # Actualiza para usar el campo 'img'
+
         product.delete()
+
+        # Elimina la imagen del directorio de destino
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
         return redirect('product')
+
 
 @login_required
 def signout(request):
