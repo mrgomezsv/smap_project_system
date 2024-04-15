@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{#{% extends 'base.html' %}#}
 
 {% block content %}
 <h1>Signin</h1>
@@ -11,6 +11,9 @@
     <button>
         Signin
     </button>
+    <a href="{% url 'signup' %}">
+        Signup
+    </a>
 </form>
 
 {% endblock %}
