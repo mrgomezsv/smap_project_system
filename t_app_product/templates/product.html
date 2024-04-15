@@ -14,16 +14,21 @@
     <!-- Productos -->
     <style>
         .image-container {
-            width: 100%; /* Ajusta el ancho al 100% del contenedor */
-            height: auto; /* Esto asegura que la altura se ajuste automáticamente según el ancho */
-            overflow: hidden; /* Oculta cualquier parte de la imagen que se desborde del contenedor */
+            width: 100%;
+            height: 300px;
+            overflow: hidden; /* Asegura que la imagen no se desborde del contenedor */
+            border-radius: 56px; /* Aplica esquinas redondeadas al contenedor */
         }
 
         .image-container img {
-            width: 100%; /* La imagen se ajusta al 100% del contenedor */
-            height: auto; /* La altura se ajusta automáticamente para mantener la proporción de aspecto */
-            display: block; /* La imagen se muestra como un bloque para alinearla correctamente */
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 56px; /* Aplica esquinas redondeadas a la imagen */
         }
+
+
     </style>
 
     <div class="container mt-5">
@@ -40,7 +45,8 @@
                             <p class="card-text">Precio: {{ product.price }}</p>
                             <p class="card-text">Categoría: {{ product.category }}</p>
                             <p class="card-text">Usuario: {{ product.user.username }}</p>
-                            <a href="{% url 'product_detail' product.id %}" class="btn btn-primary mt-auto">Ver Detalles</a>
+                            <a href="{% url 'product_detail' product.id %}" class="btn btn-primary mt-auto">Ver
+                                Detalles</a>
                         </div>
                     </div>
                 </div>
@@ -49,6 +55,6 @@
                     <div class="row">
                 {% endif %}
             {% endfor %}
-        </div>
+            </div>
     </div>
 {% endblock %}
