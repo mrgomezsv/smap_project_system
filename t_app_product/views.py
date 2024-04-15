@@ -86,16 +86,24 @@ def signout(request):
     logout(request)
     return redirect('home')
 
+
 def signin(request):
     if request.method == 'GET':
-        return render (request, 'signin.html', {'form': AuthenticationForm()})
+        return render(request, 'signin.html', {'form': AuthenticationForm()})
     else:
-        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
-        if user is None:
-            return render (request, 'signin.html', {
-                'form': AuthenticationForm(),
-                'error': 'Username or password is incorrect'
-            })
+        username = request.POST['username']
+        password = request.POST['password']
+
+        # Verificar si el usuario y la contraseña coinciden con los valores específicos
+        if username == 'wletona' and password == 'Karin2100':
+            return redirect('signup')  # Redirigir a signup.html si las credenciales son correctas
         else:
-            login(request, user)
-            return redirect('product')
+            # Autenticar al usuario normalmente si las credenciales no son las específicas
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect(
+                    'product')  # Redirigir a la página de producto si el usuario es autenticado correctamente
+            else:
+                error_message = 'Username or password is incorrect'
+                return render(request, 'signin.html', {'form': AuthenticationForm(), 'error': error_message})
