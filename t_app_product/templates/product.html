@@ -1,37 +1,54 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-        <h1 class="navbar-brand" href="#">Productos</h1>
-        <div class="d-flex ml-auto">
-            <a id="crearProductoBtn" href="{% url 'create_product' %}" class="btn btn-primary">Crear Producto</a>
-        </div>
-    </div>
-</nav>
-
-<!-- Productos -->
-<div class="container mt-5">
-    <div class="row">
-        {% for product in products %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{{ product.title }}</h5>
-                    <p class="card-text">{{ product.description }}</p>
-                    <p class="card-text">Precio: {{ product.price }}</p>
-                    <p class="card-text">Categoría: {{ product.category }}</p>
-                    <p class="card-text">Usuario: {{ product.user.username }}</p>
-                    <a href="{% url 'product_detail' product.id %}" class="btn btn-primary mt-auto">Ver Detalles</a>
-                </div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <h1 class="navbar-brand" href="#">Productos</h1>
+            <div class="d-flex ml-auto">
+                <a id="crearProductoBtn" href="{% url 'create_product' %}" class="btn btn-primary">Crear Producto</a>
             </div>
         </div>
-        {% if forloop.counter|divisibleby:3 and not forloop.last %}
+    </nav>
+
+    <!-- Productos -->
+    <style>
+        .image-container {
+            width: 100%; /* Ajusta el ancho al 100% del contenedor */
+            height: auto; /* Esto asegura que la altura se ajuste automáticamente según el ancho */
+            overflow: hidden; /* Oculta cualquier parte de la imagen que se desborde del contenedor */
+        }
+
+        .image-container img {
+            width: 100%; /* La imagen se ajusta al 100% del contenedor */
+            height: auto; /* La altura se ajusta automáticamente para mantener la proporción de aspecto */
+            display: block; /* La imagen se muestra como un bloque para alinearla correctamente */
+        }
+    </style>
+
+    <div class="container mt-5">
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <div class="image-container">
+                                <img src="{{ product.img.url }}" alt="Product Image">
+                            </div>
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <p class="card-text">{{ product.description }}</p>
+                            <p class="card-text">Precio: {{ product.price }}</p>
+                            <p class="card-text">Categoría: {{ product.category }}</p>
+                            <p class="card-text">Usuario: {{ product.user.username }}</p>
+                            <a href="{% url 'product_detail' product.id %}" class="btn btn-primary mt-auto">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+                {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                    </div>
+                    <div class="row">
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
-    <div class="row">
-        {% endif %}
-        {% endfor %}
-    </div>
-</div>
 {% endblock %}
