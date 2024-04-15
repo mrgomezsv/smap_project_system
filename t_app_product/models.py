@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Product(models.Model):
+    img = models.ImageField(upload_to='product_images/', default='default_product_image.jpg')  # Añade un valor predeterminado
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -13,4 +14,3 @@ class Product(models.Model):
     
     def __str__(self):
         return self.title + ' - by ' +self.user.username
-    

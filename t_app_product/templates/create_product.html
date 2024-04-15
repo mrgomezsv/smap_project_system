@@ -1,38 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1>Create Product</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Create Product</h1>
 
-    {{ error }}
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
 
-    <form id="createProductForm" action="/product/create/" method="POST">
+    <form id="createProductForm" action="/product/create/" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-
         <div class="form-group">
-            <label for="title">Title:</label>
-            <input type="text" class="form-control" id="title" name="title" placeholder="Enter title">
+            <label for="image" class="d-block text-center mb-2">Image:</label>
+            <input type="file" id="imageInput" name="image" accept="image/*" class="form-control-file mx-auto" style="width: fit-content;" onchange="previewImage(event)">
+            <img id="imagePreview" src="#" alt="Product Image" class="img-thumbnail mx-auto mt-2" style="display: none; max-width: 300px;">
         </div>
-
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter description"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="price">Price:</label>
-            <input type="text" class="form-control" id="price" name="price" placeholder="Enter price">
-        </div>
-
-        <div class="form-group">
-            <label for="category">Category:</label>
-            <input type="text" class="form-control" id="category" name="category" placeholder="Enter category">
-        </div>
-
-        <div class="modal-footer">
-            <a href="{% url 'product' %}" class="btn btn-secondary">Close</a>
+        {{ form.as_p }}
+        <div class="modal-footer mt-4">
+            <a href="{% url 'product' %}" class="btn btn-secondary mr-2">Close</a>
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
     </form>
 </div>
+
+<script>
+function previewImage(event) {
+    var imageInput = event.target;
+    var imagePreview = document.getElementById('imagePreview');
+
+    if (imageInput.files && imageInput.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block';
+        };
+
+        reader.readAsDataURL(imageInput.files[0]);
+    }
+}
+</script>
 {% endblock %}

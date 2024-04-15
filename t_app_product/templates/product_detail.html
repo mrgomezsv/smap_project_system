@@ -1,26 +1,49 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <h1>{{ product.title }}</h1>
 
-    <h1>{{product.title}}</h1>
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
 
-    {{error}}
-
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        
-        {{form.as_p}}
-        <button>
-            Update
-        </button>
+        <div class="form-group">
+            <label for="image">Image:</label>
+            <div class="image-container">
+                {% if product.img %}
+                    <img src="{{ product.img.url }}" alt="Product Image">
+                {% else %}
+                    <p>No image available</p>
+                {% endif %}
+            </div>
+        </div>
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Update</button>
     </form>
 
     <form action="{% url 'delete_product' product.id %}" method="POST">
         {% csrf_token %}
-
-        <button>
-            Delete
-        </button>
+        <button type="submit" class="btn btn-danger">Delete</button>
     </form>
 
-    {% endblock %}
+    <style>
+        .image-container {
+            width: 300px; /* Ajusta el ancho según tus necesidades */
+            height: auto; /* Esto asegura que la altura se ajuste automáticamente según el ancho */
+            border: 1px solid #ccc; /* Agrega un borde al contenedor */
+            padding: 10px; /* Espacio alrededor de la imagen */
+            margin-bottom: 20px; /* Espacio entre la imagen y otros elementos */
+        }
+
+        .image-container img {
+            max-width: 100%; /* La imagen se ajusta al ancho del contenedor */
+            height: auto; /* La altura se ajusta automáticamente para mantener la proporción de aspecto */
+            display: block; /* La imagen se muestra como un bloque para alinearla correctamente */
+            margin: 0 auto; /* Centra la imagen horizontalmente dentro del contenedor */
+        }
+    </style>
+{% endblock %}
