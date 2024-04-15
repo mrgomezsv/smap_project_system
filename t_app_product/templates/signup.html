@@ -5,8 +5,6 @@
 
 {% block content %}
 
-
-
     <main class="container">
         <div class="row">
             <div class="col-md-4 offset-md-4">
@@ -16,22 +14,25 @@
 
                     {{ error }}
                     {% csrf_token %}
-                    
+
                     <div class="mb-3">
                         <label for="username">Username:</label>
-                        <input type="text" name="username" class="form-control" id="username" placeholder="Escribe tu Usuario">
+                        <input type="text" name="username" class="form-control" id="username"
+                               placeholder="Escribe tu Usuario">
                     </div>
 
                     <div class="mb-3">
                         <label for="password1">Password:</label>
-                        <input type="password" name="password1" class="form-control" id="password1" placeholder="Escribe tu Password">
+                        <input type="password" name="password1" class="form-control" id="password1"
+                               placeholder="Escribe tu Password">
                     </div>
 
                     <div class="mb-3">
                         <label for="password2">Confirma tu Password:</label>
-                        <input type="password" name="password2" class="form-control" id="password2" placeholder="Repite tu Password">
+                        <input type="password" name="password2" class="form-control" id="password2"
+                               placeholder="Repite tu Password">
                     </div>
-                    
+
                     <button class="btn btn-primary">
                         Registrar
                     </button>

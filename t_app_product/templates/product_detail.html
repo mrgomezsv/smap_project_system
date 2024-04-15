@@ -5,7 +5,7 @@
         <div class="card-body">
             <div class="grid text-center">
                 <div class="g-col-6">
-                    <h5 class="card-title">{{ product.title }}</h5>
+                    <h5 class="card-title">Detalle de {{ product.title }}</h5>
                     {% if error %}
                         <div class="alert alert-danger mb-3" role="alert">
                             {{ error }}
@@ -24,12 +24,9 @@
                         {% endfor %}
                         <div class="mt-3">
                             <button type="submit" class="btn btn-primary mr-2">Update</button>
-                            <button type="submit" class="btn btn-danger" formaction="{% url 'delete_product' product.id %}">Delete</button>
-                        </div>
-                        <!-- Añade manualmente el campo de subida de archivos -->
-{#                        <div class="form-group">#}
-{#                            <label for="image">Image:</label>#}
-{#                            <input type="file" class="form-control-file" id="image" name="image">#}
+                            <button type="submit" class="btn btn-danger"
+                                    formaction="{% url 'delete_product' product.id %}">Delete
+                            </button>
                         </div>
                     </form>
                 </div>
