@@ -5,31 +5,39 @@
 {% block content %}
     <main class="container">
         <div class="row">
-            <div class="col-md-4 offset-md-4">
+            <div class="col-md-4 offset-md-4 mt-5">
+                <div class="mt-5">
+                    <div class="mt-5">
+                        <div class="mt-5">
+                            <h1 class="mt-5">Please sign in</h1>
 
-                <form action="/signin/" method="POST" class="card card-body mt-5">
+                            <form action="/signin/" method="POST" class="card card-body mt-5">
 
-                    <h1 class="text-center">Login</h1>
+                                <h1 class="text-center">Login</h1>
 
-                    {{ error }}
-                    {% csrf_token %}
+                                {{ error }}
+                                {% csrf_token %}
 
-                    <div class="mb-3">
-                        <label for="username">Username:</label>
-                        <input type="text" name="username" class="form-control" id="username"
-                               placeholder="Escribe tu Usuario">
+                                <div class="mb-3">
+                                    <label for="username">Username:</label>
+                                    <input type="text" name="username" class="form-control" id="username"
+                                           placeholder="Escribe tu Usuario">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="password">Password:</label>
+                                    <input type="password" name="password" class="form-control" id="password"
+                                           placeholder="Escribe tu Password">
+                                </div>
+
+                                <button class="btn btn-primary" type="submit">
+                                    Signin
+                                </button>
+                            </form>
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="password">Password:</label>
-                        <input type="password" name="password" class="form-control" id="password"
-                               placeholder="Escribe tu Password">
-                    </div>
-
-                    <button class="btn btn-primary" type="submit">
-                        Signin
-                    </button>
-                </form>
+                </div>
+                <p>© 2017–2024</p>
             </div>
         </div>
         </div>
