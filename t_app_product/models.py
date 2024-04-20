@@ -20,5 +20,11 @@ class Product(models.Model):
     important = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None)
 
+    img1 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
+    img2 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
+    img3 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
+    img4 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
+    img5 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
+
     def __str__(self):
         return self.title + ' - by ' + self.user.username
