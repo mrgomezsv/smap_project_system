@@ -65,6 +65,20 @@
     font-weight: bold;
 }
 
+.user-profile {
+ display: flex;
+    .dropdown-menu {
+        .dropdown-item {
+            background-color: #545560;
+        }
+        .dropdown-item:hover {
+            color: #2db34a;
+        }
+    }
+}
+
+
+
 .user-profile img {
     width: 40px;
     height: 40px;
@@ -83,16 +97,6 @@
     display: flex;
     align-items: center;
     cursor: pointer; /* Añadir esta línea para mostrar el puntero del ratón */
-}
-
-.dropdown-menu {
-    position: absolute;
-    bottom: calc(100% + 10px); /* Ajusta según sea necesario */
-    right: 0; /* Ajusta la posición a la derecha */
-    display: none; /* Por defecto, ocultar el menú */
-    background-color: #fff; /* Color de fondo */
-    border: 1px solid #ccc; /* Borde */
-    padding: 10px; /* Espaciado interno */
 }
 
 .sidebar::-webkit-scrollbar {
