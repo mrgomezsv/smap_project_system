@@ -6,10 +6,10 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ['title', 'description', 'price', 'category', 'important', 'img']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control'}), # Utilizo NumberInput para el campo DecimalField 'price'
-            'category': forms.TextInput(attrs={'class': 'form-control'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'required':True}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'required':True}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'required':True}), # Utilizo NumberInput para el campo DecimalField 'price'
+            'category': forms.Select(attrs={'class': 'form-control', 'required':True}),  # Utilizo el widget Select para el campo de categoría
             'important': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'img': forms.FileInput(attrs={'class': 'form-control-file'}), # Utilizo FileInput para el campo ImageField 'img'
         }
