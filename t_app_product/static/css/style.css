@@ -9,6 +9,7 @@
     padding: 20px; /* Espacio interior */
     box-sizing: border-box; /* Incluye el padding en el ancho y alto */
     font-family: 'whitney ssm a', 'whitney ssm b', 'lucida grande', 'lucida sans', 'Verdana', 'Helvetica', 'Arial', sans-serif; /* Tipo de letra */
+    overflow: auto;
 }
 
 /* Estilos para los elementos de la barra lateral */
@@ -92,5 +93,15 @@
     background-color: #fff; /* Color de fondo */
     border: 1px solid #ccc; /* Borde */
     padding: 10px; /* Espaciado interno */
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.sidebar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
