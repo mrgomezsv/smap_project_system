@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <main class="container mt-5">
     <div class="row">
         <div class="col-md-4 mb-4">
@@ -21,7 +20,7 @@
                         </div>
                         {% for field in form %}
                             {% if field.name != 'image' %}
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     {{ field.errors }}
                                     {{ field.label_tag }} {{ field }}
                                 </div>
@@ -29,9 +28,7 @@
                         {% endfor %}
                         <div class="mt-3">
                             <button type="submit" class="btn btn-primary mr-2">Update</button>
-                            <button type="submit" class="btn btn-danger"
-                                    formaction="{% url 'delete_product' product.id %}">Delete
-                            </button>
+                            <button type="submit" class="btn btn-danger" formaction="{% url 'delete_product' product.id %}">Delete</button>
                         </div>
                     </form>
                 </div>
@@ -39,5 +36,4 @@
         </div>
     </div>
 </main>
-
 {% endblock %}
