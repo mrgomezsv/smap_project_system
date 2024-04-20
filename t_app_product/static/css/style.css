@@ -77,8 +77,6 @@
     }
 }
 
-
-
 .user-profile img {
     width: 40px;
     height: 40px;
@@ -103,9 +101,17 @@
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
+/* Ocultar la barra de desplazamiento */
 .sidebar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+    /* Para navegadores basados en WebKit (Chrome, Safari) */
+    -webkit-scrollbar {
+        display: none;
+    }
+
+    /* Para Firefox */
+    scrollbar-width: none;
+
+    /* Para Internet Explorer y Edge */
+    -ms-overflow-style: none;
 }
 
