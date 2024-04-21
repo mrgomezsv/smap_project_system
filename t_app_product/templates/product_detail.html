@@ -22,17 +22,20 @@
                                 <div class="col-md-6">
                                     <!-- Columna para la imagen principal -->
                                     <div class="image-container mb-3">
-                                        <img src="{{ product.img.url }}" alt="Product Image" class="card-img-top"
-                                             style="width: 100%; border-radius: 20px;">
+                                        <img src="{{ product.img.url }}" alt="Product Image" class="card-img-top" style="width: 100%; border-radius: 20px;">
+                                    </div>
+                                    <!-- Campo para cambiar la imagen principal -->
+                                    <div class="form-group mb-3">
+                                        <label for="img_change" class="form-label visually-hidden">Change:</label>
+                                        {{ form.img }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <!-- Columna para los campos del formulario -->
                                     {% for field in form %}
-                                        {% if 'img1' not in field.name %}
+                                        {% if 'img1' not in field.name and 'img' not in field.name %}
                                             <div class="form-group mb-3">
-                                                <label for="{{ field.id_for_label }}"
-                                                       class="form-label">{{ field.label }}</label>
+                                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
                                                 {{ field }}
                                             </div>
                                         {% endif %}
@@ -44,11 +47,12 @@
                                 {% for field in form %}
                                     {% if 'img' in field.name %}
                                         <div class="col-3 mb-3">
-                                            <div class="image-container mb-3"
-                                                 style="height: 200px; overflow: hidden; border: 1px solid #ccc; border-radius: 20px;">
-                                                <img src="{{ field.value.url }}" alt=""
-                                                     class="card-img-top img-fluid"
-                                                     style="width: 100%; height: 100%; object-fit: cover;">
+                                            <div class="image-container mb-3" style="height: 200px; overflow: hidden; border: 1px solid #ccc; border-radius: 20px;">
+                                                <img src="{{ field.value.url }}" alt="" class="card-img-top img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+                                            </div>
+                                            <!-- Solo mostrar el campo para elegir archivo -->
+                                            <div class="form-group mb-3">
+                                                {{ field }}
                                             </div>
                                         </div>
                                     {% endif %}
@@ -56,9 +60,7 @@
                             </div>
                             <div class="mt-4">
                                 <button type="submit" class="btn btn-primary mr-2">Update</button>
-                                <button type="submit" class="btn btn-danger"
-                                        formaction="{% url 'delete_product' product.id %}">Delete
-                                </button>
+                                <button type="submit" class="btn btn-danger" formaction="{% url 'delete_product' product.id %}">Delete</button>
                             </div>
                         </form>
                     </div>
