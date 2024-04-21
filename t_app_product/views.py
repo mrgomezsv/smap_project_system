@@ -70,8 +70,11 @@ def product_detail(request, product_id):
         # Crea un formulario para el producto
         form = ProductForm(instance=product)
 
-        # Renderiza la página de detalle del producto con el formulario y el producto
-        return render(request, 'product_detail.html', {'product': product, 'form': form})
+        # Obtiene las imágenes adicionales del producto
+        additional_images = [getattr(product, f'img{i}') for i in range(1, 6)]
+
+        # Renderiza la página de detalle del producto con el formulario, el producto y las imágenes adicionales
+        return render(request, 'product_detail.html', {'product': product, 'form': form, 'additional_images': additional_images})
     else:
         try:
             # Obtiene el producto con el ID dado, si existe y pertenece al usuario actual
@@ -93,7 +96,6 @@ def product_detail(request, product_id):
             # Si ocurre algún error, muestra un mensaje de error en la página de detalle del producto
             return render(request, 'product_detail.html',
                           {'product': product, 'form': form, 'error': "Error updating product"})
-
 
 @login_required
 def delete_product(request, product_id):
