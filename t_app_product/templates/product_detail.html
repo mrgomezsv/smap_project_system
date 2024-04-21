@@ -65,7 +65,7 @@
         </div>
     </div>
     <!-- Agrega un contenedor para la vista previa de la imagen -->
-    <div id="previewImageContainer" style="position: absolute; display: none;">
+    <div id="previewImageContainer" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none; background-color: white; border: 1px solid #ccc; border-radius: 10px; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <img id="previewImage" src="" alt="Preview Image">
     </div>
 </main>
@@ -79,13 +79,6 @@
 
         // Establece la URL de la imagen de vista previa
         previewImage.src = img.src;
-
-        // Calcula la posición de la imagen original
-        var rect = img.getBoundingClientRect();
-
-        // Posiciona la vista previa sobre la imagen original
-        previewImageContainer.style.left = rect.left + 'px';
-        previewImageContainer.style.top = rect.top + 'px';
 
         // Muestra la vista previa
         previewImageContainer.style.display = 'block';
