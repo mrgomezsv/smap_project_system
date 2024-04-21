@@ -64,24 +64,36 @@ def create_product(request):
 @login_required
 def product_detail(request, product_id):
     if request.method == 'GET':
+        # Obtiene el producto con el ID dado, si existe y pertenece al usuario actual
         product = get_object_or_404(Product, pk=product_id, user=request.user)
+
+        # Crea un formulario para el producto
         form = ProductForm(instance=product)
+
+        # Renderiza la página de detalle del producto con el formulario y el producto
         return render(request, 'product_detail.html', {'product': product, 'form': form})
     else:
         try:
+            # Obtiene el producto con el ID dado, si existe y pertenece al usuario actual
             product = get_object_or_404(Product, pk=product_id, user=request.user)
-            old_image_path = product.img.path  # Actualiza para usar el campo 'img'
+
+            # Guarda los detalles del formulario en la base de datos
             form = ProductForm(request.POST, request.FILES, instance=product)
             form.save()
 
             # Elimina la imagen antigua del directorio de destino si se actualizó la imagen
-            if 'img' in request.FILES:  # Actualiza para usar el campo 'img'
+            old_image_path = product.img.path
+            if 'img' in request.FILES:
                 if os.path.exists(old_image_path):
                     os.remove(old_image_path)
 
+            # Redirige al usuario a la página de productos después de guardar los cambios
             return redirect('product')
         except ValueError:
-            return render(request, 'product_detail.html', {'product': product, 'form': form, 'error': "Error updating product"})
+            # Si ocurre algún error, muestra un mensaje de error en la página de detalle del producto
+            return render(request, 'product_detail.html',
+                          {'product': product, 'form': form, 'error': "Error updating product"})
+
 
 @login_required
 def delete_product(request, product_id):
