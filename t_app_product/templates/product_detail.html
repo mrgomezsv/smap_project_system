@@ -22,7 +22,8 @@
                             <div class="col-md-6">
                                 <!-- Columna para la imagen principal -->
                                 <div class="image-container mb-3">
-                                    <img src="{{ product.img.url }}" alt="Product Image" class="card-img-top" style="width: 100%; border-radius: 20px;">
+                                    <!-- Agrega un ID a la imagen principal -->
+                                    <img id="mainImage" src="{{ product.img.url }}" alt="Product Image" class="card-img-top" style="width: 100%; border-radius: 20px;">
                                 </div>
                                 <!-- Campo para cambiar la imagen principal -->
                                 <div class="form-group mb-3">
@@ -47,7 +48,8 @@
                             {% for image in additional_images %}
                                 <div class="col-3 mb-3">
                                     <div class="image-container mb-3" style="height: 200px; overflow: hidden; border: 1px solid #ccc; border-radius: 20px;">
-                                        <img src="{{ image.url }}" alt="" class="card-img-top img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+                                        <!-- Agrega un evento onclick para llamar a la función showPreviewImage -->
+                                        <img src="{{ image.url }}" alt="" class="card-img-top img-fluid" style="width: 100%; height: 100%; object-fit: cover;" onclick="showPreviewImage(this)">
                                     </div>
                                     <!-- No necesitas mostrar el campo para elegir archivo -->
                                 </div>
@@ -62,5 +64,31 @@
             </div>
         </div>
     </div>
+    <!-- Agrega un contenedor para la vista previa de la imagen -->
+    <div id="previewImageContainer" style="position: absolute; display: none;">
+        <img id="previewImage" src="" alt="Preview Image">
+    </div>
 </main>
+
+<!-- Agrega el script JavaScript -->
+<script>
+    // Función para mostrar la vista previa de la imagen sobre la imagen original
+    function showPreviewImage(img) {
+        var previewImage = document.getElementById('previewImage');
+        var previewImageContainer = document.getElementById('previewImageContainer');
+
+        // Establece la URL de la imagen de vista previa
+        previewImage.src = img.src;
+
+        // Calcula la posición de la imagen original
+        var rect = img.getBoundingClientRect();
+
+        // Posiciona la vista previa sobre la imagen original
+        previewImageContainer.style.left = rect.left + 'px';
+        previewImageContainer.style.top = rect.top + 'px';
+
+        // Muestra la vista previa
+        previewImageContainer.style.display = 'block';
+    }
+</script>
 {% endblock %}
