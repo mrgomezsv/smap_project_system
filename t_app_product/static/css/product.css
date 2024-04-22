@@ -1,0 +1,37 @@
+/*Productos*/
+
+.card {
+    max-width: 18rem; /* Tamaño máximo de la tarjeta */
+    margin-bottom: 20px; /* Espacio entre tarjetas */
+}
+
+.card-body {
+    padding: 1rem; /* Relleno dentro de la tarjeta */
+}
+
+.image-container {
+    width: 100%;
+    height: 200px; /* Tamaño de la imagen */
+    overflow: hidden;
+    border-radius: 20px;
+    margin-bottom: 10px; /* Espacio entre la imagen y el texto */
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 20px;
+    border: 1px solid #ccc; /* Borde sólido de 1px */
+}
+
+.card-title {
+    font-size: 1.2rem; /* Tamaño del título */
+    margin-bottom: 5px; /* Espacio entre el título y el texto */
+}
+
+.card-text {
+    font-size: 1rem; /* Tamaño del texto */
+    margin-bottom: 3px; /* Espacio entre cada línea de texto */
+}
