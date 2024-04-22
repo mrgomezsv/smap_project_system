@@ -66,11 +66,13 @@
 }
 
 .user-profile {
- display: flex;
+    display: flex;
+
     .dropdown-menu {
         .dropdown-item {
             background-color: #545560;
         }
+
         .dropdown-item:hover {
             color: #2db34a;
         }
@@ -98,12 +100,13 @@
 }
 
 .sidebar::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 /* Ocultar la barra de desplazamiento */
 .sidebar {
     /* Para navegadores basados en WebKit (Chrome, Safari) */
+
     -webkit-scrollbar {
         display: none;
     }
@@ -114,4 +117,3 @@
     /* Para Internet Explorer y Edge */
     -ms-overflow-style: none;
 }
-
