@@ -59,7 +59,8 @@ Ejecuta el siguiente comando para construir y ejecutar los contenedores Docker:
 
 Una vez que los contenedores estén en funcionamiento, ejecuta las migraciones de Django para crear las tablas necesarias en la base de datos PostgreSQL:
 
-    docker-compose exec web python manage.py migrate
+    sudo docker-compose exec web python manage.py migrate
+    sudo docker exec -it smap-web python manage.py migrate
 
 
 5. **Accede a la Aplicación en tu Navegador**
