@@ -2,14 +2,15 @@ version: '3'
 
 services:
   web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    build: docker
+    command: python manage.py runserver 0.0.0.0:8066
     volumes:
       - .:/code
     ports:
-      - "8000:8000"
+      - "8066:8000"
     depends_on:
       - db
+    container_name: smap-web
 
   db:
     image: postgres:13
@@ -19,6 +20,7 @@ services:
       POSTGRES_PASSWORD: Karin2100
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    container_name: smap-db
 
 volumes:
   postgres_data:
