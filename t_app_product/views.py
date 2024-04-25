@@ -101,17 +101,23 @@ def product_detail(request, product_id):
 def delete_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id, user=request.user)
     if request.method == 'POST':
-        # Guarda la ruta de la imagen antes de eliminar el producto
-        image_path = product.img.path  # Actualiza para usar el campo 'img'
+        # Guarda las rutas de las imágenes antes de eliminar el producto
+        image_paths = [product.img.path]  # Agrega la imagen principal a la lista
+
+        # Agrega las rutas de las imágenes adicionales
+        for i in range(1, 6):
+            image_field = getattr(product, f'img{i}')
+            if image_field:
+                image_paths.append(image_field.path)
 
         product.delete()
 
-        # Elimina la imagen del directorio de destino
-        if os.path.exists(image_path):
-            os.remove(image_path)
+        # Elimina todas las imágenes del directorio de destino
+        for image_path in image_paths:
+            if os.path.exists(image_path):
+                os.remove(image_path)
 
         return redirect('product')
-
 
 @login_required
 def signout(request):
