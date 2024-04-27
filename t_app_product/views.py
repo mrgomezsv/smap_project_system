@@ -145,3 +145,6 @@ def signin(request):
             else:
                 error_message = 'Username or password is incorrect'
                 return render(request, 'signin.html', {'form': AuthenticationForm(), 'error': error_message})
+
+def push_notification(request):
+    return render(request, 'push_notification.html')
