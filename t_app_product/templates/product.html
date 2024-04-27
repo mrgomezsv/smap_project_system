@@ -36,7 +36,7 @@
                             <h5 class="card-title">{{ product.title }}</h5>
                             <p class="card-text">{{ product.description }}</p>
                             <p class="card-text">Precio: {{ product.price }}</p>
-                            <p class="card-text">Categoría: {{ product.category }}</p>
+                            <p class="card-text">Categoría: {{ product.get_category_display }}</p>
                             <p class="card-text">Usuario: {{ product.user.username }}</p>
                             <a href="{% url 'product_detail' product.id %}" class="btn btn-primary mt-auto">Ver Detalles</a>
                         </div>
