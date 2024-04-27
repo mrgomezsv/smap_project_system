@@ -1,5 +1,6 @@
 import os
 
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
@@ -9,9 +10,11 @@ from .forms import ProductForm
 from .models import Product
 from django.contrib.auth.decorators import login_required
 
+
 @login_required
 def home(request):
     return render(request, 'home.html')
+
 
 def signup(request):
     if request.method == "GET":
@@ -39,10 +42,25 @@ def signup(request):
                 {"form": UserCreationForm(), "error": "Passwords do not match"},
             )
 
+
 @login_required
 def product(request):
-    products = Product.objects.filter(user=request.user)
+    query = request.GET.get('q')
+    category = request.GET.get('category')
+
+    # Filtrar productos por nombre y/o categoría si hay consultas de búsqueda
+    if query or category:
+        products = Product.objects.filter(user=request.user)
+        if query:
+            products = products.filter(Q(title__icontains=query) | Q(description__icontains=query))
+        if category:
+            products = products.filter(category=category)
+    else:
+        # Si no hay consulta, mostrar todos los productos del usuario
+        products = Product.objects.filter(user=request.user)
+
     return render(request, 'product.html', {'products': products})
+
 
 @login_required
 def create_product(request):
@@ -61,6 +79,7 @@ def create_product(request):
                 'error': 'Please provide valid data'
             })
 
+
 @login_required
 def product_detail(request, product_id):
     if request.method == 'GET':
@@ -74,7 +93,8 @@ def product_detail(request, product_id):
         additional_images = [getattr(product, f'img{i}') for i in range(1, 6)]
 
         # Renderiza la página de detalle del producto con el formulario, el producto y las imágenes adicionales
-        return render(request, 'product_detail.html', {'product': product, 'form': form, 'additional_images': additional_images})
+        return render(request, 'product_detail.html',
+                      {'product': product, 'form': form, 'additional_images': additional_images})
     else:
         try:
             # Obtiene el producto con el ID dado, si existe y pertenece al usuario actual
@@ -97,6 +117,7 @@ def product_detail(request, product_id):
             return render(request, 'product_detail.html',
                           {'product': product, 'form': form, 'error': "Error updating product"})
 
+
 @login_required
 def delete_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id, user=request.user)
@@ -118,6 +139,7 @@ def delete_product(request, product_id):
                 os.remove(image_path)
 
         return redirect('product')
+
 
 @login_required
 def signout(request):
@@ -146,22 +168,28 @@ def signin(request):
                 error_message = 'Username or password is incorrect'
                 return render(request, 'signin.html', {'form': AuthenticationForm(), 'error': error_message})
 
+
 def push_notification(request):
     return render(request, 'push_notification.html')
+
 
 def services(request):
     # Lógica de la vista aquí
     return render(request, 'services.html')
 
+
 def advance_payments(request):
     # Lógica de la vista aquí
     return render(request, 'advance_payments.html')
+
 
 def ticket_master(request):
     # Lógica de la vista aquí
     return render(request, 'ticket_master.html')
 
+
 from django.shortcuts import render
+
 
 def disclaimer(request):
     # Lógica de la vista aquí
