@@ -148,3 +148,21 @@ def signin(request):
 
 def push_notification(request):
     return render(request, 'push_notification.html')
+
+def services(request):
+    # Lógica de la vista aquí
+    return render(request, 'services.html')
+
+def advance_payments(request):
+    # Lógica de la vista aquí
+    return render(request, 'advance_payments.html')
+
+def ticket_master(request):
+    # Lógica de la vista aquí
+    return render(request, 'ticket_master.html')
+
+from django.shortcuts import render
+
+def disclaimer(request):
+    # Lógica de la vista aquí
+    return render(request, 'disclaimer.html')

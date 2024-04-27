@@ -15,6 +15,10 @@ urlpatterns = [
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('product/<int:product_id>/delete', views.delete_product, name='delete_product'),
     path('push_notification/', views.push_notification, name='push_notification'),
+    path('services/', views.services, name='services'),
+    path('disclaimer/', views.disclaimer, name='disclaimer'),
+    path('advance_payments/', views.advance_payments, name='advance_payments'),
+    path('ticket_master/', views.ticket_master, name='ticket_master'),
 ]
 
 # Sirve las imágenes desde la carpeta media
