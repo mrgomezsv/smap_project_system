@@ -142,3 +142,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = ['https://smap.webcraftedsolutions.net']
 CSRF_COOKIE_SECURE = True
 
+# Configuración para que la sesión expire al cerrar el navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 0
