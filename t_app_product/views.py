@@ -9,6 +9,7 @@ from django.db import IntegrityError
 from .forms import ProductForm
 from .models import Product
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
 
 @login_required
@@ -194,3 +195,49 @@ from django.shortcuts import render
 def disclaimer(request):
     # Lógica de la vista aquí
     return render(request, 'disclaimer.html')
+
+
+def redirect_productc(request):
+    return render(request, 'productc.html')
+
+
+def process_checkbox(request):
+    if request.method == 'POST':
+        checkbox_state = request.POST.get('checkbox_state')
+        print("El estado del checkbox es:", checkbox_state)
+
+        if checkbox_state == 'true':
+            # Redirige a la nueva página HTML
+            return redirect('productc')
+        else:
+            # Redirige a product.html si el checkbox está marcado como false
+            print("Redirigiendo a product.html")
+            return redirect('product')
+    else:
+        return HttpResponse("Método de solicitud no válido.")
+
+
+@login_required
+def productc(request):
+    query = request.GET.get('q')
+    category = request.GET.get('category')
+
+    # Filtrar productos por nombre y/o categoría si hay consultas de búsqueda
+    if query or category:
+        products = Product.objects.filter(user=request.user)
+        if query:
+            products = products.filter(Q(title__icontains=query) | Q(description__icontains=query))
+        if category:
+            products = products.filter(category=category)
+    else:
+        # Si no hay consulta, mostrar todos los productos del usuario
+        products = Product.objects.filter(user=request.user)
+
+    # Agrupar productos por categoría
+    categorized_products = {}
+    for product in products:
+        if product.category not in categorized_products:
+            categorized_products[product.category] = []
+        categorized_products[product.category].append(product)
+
+    return render(request, 'productc.html', {'products': categorized_products})

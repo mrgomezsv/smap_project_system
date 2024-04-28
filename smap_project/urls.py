@@ -3,6 +3,8 @@ from django.urls import path
 from t_app_product import views
 from django.conf import settings
 from django.conf.urls.static import static
+from t_app_product.views import process_checkbox, redirect_productc
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -19,6 +21,8 @@ urlpatterns = [
     path('disclaimer/', views.disclaimer, name='disclaimer'),
     path('advance_payments/', views.advance_payments, name='advance_payments'),
     path('ticket_master/', views.ticket_master, name='ticket_master'),
+    path('process-checkbox/', process_checkbox, name='process_checkbox'),
+    path('productc/', views.productc, name='productc'),
 ]
 
 # Sirve las imágenes desde la carpeta media
