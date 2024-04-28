@@ -1,116 +1,99 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <main class="mt-5">
-        <head>
-            {% load static %}
-            <link rel="stylesheet" type="text/css" href="{% static 'css/product_detail.css' %}">
-        </head>
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <div class="card mb-4">
-                    <h5 class="card-header form-label mb-0 d-flex justify-content-between align-items-center">
-                        Detalle de {{ product.title }}
-                        <a href="{% url 'product' %}" class="btn btn-primary">Close Product</a>
-                    </h5>
-                    <div class="card-body">
-                        {% if error %}
-                            <div class="alert alert-danger mb-3" role="alert">
-                                {{ error }}
-                            </div>
-                        {% endif %}
-                        <form method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <!-- Columna para la imagen principal -->
-                                    <div class="image-container mb-3">
-                                        <!-- Agrega un ID a la imagen principal -->
-                                        <img id="mainImage" src="{{ product.img.url }}" alt="Product Image"
-                                             class="card-img-top" style="width: 100%; border-radius: 20px;">
-                                    </div>
-                                    <!-- Campo para cambiar la imagen principal -->
-                                    <div class="form-group mb-3">
-                                        <label for="img_change" class="form-label visually-hidden">Change:</label>
-                                        {{ form.img }}
-                                    </div>
+<main class="mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <h5 class="card-header form-label mb-0 d-flex justify-content-between align-items-center">
+                    Detalle de {{ product.title }}
+                    <a href="{% url 'product' %}" class="btn btn-primary">Cerrar Producto</a>
+                </h5>
+                <div class="card-body">
+                    {% if error %}
+                    <div class="alert alert-danger mb-3" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endif %}
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="image-container mb-3">
+                                    <img id="mainImage" src="{{ product.img.url }}" alt="Imagen de Producto"
+                                        class="card-img-top" style="width: 100%; border-radius: 20px;">
                                 </div>
-                                <div class="col-md-6">
-                                    <!-- Columna para los campos del formulario -->
-                                    {% for field in form %}
-                                        {% if 'img1' not in field.name and 'img' not in field.name %}
-                                            <div class="form-group mb-3">
-                                                <label for="{{ field.id_for_label }}"
-                                                       class="form-label">{{ field.label }}</label>
-                                                {{ field }}
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
+                                <div class="form-group mb-3">
+                                    <label for="img_change" class="form-label visually-hidden">Cambiar:</label>
+                                    {{ form.img }}
                                 </div>
                             </div>
-                            <!-- Columna para las imágenes adicionales -->
-                            <div class="row">
-                                {% for image in additional_images %}
-                                    <div class="col-3 mb-3">
-                                        <div class="image-container mb-3"
-                                             style="height: 200px; overflow: hidden; border: 1px solid #ccc; border-radius: 20px;">
-                                            <!-- Agrega un evento onclick para llamar a la función showPreviewImage -->
-                                            <img src="{{ image.url }}" alt="" class="card-img-top img-fluid"
-                                                 style="width: 100%; height: 100%; object-fit: cover;"
-                                                 onclick="showPreviewImage(this)">
-                                        </div>
-                                        <!-- No necesitas mostrar el campo para elegir archivo -->
-                                    </div>
+                            <div class="col-md-6">
+                                {% for field in form %}
+                                {% if 'img1' not in field.name and 'img' not in field.name %}
+                                <div class="form-group mb-3">
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    {{ field }}
+                                </div>
+                                {% endif %}
                                 {% endfor %}
                             </div>
-                            <div class="mt-4">
-                                {#                            <button type="submit" class="btn btn-primary mr-2">Update</button>#}
-                                <button type="submit" class="btn btn-danger"
-                                        formaction="{% url 'delete_product' product.id %}">Delete Product
-                                </button>
+                        </div>
+                        <div class="row">
+                            {% for image in additional_images %}
+                            <div class="col-3 mb-3">
+                                <div class="image-container mb-3"
+                                    style="height: 200px; overflow: hidden; border: 1px solid #ccc; border-radius: 20px;">
+                                    <img src="{{ image.url }}" alt="" class="card-img-top img-fluid"
+                                        style="width: 100%; height: 100%; object-fit: cover;"
+                                        onclick="showPreviewImage(this)">
+                                </div>
+                                <p>Actualmente: {{ image.current_status }}</p>
+                                <label for="img{{ forloop.counter }}" class="form-label visually-hidden">Cambiar:</label>
+                                <input type="file" id="img{{ forloop.counter }}" name="img{{ forloop.counter }}">
                             </div>
-                        </form>
-                    </div>
+                            {% endfor %}
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary mr-2">Actualizar</button>
+                            <button type="submit" class="btn btn-danger"
+                                formaction="{% url 'delete_product' product.id %}">Eliminar Producto
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <!-- Agrega un contenedor para la vista previa de la imagen -->
-        <div id="previewImageContainer"
-             style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none; background-color: white; border: 1px solid #ccc; border-radius: 10px; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-            <img id="previewImage" src="" alt="Preview Image" style="max-width: 100%; max-height: 100%;">
-            <div style="margin-top: 10px; text-align: center;">
-                <button class="btn btn-primary" onclick="updateImage()">Update</button>
-                <button class="btn btn-secondary" onclick="closePreview()">Close</button>
-            </div>
-        </div>
-    </main>
+    </div>
+</main>
 
-    <!-- Agrega el script JavaScript -->
-    <script>
-        // Función para mostrar la vista previa de la imagen sobre la imagen original
-        function showPreviewImage(img) {
-            var previewImage = document.getElementById('previewImage');
-            var previewImageContainer = document.getElementById('previewImageContainer');
+<!-- Contenedor para la vista previa de la imagen -->
+<div id="previewImageContainer"
+    style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none; background-color: white; border: 1px solid #ccc; border-radius: 10px; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <img id="previewImage" src="" alt="Imagen Previa" style="max-width: 100%; max-height: 100%;">
+    <div style="margin-top: 10px; text-align: center;">
+        <button class="btn btn-primary" onclick="updateImage()">Actualizar</button>
+        <button class="btn btn-secondary" onclick="closePreview()">Cerrar</button>
+    </div>
+</div>
 
-            // Establece la URL de la imagen de vista previa
-            previewImage.src = img.src;
+<!-- Scripts -->
+<script>
+    function showPreviewImage(img) {
+        var previewImage = document.getElementById('previewImage');
+        var previewImageContainer = document.getElementById('previewImageContainer');
+        previewImage.src = img.src;
+        previewImageContainer.style.display = 'block';
+    }
 
-            // Muestra la vista previa
-            previewImageContainer.style.display = 'block';
-        }
+    function updateImage() {
+        // Lógica para actualizar la imagen aquí
+        alert('La funcionalidad para actualizar la imagen se implementará aquí.');
+    }
 
-        // Función para actualizar la imagen
-        function updateImage() {
-            // Aquí puedes agregar la lógica para actualizar la imagen
-            alert('Update image functionality will be implemented here.');
-        }
-
-        // Función para cerrar la vista previa
-        function closePreview() {
-            var previewImageContainer = document.getElementById('previewImageContainer');
-
-            // Oculta la vista previa
-            previewImageContainer.style.display = 'none';
-        }
-    </script>
+    function closePreview() {
+        var previewImageContainer = document.getElementById('previewImageContainer');
+        previewImageContainer.style.display = 'none';
+    }
+</script>
 {% endblock %}
