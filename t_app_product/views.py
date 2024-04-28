@@ -17,6 +17,28 @@ def home(request):
     return render(request, 'home.html')
 
 
+def signin(request):
+    if request.method == 'GET':
+        return render(request, 'signin.html', {'form': AuthenticationForm()})
+    else:
+        username = request.POST['username']
+        password = request.POST['password']
+
+        # Verificar si el usuario y la contraseña coinciden con los valores específicos
+        if username == 'wletona' and password == 'Karin2100':
+            return redirect('signup')  # Redirigir a signup.html si las credenciales son correctas
+        else:
+            # Autenticar al usuario normalmente si las credenciales no son las específicas
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect(
+                    'product')  # Redirigir a la página de producto si el usuario es autenticado correctamente
+            else:
+                error_message = 'Username or password is incorrect'
+                return render(request, 'signin.html', {'form': AuthenticationForm(), 'error': error_message})
+
+
 def signup(request):
     if request.method == "GET":
         return render(request, "signup.html", {"form": UserCreationForm()})
@@ -148,59 +170,41 @@ def signout(request):
     return redirect('home')
 
 
-def signin(request):
-    if request.method == 'GET':
-        return render(request, 'signin.html', {'form': AuthenticationForm()})
-    else:
-        username = request.POST['username']
-        password = request.POST['password']
-
-        # Verificar si el usuario y la contraseña coinciden con los valores específicos
-        if username == 'wletona' and password == 'Karin2100':
-            return redirect('signup')  # Redirigir a signup.html si las credenciales son correctas
-        else:
-            # Autenticar al usuario normalmente si las credenciales no son las específicas
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect(
-                    'product')  # Redirigir a la página de producto si el usuario es autenticado correctamente
-            else:
-                error_message = 'Username or password is incorrect'
-                return render(request, 'signin.html', {'form': AuthenticationForm(), 'error': error_message})
-
-
+@login_required
 def push_notification(request):
     return render(request, 'push_notification.html')
 
 
+@login_required
 def services(request):
     # Lógica de la vista aquí
     return render(request, 'services.html')
 
 
+@login_required
 def advance_payments(request):
     # Lógica de la vista aquí
     return render(request, 'advance_payments.html')
 
 
+@login_required
 def ticket_master(request):
     # Lógica de la vista aquí
     return render(request, 'ticket_master.html')
 
 
-from django.shortcuts import render
-
-
+@login_required
 def disclaimer(request):
     # Lógica de la vista aquí
     return render(request, 'disclaimer.html')
 
 
+@login_required
 def redirect_productc(request):
     return render(request, 'productc.html')
 
 
+@login_required
 def process_checkbox(request):
     if request.method == 'POST':
         checkbox_state = request.POST.get('checkbox_state')
