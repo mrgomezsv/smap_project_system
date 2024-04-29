@@ -27,57 +27,54 @@
 <body>
 {% block content %}
     <main class="container">
-        <div class="row">
-            <div class="col-md-4 offset-md-4">
+
+        <div class="row justify-content-center"> <!-- Agregamos la clase para centrar horizontalmente -->
+
+            <div class="col-md-5">
+
                 <form action="/signup/" method="POST" class="card card-body mt-5" enctype="multipart/form-data">
-                    
-
                     <h1 class="text-center">Registrarse</h1>
-
                     {{ error }}
                     {% csrf_token %}
                     <div class="signup">
-                        <div class="signup">
-                            <img src="{% static 'assets/user_profile.jpeg' %}" alt="Imagen de Perfil">
-                        </div>
+                        <img src="{% static 'assets/user_profile.jpeg' %}" alt="Imagen de Perfil">
                     </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form action="/signup/" method="POST" class="card card-body mt-5" enctype="multipart/form-data">
+                    {{ error }}
+                    {% csrf_token %}
                     <div class="mb-3">
                         <label for="username">Username:</label>
                         <input type="text" name="username" class="form-control" id="username"
                                placeholder="Escribe tu Usuario">
                     </div>
-
                     <div class="mb-3">
                         <label for="password1">Password:</label>
                         <input type="password" name="password1" class="form-control" id="password1"
                                placeholder="Escribe tu Password">
                     </div>
-
                     <div class="mb-3">
                         <label for="password2">Confirma tu Password:</label>
                         <input type="password" name="password2" class="form-control" id="password2"
                                placeholder="Repite tu Password">
                     </div>
-
                     <div class="mb-3">
                         <label for="first_name">Nombre:</label>
                         <input type="text" id="first_name" name="first_name" class="form-control"
                                placeholder="Escribe tu Nombre">
                     </div>
-
                     <div class="mb-3">
                         <label for="last_name">Apellido:</label>
                         <input type="text" id="last_name" name="last_name" class="form-control"
                                placeholder="Escribe tu Apellido">
                     </div>
-
                     <div class="mb-3">
                         <label for="profile_picture">Foto de perfil:</label>
                         <input type="file" id="profile_picture" name="profile_picture" class="form-control"
                                accept="image/*" required>
-
                     </div>
-
                     <button class="btn btn-primary">
                         Registrarse
                     </button>
