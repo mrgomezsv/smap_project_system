@@ -73,14 +73,17 @@ def product(request):
 
     # Filtrar productos por nombre y/o categoría si hay consultas de búsqueda
     if query or category:
-        products = Product.objects.filter(user=request.user)
+        # products = Product.objects.filter(user=request.user)  # Comentario: Se elimina la filtración por usuario
+        products = Product.objects.all()  # Comentario: Se seleccionan todos los productos
+
         if query:
             products = products.filter(Q(title__icontains=query) | Q(description__icontains=query))
         if category:
             products = products.filter(category=category)
     else:
         # Si no hay consulta, mostrar todos los productos del usuario
-        products = Product.objects.filter(user=request.user)
+        # products = Product.objects.filter(user=request.user)  # Comentario: Se elimina la filtración por usuario
+        products = Product.objects.all()  # Comentario: Se seleccionan todos los productos
 
     return render(request, 'product.html', {'products': products})
 
@@ -106,8 +109,8 @@ def create_product(request):
 @login_required
 def product_detail(request, product_id):
     if request.method == 'GET':
-        # Obtiene el producto con el ID dado, si existe y pertenece al usuario actual
-        product = get_object_or_404(Product, pk=product_id, user=request.user)
+        # Obtiene el producto con el ID dado, sin importar el usuario
+        product = get_object_or_404(Product, pk=product_id)
 
         # Crea un formulario para el producto
         form = ProductForm(instance=product)
@@ -120,8 +123,8 @@ def product_detail(request, product_id):
                       {'product': product, 'form': form, 'additional_images': additional_images})
     else:
         try:
-            # Obtiene el producto con el ID dado, si existe y pertenece al usuario actual
-            product = get_object_or_404(Product, pk=product_id, user=request.user)
+            # Obtiene el producto con el ID dado, sin importar el usuario
+            product = get_object_or_404(Product, pk=product_id)
 
             # Guarda los detalles del formulario en la base de datos
             form = ProductForm(request.POST, request.FILES, instance=product)
@@ -143,7 +146,9 @@ def product_detail(request, product_id):
 
 @login_required
 def delete_product(request, product_id):
-    product = get_object_or_404(Product, pk=product_id, user=request.user)
+    # Obtiene el producto con el ID dado, sin importar el usuario
+    product = get_object_or_404(Product, pk=product_id)
+
     if request.method == 'POST':
         # Guarda las rutas de las imágenes antes de eliminar el producto
         image_paths = [product.img.path]  # Agrega la imagen principal a la lista
@@ -162,6 +167,7 @@ def delete_product(request, product_id):
                 os.remove(image_path)
 
         return redirect('product')
+
 
 @login_required
 def signout(request):
@@ -227,14 +233,17 @@ def productc(request):
 
     # Filtrar productos por nombre y/o categoría si hay consultas de búsqueda
     if query or category:
-        products = Product.objects.filter(user=request.user)
+        # products = Product.objects.filter(user=request.user)  # Comentario: Se elimina la filtración por usuario
+        products = Product.objects.all()  # Comentario: Se seleccionan todos los productos
+
         if query:
             products = products.filter(Q(title__icontains=query) | Q(description__icontains=query))
         if category:
             products = products.filter(category=category)
     else:
         # Si no hay consulta, mostrar todos los productos del usuario
-        products = Product.objects.filter(user=request.user)
+        # products = Product.objects.filter(user=request.user)  # Comentario: Se elimina la filtración por usuario
+        products = Product.objects.all()  # Comentario: Se seleccionan todos los productos
 
     # Agrupar productos por categoría
     categorized_products = {}
