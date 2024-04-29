@@ -25,7 +25,8 @@ def signin(request):
         password = request.POST['password']
 
         # Verificar si el usuario y la contraseña coinciden con los valores específicos
-        if username == 'wletona' and password == 'Karin2100':
+        #if username == 'wletona' and password == 'Karin2100':
+        if username == 'create':
             return redirect('signup')  # Redirigir a signup.html si las credenciales son correctas
         else:
             # Autenticar al usuario normalmente si las credenciales no son las específicas
