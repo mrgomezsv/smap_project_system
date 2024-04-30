@@ -18,7 +18,15 @@ Asegúrate de tener Python instalado en tu sistema. Puedes descargarlo desde pyt
 
     pip install -r requirements.txt
 
-4.Asignación de la variable de ejecución del proyecto:
+4.Crear una migración
+    
+    python manage.py makemigrations
+
+5.Correr todas las migraciones
+
+    python manage.py migrate
+
+6.Asignación de la variable de ejecución del proyecto:
     
     python manage.py runserver
 
