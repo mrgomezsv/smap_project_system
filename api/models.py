@@ -11,6 +11,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True)
+    important = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, related_name='api_products')
 
     img1 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')

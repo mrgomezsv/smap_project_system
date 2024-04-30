@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product
+from t_app_product.models import Product  # Importa el modelo de tu aplicación
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
