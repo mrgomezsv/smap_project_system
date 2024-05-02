@@ -20,6 +20,7 @@ urlpatterns = [
     path('push_notification/', views.push_notification, name='push_notification'),
     path('services/', views.services, name='services'),
     path('disclaimer/', views.disclaimer, name='disclaimer'),
+    path('sudo_admin/', views.sudo_admin, name='sudo_admin'),
     path('advance_payments/', views.advance_payments, name='advance_payments'),
     path('ticket_master/', views.ticket_master, name='ticket_master'),
     path('process-checkbox/', process_checkbox, name='process_checkbox'),

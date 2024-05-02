@@ -254,3 +254,8 @@ def productc(request):
         categorized_products[product.category].append(product)
 
     return render(request, 'productc.html', {'products': categorized_products})
+
+@login_required
+def sudo_admin(request):
+    # Lógica de la vista aquí
+    return render(request, 'sudo_admin.html')
