@@ -85,26 +85,28 @@
 
 
         document.addEventListener('DOMContentLoaded', function () {
-        const selectAllCheckbox = document.querySelector('#flexSelectedAll');
-        const productCheckboxes = document.querySelectorAll('.product-checkbox');
-        const trashIcon = document.getElementById('trash-icon');
+            const selectAllCheckbox = document.querySelector('#flexSelectedAll');
+            const productCheckboxes = document.querySelectorAll('.product-checkbox');
+            const trashIcon = document.getElementById('trash-icon');
 
-        selectAllCheckbox.addEventListener('change', function () {
-            // Si el checkbox "Seleccionar" está marcado, muestra los checkbox de los productos y el bote de basura
-            if (this.checked) {
-                productCheckboxes.forEach(function (checkbox) {
-                    checkbox.style.display = 'inline-block';
-                });
-                trashIcon.classList.remove('d-none');
-            } else {
-                // Si el checkbox "Seleccionar" no está marcado, oculta los checkbox de los productos y el bote de basura
-                productCheckboxes.forEach(function (checkbox) {
-                    checkbox.style.display = 'none';
-                });
-                trashIcon.classList.add('d-none');
-            }
+            selectAllCheckbox.addEventListener('change', function () {
+                // Si el checkbox "Seleccionar" está marcado, muestra los checkbox de los productos y el bote de basura
+                if (this.checked) {
+                    productCheckboxes.forEach(function (checkbox) {
+                        checkbox.style.display = 'inline-block';
+                        checkbox.checked = false; // Establece el estado a false cuando se muestran
+                    });
+                    trashIcon.classList.remove('d-none');
+                } else {
+                    // Si el checkbox "Seleccionar" no está marcado, oculta los checkbox de los productos y el bote de basura
+                    productCheckboxes.forEach(function (checkbox) {
+                        checkbox.style.display = 'none';
+                        checkbox.checked = false; // Establece el estado a false cuando se ocultan
+                    });
+                    trashIcon.classList.add('d-none');
+                }
+            });
         });
-    });
     </script>
 
 {% endblock %}
