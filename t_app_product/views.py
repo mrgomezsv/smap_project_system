@@ -10,6 +10,7 @@ from .forms import ProductForm
 from .models import Product
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 @login_required
@@ -255,7 +256,11 @@ def productc(request):
 
     return render(request, 'productc.html', {'products': categorized_products})
 
+def is_mrgomez(user):
+    return user.username == 'mrgomez'
+
 @login_required
+@user_passes_test(is_mrgomez)
 def sudo_admin(request):
     # Lógica de la vista aquí
     return render(request, 'sudo_admin.html')
