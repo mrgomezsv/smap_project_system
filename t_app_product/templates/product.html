@@ -22,15 +22,15 @@
                     <i class="fas fa-trash-alt mr-2"></i>
                 </div>
                 <!-- Checkbox principal "Seleccionar" en la barra de navegación -->
-                <form id="select-all-form">
-                    {% csrf_token %}
-                    <div class="form-check me-3">
-                        <input class="form-check-input" type="checkbox" id="flexSelectedAll">
-                        <label class="form-check-label" for="flexSelectedAll">
-                            Seleccionar
-                        </label>
-                    </div>
-                </form>
+{#                <form id="select-all-form">#}
+{#                    {% csrf_token %}#}
+{#                    <div class="form-check me-3">#}
+{#                        <input class="form-check-input" type="checkbox" id="flexSelectedAll">#}
+{#                        <label class="form-check-label" for="flexSelectedAll">#}
+{#                            Seleccionar#}
+{#                        </label>#}
+{#                    </div>#}
+{#                </form>#}
                 <!-- Utilizamos Bootstrap para espaciar el checkbox -->
                 <form id="checkbox-form" method="post" action="{% url 'process_checkbox' %}">
                     {% csrf_token %}
