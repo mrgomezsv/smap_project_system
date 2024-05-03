@@ -3,13 +3,8 @@
 {% block content %}
     <head>
         {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/sudo_admin.css' %}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-        <style>
-            /* Estilo para ocultar el icono del bote de basura */
-            .hide-trash .trash-icon {
-                display: none;
-            }
-        </style>
     </head>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -31,21 +26,27 @@
                 <th>Nombre de Usuario</th>
                 <th>Correo Electrónico</th>
                 <th>Fecha de Registro</th>
-                <th></th> <!-- Columna para el icono del bote de basura -->
+                <th class="trash-column"></th> <!-- Columna para el icono del bote de basura -->
             </tr>
             </thead>
             <tbody>
             {% for user in users %}
                 {% with random_boolean=user.checkbox_state %}
                     <tr>
-                        <td><input type="checkbox" name="selected_users" value="{{ user.id }}"
-                                   id="user-checkbox-{{ user.id }}" onchange="toggleTrashIconVisibility('{{ user.id }}')"></td> <!-- Checkbox de usuario -->
+                        <td class="checkbox-container">
+                            <input type="checkbox" name="selected_users" value="{{ user.id }}"
+                                   id="user-checkbox-{{ user.id }}"
+                                   onchange="toggleTrashIconVisibility('{{ user.id }}')">
+                            <label for="user-checkbox-{{ user.id }}" class="checkbox-label"></label>
+                        </td> <!-- Checkbox de usuario -->
                         <td>{{ user.id }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.date_joined }}</td>
-                        <td class=" me-3 {% if not random_boolean %}hide-trash{% endif %}" id="trash-icon-{{ user.id }}"><i
-                                class="fas fa-trash-alt trash-icon mr-2"></i></td> <!-- Icono del bote de basura -->
+                        <td class="form-check me-3 {% if not random_boolean %}hide-trash{% endif %} trash-column"
+                            id="trash-icon-{{ user.id }}">
+                            <i class="fas fa-trash-alt trash-icon mr-2"></i>
+                        </td> <!-- Icono del bote de basura -->
                     </tr>
                 {% endwith %}
             {% endfor %}

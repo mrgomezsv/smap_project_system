@@ -1,0 +1,15 @@
+/* Estilo para ocultar el icono del bote de basura */
+.hide-trash .trash-icon {
+    display: none;
+}
+
+.table td,
+.table th {
+    height: 50px; /* Establece la altura fija para todas las celdas de la tabla */
+}
+
+/* Establece un ancho fijo para la columna del icono del bote de basura */
+.trash-column {
+    width: 30px; /* Cambia este valor según tus necesidades */
+    vertical-align: middle; /* Alinea verticalmente el contenido */
+}
