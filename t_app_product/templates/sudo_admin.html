@@ -27,7 +27,7 @@
                 <th>Correo Electrónico</th>
                 <th>Nombre</th>
                 <th>Apellido</th>
-{#                <th>Fecha de Registro</th>#}
+                <th>Fecha de Registro</th>
                 <th class="trash-column"></th> <!-- Columna para el icono del bote de basura -->
             </tr>
             </thead>
@@ -46,11 +46,11 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.first_name }}</td>
                         <td>{{ user.last_name }}</td>
-{#                        <td>{{ user.date_joined }}</td>#}
+                        <td>{{ user.date_joined }}</td>
                         <td class="form-check me-3 {% if not random_boolean %}hide-trash{% endif %} trash-column"
                             id="trash-icon-{{ user.id }}">
-                            <i class="fas fa-trash-alt trash-icon mr-2"></i>
-                        </td> <!-- Icono del bote de basura -->
+                             <i class="fas fa-trash-alt trash-icon mr-2"></i>
+                        </td>
                     </tr>
                 {% endwith %}
             {% endfor %}

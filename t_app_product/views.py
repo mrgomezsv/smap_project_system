@@ -10,6 +10,7 @@ from .forms import ProductForm
 from .models import Product
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
+from .forms import CustomUserCreationForm
 
 
 @login_required
@@ -25,7 +26,7 @@ def signin(request):
         password = request.POST['password']
 
         # Verificar si el usuario y la contraseña coinciden con los valores específicos
-        #if username == 'wletona' and password == 'Karin2100':
+        # if username == 'wletona' and password == 'Karin2100':
         if username == 'create':
             return redirect('signup')  # Redirigir a signup.html si las credenciales son correctas
         else:
@@ -42,13 +43,16 @@ def signin(request):
 
 def signup(request):
     if request.method == "GET":
-        return render(request, "signup.html", {"form": UserCreationForm()})
+        return render(request, "signup.html", {"form": CustomUserCreationForm()})
     else:
         if request.POST["password1"] == request.POST["password2"]:
             try:
                 user = User.objects.create_user(
                     username=request.POST["username"],
                     password=request.POST["password1"],
+                    first_name=request.POST["first_name"],  # Agrega estos campos
+                    last_name=request.POST["last_name"],  # Agrega estos campos
+                    email=request.POST["email"],  # Agrega este campo
                 )
                 user.save()
                 login(request, user)
@@ -57,13 +61,13 @@ def signup(request):
                 return render(
                     request,
                     "signup.html",
-                    {"form": UserCreationForm(), "error": "User already exists"},
+                    {"form": CustomUserCreationForm(), "error": "User already exists"},
                 )
         else:
             return render(
                 request,
                 "signup.html",
-                {"form": UserCreationForm(), "error": "Passwords do not match"},
+                {"form": CustomUserCreationForm(), "error": "Passwords do not match"},
             )
 
 
@@ -255,8 +259,10 @@ def productc(request):
 
     return render(request, 'productc.html', {'products': categorized_products})
 
+
 def is_mrgomez(user):
     return user.username == 'mrgomez'
+
 
 @login_required
 @user_passes_test(is_mrgomez)

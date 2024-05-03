@@ -30,17 +30,17 @@
 
         <div class="row justify-content-center"> <!-- Agregamos la clase para centrar horizontalmente -->
 
-{#            <div class="col-md-5">#}
-{##}
-{#                <form action="/signup/" method="POST" class="card card-body mt-5" enctype="multipart/form-data">#}
-{#                    <h1 class="text-center">Registrarse</h1>#}
-{#                    {{ error }}#}
-{#                    {% csrf_token %}#}
-{#                    <div class="signup">#}
-{#                        <img src="{% static 'assets/user_profile.jpeg' %}" alt="Imagen de Perfil">#}
-{#                    </div>#}
-{#                </form>#}
-{#            </div>#}
+            {#            <div class="col-md-5">#}
+            {##}
+            {#                <form action="/signup/" method="POST" class="card card-body mt-5" enctype="multipart/form-data">#}
+            {#                    <h1 class="text-center">Registrarse</h1>#}
+            {#                    {{ error }}#}
+            {#                    {% csrf_token %}#}
+            {#                    <div class="signup">#}
+            {#                        <img src="{% static 'assets/user_profile.jpeg' %}" alt="Imagen de Perfil">#}
+            {#                    </div>#}
+            {#                </form>#}
+            {#            </div>#}
             <div class="col-md-4">
                 <form action="/signup/" method="POST" class="card card-body mt-5" enctype="multipart/form-data">
                     <h1 class="text-center">Registrarse</h1>
@@ -72,15 +72,16 @@
                                placeholder="Escribe tu Apellido">
                     </div>
                     <div class="mb-3">
-                        <label for="e-mail">E-mail:</label>
-                        <input type="text" id="e-mail" name="e-mail" class="form-control"
-                               placeholder="Escribe tu E-mail">
+                        <label for="email">E-mail:</label>
+                        <input type="text" id="email" name="email" class="form-control" placeholder="Escribe tu E-mail">
                     </div>
-{#                    <div class="mb-3">#}
-{#                        <label for="profile_picture">Foto de perfil:</label>#}
-{#                        <input type="file" id="profile_picture" name="profile_picture" class="form-control"#}
-{#                               accept="image/*" required>#}
-{#                    </div>#}
+
+
+                    {#                    <div class="mb-3">#}
+                    {#                        <label for="profile_picture">Foto de perfil:</label>#}
+                    {#                        <input type="file" id="profile_picture" name="profile_picture" class="form-control"#}
+                    {#                               accept="image/*" required>#}
+                    {#                    </div>#}
                     <button class="btn btn-primary">
                         Registrarse
                     </button>
