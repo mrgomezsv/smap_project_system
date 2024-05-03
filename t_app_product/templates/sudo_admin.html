@@ -28,6 +28,7 @@
                 <th>Nombre</th>
                 <th>Apellido</th>
                 <th>Fecha de Registro</th>
+                <th>Ultimo Inicio de Sesion</th>
                 <th class="trash-column"></th> <!-- Columna para el icono del bote de basura -->
             </tr>
             </thead>
@@ -47,9 +48,10 @@
                         <td>{{ user.first_name }}</td>
                         <td>{{ user.last_name }}</td>
                         <td>{{ user.date_joined }}</td>
+                        <td>{{ user.last_login }}</td>
                         <td class="form-check me-3 {% if not random_boolean %}hide-trash{% endif %} trash-column"
                             id="trash-icon-{{ user.id }}">
-                             <i class="fas fa-trash-alt trash-icon mr-2"></i>
+                            <i class="fas fa-trash-alt trash-icon mr-2"></i>
                         </td>
                     </tr>
                 {% endwith %}
