@@ -1,35 +1,67 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% load static %}
+    <head>
+        {% load static %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <style>
+            /* Estilo para ocultar el icono del bote de basura */
+            .hide-trash .trash-icon {
+                display: none;
+            }
+        </style>
+    </head>
 
-{#    <main class="container py-5">#}
-{#        <div class="d-flex justify-content-center align-items-center">#}
-{#            <img src="{% static 'assets/ubuntu.jpeg' %}" class="img-fluid w-50" alt="Under Construction!!!">#}
-{#        </div>#}
-{#    </main>#}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container d-flex align-items-center">
+            <h2 class="h2">Usuarios Registrados</h2>
+            <div class="d-flex ml-auto">
+                <a id="crearProductoBtn" href="{% url 'signup' %}" class="btn btn-primary">Nuevo Usuario</a>
+            </div>
+        </div>
+    </nav>
 
-        <div class="container">
-        <h2>Usuarios Registrados</h2>
+    <div class="container mt-5">
+
         <table class="table">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre de Usuario</th>
-                    <th>Correo Electrónico</th>
-                    <th>Fecha de Registro</th>
-                </tr>
+            <tr>
+                <th><input type="checkbox" id="select-all"></th> <!-- Checkbox para seleccionar todos -->
+                <th>ID</th>
+                <th>Nombre de Usuario</th>
+                <th>Correo Electrónico</th>
+                <th>Fecha de Registro</th>
+                <th></th> <!-- Columna para el icono del bote de basura -->
+            </tr>
             </thead>
             <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.date_joined }}</td>
-                </tr>
-                {% endfor %}
+            {% for user in users %}
+                {% with random_boolean=user.checkbox_state %}
+                    <tr>
+                        <td><input type="checkbox" name="selected_users" value="{{ user.id }}"
+                                   id="user-checkbox-{{ user.id }}" onchange="toggleTrashIconVisibility('{{ user.id }}')"></td> <!-- Checkbox de usuario -->
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.date_joined }}</td>
+                        <td class=" me-3 {% if not random_boolean %}hide-trash{% endif %}" id="trash-icon-{{ user.id }}"><i
+                                class="fas fa-trash-alt trash-icon mr-2"></i></td> <!-- Icono del bote de basura -->
+                    </tr>
+                {% endwith %}
+            {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <script>
+        function toggleTrashIconVisibility(userId) {
+            var checkbox = document.getElementById('user-checkbox-' + userId);
+            var trashIcon = document.getElementById('trash-icon-' + userId);
+            if (checkbox.checked) {
+                trashIcon.classList.remove('hide-trash');
+            } else {
+                trashIcon.classList.add('hide-trash');
+            }
+        }
+    </script>
 {% endblock %}
