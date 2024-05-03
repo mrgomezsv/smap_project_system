@@ -8,9 +8,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .forms import ProductForm
 from .models import Product
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import HttpResponse
 
 
 @login_required
