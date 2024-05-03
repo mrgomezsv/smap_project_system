@@ -3,9 +3,33 @@
 {% block content %}
     {% load static %}
 
-    <main class="container py-5">
-        <div class="d-flex justify-content-center align-items-center">
-            <img src="{% static 'assets/ubuntu.jpeg' %}" class="img-fluid w-50" alt="Under Construction!!!">
-        </div>
-    </main>
+{#    <main class="container py-5">#}
+{#        <div class="d-flex justify-content-center align-items-center">#}
+{#            <img src="{% static 'assets/ubuntu.jpeg' %}" class="img-fluid w-50" alt="Under Construction!!!">#}
+{#        </div>#}
+{#    </main>#}
+
+        <div class="container">
+        <h2>Usuarios Registrados</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Correo Electrónico</th>
+                    <th>Fecha de Registro</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.date_joined }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

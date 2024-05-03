@@ -262,5 +262,5 @@ def is_mrgomez(user):
 @login_required
 @user_passes_test(is_mrgomez)
 def sudo_admin(request):
-    # Lógica de la vista aquí
-    return render(request, 'sudo_admin.html')
+    users = User.objects.all()
+    return render(request, 'sudo_admin.html', {'users': users})
