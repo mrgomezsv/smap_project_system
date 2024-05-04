@@ -1,20 +1,86 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<head>
-    {% load static %}
-</head>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container d-flex align-items-center">
-        <h2 class="h2">Historial de Notificaciones</h2>
-        <div class="d-flex ml-auto">
-            <a id="crearProductoBtn" href="" class="btn btn-primary">Crear Nueva</a>
+    <head>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/push_notification.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    </head>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container d-flex align-items-center">
+            <h2 class="h2">Historial de Notificaciones</h2>
+            <div class="d-flex ml-auto">
+                <a id="crearProductoBtn" href="#" class="btn btn-primary">Crear Nueva</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div id="nuevoComponente" class="componente-con-borde" style="display: none;">
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Título de la notificación</label>
+                <input type="email" class="form-control" id="exampleFormControlInput1"
+                       placeholder="Ingresa un titulo opcional">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Texto de la notificación</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1"
+                          placeholder="Ingresa el texto de la notificacion" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Imagen de notificación (opcional)</label>
+                <input class="form-control" type="file" id="formFile"
+                       placeholder="Ejemplo: https://tuapp.com/imagen.png">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput2" class="form-label">Nombre de la notificación</label>
+                <input type="email" class="form-control" id="exampleFormControlInput2"
+                       placeholder="Ingresa un nombre opcional">
+            </div>
+            <div class="mt-4 justify-content-end">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+                <button id="cancelarBtn" type="button" class="btn btn-danger ml-2">Cancelar</button>
+            </div>
         </div>
     </div>
-</nav>
 
-<div class="container mt-5">
+    <div class="container mt-5">
+        <table class="table">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all"></th>
+                <th>ID</th>
+                <th>Titulo de la notificacion</th>
+                <th>Texto de la nottificacion</th>
+                <th>Imagen de la notificacion</th>
+                <th>Nombre de la notificacion</th>
+                <th>Fecha de Envio</th>
+                <th>Usuario</th>
+                <th class="trash-column"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Aquí van las filas de la tabla -->
+            </tbody>
+        </table>
+    </div>
 
-</div>
+    <script>
+        document.getElementById('crearProductoBtn').addEventListener('click', function (event) {
+            event.preventDefault(); // Evita que el enlace se comporte como un enlace normal
+            var componente = document.getElementById('nuevoComponente');
+            if (componente.style.display === 'none') {
+                componente.style.display = 'block';
+            } else {
+                componente.style.display = 'none';
+            }
+        });
 
+        // Agrega un evento de clic al botón de cancelar
+        document.getElementById('cancelarBtn').addEventListener('click', function () {
+            var componente = document.getElementById('nuevoComponente');
+            componente.style.display = 'none';
+        });
+    </script>
+    
 {% endblock %}
