@@ -16,7 +16,7 @@
     </nav>
 
     <div class="container mt-5">
-        <div id="nuevoComponente" class="componente-con-borde" style="display: none;">
+        <div id="newPushNotification" class="componente-con-borde" style="display: none;">
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Título de la notificación</label>
                 <input type="email" class="form-control" id="exampleFormControlInput1"
@@ -68,7 +68,7 @@
     <script>
         document.getElementById('crearProductoBtn').addEventListener('click', function (event) {
             event.preventDefault(); // Evita que el enlace se comporte como un enlace normal
-            var componente = document.getElementById('nuevoComponente');
+            var componente = document.getElementById('newPushNotification');
             if (componente.style.display === 'none') {
                 componente.style.display = 'block';
             } else {
@@ -78,7 +78,7 @@
 
         // Agrega un evento de clic al botón de cancelar
         document.getElementById('cancelarBtn').addEventListener('click', function () {
-            var componente = document.getElementById('nuevoComponente');
+            var componente = document.getElementById('newPushNotification');
             componente.style.display = 'none';
         });
     </script>
