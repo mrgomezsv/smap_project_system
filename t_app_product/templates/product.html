@@ -42,8 +42,8 @@
                         </label>
                     </div>
                 </form>
-                <!-- El botón y el formulario de búsqueda se mantienen igual -->
-                <a id="crearProductoBtn" href="{% url 'create_product' %}" class="btn btn-primary">Nuevo Producto</a>
+                <!-- <a id="crearProductoBtn" href="{% url 'create_product' %}" class="btn btn-primary">Nuevo Producto</a> -->
+                <a id="newProductoBtn" href="" class="btn btn-primary">Nuevo Producto</a>
                 <form class="d-flex ms-3" role="search" method="get">
                     <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
@@ -51,6 +51,35 @@
             </div>
         </div>
     </nav>
+
+    <div class="container mt-5">
+        <div id="newProductModal" class="componente-con-borde" style="display: none;">
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Título de la notificación</label>
+                <input type="email" class="form-control" id="exampleFormControlInput1"
+                       placeholder="Ingresa un titulo opcional">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Texto de la notificación</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1"
+                          placeholder="Ingresa el texto de la notificacion" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Imagen de notificación (opcional)</label>
+                <input class="form-control" type="file" id="formFile"
+                       placeholder="Ejemplo: https://tuapp.com/imagen.png">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput2" class="form-label">Nombre de la notificación</label>
+                <input type="email" class="form-control" id="exampleFormControlInput2"
+                       placeholder="Ingresa un nombre opcional">
+            </div>
+            <div class="mt-4 justify-content-end">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+                <button id="cancelarBtn" type="button" class="btn btn-danger ml-2">Cancelar</button>
+            </div>
+        </div>
+    </div>
 
     <div class="container mt-5">
         <div class="row row-cols-1 row-cols-md-4">
@@ -130,6 +159,23 @@
                     trashIcon.classList.add('d-none');
                 }
             });
+        });
+
+        
+        document.getElementById('newProductoBtn').addEventListener('click', function (event) {
+            event.preventDefault(); // Evita que el enlace se comporte como un enlace normal
+            var componente = document.getElementById('newProductModal');
+            if (componente.style.display === 'none') {
+                componente.style.display = 'block';
+            } else {
+                componente.style.display = 'none';
+            }
+        });
+
+        // Agrega un evento de clic al botón de cancelar
+        document.getElementById('cancelarBtn').addEventListener('click', function () {
+            var componente = document.getElementById('newProductModal');
+            componente.style.display = 'none';
         });
     </script>
 
