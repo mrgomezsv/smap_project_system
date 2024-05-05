@@ -13,6 +13,7 @@
             }
         </style>
     </head>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container d-flex align-items-center">
@@ -23,16 +24,6 @@
                     <i class="fas fa-trash-alt mr-2"></i>
                 </div>
                 <!-- Checkbox principal "Seleccionar" en la barra de navegación -->
-                {#                <form id="select-all-form">#}
-                {#                    {% csrf_token %}#}
-                {#                    <div class="form-check me-3">#}
-                {#                        <input class="form-check-input" type="checkbox" id="flexSelectedAll">#}
-                {#                        <label class="form-check-label" for="flexSelectedAll">#}
-                {#                            Seleccionar#}
-                {#                        </label>#}
-                {#                    </div>#}
-                {#                </form>#}
-                <!-- Utilizamos Bootstrap para espaciar el checkbox -->
                 <form id="checkbox-form" method="post" action="{% url 'process_checkbox' %}">
                     {% csrf_token %}
                     <div class="form-check me-3">
@@ -43,7 +34,6 @@
                         </label>
                     </div>
                 </form>
-                <!-- <a id="crearProductoBtn" href="{% url 'create_product' %}" class="btn btn-primary">Nuevo Producto</a> -->
                 <a id="newProductoBtn" href="" class="btn btn-primary">Nuevo Producto</a>
                 <form class="d-flex ms-3" role="search" method="get">
                     <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
@@ -54,78 +44,7 @@
     </nav>
 
     <div class="container mt-5">
-        <div id="newProductModal" class="componente-con-borde" style="display: none;">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Nombre del Principal</label>
-                        <input type="email" class="form-control" id="exampleFormControlInput1"
-                               placeholder="Ingresa un titulo opcional">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlTextarea1" class="form-label">Descripcion</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1"
-                                  placeholder="Ingresa el texto de la notificacion" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput2" class="form-label">Precio</label>
-                        <input type="number" class="form-control" id="exampleFormControlInput2" style="max-width: 150px;"
-                               placeholder="Ingresa un precio">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput2" class="form-label">Categoria</label>
-                        <input type="email" class="form-control" id="exampleFormControlInput2"
-                               placeholder="Ingresa un nombre opcional">
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                        <label class="form-check-label" for="flexCheckChecked">
-                            Checked checkbox
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Imagen de Portada</label>
-                        <input class="form-control" type="file" id="formFile"
-                               placeholder="Ejemplo: https://tuapp.com/imagen.png">
-                    </div>
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Imagen de 1</label>
-                        <input class="form-control" type="file" id="formFile"
-                               placeholder="Ejemplo: https://tuapp.com/imagen.png">
-                    </div>
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Imagen de 2</label>
-                        <input class="form-control" type="file" id="formFile"
-                               placeholder="Ejemplo: https://tuapp.com/imagen.png">
-                    </div>
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Imagen de 3</label>
-                        <input class="form-control" type="file" id="formFile"
-                               placeholder="Ejemplo: https://tuapp.com/imagen.png">
-                    </div>
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Imagen de 4</label>
-                        <input class="form-control" type="file" id="formFile"
-                               placeholder="Ejemplo: https://tuapp.com/imagen.png">
-                    </div>
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Imagen de 5</label>
-                        <input class="form-control" type="file" id="formFile"
-                               placeholder="Ejemplo: https://tuapp.com/imagen.png">
-                    </div>
-                </div>
-            </div>
-            <div class="mt-4 justify-content-end">
-                <button type="submit" class="btn btn-primary">Crear</button>
-                <button id="cancelarBtn" type="button" class="btn btn-danger ml-2">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    
-
-    <div class="container mt-5">
+        <!-- Contenido principal de la página -->
         <div class="row row-cols-1 row-cols-md-4">
             {% for product in products %}
                 <div class="col mb-4">
@@ -155,6 +74,9 @@
         </div>
     </div>
 
+    <!-- Incluye el contenido del modal desde el archivo separado -->
+    {% include 'modal_new_product.html' %}
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const checkbox = document.querySelector('#flexCheckDefault');
@@ -165,7 +87,6 @@
                 form.submit();
             });
         });
-
 
         document.addEventListener('DOMContentLoaded', function () {
             const checkbox = document.querySelector('#flexCheckDefault');
@@ -205,7 +126,6 @@
             });
         });
 
-        
         document.getElementById('newProductoBtn').addEventListener('click', function (event) {
             event.preventDefault(); // Evita que el enlace se comporte como un enlace normal
             var componente = document.getElementById('newProductModal');
