@@ -49,7 +49,10 @@
                                         <img src="{{ product.img.url }}" alt="Product Image">
                                     </div>
                                     <h5 class="card-title">{{ product.title }}</h5>
-                                    <p class="card-text">{{ product.description }}</p>
+                                    {#<p class="card-text">{{ product.description }}</p>#}
+                                    <p class="card-text">
+                                        {{ product.description|slice:":30" }}{% if product.description|length > 27 %}
+                                            ...{% endif %}</p>
                                     <p class="card-text">Precio: {{ product.price }}</p>
                                     <p class="card-text">Categoría: {{ product.get_category_display }}</p>
                                     {% if user.username == 'mrgomez' %}
