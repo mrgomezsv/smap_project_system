@@ -36,7 +36,6 @@
             </div>
         </div>
         <div class="col-md-6">
-            <!-- Espacio entre secciones -->
             <div style="margin-bottom: 1px;"></div>
             <div class="mb-3">
                 <label for="img" class="form-label">Imagen de Portada</label>
@@ -71,14 +70,14 @@
         </div>
     </div>
     <div class="mt-4 justify-content-end">
-        <button id="crearBtn" type="submit" class="btn btn-primary">Crear</button>
+        <button id="crearBtn" type="button" class="btn btn-primary">Crear</button>
         <button id="cancelarBtn" type="button" class="btn btn-danger ml-2">Cancelar</button>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('#crearBtn').click(function() {
+    $(document).ready(function () {
+        $('#crearBtn').click(function () {
             // Obtener los valores de los campos del formulario
             var title = $('#title').val();
             var description = $('#description').val();
@@ -106,6 +105,18 @@
             formData.append('img4', img4);
             formData.append('img5', img5);
 
+            // Obtener el token CSRF del cookie
+            var csrftoken = getCookie('csrftoken');
+
+            // Agregar el token CSRF como un encabezado en la solicitud AJAX
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                    }
+                }
+            });
+
             // Realizar una petición AJAX para enviar los datos del formulario al servidor
             $.ajax({
                 url: '/product/create/',
@@ -113,11 +124,11 @@
                 data: formData,
                 processData: false,
                 contentType: false,
-                success: function(response) {
+                success: function (response) {
                     // Si la creación del producto fue exitosa, redirigir a la página de productos
                     window.location.href = '/product/';
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     // Si hay un error, mostrar un mensaje de error
                     console.error(error);
                     alert('Error al crear el producto. Por favor, intenta nuevamente.');
@@ -125,4 +136,28 @@
             });
         });
     });
+
+    // Función para obtener el valor del token CSRF del cookie
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Verificar si el cookie contiene el nombre buscado
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Función para verificar si el método de solicitud es seguro para CSRF
+    function csrfSafeMethod(method) {
+        // Estos métodos de solicitud no requieren CSRF
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
 </script>
