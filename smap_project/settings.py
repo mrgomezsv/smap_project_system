@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     't_app_product',
     'api',
     'rest_framework',
+    'kidsfun_web',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'smap_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 't_app_product' / 'templates'],  # Agregar esta línea
+        'DIRS': [BASE_DIR / 'kidsfun_web' / 'templates'],  # Agregar esta línea
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
