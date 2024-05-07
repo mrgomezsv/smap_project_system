@@ -1,1 +1,31 @@
-<h1>Hola Mundo</h1>
+{% extends 'base.html' %}
+
+{% block title %}Kidsfun y Fiestas Infantiles{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <!-- Agrega aquí los enlaces CSS específicos de la página de inicio -->
+{% endblock %}
+
+{% block header %}
+    <!-- Navbar content specific to home page goes here -->
+    <nav class="navbar navbar-expand-sm">
+        <!-- Navbar code -->
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <!-- Content specific to home page goes here -->
+    <section class="home">
+        <!-- Home section content -->
+    </section>
+{% endblock %}
+
+{% block footer %}
+    <!-- Footer content -->
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <!-- Agrega aquí los enlaces JS específicos de la página de inicio -->
+{% endblock %}
