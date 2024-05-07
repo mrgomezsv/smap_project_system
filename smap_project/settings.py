@@ -127,6 +127,7 @@ STATIC_URL = '/static/'
 # Definir las rutas adicionales para buscar archivos estáticos
 STATICFILES_DIRS = [
     BASE_DIR / "t_app_product" / "static",
+    BASE_DIR / "kidsfun_web" / "static",
 ]
 
 LOGIN_URL = '/signin'
