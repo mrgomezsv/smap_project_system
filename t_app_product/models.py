@@ -18,7 +18,7 @@ class Product(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     dimensions = models.CharField(max_length=50, blank=True, null=True)  # Campo para dimensiones
     created = models.DateTimeField(auto_now_add=True)
-    important = models.BooleanField(default=False)
+    puclicated = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, related_name='t_app_products')
 
     img1 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')

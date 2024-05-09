@@ -34,9 +34,9 @@
                        placeholder="Ingresa 13x10">
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="important" id="important" name="important">
-                <label class="form-check-label" for="important">
-                    Producto Importante
+                <input class="form-check-input" type="checkbox" value="puclicated " id="puclicated " name="puclicated ">
+                <label class="form-check-label" for="puclicated ">
+                    Producto Publicado
                 </label>
             </div>
         </div>
@@ -88,7 +88,7 @@
             var description = $('#description').val();
             var price = $('#price').val();
             var category = $('#category').val();
-            var important = $('#important').prop('checked');
+            var puclicated  = $('#puclicated ').prop('checked');
             var img = $('#img').prop('files')[0];
             var img1 = $('#img1').prop('files')[0];
             var img2 = $('#img2').prop('files')[0];
@@ -102,7 +102,7 @@
             formData.append('description', description);
             formData.append('price', price);
             formData.append('category', category);
-            formData.append('important', important);
+            formData.append('puclicated ', puclicated );
             formData.append('img', img);
             formData.append('img1', img1);
             formData.append('img2', img2);
