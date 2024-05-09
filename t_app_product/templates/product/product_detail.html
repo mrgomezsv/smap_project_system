@@ -23,9 +23,9 @@
                                     <img id="mainImage" src="{{ product.img.url }}" alt="Imagen de Producto"
                                         class="card-img-top" style="width: 100%; border-radius: 20px;">
                                 </div>
-                                <div class="form-group mb-3">
-                                    <label for="img_change" class="form-label visually-hidden">Cambiar:</label>
-                                    {{ form.img }}
+                                <div class="input-group mb-3">
+                                    <input type="file" class="form-control" id="img_change" name="img_change">
+                                    <label class="input-group-text" for="img_change">Seleccionar Imagen</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -49,8 +49,10 @@
                                         onclick="showPreviewImage(this)">
                                 </div>
                                 <p>Actualmente: {{ image.current_status }}</p>
-                                <label for="img{{ forloop.counter }}" class="form-label visually-hidden">Cambiar:</label>
-                                <input type="file" id="img{{ forloop.counter }}" name="img{{ forloop.counter }}">
+                                <div class="input-group mb-3">
+                                    <input type="file" class="form-control" id="img{{ forloop.counter }}" name="img{{ forloop.counter }}">
+                                    <label class="input-group-text" for="img{{ forloop.counter }}">Seleccionar Imagen</label>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
