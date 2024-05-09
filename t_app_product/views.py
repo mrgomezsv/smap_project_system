@@ -20,7 +20,7 @@ def home(request):
 
 def signin(request):
     if request.method == 'GET':
-        return render(request, 'signin.html', {'form': AuthenticationForm()})
+        return render(request, 'login/signin.html', {'form': AuthenticationForm()})
     else:
         username = request.POST['username']
         password = request.POST['password']
@@ -38,12 +38,12 @@ def signin(request):
                     'product')  # Redirigir a la página de producto si el usuario es autenticado correctamente
             else:
                 error_message = 'Username or password is incorrect'
-                return render(request, 'signin.html', {'form': AuthenticationForm(), 'error': error_message})
+                return render(request, 'login/signin.html', {'form': AuthenticationForm(), 'error': error_message})
 
 
 def signup(request):
     if request.method == "GET":
-        return render(request, "signup.html", {"form": CustomUserCreationForm()})
+        return render(request, "login/signup.html", {"form": CustomUserCreationForm()})
     else:
         if request.POST["password1"] == request.POST["password2"]:
             try:
@@ -60,13 +60,13 @@ def signup(request):
             except IntegrityError:
                 return render(
                     request,
-                    "signup.html",
+                    "login/signup.html",
                     {"form": CustomUserCreationForm(), "error": "User already exists"},
                 )
         else:
             return render(
                 request,
-                "signup.html",
+                "login/signup.html",
                 {"form": CustomUserCreationForm(), "error": "Passwords do not match"},
             )
 
@@ -90,13 +90,13 @@ def product(request):
         # products = Product.objects.filter(user=request.user)  # Comentario: Se elimina la filtración por usuario
         products = Product.objects.all()  # Comentario: Se seleccionan todos los productos
 
-    return render(request, 'product.html', {'products': products})
+    return render(request, 'product/product.html', {'products': products})
 
 
 @login_required
 def create_product(request):
     if request.method == 'GET':
-        return render(request, 'create_product.html', {'form': ProductForm()})
+        return render(request, 'product/create_product.html', {'form': ProductForm()})
     else:
         try:
             form = ProductForm(request.POST, request.FILES)
@@ -105,7 +105,7 @@ def create_product(request):
             new_product.save()
             return redirect('product')
         except ValueError:
-            return render(request, 'create_product.html', {
+            return render(request, 'product/create_product.html', {
                 'form': ProductForm(),
                 'error': 'Please provide valid data'
             })
@@ -124,7 +124,7 @@ def product_detail(request, product_id):
         additional_images = [getattr(product, f'img{i}') for i in range(1, 6)]
 
         # Renderiza la página de detalle del producto con el formulario, el producto y las imágenes adicionales
-        return render(request, 'product_detail.html',
+        return render(request, 'product/product_detail.html',
                       {'product': product, 'form': form, 'additional_images': additional_images})
     else:
         try:
@@ -145,7 +145,7 @@ def product_detail(request, product_id):
             return redirect('product')
         except ValueError:
             # Si ocurre algún error, muestra un mensaje de error en la página de detalle del producto
-            return render(request, 'product_detail.html',
+            return render(request, 'product/product_detail.html',
                           {'product': product, 'form': form, 'error': "Error updating product"})
 
 
@@ -211,7 +211,7 @@ def disclaimer(request):
 
 @login_required
 def redirect_productc(request):
-    return render(request, 'productc.html')
+    return render(request, 'product/productc.html')
 
 
 @login_required
@@ -257,7 +257,7 @@ def productc(request):
             categorized_products[product.category] = []
         categorized_products[product.category].append(product)
 
-    return render(request, 'productc.html', {'products': categorized_products})
+    return render(request, 'product/productc.html', {'products': categorized_products})
 
 
 def is_mrgomez(user):
@@ -268,4 +268,4 @@ def is_mrgomez(user):
 @user_passes_test(is_mrgomez)
 def sudo_admin(request):
     users = User.objects.all()
-    return render(request, 'sudo_admin.html', {'users': users})
+    return render(request, 'sudo/sudo_admin.html', {'users': users})

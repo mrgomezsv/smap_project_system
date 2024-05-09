@@ -1,26 +1,21 @@
 /* footer.css */
 
+html, body {
+    height: 100%; /* Asegura que el cuerpo y el HTML ocupen toda la altura de la ventana */
+    margin: 0; /* Elimina los márgenes predeterminados */
+    padding: 0; /* Elimina el relleno predeterminado */
+    display: flex; /* Usa flexbox para organizar el contenido */
+    flex-direction: column; /* Organiza el contenido en una columna */
+}
+
+.content-container {
+    flex: 1; /* Hace que el contenido-container ocupe todo el espacio disponible */
+}
+
 .footer {
+    flex-shrink: 0; /* Evita que el footer se reduzca en tamaño */
     background-color: #ffffff; /* Color de fondo del footer */
     color: #42444e; /* Color del texto del footer */
     padding: 20px; /* Espaciado interior del footer */
     text-align: center; /* Alineación del texto al centro */
-}
-
-.footer a {
-    color: #42444e; /* Color de los enlaces dentro del footer */
-    text-decoration: none; /* Quita el subrayado de los enlaces */
-    margin: 0 10px; /* Margen entre los enlaces */
-}
-
-.footer a:hover {
-    color: #2db34a; /* Color de los enlaces al pasar el mouse */
-}
-
-.footer div {
-    margin-bottom: 20px; /* Espacio entre el contenido del footer y el texto de copyright */
-}
-
-.footer div:last-child {
-    margin-bottom: 0; /* Elimina el margen inferior del último elemento dentro del footer */
 }
