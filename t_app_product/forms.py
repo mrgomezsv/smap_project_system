@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['title', 'description', 'price', 'category', 'important', 'img', 'img1', 'img2', 'img3', 'img4', 'img5']
+        fields = ['title', 'description', 'price', 'category', 'important', 'img', 'img1', 'img2', 'img3', 'img4', 'img5',  'dimensions']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'required':True}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'required':True}),
@@ -14,6 +14,7 @@ class ProductForm(forms.ModelForm):
             'category': forms.Select(attrs={'class': 'form-control', 'required':True}),
             'important': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'img': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+            'dimensions': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 
