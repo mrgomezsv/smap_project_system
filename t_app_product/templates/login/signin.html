@@ -12,7 +12,7 @@
         <form action="{% url 'signin' %}" method="POST" class="my-form" id="signin-form">
             {% csrf_token %}
             <div class="login-welcome-row">
-                <h1>Login your account in <br> you SMAP&#x1F44F;</h1>
+                <h1>Accede a tu cuenta en <br>SMAP&#x1F44F;</h1>
             </div>
             <div class="divider">
                 <span class="divider-line"></span>
@@ -20,7 +20,7 @@
                 <span class="divider-line"></span>
             </div>
             <div class="text-field">
-                <label for="username">Username:
+                <label for="username">Usuario:
                     <input type="text" id="username" name="username" autocomplete="off" placeholder="Your Username" required>
                     <!-- SVG icon for username -->
                 </label>
@@ -36,8 +36,8 @@
             <button class="my-form__button" type="submit">Login</button>
             <div class="my-form__actions">
                 <div class="my-form__row">
-                    <span>Don't have an account? </span>
-                    <a href="{% url 'signup' %}" title="Create Account">Create Account</a>
+                    <span>No tiene cuenta?</span>
+                    <a href="{% url 'signup' %}" title="Create Account">Crear Cuenta</a>
                 </div>
             </div>
         </form>
@@ -45,9 +45,8 @@
     <div class="info-side">
         <img src="{% static 'assets/mock.png' %}" alt="Mock" class="mockup"/>
         <div class="welcome-message">
-            <h2>Welcome to DevCode 👋</h2>
-            <p>Your ultimate guide to effortlessly exploring the dynamic realm of software development and
-                programming.</p>
+            <h2>Bienvenido a SMAP  👋</h2>
+            <p>Sistema de Manejo de Aplicaciones Móviles.</p>
         </div>
     </div>
 </div>
