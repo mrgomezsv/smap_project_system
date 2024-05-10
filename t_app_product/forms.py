@@ -7,6 +7,15 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['title', 'description', 'price', 'category', 'dimensions', 'publicated', 'img', 'img1', 'img2', 'img3', 'img4', 'img5']
+        labels = {
+            'title': 'Título',
+            'description': 'Descripción',
+            'price': 'Precio',
+            'category': 'Categoría',
+            'dimensions': 'Dimensiones',
+            'publicated': 'Publicado',
+        }
+
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'required':True}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'required':True}),
