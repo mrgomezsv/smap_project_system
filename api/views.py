@@ -18,5 +18,9 @@ from .serializers import ProductSerializer
 
 
 class ProductListCreate(generics.ListAPIView):  # Cambia ListCreateAPIView a ListAPIView
-    queryset = Product.objects.all()
+    #queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        # Filtra los productos para mostrar solo aquellos que están publicados
+        return Product.objects.filter(publicated=True)
