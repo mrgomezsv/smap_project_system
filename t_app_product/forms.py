@@ -6,15 +6,15 @@ from django.contrib.auth.models import User
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['title', 'description', 'price', 'category', 'puclicated', 'img', 'img1', 'img2', 'img3', 'img4', 'img5',  'dimensions']
+        fields = ['title', 'description', 'price', 'category', 'dimensions', 'publicated', 'img', 'img1', 'img2', 'img3', 'img4', 'img5']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'required':True}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'required':True}),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'required':True}),
             'category': forms.Select(attrs={'class': 'form-control', 'required':True}),
-            'puclicated': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'img': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
             'dimensions': forms.TextInput(attrs={'class': 'form-control'}),
+            'publicated': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'img': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
         }
 
 
