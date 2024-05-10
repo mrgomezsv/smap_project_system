@@ -20,25 +20,22 @@ def home(request):
 
 def signin(request):
     if request.method == 'GET':
-        return render(request, 'login/signin.html', {'form': AuthenticationForm()})
+        form = AuthenticationForm()
+        return render(request, 'login/signin.html', {'form': form})
     else:
-        username = request.POST['username']
-        password = request.POST['password']
-
-        # Verificar si el usuario y la contraseña coinciden con los valores específicos
-        # if username == 'wletona' and password == 'Karin2100':
-        if username == 'create':
-            return redirect('signup')  # Redirigir a signup.html si las credenciales son correctas
-        else:
-            # Autenticar al usuario normalmente si las credenciales no son las específicas
-            user = authenticate(request, username=username, password=password)
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect(
-                    'product')  # Redirigir a la página de producto si el usuario es autenticado correctamente
+                return redirect('product')  # Asegúrate de que 'product' esté definido en tus URLs
             else:
                 error_message = 'Username or password is incorrect'
-                return render(request, 'login/signin.html', {'form': AuthenticationForm(), 'error': error_message})
+                return render(request, 'login/signin.html', {'form': form, 'error': error_message})
+        else:
+            return render(request, 'login/signin.html', {'form': form})
 
 
 def signup(request):

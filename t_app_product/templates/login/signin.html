@@ -1,47 +1,56 @@
-{#{% extends 'base.html' %}#}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-{% block content %}
+{# load static #}
+<head>
+    <meta charset="UTF-8">
     {% load static %}
-    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}">
-    <main class="container">
-        <div class="row">
-            <div class="col-md-4 offset-md-4 mt-5">
-                <div class="mt-5">
-                    <div class="mt-5">
-                        <div class="mt-5">
-                            <h1 class="mt-5">Please sign in</h1>
-
-                            <form action="/signin/" method="POST" class="card card-body mt-5">
-
-                                <h1 class="text-center">Login</h1>
-
-                                {{ error }}
-                                {% csrf_token %}
-
-                                <div class="mb-3">
-                                    <label for="username">Username:</label>
-                                    <input type="text" name="username" class="form-control" id="username"
-                                           placeholder="Escribe tu Usuario">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="password">Password:</label>
-                                    <input type="password" name="password" class="form-control" id="password"
-                                           placeholder="Escribe tu Password">
-                                </div>
-
-                                <button class="btn btn-primary" type="submit">
-                                    Signin
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <p>© 2024</p>
+    <title>SMAP Application - Login</title>
+    <link rel="shortcut icon" href="{% static 'asset/favicon.jpg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/singin.css' %}">
+</head>
+<body>
+<div class="form-wrapper">
+    <div class="form-side">
+        <form action="{% url 'signin' %}" method="POST" class="my-form" id="signin-form">
+            {% csrf_token %}
+            <div class="login-welcome-row">
+                <h1>Login your account in <br> you SMAP&#x1F44F;</h1>
             </div>
+            <div class="divider">
+                <span class="divider-line"></span>
+                X
+                <span class="divider-line"></span>
+            </div>
+            <div class="text-field">
+                <label for="username">Username:
+                    <input type="text" id="username" name="username" autocomplete="off" placeholder="Your Username" required>
+                    <!-- SVG icon for username -->
+                </label>
+            </div>
+            <div class="text-field">
+                <label for="password">Password:
+                    <input id="password" type="password" name="password" placeholder="Your Password"
+                           title="Minimum 6 characters at least 1 Alphabet and 1 Number"
+                           pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" required>
+                    <!-- SVG icon for password -->
+                </label>
+            </div>
+            <button class="my-form__button" type="submit">Login</button>
+            <div class="my-form__actions">
+                <div class="my-form__row">
+                    <span>Don't have an account? </span>
+                    <a href="{% url 'signup' %}" title="Create Account">Create Account</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="info-side">
+        <img src="{% static 'assets/mock.png' %}" alt="Mock" class="mockup"/>
+        <div class="welcome-message">
+            <h2>Welcome to DevCode 👋</h2>
+            <p>Your ultimate guide to effortlessly exploring the dynamic realm of software development and
+                programming.</p>
         </div>
-        </div>
-    </main>
-{% endblock %}
+    </div>
+</div>
+<script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
