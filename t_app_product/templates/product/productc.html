@@ -1,102 +1,103 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <head>
-        {% load static %}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
-    </head>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container d-flex align-items-center">
-            <h1 class="h2">Productos</h1>
-            <div class="d-flex ml-auto">
-                <!-- Utilizamos Bootstrap para espaciar el checkbox -->
-                <form id="checkbox-form" method="post" action="{% url 'process_checkbox' %}">
-                    {% csrf_token %}
-                    <div class="form-check me-3">
-                        <input class="form-check-input" type="checkbox" value="true" name="checkbox_state"
-                               id="flexCheckDefault" checked> <!-- Marcado como true por defecto -->
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Categorias
-                        </label>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
+</head>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container d-flex align-items-center">
+        <h1 class="h2">Productos</h1>
+        <div class="d-flex ml-auto">
+            <!-- Utilizamos Bootstrap para espaciar el checkbox -->
+            <form id="checkbox-form" method="post" action="{% url 'process_checkbox' %}">
+                {% csrf_token %}
+                <div class="form-check me-3">
+                    <input class="form-check-input" type="checkbox" value="true" name="checkbox_state"
+                           id="flexCheckDefault" checked> <!-- Marcado como true por defecto -->
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Categorias
+                    </label>
+                </div>
+            </form>
+            <!-- El botón y el formulario de búsqueda se mantienen igual -->
+            <!-- <a id="crearProductoBtn" href="{% url 'create_product' %}" class="btn btn-primary">Nuevo Producto</a> -->
+            <a id="newProductoBtn" href="" class="btn btn-primary">Nuevo Producto</a>
+            <form class="d-flex ms-3" role="search" method="get">
+                <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- Incluye el contenido del modal desde el archivo separado -->
+{% include 'modal/modal_new_product.html' %}
+
+<div class="container mt-5">
+    {% if products %}
+    {% for category, products_in_category in products.items %}
+    <h3>{{ products_in_category.0.get_category_display }}</h3> <!-- Título de la categoría -->
+    <div class="row row-cols-1 row-cols-md-4">
+        {% for product in products_in_category %}
+        <div class="col mb-4">
+            <div class="card h-100 d-flex flex-column flex-fill">
+                <div class="card-body d-flex flex-column">
+                    <div class="image-container">
+                        <img src="{{ product.img.url }}" alt="Product Image">
                     </div>
-                </form>
-                <!-- El botón y el formulario de búsqueda se mantienen igual -->
-                <!-- <a id="crearProductoBtn" href="{% url 'create_product' %}" class="btn btn-primary">Nuevo Producto</a> -->
-                <a id="newProductoBtn" href="" class="btn btn-primary">Nuevo Producto</a>
-                <form class="d-flex ms-3" role="search" method="get">
-                    <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    {#<p class="card-text">{{ product.description }}</p>#}
+                    <p class="card-text">
+                        {{ product.description|slice:":27" }}{% if product.description|length > 27 %}
+                        ...{% endif %}</p>
+                    <p class="card-text">Precio: {{ product.price }}</p>
+                    <p class="card-text">Categoría: {{ product.get_category_display }}</p>
+                    <p class="card-text">Dimensiones: {{ product.dimensions|default:'-' }}</p>
+                    <p class="card-text">Estado: {% if product.publicated %}Publicado{% else %}Creado{% endif %}</p>
+                    {% if user.username == 'mrgomez' %}
+                    <p class="card-text">Usuario: {{ product.user.username }}</p>
+                    {% endif %}
+                    <a href="{% url 'product_detail' product.id %}" class="btn btn-primary mt-auto">Ver
+                        Detalles</a>
+                </div>
             </div>
         </div>
-    </nav>
-
-    <!-- Incluye el contenido del modal desde el archivo separado -->
-    {% include 'modal/modal_new_product.html' %}
-
-    <div class="container mt-5">
-        {% if products %}
-            {% for category, products_in_category in products.items %}
-                <h3>{{ products_in_category.0.get_category_display }}</h3> <!-- Título de la categoría -->
-                <div class="row row-cols-1 row-cols-md-4">
-                    {% for product in products_in_category %}
-                        <div class="col mb-4">
-                            <div class="card h-100 d-flex flex-column flex-fill">
-                                <div class="card-body d-flex flex-column">
-                                    <div class="image-container">
-                                        <img src="{{ product.img.url }}" alt="Product Image">
-                                    </div>
-                                    <h5 class="card-title">{{ product.title }}</h5>
-                                    {#<p class="card-text">{{ product.description }}</p>#}
-                                    <p class="card-text">
-                                        {{ product.description|slice:":27" }}{% if product.description|length > 27 %}
-                                            ...{% endif %}</p>
-                                    <p class="card-text">Precio: {{ product.price }}</p>
-                                    <p class="card-text">Categoría: {{ product.get_category_display }}</p>
-                                    <p class="card-text">Dimensiones: {{ product.dimensions|default:'-' }}</p>
-                                    {% if user.username == 'mrgomez' %}
-                                        <p class="card-text">Usuario: {{ product.user.username }}</p>
-                                    {% endif %}
-                                    <a href="{% url 'product_detail' product.id %}" class="btn btn-primary mt-auto">Ver
-                                        Detalles</a>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No hay productos disponibles.</p>
-        {% endif %}
+        {% endfor %}
     </div>
+    {% endfor %}
+    {% else %}
+    <p>No hay productos disponibles.</p>
+    {% endif %}
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const checkbox = document.querySelector('#flexCheckDefault');
-            const form = document.querySelector('#checkbox-form');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkbox = document.querySelector('#flexCheckDefault');
+        const form = document.querySelector('#checkbox-form');
 
-            checkbox.addEventListener('change', function () {
-                // Envía automáticamente el formulario cuando el estado del checkbox cambia
-                form.submit();
-            });
+        checkbox.addEventListener('change', function () {
+            // Envía automáticamente el formulario cuando el estado del checkbox cambia
+            form.submit();
         });
+    });
 
-        document.getElementById('newProductoBtn').addEventListener('click', function (event) {
-            event.preventDefault(); // Evita que el enlace se comporte como un enlace normal
-            var componente = document.getElementById('newProductModal');
-            if (componente.style.display === 'none') {
-                componente.style.display = 'block';
-            } else {
-                componente.style.display = 'none';
-            }
-        });
-
-        // Agrega un evento de clic al botón de cancelar
-        document.getElementById('cancelarBtn').addEventListener('click', function () {
-            var componente = document.getElementById('newProductModal');
+    document.getElementById('newProductoBtn').addEventListener('click', function (event) {
+        event.preventDefault(); // Evita que el enlace se comporte como un enlace normal
+        var componente = document.getElementById('newProductModal');
+        if (componente.style.display === 'none') {
+            componente.style.display = 'block';
+        } else {
             componente.style.display = 'none';
-        });
-    </script>
+        }
+    });
+
+    // Agrega un evento de clic al botón de cancelar
+    document.getElementById('cancelarBtn').addEventListener('click', function () {
+        var componente = document.getElementById('newProductModal');
+        componente.style.display = 'none';
+    });
+</script>
 {% endblock %}

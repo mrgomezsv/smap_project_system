@@ -66,6 +66,7 @@
                             <p class="card-text">Precio: {{ product.price }}</p>
                             <p class="card-text">Categoría: {{ product.get_category_display }}</p>
                             <p class="card-text">Dimensiones: {{ product.dimensions|default:'-' }}</p>
+                            <p class="card-text">Estado: {% if product.publicated %}Publicado{% else %}Creado{% endif %}</p>
                             {% if user.username == 'mrgomez' %}
                                 <p class="card-text">Usuario: {{ product.user.username }}</p>
                             {% endif %}
