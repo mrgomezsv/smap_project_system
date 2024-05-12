@@ -66,28 +66,31 @@
                                     formaction="{% url 'delete_product' product.id %}">Eliminar Producto
                             </button>
                         </div>
-                        <!-- Agrega esto al final de tu plantilla -->
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+            <!-- Agrega esto al final de tu plantilla -->
                         <div class="modal-dialog modal-dialog-centered custom-modal-width" id="commentModal"
                              style="display: block;">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="commentModalLabel">Comentar sobre {{ product.title }}</h5>
-                                    <!-- No necesitas el botón de cerrar si el área de comentarios es estática -->
                                 </div>
                                 <div class="modal-body">
                                     <textarea class="form-control mb-3" id="commentText" rows="3"
-                                              placeholder="Escribe tu comentario aquí"></textarea>
-                                    <!-- Puedes agregar más campos aquí si es necesario -->
+                                              placeholder="Postea un comentario sobre este producto"
+                                              oninput="checkInput()"></textarea>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" onclick="submitComment()">Publicar
+                                    <button type="button" class="btn btn-primary" id="submitButton"
+                                            onclick="submitComment()" disabled>Publicar
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </form>
                 </div>
-            </div>
         </div>
     </div>
 </main>
@@ -119,6 +122,25 @@
     function closePreview() {
         var previewImageContainer = document.getElementById('previewImageContainer');
         previewImageContainer.style.display = 'none';
+    }
+
+
+    // Comentarios en los productos
+        function checkInput() {
+        var commentText = document.getElementById('commentText').value;
+        var submitButton = document.getElementById('submitButton');
+
+        // Habilitar el botón si hay texto, deshabilitarlo si no hay texto
+        if (commentText.trim() !== '') {
+            submitButton.disabled = false;
+        } else {
+            submitButton.disabled = true;
+        }
+    }
+
+    function submitComment() {
+        // Lógica para enviar el comentario
+        alert("Comentario enviado: " + document.getElementById('commentText').value);
     }
 </script>
 {% endblock %}
