@@ -73,19 +73,26 @@ def product(request):
     query = request.GET.get('q')
     category = request.GET.get('category')
 
-    # Filtrar productos por nombre y/o categoría si hay consultas de búsqueda
+    # Filtrar productos por nombre, categoría y/o estado de publicación si hay consultas de búsqueda
     if query or category:
-        # products = Product.objects.filter(user=request.user)  # Comentario: Se elimina la filtración por usuario
-        products = Product.objects.all()  # Comentario: Se seleccionan todos los productos
+        products = Product.objects.all()  # Selecciona todos los productos
 
         if query:
-            products = products.filter(Q(title__icontains=query) | Q(description__icontains=query))
+            # Verificar si el texto de búsqueda contiene "publicado" o "creado"
+            if "publicado" in query.lower():
+                products = products.filter(publicated=True)
+            elif "creado" in query.lower():
+                products = products.filter(publicated=False)
+
+            # Continuar con la búsqueda por título y descripción si no se encontraron coincidencias de estado
+            else:
+                products = products.filter(Q(title__icontains=query) | Q(description__icontains=query))
+
         if category:
-            products = products.filter(category=category)
+            products = products.filter(category=category)  # Filtra por categoría
+
     else:
-        # Si no hay consulta, mostrar todos los productos del usuario
-        # products = Product.objects.filter(user=request.user)  # Comentario: Se elimina la filtración por usuario
-        products = Product.objects.all()  # Comentario: Se seleccionan todos los productos
+        products = Product.objects.all()  # Muestra todos los productos si no hay consulta
 
     return render(request, 'product/product.html', {'products': products})
 
