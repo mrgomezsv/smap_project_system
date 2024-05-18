@@ -1,0 +1,47 @@
+/* Estilos para el encabezado */
+        .pt-5 {
+            padding-top: 5rem; /* Ajusta el valor según sea necesario */
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-red {
+            color: #f00;
+        }
+
+        .text-orange {
+            color: #f90;
+        }
+
+        .text-yellow {
+            color: #fcb900;
+        }
+
+        .text-blue {
+            color: #2855e9;
+        }
+
+        .text-violet {
+            color: #c751c0;
+        }
+
+        /* Estilos para la sección "About" */
+        .padding-section {
+            padding: 100px 0; /* Ajusta el valor según sea necesario */
+        }
+
+        .section-about h2 {
+            font-size: 2.5rem; /* Ajusta el tamaño del título según sea necesario */
+            color: #f90; /* Color del texto del título */
+        }
+
+        .section-about p {
+            font-size: 1.25rem; /* Ajusta el tamaño del texto según sea necesario */
+            color: #000; /* Color del texto */
+        }
+
+        .img img {
+            width: 100%; /* Ajusta el ancho de la imagen según sea necesario */
+        }
