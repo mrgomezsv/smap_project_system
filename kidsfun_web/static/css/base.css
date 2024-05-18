@@ -1,0 +1,276 @@
+/* CSS para el base.html */
+        /*--------------------------------------------
+        font
+        ----------------------------------------------*/
+        @import url("https://fonts.googleapis.com/css2?family=Titan+One&display=swap");
+        @import url("https://fonts.googleapis.com/css2?family=Titan+One&family=Varela+Round&display=swap");
+
+        body {
+            font-family: "Titan One", cursive;
+        }
+
+        :root {
+            --color-yellow-menu: #f5a91b;
+            --color-green: #00d084;
+            --color-yellow: #fcb900;
+            --color-red: #f00;
+            --color-violeta: #c751c0;
+            --color-darkgreen: #305e27;
+            --color-lightblue: #2855e9;
+            --color-gray: #f5f3f3;
+
+            --color-footer: #0a1844;
+        }
+
+        .line-cloud {
+            width: 100%;
+            padding-top: 130px;
+            overflow: hidden;
+        }
+
+        .menu .navbar .backround {
+            position: absolute;
+            width: 110%;
+            top: 50%;
+            left: -5%;
+            transform: translateY(-50%);
+        }
+
+        .menu .navbar .backround img {
+            width: 100%;
+        }
+
+        .menu .navbar {
+            background-color: var(--color-yellow-menu);
+        }
+
+        .menu .navbar-toggler i {
+            color: #fff;
+            font-size: 40px;
+        }
+
+        .menu .navbar-toggler:focus {
+            box-shadow: 0 0 0 0;
+        }
+
+        .menu .navbar-brand {
+            height: 150px;
+        }
+
+        .menu .navbar-brand img {
+            height: 100%;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 20px;
+            color: var(--color-yellow-menu);
+            position: relative;
+            transition: all .4s;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--color-violeta);
+            transform: translateY(-10%);
+        }
+
+        /*---------------------------------
+        home section
+        -----------------------------------*/
+        .home {
+            min-height: 110vh;
+            position: relative;
+            z-index: 10;
+            background-color: #000;
+            padding-top: 20%;
+            z-index: 15;
+            overflow: hidden;
+        }
+
+        .home::after {
+            content: "";
+            position: absolute;
+            background-image: url("../img/home/banerV2.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            bottom: 0;
+            z-index: -1;
+            opacity: .4;
+        }
+
+        .home .carousel {
+            position: relative;
+            z-index: 25;
+        }
+
+        .home .carousel-indicators .active {
+            background-color: var(--color-yellow);
+            opacity: 1;
+        }
+
+        .home .carousel .carousel-indicators {
+            position: absolute;
+            right: 0;
+            bottom: -15%;
+            left: 0;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin-right: 15%;
+            margin-bottom: 0;
+            margin-left: 15%;
+            border-radius: 10px !important;
+        }
+
+        .home .carousel-indicators [data-bs-target] {
+            height: 5px;
+            width: 25px;
+        }
+
+        .home h1 {
+            font-size: 60px;
+        }
+
+        .home p {
+            font-size: 20px;
+            color: #d8d2d2;
+        }
+
+        .home .carousel-item {
+            overflow: hidden;
+        }
+
+        .home .carousel .col-lg-3 {
+            margin-right: 20px;
+            margin-left: 20px;
+            width: 25%;
+        }
+
+        .carousel .card {
+            width: 100%;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .carousel .card img {
+            width: 100%;
+            object-fit: cover;
+            height: 100%;
+        }
+
+        .divisor {
+            width: 100%;
+            height: 100px;
+            background-color: #427239;
+            clip-path: ellipse(71% 84% at 51% 14%);
+        }
+
+        /*---------------------------------
+        menu section
+        ----------------------------------*/
+        .menu {
+            position: absolute;
+            width: 100%;
+            z-index: 26;
+        }
+
+        .menu .nav {
+            position: relative;
+        }
+
+        .menu .nav .backround {
+            position: absolute;
+            width: 110%;
+            top: 50%;
+            left: -5%;
+            transform: translateY(-50%);
+        }
+
+        .menu .nav .backround img {
+            width: 100%;
+        }
+
+        .menu .navbar {
+            background-color: var(--color-yellow-menu);
+        }
+
+        .menu .navbar-toggler i {
+            color: #fff;
+            font-size: 40px;
+        }
+
+        .menu .navbar-toggler:focus {
+            box-shadow: 0 0 0 0;
+        }
+
+        .menu .navbar-brand {
+            height: 150px;
+        }
+
+        .menu .navbar-brand img {
+            height: 100%;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 20px;
+            color: var(--color-yellow-menu);
+            position: relative;
+            transition: all .4s;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--color-violeta);
+            transform: translateY(-10%);
+        }
+
+        /*---------------------------------------
+        footer section
+        ----------------------------------------*/
+        .divisor-2 {
+            width: 100%;
+            height: 100px;
+            background-color: var(--color-footer);
+            clip-path: ellipse(100% 68% at 7% 82%);
+        }
+
+        footer {
+            background-color: var(--color-footer);
+        }
+
+        footer a {
+            display: block;
+            font-size: 40px;
+            text-align: center;
+            width: 40px;
+            margin: auto;
+            transition: all 0.4s;
+        }
+
+        footer .fac {
+            color: var(--color-lightblue);
+        }
+
+        footer .ins {
+            color: var(--color-violeta);
+        }
+
+        footer .wha {
+            color: var(--color-green);
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+
+        footer p,
+        footer .power {
+            color: #fff;
+            font-family: "Varela Round", sans-serif;
+            margin-bottom: 0;
+            font-size: 18px;
+            cursor: pointer;
+        }
