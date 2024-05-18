@@ -10,7 +10,7 @@ from api.views import ProductListCreate
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('kidsfun_web.urls')),  # Actualiza la URL principal
-    # path('', views.home, name='home'),
+    path('about_smap/', views.about_smap, name='about_smap'),
     path('signup/', views.signup, name='signup'),
     path('product/', views.product, name='product'),
     path('logout/', views.signout, name='logout'),
