@@ -61,6 +61,7 @@ TEMPLATES = [
             BASE_DIR / 't_app_product' / 'templates' / 'home',
             BASE_DIR / 't_app_product' / 'templates' / 'push_notificated',  # Agrega esta línea para cada directorio
             BASE_DIR / 't_app_product' / 'templates' / 'other_service',
+            BASE_DIR / 't_app_product' / 'templates' / 'firebase_auth',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
