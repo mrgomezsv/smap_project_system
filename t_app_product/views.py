@@ -268,7 +268,7 @@ def productc(request):
 
     return render(request, 'product/productc.html', {'products': categorized_products})
 
-@login_required
+
 def is_mrgomez(user):
     return user.username == 'mrgomez'
 
