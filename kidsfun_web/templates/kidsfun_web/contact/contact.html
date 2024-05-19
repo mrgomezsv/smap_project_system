@@ -1,6 +1,121 @@
 {% extends 'kidsfun_web/base.html' %}
 
 {% block content %}
+
+<html lang="en">
+<head>
+    <title>Kidsfun y Fiestas Infantiles</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     {% load static %}
-    <h1>CONTACT</h1>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"/> <!-- Asegúrate de que este archivo exista y contenga tus estilos -->
+    <link rel="icon" href="{% static 'img/favicon/favicon-16x16.png' %}" type="image/x-icon"/>
+</head>
+
+<body>
+<header class="menu">
+    <!-- Header content -->
+</header>
+
+<!-- Resto de tu contenido HTML -->
+
+    <!----------------------------------section form ------------------------>
+    <section class="section-form padding-section">
+        <div class="container">
+            <div class="row justify-content-center align-items-center g-2">
+                <h1><span class="text-red anim_1">Contact </span><span class="text-orange anim_2">Us</span></h1>
+            </div>
+            <div class="line my-4"></div>
+            <div class="row mt-5">
+                <div class="col-12 col-sm-12 col-md-6">
+                    <div class="row justify-content-center align-items-center g-2">
+                        <h2 data-aos="fade-up">
+                            <span class="text-green">Write to us </span>
+                            <span class="text-blue">or give </span>
+                            <span class="text-violet">us a call</span>
+                        </h2>
+                        <!-- <p data-aos="fade-up" class="text-blue">1144 North Ave Nueva Rochelle, Nueva York, Estados Unidos 10804</p> -->
+                        <p data-aos="fade-up"><span class="text-violet">Tel: </span>+1 (347) 870-4240</p>
+                        <p data-aos="fade-up"><span class="text-violet">WhatsApp: </span>+1 (929) 392-6596</p>
+                        <p data-aos="fade-up"><span class="text-violet">Emails: </span>hello@kidsfunyfiestasinfantiles.com</p>
+                        <p data-aos="fade-up">sales@kidsfunyfiestasinfantiles.com</p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6">
+                    <form class="row g-3 shadow p-2 anim_4" action="./form/form.php" method="post">
+                        <div class="col-md-6">
+                            <label for="firstName" class="form-label">First name</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="lastName" class="form-label">Last name</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName">
+                        </div>
+                        <div class="col-12">
+                            <label for="contactNumber" class="form-label">Your Contact Number</label>
+                            <input type="text" class="form-control" id="contactNumber" name="contactNumber" placeholder="+1 (000) 000 - 0000">
+                        </div>
+                        <div class="col-12">
+                            <label for="email" class="form-label">Your Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="example@mail.com">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="reason" class="form-label">Reason</label>
+                            <input type="text" class="form-control" id="reason" name="reason">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-violet">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divisor-2"></div>
+    <footer class="">
+        <div class="container">
+            <div class="row justify-content-center align-items-center pb-3">
+                <div class="col-3 col-lg-1">
+                    <a class="fac" href="https://www.facebook.com/BouncehouseNY">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                </div>
+                <div class="col-3 col-lg-1">
+                    <a class="ins" href="https://www.instagram.com/kidsfunyfiestasinfantiles/">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                </div>
+                <div class="col-3 col-lg-1">
+                    <a class="wha" href="https://wa.me/3478704240">
+                        <i class="bi bi-whatsapp"></i>
+                    </a>
+                </div>
+                <div class="col-lg-8 text-center text-lg-end mt-3 mt-lg-0">
+                    <p>
+                        <span class="text-violet">Copyright &copy; </span>
+                        <span class="text-orange">Kidsfun y Fiestas Infantiles </span>
+                        <span class="text-yellow">2023 Kidsfun y </span>
+                        <span class="text-green">Fiestas Infantiles</span>
+                    </p>
+                </div>
+            </div>
+            <div class="row justify-content-center align-items-center pb-3">
+                <a href="#" class="text-end power">Power by webforallsv.com</a>
+            </div>
+        </div>
+    </footer>
+
+<footer class="">
+    <!-- Footer content -->
+</footer>
+
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+</script>
+</body>
+</html>
 {% endblock %}
