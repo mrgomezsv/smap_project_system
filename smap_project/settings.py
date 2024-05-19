@@ -147,3 +147,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configuración adicional para CSRF
 CSRF_TRUSTED_ORIGINS = ['https://smap.webcraftedsolutions.net']
 CSRF_COOKIE_SECURE = True
+
+# Asegurarse de que las cookies de sesión solo se envíen a través de HTTPS
+SESSION_COOKIE_SECURE = True
+
+# Evitar que JavaScript acceda a las cookies de sesión
+SESSION_COOKIE_HTTPONLY = True
+
+# Establecer SameSite para proteger contra ataques CSRF
+SESSION_COOKIE_SAMESITE = 'Lax'  # También puede ser 'Strict' dependiendo de tus necesidades
+
+# Opcionalmente, mantener ambas configuraciones para mayor seguridad
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expira al cerrar el navegador
+SESSION_COOKIE_AGE = 300  # Y/o expira en 5 minutos
