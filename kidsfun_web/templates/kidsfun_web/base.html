@@ -2,92 +2,96 @@
 <html lang="en">
 <head>
     <title>{% block title %}Kidsfun y Fiestas Infantiles{% endblock %}</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     {% load static %}
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/animation.css' %}">
     <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css" />
-    <link rel="icon" href="{% static 'img/home/favicon/favicon-16x16.png' %}" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css"/>
+    <link rel="icon" type="image/x-icon" href="{% static '../static/img/favicon/favicon-16x16.png' %}">
 </head>
 <body>
-    <header class="menu">
-        <nav class="navbar navbar-expand-sm">
-            <div class="container">
-                <a class="navbar-brand" href="#">
-                    <img src="{% static 'img/logo.png' %}" alt="logo"/>
-                </a>
-                <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
+<header class="menu">
+    <nav class="navbar navbar-expand-sm">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'img/logo.png' %}" alt="logo"/>
+            </a>
+            <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
                     data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false"
                     aria-label="Toggle navigation">
-                    <i class="bi bi-list"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="collapsibleNavId">
-                    <ul class="nav navbar-nav ms-auto mt-2 mt-lg-0">
-                        <div class="backround"><img src="{% static 'img/CLOUD-V2.png' %}" alt="cloud"></div>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'home' %}" aria-current="page">Home <span class="visually-hidden"></span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Products and services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Content block -->
-    {% block content %}
-    {% endblock %}
-
-    <!-- Footer -->
-    <footer class="">
-        <div class="container">
-            <div class="row justify-content-center align-items-center pb-3">
-                <div class="col-3 col-lg-1">
-                    <a class="fac" href="https://www.facebook.com/BouncehouseNY">
-                        <i class="bi bi-facebook"></i>
-                    </a>
-                </div>
-                <div class="col-3 col-lg-1">
-                    <a class="ins" href="https://www.instagram.com/kidsfunyfiestasinfantiles/">
-                        <i class="bi bi-instagram"></i>
-                    </a>
-                </div>
-                <div class="col-3 col-lg-1">
-                    <a class="wha" href="https://wa.me/3478704240">
-                        <i class="bi bi-whatsapp"></i>
-                    </a>
-                </div>
-                <div class="col-lg-8 text-center text-lg-end mt-3 mt-lg-0">
-                    <p>
-                        <span class="text-violet">Copyright &copy; </span>
-                        <span class="text-orange">Kidsfun y Fiestas Infantiles </span>
-                        <span class="text-yellow">2023 Kidsfun y </span>
-                        <span class="text-green">Fiestas Infantiles</span>
-                    </p>
-                </div>
-            </div>
-            <div class="row justify-content-center align-items-center pb-3">
-                <a href="#" class="text-end power">Power by webforallsv.com</a>
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavId">
+                <ul class="nav navbar-nav ms-auto mt-2 mt-lg-0">
+                    <div class="backround"><img src="{% static 'img/CLOUD-V2.png' %}" alt="cloud"></div>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'home' %}" aria-current="page">Home <span
+                                class="visually-hidden"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Products and services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="product/">SMAP</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
             </div>
         </div>
-    </footer>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init();
-    </script>
+    </nav>
+</header>
+
+<!-- Content block -->
+{% block content %}
+{% endblock %}
+
+<!-- Footer -->
+<footer class="">
+    <div class="container">
+        <div class="row justify-content-center align-items-center pb-3">
+            <div class="col-3 col-lg-1">
+                <a class="fac" href="https://www.facebook.com/BouncehouseNY">
+                    <i class="bi bi-facebook"></i>
+                </a>
+            </div>
+            <div class="col-3 col-lg-1">
+                <a class="ins" href="https://www.instagram.com/kidsfunyfiestasinfantiles/">
+                    <i class="bi bi-instagram"></i>
+                </a>
+            </div>
+            <div class="col-3 col-lg-1">
+                <a class="wha" href="https://wa.me/3478704240">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+            </div>
+            <div class="col-lg-8 text-center text-lg-end mt-3 mt-lg-0">
+                <p>
+                    <span class="text-violet">Copyright &copy; </span>
+                    <span class="text-orange">Kidsfun y Fiestas Infantiles </span>
+                    <span class="text-yellow">2024 Kidsfun y </span>
+                    <span class="text-green">Fiestas Infantiles</span>
+                </p>
+            </div>
+        </div>
+        <div class="row justify-content-center align-items-center pb-3">
+            <a href="https://webforallsv.com/" class="text-end power">Power by webforallsv.com</a>
+        </div>
+    </div>
+</footer>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+</script>
 </body>
 </html>
