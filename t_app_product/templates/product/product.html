@@ -44,40 +44,40 @@
     </nav>
 
     <div class="container mt-5">
-        <!-- Contenido principal de la página -->
-        <div class="row row-cols-1 row-cols-md-4">
-            {% for product in products %}
-                <div class="col mb-4">
-                    <div class="card h-100 d-flex flex-column flex-fill">
-                        <div class="card-body d-flex flex-column" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                            <div class="form-check me-3" d-none>
-                                <input class="form-check-input product-checkbox"
-                                       style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);" type="checkbox"
-                                       id="productCheckbox_{{ product.id }}">
-                            </div>
-                            <div class="image-container">
-                                <img src="{{ product.img.url }}" alt="Product Image">
-                            </div>
-                            <h5 class="card-title">{{ product.title }}</h5>
-                            {#<p class="card-text">{{ product.description }}</p>#}
-                            <p class="card-text">
-                                {{ product.description|slice:":27" }}{% if product.description|length > 27 %}
-                                    ...{% endif %}</p>
-                            <p class="card-text">Precio: {{ product.price }}</p>
-                            <p class="card-text">Categoría: {{ product.get_category_display }}</p>
-                            <p class="card-text">Dimensiones: {{ product.dimensions|default:'-' }}</p>
-                            <p class="card-text">Estado: {% if product.publicated %}Publicado{% else %}Creado{% endif %}</p>
-                            {% if user.username == 'mrgomez' %}
-                                <p class="card-text">Usuario: {{ product.user.username }}</p>
-                            {% endif %}
-                            <a href="{% url 'product_detail' product.id %}" class="btn btn-primary mt-auto">Ver
-                                Detalles</a>
+    <!-- Contenido principal de la página -->
+    <div class="row row-cols-1 row-cols-md-4">
+        {% for product in products %}
+            <div class="col mb-4">
+                <div class="card h-100 d-flex flex-column flex-fill bg-color" style="background-color: #F4F1FF; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <div class="card-body d-flex flex-column">
+                        <div class="form-check me-3" d-none>
+                            <input class="form-check-input product-checkbox"
+                                   style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);" type="checkbox"
+                                   id="productCheckbox_{{ product.id }}">
                         </div>
+                        <div class="image-container">
+                            <img src="{{ product.img.url }}" alt="Product Image">
+                        </div>
+                        <h5 class="card-title">{{ product.title }}</h5>
+                        {#<p class="card-text">{{ product.description }}</p>#}
+                        <p class="card-text">{{ product.description|slice:":27" }}{% if product.description|length > 27 %}
+                            ...{% endif %}</p>
+                        <p class="card-text">Precio: {{ product.price }}</p>
+                        <p class="card-text">Categoría: {{ product.get_category_display }}</p>
+                        <p class="card-text">Dimensiones: {{ product.dimensions|default:'-' }}</p>
+                        <p class="card-text">Estado: {% if product.publicated %}Publicado{% else %}Creado{% endif %}</p>
+                        {% if user.username == 'mrgomez' %}
+                            <p class="card-text">Usuario: {{ product.user.username }}</p>
+                        {% endif %}
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-primary mt-auto">Ver
+                            Detalles</a>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
+            </div>
+        {% endfor %}
     </div>
+</div>
+
 
     <!-- Incluye el contenido del modal desde el archivo separado -->
     {% include 'modal/modal_new_product.html' %}

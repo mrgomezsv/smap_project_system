@@ -14,7 +14,7 @@ html, body {
 
 .footer {
     flex-shrink: 0; /* Evita que el footer se reduzca en tamaño */
-    background-color: #ffffff; /* Color de fondo del footer */
+    /*  background-color: #F4F1FF; Color de fondo del footer */
     color: #42444e; /* Color del texto del footer */
     padding: 20px; /* Espaciado interior del footer */
     text-align: center; /* Alineación del texto al centro */
