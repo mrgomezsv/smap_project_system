@@ -7,20 +7,22 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     </head>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container d-flex align-items-center">
-            <h2 class="h2">Usuarios Registrados</h2>
-            <div class="d-flex ml-auto">
-                <a id="crearProductoBtn" href="{% url 'signup' %}" class="btn btn-primary">Nuevo Usuario</a>
-            </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #F4F1FF !important; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+    <div class="container d-flex align-items-center">
+        <h2 class="h2">Usuarios Registrados</h2>
+        <div class="d-flex ml-auto">
+            <a id="crearProductoBtn" href="{% url 'signup' %}" class="btn btn-primary">Nuevo Usuario</a>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <div class="container mt-5">
 
-        <table class="table">
+<body style="background-color: #F4F1FF">
+    <div class="container mt-5" style="background-color: #F4F1FF !important">
+
+        <table class="table" style="background-color: #F4F1FF !important">
             <thead>
-            <tr>
+            <tr style="background-color: #F4F1FF !important">
                 <th><input type="checkbox" id="select-all"></th> <!-- Checkbox para seleccionar todos -->
                 <th>ID</th>
                 <th>Nombre de Usuario</th>
@@ -32,7 +34,7 @@
                 <th class="trash-column"></th> <!-- Columna para el icono del bote de basura -->
             </tr>
             </thead>
-            <tbody>
+            <tbody style="background-color: #F4F1FF !important">
             {% for user in users %}
                 {% with random_boolean=user.checkbox_state %}
                     <tr>
@@ -59,6 +61,7 @@
             </tbody>
         </table>
     </div>
+</body>
 
     <script>
         function toggleTrashIconVisibility(userId) {

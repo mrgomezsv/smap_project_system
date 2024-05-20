@@ -24,6 +24,6 @@
     left: 50%; /* Centrar horizontalmente */
     transform: translate(-50%, -50%); /* Centrar */
     z-index: 999; /* Asegurar que esté encima de la tabla */
-    background-color: white; /* Color de fondo */
+    background-color: #F4F1FF; /* Color de fondo */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra */
 }
