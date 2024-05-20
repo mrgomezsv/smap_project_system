@@ -1,0 +1,102 @@
+{% extends 'kidsfun_web/base.html' %}
+
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"/>
+<section class="home">
+    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-bs-target="#carouselId" data-bs-slide-to="0" class="active" aria-current="true"
+                aria-label="First slide"></li>
+            <li data-bs-target="#carouselId" data-bs-slide-to="1" aria-label="Second slide"></li>
+            <li data-bs-target="#carouselId" data-bs-slide-to="2" aria-label="Third slide"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            <div class="carousel-item active">
+                <div class="row row-cols-1 row-cols-md-3  g-4  justify-content-center">
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="card slide-right">
+                            <img src="{% static 'img/home/img-1-removebg-preview.png' %}" class="card-img-top" alt="..." />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card slide-top">
+                            <img src="{% static 'img/home/img-2-removebg-preview.png' %}" class="card-img-top" alt="..." />
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card slide-left" data-aos="fade-left">
+                            <img src="{% static 'img/home/img-3-removebg-preview.png' %}" class="card-img-top" alt="..." />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+                    <div class="col-lg-3">
+                        <div class="card slide-right">
+                            <img src="{% static 'img/home/img-4-removebg-preview.png' %}" class="card-img-top" alt="..." />
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card slide-bottom">
+                            <img src="{% static 'img/home/img-5-removebg-preview.png' %}" class="card-img-top" alt="..." />
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card slide-left" data-aos="fade-left">
+                            <img src="{% static 'img/home/img-6.jpg' %}" class="card-img-top" alt="..." />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+                    <div class="col-lg-3">
+                        <div class="card slide-aparecer">
+                            <img src="{% static 'img/home/img-7-removebg-preview.png' %}" class="card-img-top" alt="..." />
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card slide-aparecer">
+                            <img src="{% static 'img/home/img-8-removebg-preview.png' %}" class="card-img-top" alt="..." />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center pt-5">
+        <h1 class="text-center">
+            <span class="text-red">K</span><span class="text-orange">i</span><span class="text-yellow">ds</span><span class="text-blue">fu</span><span class="text-violet">n </span>
+            <span class="text-red">y </span>
+            <span class="text-red">Fi</span><span class="text-orange">es</span><span class="text-yellow">tas </span>
+            <span class="text-blue">In</span><span class="text-violet">fa</span><span class="text-red">nt</span><span class="text-orange">il</span><span class="text-yellow">es</span>
+        </h1>
+    </div>
+        <!-- .---------------------section services------------------------- -->
+    <section class="padding-section section-about background-white">
+    <div class="container">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h2 class="section-title text-center text-md-start text-orange">About</h2>
+                <p class="text-center text-md-start">We are a company dedicated in the entertainment of children. We provide different games and activities for children and family events such as birthday parties, graduation celebrations and more!</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="img" data-aos="zoom-in-down">
+                    <img src="../static/img/home/about.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <div class="row justify-content-center pt-5">
+        <div class="col-lg-8">
+            <p class="text-center fs-2">
+                We are a company dedicated to the rental of bounce houses, water slides, obstacle courses and party accessories.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

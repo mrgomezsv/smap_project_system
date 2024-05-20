@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2
 DEBUG = True
 
 ALLOWED_HOSTS = ['smap.webcraftedsolutions.net', '127.0.0.1', 'localhost']
-
 
 # Application definition
 
@@ -40,6 +38,7 @@ INSTALLED_APPS = [
     't_app_product',
     'api',
     'rest_framework',
+    'kidsfun_web',
 ]
 
 MIDDLEWARE = [
@@ -61,6 +60,7 @@ TEMPLATES = [
             BASE_DIR / 't_app_product' / 'templates' / 'home',
             BASE_DIR / 't_app_product' / 'templates' / 'push_notificated',  # Agrega esta línea para cada directorio
             BASE_DIR / 't_app_product' / 'templates' / 'other_service',
+            BASE_DIR / 't_app_product' / 'templates' / 'firebase_auth',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -75,7 +75,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'smap_project.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -109,7 +108,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -121,7 +119,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
@@ -130,6 +127,7 @@ STATIC_URL = '/static/'
 # Definir las rutas adicionales para buscar archivos estáticos
 STATICFILES_DIRS = [
     BASE_DIR / "t_app_product" / "static",
+    BASE_DIR / "kidsfun_web" / "static",
 ]
 
 LOGIN_URL = '/signin'
@@ -137,7 +135,6 @@ LOGIN_URL = '/signin'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

@@ -14,8 +14,8 @@ from .forms import CustomUserCreationForm
 
 
 @login_required
-def home(request):
-    return render(request, 'home.html')
+def about_smap(request):
+    return render(request, 'about_smap.html')
 
 
 def signin(request):
@@ -199,6 +199,11 @@ def services(request):
 def advance_payments(request):
     # Lógica de la vista aquí
     return render(request, 'advance_payments.html')
+
+@login_required
+def firebase_auth(request):
+    # Lógica de la vista aquí
+    return render(request, 'firebase_auth.html')
 
 
 @login_required
