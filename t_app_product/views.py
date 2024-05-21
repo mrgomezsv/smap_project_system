@@ -11,6 +11,7 @@ from .models import Product
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from .forms import CustomUserCreationForm
+from firebase_admin import auth
 
 
 @login_required
@@ -200,10 +201,40 @@ def advance_payments(request):
     # Lógica de la vista aquí
     return render(request, 'advance_payments.html')
 
+
 @login_required
 def firebase_auth(request):
-    # Lógica de la vista aquí
-    return render(request, 'firebase_auth.html')
+    # Función para obtener los usuarios de Firebase
+    def get_firebase_users():
+        # Obtener la primera página de usuarios
+        page = auth.list_users()
+
+        # Procesar los usuarios de la página actual
+        processed_data = []
+        for user in page.users:
+            processed_data.append({
+                'uid': user.uid,
+                'email': user.email,
+                # Agrega otros campos según sea necesario
+            })
+
+        # Verificar si hay más páginas y procesarlas
+        while page.has_next_page:
+            page = auth.list_users(page.next_page_token)
+            for user in page.users:
+                processed_data.append({
+                    'uid': user.uid,
+                    'email': user.email,
+                    # Agrega otros campos según sea necesario
+                })
+
+        return processed_data
+
+    # Obtener usuarios de Firebase
+    users = get_firebase_users()
+
+    # Enviar los datos al template
+    return render(request, 'firebase_auth.html', {'users': users})
 
 
 @login_required

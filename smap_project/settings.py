@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+from keyring import credentials
+from firebase_admin import credentials
+import firebase_admin
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +30,10 @@ SECRET_KEY = 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2
 DEBUG = True
 
 ALLOWED_HOSTS = ['smap.webcraftedsolutions.net', '127.0.0.1', 'localhost']
+
+# Firebase Admin SDK initialization
+cred_path = os.path.join(BASE_DIR, 'credentials', 'smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json')  # Reemplaza con la ruta a tus credenciales
+cred = credentials.Certificate(cred_path)
 
 # Application definition
 
@@ -157,3 +166,8 @@ SESSION_COOKIE_SAMESITE = 'Lax'  # También puede ser 'Strict' dependiendo de tu
 # Opcionalmente, mantener ambas configuraciones para mayor seguridad
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expira al cerrar el navegador
 SESSION_COOKIE_AGE = 300  # Y/o expira en 5 minutos
+
+try:
+    firebase_admin.initialize_app(cred)
+except ValueError:
+    pass  # La aplicación de Firebase ya está inicializada
