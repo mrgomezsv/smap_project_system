@@ -104,3 +104,5 @@ media/
 # mypy
 .mypy_cache/
 
+#credentials/
+credentials/
