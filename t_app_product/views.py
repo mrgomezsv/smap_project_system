@@ -218,9 +218,9 @@ def firebase_auth(request):
                 'display_name': user.display_name,
                 'phone_number': user.phone_number,
                 'photo_url': user.photo_url,
-                'provider_id': user.provider_id,  # Proveedores
-                'creation_timestamp': user.user_metadata.creation_timestamp,  # Fecha de creación
-                'last_sign_in_timestamp': user.user_metadata.last_sign_in_timestamp  # Fecha de acceso
+                'provider_id': user.provider_id,
+                'creation_timestamp': user.user_metadata.creation_timestamp / 1000,  # Convertir a segundos
+                'last_sign_in_timestamp': user.user_metadata.last_sign_in_timestamp / 1000  # Convertir a segundos
             })
 
         # Verificar si hay más páginas y procesarlas
@@ -234,8 +234,8 @@ def firebase_auth(request):
                     'phone_number': user.phone_number,
                     'photo_url': user.photo_url,
                     'provider_id': user.provider_id,
-                    'creation_timestamp': user.user_metadata.creation_timestamp,
-                    'last_sign_in_timestamp': user.user_metadata.last_sign_in_timestamp
+                    'creation_timestamp': user.user_metadata.creation_timestamp / 1000,  # Convertir a segundos
+                    'last_sign_in_timestamp': user.user_metadata.last_sign_in_timestamp / 1000  # Convertir a segundos
                 })
 
         return processed_data
@@ -245,7 +245,6 @@ def firebase_auth(request):
 
     # Enviar los datos al template
     return render(request, 'firebase_auth.html', {'users': users})
-
 
 
 @login_required
