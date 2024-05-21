@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from .forms import CustomUserCreationForm
 from firebase_admin import auth
+from datetime import datetime
 
 
 @login_required
@@ -212,6 +213,9 @@ def firebase_auth(request):
         # Procesar los usuarios de la página actual
         processed_data = []
         for user in page.users:
+            creation_timestamp = datetime.fromtimestamp(user.user_metadata.creation_timestamp / 1000)
+            last_sign_in_timestamp = datetime.fromtimestamp(user.user_metadata.last_sign_in_timestamp / 1000)
+
             processed_data.append({
                 'uid': user.uid,
                 'email': user.email,
@@ -219,14 +223,17 @@ def firebase_auth(request):
                 'phone_number': user.phone_number,
                 'photo_url': user.photo_url,
                 'provider_id': user.provider_id,
-                'creation_timestamp': user.user_metadata.creation_timestamp / 1000,  # Convertir a segundos
-                'last_sign_in_timestamp': user.user_metadata.last_sign_in_timestamp / 1000  # Convertir a segundos
+                'creation_timestamp': creation_timestamp,
+                'last_sign_in_timestamp': last_sign_in_timestamp
             })
 
         # Verificar si hay más páginas y procesarlas
         while page.has_next_page:
             page = auth.list_users(page.next_page_token)
             for user in page.users:
+                creation_timestamp = datetime.fromtimestamp(user.user_metadata.creation_timestamp / 1000)
+                last_sign_in_timestamp = datetime.fromtimestamp(user.user_metadata.last_sign_in_timestamp / 1000)
+
                 processed_data.append({
                     'uid': user.uid,
                     'email': user.email,
@@ -234,8 +241,8 @@ def firebase_auth(request):
                     'phone_number': user.phone_number,
                     'photo_url': user.photo_url,
                     'provider_id': user.provider_id,
-                    'creation_timestamp': user.user_metadata.creation_timestamp / 1000,  # Convertir a segundos
-                    'last_sign_in_timestamp': user.user_metadata.last_sign_in_timestamp / 1000  # Convertir a segundos
+                    'creation_timestamp': creation_timestamp,
+                    'last_sign_in_timestamp': last_sign_in_timestamp
                 })
 
         return processed_data
@@ -245,6 +252,7 @@ def firebase_auth(request):
 
     # Enviar los datos al template
     return render(request, 'firebase_auth.html', {'users': users})
+
 
 
 @login_required
