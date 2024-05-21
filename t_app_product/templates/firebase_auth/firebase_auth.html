@@ -7,22 +7,28 @@
     <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
+<!--                <th>ID</th>-->
                 <th>Email</th>
                 <th>Nombre</th>
-                <th>Telefono</th>
+                <th>Teléfono</th>
                 <th>Foto de Perfil</th>
+                <th>Proveedores</th>
+                <th>Fecha de Creación</th>
+                <th>Fecha de Último Acceso</th>
                 <!-- Agrega otras columnas según lo necesites -->
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
             <tr>
-                <td>{{ user.uid }}</td>
+<!--                <td>{{ user.uid }}</td>-->
                 <td>{{ user.email }}</td>
                 <td>{{ user.display_name }}</td>
-                <td>{{ user.phone_number}}</td>
-                <td>{{ user.photo_url}}</td>
+                <td>{{ user.phone_number }}</td>
+                <td>{{ user.photo_url }}</td>
+                <td>{{ user.provider_id }}</td>
+                <td>{{ user.creation_timestamp|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ user.last_sign_in_timestamp|date:"Y-m-d H:i:s" }}</td>
                 <!-- Agrega otras celdas según lo necesites -->
             </tr>
             {% endfor %}
