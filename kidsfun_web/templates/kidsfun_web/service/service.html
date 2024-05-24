@@ -37,11 +37,12 @@
             <div class="card h-100 d-flex flex-column flex-fill bg-color" style="background-color: #F4F1FF; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
               <div class="card-body d-flex flex-column">
                 <div class="image-container">
-                  <img src="{{ producto.imagen.url }}" alt="Product Image">
-                </div>
-                <h5 class="card-title">Nombre del Producto: {{ producto.nombre }}</h5>
-                <p class="card-text">Dimensiones: {{ producto.dimensiones|default:'-' }}</p>
-                <a href="{{ producto.url }}" class="btn btn-primary mt-auto">Get it now</a>
+                            <img src="{{ producto.img.url }}" alt="Product Image">
+                        </div>
+                <h5 class="card-title">Nombre del Producto: {{ producto.title }}</h5>
+                <p class="card-text">Dimensiones: {{ producto.dimensions|default:'-' }}</p>
+
+<!--                <a href="{{ producto.url }}" class="btn btn-primary mt-auto">Get it now</a>-->
               </div>
             </div>
           </div>
