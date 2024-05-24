@@ -26,26 +26,26 @@
     <!-- Home section content here -->
   </section>
 
-    <section class="section-products padding-section">
+<section class="section-products padding-section">
     <div class="container">
       <div class="row" data-aos="fade-up">
         <h2 class="pb-5 text-violet t-sm-center">Productos</h2>
       </div>
-      <div class="row row-cols-1 row-cols-md-3 g-4" style="margin-top: 70px;">
+      <div class="row row-cols-1 row-cols-md-4 g-4" style="margin-top: 70px;">
         {% for producto in productos %}
-          <div class="col" data-aos="fade-up">
-            <div class="card h-100 shadow">
-              <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
-              <div class="card-body">
+          <div class="col mb-4">
+            <div class="card h-100 d-flex flex-column flex-fill bg-color" style="background-color: #F4F1FF; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+              <div class="card-body d-flex flex-column">
+                <div class="image-container">
+                  <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                </div>
                 <h5 class="card-title">{{ producto.nombre }}</h5>
                 <p class="card-text">{{ producto.descripcion }}</p>
-                <a class="btn btn-1" href="{{ producto.url }}">Get it now</a>
+                <p class="card-text">Precio: {{ producto.precio }}</p>
+                <a href="{{ producto.url }}" class="btn btn-primary mt-auto">Get it now</a>
               </div>
             </div>
           </div>
-          {% if forloop.counter|divisibleby:3 and not forloop.last %}
-            </div><div class="row row-cols-1 row-cols-md-3 g-4" style="margin-top: 70px;">
-          {% endif %}
         {% endfor %}
       </div>
     </div>
