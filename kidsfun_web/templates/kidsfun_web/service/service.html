@@ -26,24 +26,29 @@
     <!-- Home section content here -->
   </section>
 
-  <section class="section-products padding-section">
-    <!-- Products section content here -->
+    <section class="section-products padding-section">
     <div class="container">
       <div class="row" data-aos="fade-up">
-        <h2 class="pb-5 text-violet t-sm-center">Bounce House</h2>
+        <h2 class="pb-5 text-violet t-sm-center">Productos</h2>
       </div>
       <div class="row row-cols-1 row-cols-md-3 g-4" style="margin-top: 70px;">
-        <div class="col" data-aos="fade-up">
-          <div class="card h-100 shadow">
-            <img src="./img/bounce_house_15x15/img (1).png" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Bounce House</h5>
-              <p class="card-text">Size 15x15 ft</p>
-              <a class="btn btn-1" href="./template/bounce_house_15x15ft.html">Get it now</a>
+        {% for producto in productos %}
+          <div class="col" data-aos="fade-up">
+            <div class="card h-100 shadow">
+              <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ producto.nombre }}</h5>
+                <p class="card-text">{{ producto.descripcion }}</p>
+                <a class="btn btn-1" href="{{ producto.url }}">Get it now</a>
+              </div>
             </div>
           </div>
-        </div>
+          {% if forloop.counter|divisibleby:3 and not forloop.last %}
+            </div><div class="row row-cols-1 row-cols-md-3 g-4" style="margin-top: 70px;">
+          {% endif %}
+        {% endfor %}
       </div>
+    </div>
   </section>
 
   <div class="divisor-2"></div>
