@@ -256,3 +256,9 @@ Tarjeta de Productos en template
 .section-products .card .btn-1:hover {
   background: #af4ea9;
 }
+
+.section-products .card img {
+  object-fit: contain; /* Cambiamos de 'cover' a 'contain' */
+  height: 250px; /* Ajusta la altura según tus preferencias */
+  width: 100%; /* Ajusta el ancho para que ocupe todo el contenedor */
+}
