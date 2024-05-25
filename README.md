@@ -86,5 +86,16 @@ Asegúrate de tener Python instalado en tu sistema. Puedes descargarlo desde pyt
 
     python3 manage.py runserver
 
+## PostgreSQL
+
+1.Ingresar a la terminal de Postgre
+
+    psql -U postgres -d ""
+
+2.Crear data base
+    
+    CREATE DATABASE smap_kf;
+
+
 ##### Video de referencia:
     https://www.youtube.com/watch?v=e6PkGDH4wWA&t=5736s
