@@ -47,7 +47,7 @@
         padding-top: 190px; /* Añadir margen superior para separar del navbar */
     }
 
-    .section-products h2 {
+    .section-products h3 {
         font-size: 35px;
         color: #c750c0; /* Puedes ajustar el color si lo deseas */
         text-align: left;
@@ -60,7 +60,7 @@
         {% for category, products_in_category in products_or_category.items %}
         <div class="row" data-aos="fade-up">
             <div class="col-12">
-                <h2 class="pb-5 text-violet t-sm-center">{{ category }}</h2>
+                <h3 class="pb-5 text-violet t-sm-center">{{ products_in_category.0.get_category_display }}</h3>
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
