@@ -22,9 +22,7 @@
         background: var(--color-violeta);
         color: #fff; /* Color de letra */
         border-radius: 15px; /* Forma del botón */
-        padding: 8px; /* Relleno vertical */
-        padding-left: 12px; /* Relleno izquierdo */
-        padding-right: 12px; /* Relleno derecho */
+        padding: 8px 12px; /* Relleno */
         font-size: 14px; /* Tamaño de la fuente */
         transition: background 0.3s; /* Transición de color de fondo */
     }
@@ -36,54 +34,35 @@
     .card-title-custom {
         font-size: 25px;
         color: #2755e8;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-
-    .card-img-top {
-        object-fit: cover !important;
-        width: 100% !important;
-        height: auto !important;
+        margin: 10px 0;
     }
 
     .image-container {
-        width: 100% !important;
-        height: auto !important;
-        overflow: hidden !important;
+        width: 100%;
+        height: auto;
+        overflow: hidden;
     }
 
-    .card-img-top {
-        object-fit: cover !important;
-        width: 100% !important;
-        height: 100% !important;
-        margin: 0 !important;
-        border-top-left-radius: 20px; /* Esquinas superiores redondeadas */
-        border-top-right-radius: 20px; /* Esquinas superiores redondeadas */
+    .section-products {
+        padding-top: 190px; /* Añadir margen superior para separar del navbar */
     }
 
-    .image-container {
-        width: 100% !important;
-        height: 100% !important;
-        overflow: hidden !important;
-        margin: 0 !important;
+    .section-products h2 {
+        font-size: 35px;
+        color: #c750c0; /* Puedes ajustar el color si lo deseas */
+        text-align: left;
+        margin-bottom: 5px;
     }
 </style>
-<header class="menu">
-    <nav class="navbar navbar-expand-sm">
-        <!-- Navbar content here -->
-    </nav>
-</header>
-
-<section class="home-services">
-    <!-- Home section content here -->
-</section>
 
 <section class="section-products padding-section">
     <div class="container">
         <div class="row" data-aos="fade-up">
-            <h2 class="pb-5 text-violet t-sm-center">Productos</h2>
+            <div class="col-12">
+                <h2 class="pb-5 text-violet t-sm-center">Productos</h2>
+            </div>
         </div>
-        <div class="row row-cols-1 row-cols-md-3 g-4 text-center" style="margin-top: 70px;">
+        <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
             {% for producto in productos %}
             <div class="col mb-4">
                 <div class="card h-100 d-flex flex-column flex-fill bg-color"
@@ -91,7 +70,7 @@
                     <div class="image-container">
                         <img class="card-img-top" src="{{ producto.img.url }}" alt="Product Image" style="max-height: 290px;">
                     </div>
-                    <h5 class="card-title card-title-custom" style="margin-bottom: 15px;">{{ producto.title }}</h5>
+                    <h5 class="card-title card-title-custom">{{ producto.title }}</h5>
                     <p class="card-text" style="color: #797777">{{ producto.dimensions|default:'-' }}</p>
                     <div style="display: flex; justify-content: center; margin-bottom: 25px;">
                         <a href="{{ producto.url }}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get it now</a>
