@@ -1,0 +1,58 @@
+
+.section-products .card img {
+  object-fit: cover;
+  height: 65% !important;
+}
+
+
+.section-products .card {
+  text-align: center;
+}
+
+.section-products .card img {
+  object-fit: cover;
+  height: 65% !important;
+}
+
+.section-products .card h5 {
+  font-size: 25px;
+  color: var(--color-lightblue);
+}
+
+.section-products .card p {
+  font-size: 15px;
+  color: #797777;
+}
+
+.section-products .card .btn {
+  color: #fff;
+  border-radius: 15px;
+}
+
+.section-products .card .btn:focus {
+  box-shadow: none;
+}
+
+.section-products .card .btn-1 {
+  background: var(--color-violeta);
+}
+
+.section-products .card .btn-1:hover {
+  background: #af4ea9;
+}
+
+.section-products .card .btn-2 {
+  background: var(--color-red);
+}
+
+.section-products .card .btn-2:hover {
+  background: #dd2323;
+}
+
+.section-products .card .btn-3 {
+  background: var(--color-green);
+}
+
+.section-products .card .btn-3:hover {
+  background: #62c788;
+}
