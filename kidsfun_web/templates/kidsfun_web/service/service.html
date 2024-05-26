@@ -57,24 +57,24 @@
 
 <section class="section-products padding-section">
     <div class="container">
-        {% for categoria, productos_in_categoria in productos_por_categoria.items %}
+        {% for category, products_in_category in products_or_category.items %}
         <div class="row" data-aos="fade-up">
             <div class="col-12">
-                <h2 class="pb-5 text-violet t-sm-center">{{ categoria }}</h2>
+                <h2 class="pb-5 text-violet t-sm-center">{{ category }}</h2>
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
-            {% for producto in productos_in_categoria %}
+            {% for product in products_in_category %}
             <div class="col mb-4">
                 <div class="card h-100 d-flex flex-column flex-fill bg-color"
                      style="background-color: #ffffff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px; margin-bottom: 25px;">
                     <div class="image-container">
-                        <img class="card-img-top" src="{{ producto.img.url }}" alt="Product Image" style="max-height: 290px;">
+                        <img class="card-img-top" src="{{ product.img.url }}" alt="Product Image" style="max-height: 290px;">
                     </div>
-                    <h5 class="card-title card-title-custom">{{ producto.title }}</h5>
-                    <p class="card-text" style="color: #797777">{{ producto.dimensions|default:'-' }}</p>
+                    <h5 class="card-title card-title-custom">{{ product.title }}</h5>
+                    <p class="card-text" style="color: #797777">{{ product.dimensions|default:'-' }}</p>
                     <div style="display: flex; justify-content: center; margin-bottom: 25px;">
-                        <a href="{{ producto.url }}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get it now</a>
+                        <a href="{{ product.url }}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get it now</a>
                     </div>
                 </div>
             </div>
