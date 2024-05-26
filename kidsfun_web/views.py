@@ -6,15 +6,18 @@ def home(request):
     return render(request, 'kidsfun_web/home/home.html')
 
 def service(request):
-    # Obtén solo los productos que están publicados
+    # Obtener todos los productos que están publicados
     productos = Product.objects.filter(publicated=True)
 
-    # Imprimir los datos de los productos en la terminal
+    # Crear un diccionario para almacenar los productos agrupados por categoría
+    productos_por_categoria = {}
     for producto in productos:
-        print(
-            f"Nombre: {producto.title}, Descripción: {producto.description}, Precio: {producto.price}, Categoría: {producto.category}, Dimensiones: {producto.dimensions}, Usuario: {producto.user.username}")
+        categoria = producto.category
+        if categoria not in productos_por_categoria:
+            productos_por_categoria[categoria] = []
+        productos_por_categoria[categoria].append(producto)
 
-    return render(request, 'kidsfun_web/service/service.html', {'productos': productos})
+    return render(request, 'kidsfun_web/service/service.html', {'productos_por_categoria': productos_por_categoria})
 
 def contact(request):
     return render(request, 'kidsfun_web/contact/contact.html')

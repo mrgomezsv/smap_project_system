@@ -57,13 +57,14 @@
 
 <section class="section-products padding-section">
     <div class="container">
+        {% for categoria, productos_in_categoria in productos_por_categoria.items %}
         <div class="row" data-aos="fade-up">
             <div class="col-12">
-                <h2 class="pb-5 text-violet t-sm-center">Productos</h2>
+                <h2 class="pb-5 text-violet t-sm-center">{{ categoria }}</h2>
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
-            {% for producto in productos %}
+            {% for producto in productos_in_categoria %}
             <div class="col mb-4">
                 <div class="card h-100 d-flex flex-column flex-fill bg-color"
                      style="background-color: #ffffff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px; margin-bottom: 25px;">
@@ -79,6 +80,7 @@
             </div>
             {% endfor %}
         </div>
+        {% endfor %}
     </div>
 </section>
 
