@@ -33,45 +33,14 @@ transition: background 0.3s; /* Transición de color de fondo */
 background: #af4ea9;
 }
 
-</style>
-<header class="menu">
-    <nav class="navbar navbar-expand-sm">
-        <!-- Navbar content here -->
-    </nav>
-</header>
+        .card-title-custom {
+        font-size:25px;
+        color: #2755e8;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
 
-<section class="home-services">
-    <!-- Home section content here -->
-</section>
-
-<section class="section-products padding-section">
-    <div class="container">
-        <div class="row" data-aos="fade-up">
-            <h2 class="pb-5 text-violet t-sm-center">Productos</h2>
-        </div>
-        <div class="row row-cols-1 row-cols-md-3 g-4 text-center" style="margin-top: 70px;">
-            {% for producto in productos %}
-            <div class="col mb-4">
-
-
-                <div class="card h-100 d-flex flex-column flex-fill bg-color"
-                     style="background-color: #F4F1FF; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
-                    <div class="card-body d-flex flex-column">
-                        <div class="image-container">
-                            <img class="card-img-top" src="{{ producto.img.url }}" alt="Product Image">
-                        </div>
-                        <h5 class="card-title" style="color: #2755e8; margin-top: 10px; margin-bottom: 10px;">
-                            {{ producto.title }}</h5>
-                        <p class="card-text" style="color: #797777">{{ producto.dimensions|default:'-' }}</p>
-                        <div style="display: flex; justify-content: center;">
-                            <a href="{{ producto.url }}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get
-                                it now</a>
-                        </div>
-                    </div>
-                </div>
-
-                <style>
-                    .card-img-top {
+                        .card-img-top {
                         object-fit: cover !important;
                         width: 100% !important;
                         height: auto !important;
@@ -99,9 +68,37 @@ background: #af4ea9;
         margin-bottom: 0 !important;
         margin-left: 0 !important;
     }
-                </style>
+</style>
+<header class="menu">
+    <nav class="navbar navbar-expand-sm">
+        <!-- Navbar content here -->
+    </nav>
+</header>
 
+<section class="home-services">
+    <!-- Home section content here -->
+</section>
 
+<section class="section-products padding-section">
+    <div class="container">
+        <div class="row" data-aos="fade-up">
+            <h2 class="pb-5 text-violet t-sm-center">Productos</h2>
+        </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4 text-center" style="margin-top: 70px;">
+            {% for producto in productos %}
+            <div class="col mb-4">
+                <div class="card h-100 d-flex flex-column flex-fill bg-color"
+                     style="background-color: #ffffff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px; margin-bottom: 25px;">
+                    <div class="image-container">
+                        <img class="card-img-top" src="{{ producto.img.url }}" alt="Product Image">
+                    </div>
+                    <h5 class="card-title card-title-custom" style="margin-bottom: 15px;">{{ producto.title }}</h5>
+                    <p class="card-text" style="color: #797777">{{ producto.dimensions|default:'-' }}</p>
+                    <div style="display: flex; justify-content: center; margin-bottom: 25px;">
+                        <a href="{{ producto.url }}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get it
+                            now</a>
+                    </div>
+                </div>
             </div>
             {% endfor %}
         </div>
