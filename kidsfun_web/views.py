@@ -25,5 +25,9 @@ def service(request):
     return render(request, 'kidsfun_web/service/service.html', {'products_or_category': products_or_category})
 
 
+def service_product(request):
+    return render(request, 'kidsfun_web/service/product/product.html')
+
+
 def contact(request):
     return render(request, 'kidsfun_web/contact/contact.html')

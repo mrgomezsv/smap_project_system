@@ -74,7 +74,7 @@
                     <h5 class="card-title card-title-custom">{{ product.title }}</h5>
                     <p class="card-text" style="color: #797777">{{ product.dimensions|default:'-' }}</p>
                     <div style="display: flex; justify-content: center; margin-bottom: 25px;">
-                        <a href="{{ product.url }}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get it now</a>
+                        <a href="{% url 'service_product' %}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get it now</a>
                     </div>
                 </div>
             </div>
