@@ -2,4 +2,30 @@
 
 {% block content %}
 {% load static %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/animation.css' %}">
+<link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css"/>
+<link rel="icon" type="image/x-icon" href="{% static '../static/img/favicon/favicon-16x16.png' %}"/>
+
+
+<section class="section-description padding-section">
+    <div class="container">
+        <!-- Contenido de la descripción del producto -->
+        <h1>{{ product.title }}</h1>
+        <p>{{ product.description }}</p>
+        <!-- Aquí puedes mostrar más detalles del producto -->
+    </div>
+</section>
+
+<div class="divisor-2"></div>
+
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+</script>
 {% endblock %}
