@@ -88,6 +88,7 @@
             var description = $('#description').val();
             var price = $('#price').val();
             var category = $('#category').val();
+            var dimensions = $('#dimensions').val();
             var publicated  = $('#publicated ').prop('checked');
             var img = $('#img').prop('files')[0];
             var img1 = $('#img1').prop('files')[0];
@@ -102,6 +103,7 @@
             formData.append('description', description);
             formData.append('price', price);
             formData.append('category', category);
+            formData.append('dimensions', dimensions);
             formData.append('publicated ', publicated );
             formData.append('img', img);
             formData.append('img1', img1);

@@ -16,7 +16,7 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
-    dimensions = models.CharField(max_length=50, blank=True, null=True)  # Campo para dimensiones
+    dimensions = models.CharField(max_length=50, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     publicated = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, related_name='t_app_products')
