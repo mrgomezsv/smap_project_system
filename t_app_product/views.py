@@ -139,13 +139,16 @@ def product_detail(request, product_id):
 
             # Guarda los detalles del formulario en la base de datos
             form = ProductForm(request.POST, request.FILES, instance=product)
-            form.save()
 
-            # Elimina la imagen antigua del directorio de destino si se actualizó la imagen
-            old_image_path = product.img.path
-            if 'img' in request.FILES:
-                if os.path.exists(old_image_path):
-                    os.remove(old_image_path)
+            if form.is_valid():
+                # Si se proporciona una nueva imagen principal, maneja la eliminación de la imagen anterior
+                if 'img' in request.FILES:
+                    old_image_path = product.img.path
+                    if os.path.exists(old_image_path):
+                        os.remove(old_image_path)
+
+                # Guarda el formulario
+                form.save()
 
             # Redirige al usuario a la página de productos después de guardar los cambios
             return redirect('product')
