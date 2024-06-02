@@ -34,6 +34,12 @@ def service_product(request, product_id):
     # print("Descripción:", product.description)
     # print("Categoria:", product.category)
     # print("Dimensiones:", product.dimensions)
+    # print("img:", product.img)
+    # print("img:", product.img1)
+    # print("img:", product.img2)
+    # print("img:", product.img3)
+    # print("img:", product.img4)
+    # print("img:", product.img5)
     # print("Usiario:", product.user.username)
     # Continúa imprimiendo cualquier otro dato que desees
 
