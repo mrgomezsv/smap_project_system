@@ -9,148 +9,155 @@
 <link rel="icon" type="image/x-icon" href="{% static 'img/favicon/favicon-16x16.png' %}"/>
 
 <style>
+    /*--------------------------------------------
+    font
+    ----------------------------------------------*/
+    @import url("https://fonts.googleapis.com/css2?family=Titan+One&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Titan+One&family=Varela+Round&display=swap");
 
-/*--------------------------------------------
-font
-----------------------------------------------*/
-@import url("https://fonts.googleapis.com/css2?family=Titan+One&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Titan+One&family=Varela+Round&display=swap");
+    body {
+      font-family: "Titan One", cursive;
+    }
 
-body {
-  font-family: "Titan One", cursive;
-}
+    :root {
+      --color-green: #00d084;
+      --color-blue: #2855e9;
+      --color-violet: #c751c0;
+    }
 
-:root {
-  --color-green: #00d084;
-  --color-blue: #2855e9;
-  --color-violet: #c751c0;
-}
+    .padding-section {
+      padding: 150px 0 100px; /* Ajuste de separación superior */
+    }
 
-.padding-section {
-  padding: 150px 0 100px; /* Ajuste de separación superior */
-}
+    .text-green {
+      color: var(--color-green);
+    }
 
-.text-green {
-  color: var(--color-green);
-}
+    .text-blue {
+      color: var(--color-blue);
+    }
 
-.text-blue {
-  color: var(--color-blue);
-}
+    .text-violet {
+      color: var(--color-violet);
+    }
 
-.text-violet {
-  color: var(--color-violet);
-}
+    .btn-violet {
+      background-color: var(--color-violet);
+      color: #fff;
+      border-radius: 15px;
+    }
 
-.btn-violet {
-  background-color: var(--color-violet);
-  color: #fff;
-  border-radius: 15px;
-}
+    .btn-violet:hover {
+      background-color: #af4ea9;
+      color: #fff;
+    }
 
-.btn-violet:hover {
-  background-color: #af4ea9;
-  color: #fff;
-}
+    .btn-violet:focus {
+      box-shadow: none;
+    }
 
-.btn-violet:focus {
-  box-shadow: none;
-}
+    .divisor-2 {
+      width: 100%;
+      height: 100px;
+      background-color: var(--color-#0a1843);
+      clip-path: ellipse(100% 68% at 7% 82%);
+    }
 
-.divisor-2 {
-  width: 100%;
-  height: 100px;
-  background-color: var(--color-#0a1843);
-  clip-path: ellipse(100% 68% at 7% 82%);
-}
+    .section-description h1 {
+      font-size: 50px;
+      margin-bottom: 40px;
+    }
 
-.section-description h1 {
-  font-size: 50px;
-  margin-bottom: 40px;
-}
+    .section-description .des h3 {
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
 
-.section-description .des h3 {
-  font-size: 30px;
-  margin-bottom: 20px;
-}
+    .section-description .des p {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
 
-.section-description .des p {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
+    .img-description {
+      width: 100%;
+      overflow: hidden;
+    }
 
-.img-description {
-  width: 100%;
-  overflow: hidden;
-}
+    .img-description img {
+      width: 100%;
+      height: auto;
+      border-radius: 15px;
+    }
 
-.img-description img {
-  width: 100%;
-  height: auto;
-  border-radius: 15px;
-}
+    .galery-des .img {
+      margin-bottom: 150px; /* Ajuste de separación entre imágenes y elementos superiores */
+    }
 
-.galery-des .img {
-  margin-bottom: 150px; /* Ajuste de separación entre imágenes y elementos superiores */
-}
+    .galery-des .img img {
+      width: 100%;
+      height: 100%; /* Establecer la altura al 100% para mantener la relación de aspecto */
+      object-fit: cover; /* Hace que la imagen se ajuste dentro del contenedor sin distorsionarla */
+      border-radius: 15px;
+    }
 
-.galery-des .img img {
-  width: 100%;
-  height: 100%; /* Establecer la altura al 100% para mantener la relación de aspecto */
-  object-fit: cover; /* Hace que la imagen se ajuste dentro del contenedor sin distorsionarla */
-  border-radius: 15px;
-}
+    /* Animaciones */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
 
-/* Animaciones */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
+      100% {
+        opacity: 1;
+      }
+    }
 
-  100% {
-    opacity: 1;
-  }
-}
+    .anim_1,
+    .anim_2,
+    .anim_3,
+    .anim_4 {
+      animation: fadeIn 1s ease-in-out;
+      animation-fill-mode: both;
+      opacity: 0;
+    }
 
-.anim_1,
-.anim_2,
-.anim_3,
-.anim_4 {
-  animation: fadeIn 1s ease-in-out;
-  animation-fill-mode: both;
-  opacity: 0;
-}
+    .anim_1 {
+      animation-delay: 0.5s;
+    }
 
-.anim_1 {
-  animation-delay: 0.5s;
-}
+    .anim_2 {
+      animation-delay: 1s;
+    }
 
-.anim_2 {
-  animation-delay: 1s;
-}
+    .anim_3 {
+      animation-delay: 1.5s;
+    }
 
-.anim_3 {
-  animation-delay: 1.5s;
-}
+    .anim_4 {
+      animation-delay: 2s;
+    }
 
-.anim_4 {
-  animation-delay: 2s;
-}
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .section-description h1 {
+        font-size: 40px;
+      }
 
-/* Responsive Design */
-@media (max-width: 992px) {
-  .section-description h1 {
-    font-size: 40px;
-  }
+      .section-description .des h3 {
+        font-size: 25px;
+      }
 
-  .section-description .des h3 {
-    font-size: 25px;
-  }
+      .section-description .des p {
+        font-size: 16px;
+      }
 
-  .section-description .des p {
-    font-size: 16px;
-  }
-}
+      .des .btn-violet {
+        margin-top: 50px; /* Añade un margen superior al botón */
+      }
+
+      .row.justify-content-center.align-items-center {
+        flex-direction: column; /* Cambia la dirección del contenedor en dispositivos móviles */
+      }
+    }
 
 </style>
 
@@ -192,7 +199,12 @@ body {
                 <p><strong>Category:</strong> {{ product.category }}</p>
                 <p><strong>Dimensions:</strong> {{ product.dimensions }}</p>
                 <a href="{% url 'service' %}" class="btn btn-violet shadow">Go back</a>
-                <!-- Reemplaza "service" con la URL adecuada -->
+                <style>@media (max-width: 576px) {
+  .des .btn-violet {
+    margin-bottom: 50px; /* Agrega un espacio debajo del botón en dispositivos móviles */
+  }
+}
+                </style>
             </div>
             <div class="col-md-6 col-lg-6 anim_4">
                 <div class="img-description img">
