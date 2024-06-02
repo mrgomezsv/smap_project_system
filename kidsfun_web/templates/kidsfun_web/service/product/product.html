@@ -10,7 +10,7 @@
 
 <style>
 
-    /*--------------------------------------------
+/*--------------------------------------------
 font
 ----------------------------------------------*/
 @import url("https://fonts.googleapis.com/css2?family=Titan+One&display=swap");
@@ -156,82 +156,43 @@ body {
 
 <section class="section-description padding-section">
     <div class="container">
-<!--<div class="row" style="margin-top: 50px;">-->
-<!--    <h1>-->
-<!--        <span class="text-green anim_1">Description</span>-->
-<!--        <span class="text-blue anim_2">of</span>-->
-<!--        <span class="text-violet anim_3">products</span>-->
-<!--    </h1>-->
-<!--</div>-->
+        <!--<div class="row" style="margin-top: 50px;">-->
+        <!--    <h1>-->
+        <!--        <span class="text-green anim_1">Description</span>-->
+        <!--        <span class="text-blue anim_2">of</span>-->
+        <!--        <span class="text-violet anim_3">products</span>-->
+        <!--    </h1>-->
+        <!--</div>-->
 
-
-            <style>
-        /* Estilos personalizados para las palabras */
-        .custom-green {
-            color: green;
-        }
-
-        .custom-blue {
-            color: blue;
-        }
-
-        .custom-violet {
-            color: violet;
-        }
-    </style>
-
-
-    <div class="row" style="margin-top: 50px;">
-        <h1 id="product-title">
-            {{ product.title }}
-        </h1>
-    </div>
-
-    <script>
-        // Obtén el elemento del título del producto
-        const productTitle = document.getElementById('product-title');
-
-        // Divide el título en palabras
-        const words = productTitle.innerText.split(' ');
-
-        // Elimina el contenido actual del elemento
-        productTitle.innerHTML = '';
-
-        // Aplica colores a cada palabra y agrega al elemento
-        words.forEach((word, index) => {
-            let colorClass;
-            switch (index % 3) {
-                case 0:
-                    colorClass = 'custom-green';
-                    break;
-                case 1:
-                    colorClass = 'custom-blue';
-                    break;
-                case 2:
-                    colorClass = 'custom-violet';
-                    break;
-                default:
-                    colorClass = '';
+        <style>
+            /* Estilos personalizados para las palabras */
+            .custom-green {
+                color: green;
             }
-            const span = document.createElement('span');
-            span.innerText = word;
-            span.classList.add(colorClass, `anim_${index + 1}`);
-            productTitle.appendChild(span);
-            // Agrega un espacio entre las palabras
-            if (index < words.length - 1) {
-                productTitle.appendChild(document.createTextNode(' '));
-            }
-        });
-    </script>
 
+            .custom-blue {
+                color: blue;
+            }
+
+            .custom-violet {
+                color: violet;
+            }
+        </style>
+
+        <div class="row" style="margin-top: 50px;">
+            <h1 id="product-title">
+                {{ product.title }}
+            </h1>
+        </div>
 
         <div class="row justify-content-center align-items-center">
             <div class="col-md-6 col-lg-6 des" data-aos="fade-right">
-<!--                <h3>{{ product.title }}</h3>-->
+                <!--                <h3>{{ product.title }}</h3>-->
                 <p>{{ product.description }}</p>
                 <p><strong>Category:</strong> {{ product.category }}</p>
                 <p><strong>Dimensions:</strong> {{ product.dimensions }}</p>
-                <a href="{% url 'service' %}" class="btn btn-violet shadow">Go back</a> <!-- Reemplaza "service" con la URL adecuada -->
+                <a href="{% url 'service' %}" class="btn btn-violet shadow">Go back</a>
+                <!-- Reemplaza "service" con la URL adecuada -->
             </div>
             <div class="col-md-6 col-lg-6 anim_4">
                 <div class="img-description img">
@@ -240,46 +201,85 @@ body {
             </div>
         </div>
         <div class="row galery-des justify-content-center align-items-center" style="margin-top: 150px;">
-    {% if product.img1 %}
-    <div class="col-md-4 col-lg-4" data-aos="fade-up">
-        <div class="img">
-            <img src="{{ product.img1.url }}" alt="" class="img-fluid">
+            {% if product.img1 %}
+            <div class="col-md-4 col-lg-4" data-aos="fade-up">
+                <div class="img">
+                    <img src="{{ product.img1.url }}" alt="" class="img-fluid">
+                </div>
+            </div>
+            {% endif %}
+            {% if product.img2 %}
+            <div class="col-md-4 col-lg-4" data-aos="fade-up">
+                <div class="img">
+                    <img src="{{ product.img2.url }}" alt="" class="img-fluid">
+                </div>
+            </div>
+            {% endif %}
+            {% if product.img3 %}
+            <div class="col-md-4 col-lg-4" data-aos="fade-up">
+                <div class="img">
+                    <img src="{{ product.img3.url }}" alt="" class="img-fluid">
+                </div>
+            </div>
+            {% endif %}
+            {% if product.img4 %}
+            <div class="col-md-4 col-lg-4" data-aos="fade-up">
+                <div class="img">
+                    <img src="{{ product.img4.url }}" alt="" class="img-fluid">
+                </div>
+            </div>
+            {% endif %}
+            {% if product.img5 %}
+            <div class="col-md-4 col-lg-4" data-aos="fade-up">
+                <div class="img">
+                    <img src="{{ product.img5.url }}" alt="" class="img-fluid">
+                </div>
+            </div>
+            {% endif %}
         </div>
-    </div>
-    {% endif %}
-    {% if product.img2 %}
-    <div class="col-md-4 col-lg-4" data-aos="fade-up">
-        <div class="img">
-            <img src="{{ product.img2.url }}" alt="" class="img-fluid">
-        </div>
-    </div>
-    {% endif %}
-    {% if product.img3 %}
-    <div class="col-md-4 col-lg-4" data-aos="fade-up">
-        <div class="img">
-            <img src="{{ product.img3.url }}" alt="" class="img-fluid">
-        </div>
-    </div>
-    {% endif %}
-    {% if product.img4 %}
-    <div class="col-md-4 col-lg-4" data-aos="fade-up">
-        <div class="img">
-            <img src="{{ product.img4.url }}" alt="" class="img-fluid">
-        </div>
-    </div>
-    {% endif %}
-    {% if product.img5 %}
-    <div class="col-md-4 col-lg-4" data-aos="fade-up">
-        <div class="img">
-            <img src="{{ product.img5.url }}" alt="" class="img-fluid">
-        </div>
-    </div>
-    {% endif %}
-</div>
     </div>
 </section>
 
 <div class="divisor-2"></div>
+
+<script>
+
+    // Obtén el elemento del título del producto
+    const productTitle = document.getElementById('product-title');
+
+    // Divide el título en palabras
+    const words = productTitle.innerText.split(' ');
+
+    // Elimina el contenido actual del elemento
+    productTitle.innerHTML = '';
+
+    // Aplica colores a cada palabra y agrega al elemento
+    words.forEach((word, index) => {
+        let colorClass;
+        switch (index % 3) {
+            case 0:
+                colorClass = 'custom-green';
+                break;
+            case 1:
+                colorClass = 'custom-blue';
+                break;
+            case 2:
+                colorClass = 'custom-violet';
+                break;
+            default:
+                colorClass = '';
+        }
+        const span = document.createElement('span');
+        span.innerText = word;
+        span.classList.add(colorClass, `anim_${index + 1}`);
+        productTitle.appendChild(span);
+        // Agrega un espacio entre las palabras
+        if (index < words.length - 1) {
+            productTitle.appendChild(document.createTextNode(' '));
+        }
+    });
+
+</script>
 
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
