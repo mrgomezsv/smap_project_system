@@ -19,7 +19,7 @@
 <header class="menu">
     <nav class="navbar navbar-expand-sm">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="{% url 'home' %}">
                 <img src="{% static 'img/logo.png' %}" alt="logo"/>
             </a>
             <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
@@ -76,7 +76,7 @@
                 <p>
                     <span class="text-violet">Copyright &copy; </span>
                     <span class="text-orange">Kidsfun y Fiestas Infantiles </span>
-                    <span class="text-yellow">2024 Kidsfun y </span>
+                    <span class="text-yellow" id="copyrightYear">2024</span>
                     <span class="text-green">Fiestas Infantiles</span>
                 </p>
             </div>
@@ -86,6 +86,23 @@
         </div>
     </div>
 </footer>
+<script>
+    // Obtiene el elemento span donde se mostrará el año actual
+    var copyrightYearSpan = document.getElementById("copyrightYear");
+
+    // Obtiene el contenido actual del span
+    var currentContent = copyrightYearSpan.textContent;
+
+    // Obtiene el año actual
+    var currentYear = new Date().getFullYear();
+
+    // Reemplaza el año en el contenido del span
+    var newContent = currentContent.replace("2024", currentYear);
+
+    // Actualiza el contenido del span con el año actualizado
+    copyrightYearSpan.textContent = newContent;
+</script>
+
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'js/owl.carousel.min.js' %}"></script>
