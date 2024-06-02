@@ -23,7 +23,6 @@
                 <label for="username">Usuario:
                     <input type="text" id="username" name="username" autocomplete="off" placeholder="Your Username"
                            required>
-                    <!-- SVG icon for username -->
                 </label>
             </div>
             <div class="text-field">
@@ -31,16 +30,9 @@
                     <input id="password" type="password" name="password" placeholder="Your Password"
                            title="Minimum 6 characters at least 1 Alphabet and 1 Number"
                            pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" required>
-                    <!-- SVG icon for password -->
                 </label>
             </div>
             <button class="my-form__button" type="submit">Login</button>
-            <div class="my-form__actions">
-                <div class="my-form__row">
-                    <span>No tiene cuenta?</span>
-                    <a href="{% url 'signup' %}" title="Create Account">Crear Cuenta</a>
-                </div>
-            </div>
         </form>
     </div>
     <div class="info-side">
@@ -53,11 +45,10 @@
         <img src="{% static 'assets/mock.png' %}" alt="Mock" class="mockup"/>
         <div class="welcome-message">
             <h2>Bienvenido a SMAP 👋</h2>
-<!--            <p>Sistema de Manejo de Aplicaciones Móviles.</p>-->
             <div class="my-form__actions">
                 <div class="my-form__row centered-content">
                     <div>
-                        Volver a <a href="http://127.0.0.1:8000" title="Create Account">Kisdfun y Fiestas Infantiles</a>
+                        Volver a <a href="https://kidsfunyfiestasinfantiles.com/" title="Create Account">Kisdfun y Fiestas Infantiles</a>
                     </div>
                 </div>
             </div>
