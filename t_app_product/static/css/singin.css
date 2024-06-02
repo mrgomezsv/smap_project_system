@@ -361,3 +361,17 @@ body {
         padding: 3rem 2rem;
     }
 }
+
+/* Estilos para dispositivos móviles */
+@media only screen and (max-width: 600px) {
+  /* Haz que la imagen sea más pequeña */
+  .mockup {
+    max-width: 200px !important; /* Tamaño deseado */
+    height: auto !important;
+  }
+
+  /* Coloca la imagen 50px debajo del formulario */
+  form {
+    margin-bottom: 350px !important;
+  }
+}
