@@ -156,17 +156,78 @@ body {
 
 <section class="section-description padding-section">
     <div class="container">
-<div class="row" style="margin-top: 50px;">
-    <h1>
-        <span class="text-green anim_1">Description</span>
-        <span class="text-blue anim_2">of</span>
-        <span class="text-violet anim_3">products</span>
-    </h1>
-</div>
+<!--<div class="row" style="margin-top: 50px;">-->
+<!--    <h1>-->
+<!--        <span class="text-green anim_1">Description</span>-->
+<!--        <span class="text-blue anim_2">of</span>-->
+<!--        <span class="text-violet anim_3">products</span>-->
+<!--    </h1>-->
+<!--</div>-->
+
+
+            <style>
+        /* Estilos personalizados para las palabras */
+        .custom-green {
+            color: green;
+        }
+
+        .custom-blue {
+            color: blue;
+        }
+
+        .custom-violet {
+            color: violet;
+        }
+    </style>
+
+
+    <div class="row" style="margin-top: 50px;">
+        <h1 id="product-title">
+            {{ product.title }}
+        </h1>
+    </div>
+
+    <script>
+        // Obtén el elemento del título del producto
+        const productTitle = document.getElementById('product-title');
+
+        // Divide el título en palabras
+        const words = productTitle.innerText.split(' ');
+
+        // Elimina el contenido actual del elemento
+        productTitle.innerHTML = '';
+
+        // Aplica colores a cada palabra y agrega al elemento
+        words.forEach((word, index) => {
+            let colorClass;
+            switch (index % 3) {
+                case 0:
+                    colorClass = 'custom-green';
+                    break;
+                case 1:
+                    colorClass = 'custom-blue';
+                    break;
+                case 2:
+                    colorClass = 'custom-violet';
+                    break;
+                default:
+                    colorClass = '';
+            }
+            const span = document.createElement('span');
+            span.innerText = word;
+            span.classList.add(colorClass, `anim_${index + 1}`);
+            productTitle.appendChild(span);
+            // Agrega un espacio entre las palabras
+            if (index < words.length - 1) {
+                productTitle.appendChild(document.createTextNode(' '));
+            }
+        });
+    </script>
+
 
         <div class="row justify-content-center align-items-center">
             <div class="col-md-6 col-lg-6 des" data-aos="fade-right">
-                <h3>{{ product.title }}</h3>
+<!--                <h3>{{ product.title }}</h3>-->
                 <p>{{ product.description }}</p>
                 <p><strong>Category:</strong> {{ product.category }}</p>
                 <p><strong>Dimensions:</strong> {{ product.dimensions }}</p>
