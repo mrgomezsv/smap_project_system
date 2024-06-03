@@ -62,7 +62,7 @@
                         {#<p class="card-text">{{ product.description }}</p>#}
                         <p class="card-text">{{ product.description|slice:":27" }}{% if product.description|length > 27 %}
                             ...{% endif %}</p>
-                        <p class="card-text">Precio: {{ product.price }}</p>
+<!--                        <p class="card-text">Precio: {{ product.price }}</p>-->
                         <p class="card-text">Categoría: {{ product.get_category_display }}</p>
                         <p class="card-text">Dimensiones: {{ product.dimensions|default:'-' }}</p>
                         <p class="card-text">Estado: {% if product.publicated %}Publicado{% else %}Creado{% endif %}</p>
