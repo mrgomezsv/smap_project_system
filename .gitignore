@@ -109,3 +109,9 @@ credentials/
 
 # Ignorar archivos .DS_Store generados por macOS
 .DS_Store
+
+# Añadir .DS_Store al .gitignore
+echo ".DS_Store" >> .gitignore
+
+# Eliminar todos los .DS_Store del repositorio
+find . -name .DS_Store -print0 | xargs -0 git rm --cachedgit
