@@ -1,10 +1,79 @@
-{# load static #}
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     <title>SMAP Application - Login</title>
     <link rel="shortcut icon" href="{% static 'asset/favicon.jpg' %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'css/singin.css' %}">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        .form-wrapper {
+            background: #f3f1ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        .form-side {
+            background: #f3f1ff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+        .my-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .text-field {
+            margin-bottom: 15px;
+        }
+        .text-field input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .my-form__button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #007BFF;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .my-form__button:hover {
+            background: #0056b3;
+        }
+        .welcome-message {
+            margin-top: 20px;
+        }
+        .centered-content {
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .form-wrapper {
+                align-items: flex-start;
+                padding-top: 50px;
+                background: #f3f1ff;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="form-wrapper">
@@ -33,26 +102,17 @@
                 </label>
             </div>
             <button class="my-form__button" type="submit">Login</button>
-        </form>
-    </div>
-    <div class="info-side">
-        <style>.centered-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center; /* Alineación de texto al centro */
-}</style>
-<!--<img src="{% static 'assets/logo.png' %}" alt="Mock" class="mockup img-fluid img-sm"/>-->
-        <div class="welcome-message">
-            <h2>Bienvenido a SMAP 👋</h2>
-            <div class="my-form__actions">
-                <div class="my-form__row centered-content">
-                    <div>
-                        Volver a <a href="https://kidsfunyfiestasinfantiles.com/" title="Create Account">Kisdfun y Fiestas Infantiles</a>
+            <div class="welcome-message">
+                <div class="my-form__actions">
+                    <div class="my-form__row centered-content">
+                        <div>
+                            Volver a <a href="https://kidsfunyfiestasinfantiles.com/" title="Create Account">Kisdfun y
+                            Fiestas Infantiles</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 <script src="{% static 'js/script.js' %}"></script>
