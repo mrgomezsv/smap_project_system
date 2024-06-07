@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['kidsfunyfiestasinfantiles.com.webcraftedsolutions.net', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['kidsfunyfiestasinfantiles.webcraftedsolutions.net', '127.0.0.1', 'localhost']
 
 # Firebase Admin SDK initialization
 cred_path = os.path.join(BASE_DIR, 'credentials', 'smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json')  # Reemplaza con la ruta a tus credenciales
@@ -151,7 +151,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuración adicional para CSRF
-CSRF_TRUSTED_ORIGINS = ['https://kidsfunyfiestasinfantiles.com.webcraftedsolutions.net']
+CSRF_TRUSTED_ORIGINS = ['https://kidsfunyfiestasinfantiles.webcraftedsolutions.net']
 CSRF_COOKIE_SECURE = True
 
 # Asegurarse de que las cookies de sesión solo se envíen a través de HTTPS
