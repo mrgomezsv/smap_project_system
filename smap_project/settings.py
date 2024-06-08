@@ -171,3 +171,5 @@ try:
     firebase_admin.initialize_app(cred)
 except ValueError:
     pass  # La aplicación de Firebase ya está inicializada
+
+SITE_DOMAIN = 'https://kidsfunyfiestasinfantiles.webcraftedsolutions.net'
