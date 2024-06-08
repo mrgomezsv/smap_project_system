@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from t_app_product.models import Product  # Importa el modelo de tu aplicación
+from django.conf import settings
+from .models import Product
 
 class ProductSerializer(serializers.ModelSerializer):
     img = serializers.SerializerMethodField()
@@ -14,25 +15,22 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_img(self, obj):
-        request = self.context.get('request')
-        return request.build_absolute_uri(obj.img.url) if obj.img else None
+        return self.build_absolute_uri(obj.img.url)
 
     def get_img1(self, obj):
-        request = self.context.get('request')
-        return request.build_absolute_uri(obj.img1.url) if obj.img1 else None
+        return self.build_absolute_uri(obj.img1.url)
 
     def get_img2(self, obj):
-        request = self.context.get('request')
-        return request.build_absolute_uri(obj.img2.url) if obj.img2 else None
+        return self.build_absolute_uri(obj.img2.url)
 
     def get_img3(self, obj):
-        request = self.context.get('request')
-        return request.build_absolute_uri(obj.img3.url) if obj.img3 else None
+        return self.build_absolute_uri(obj.img3.url)
 
     def get_img4(self, obj):
-        request = self.context.get('request')
-        return request.build_absolute_uri(obj.img4.url) if obj.img4 else None
+        return self.build_absolute_uri(obj.img4.url)
 
     def get_img5(self, obj):
-        request = self.context.get('request')
-        return request.build_absolute_uri(obj.img5.url) if obj.img5 else None
+        return self.build_absolute_uri(obj.img5.url)
+
+    def build_absolute_uri(self, url):
+        return f'{settings.SITE_DOMAIN}{url}'
