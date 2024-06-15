@@ -5,55 +5,12 @@
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
 <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
 <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/icons_products.css' %}"/>
 <link rel="stylesheet" href="{% static 'css/animation.css' %}">
 <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css"/>
 <link rel="icon" type="image/x-icon" href="{% static '../static/img/favicon/favicon-16x16.png' %}"/>
-<style>
-    .card-img-top {
-        object-fit: cover;
-        height: 100%;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-    }
-
-    .section-products .card .btn-primary {
-        background: var(--color-violeta);
-        color: #fff; /* Color de letra */
-        border-radius: 15px; /* Forma del botón */
-        padding: 8px 12px; /* Relleno */
-        font-size: 14px; /* Tamaño de la fuente */
-        transition: background 0.3s; /* Transición de color de fondo */
-    }
-
-    .section-products .card .btn-primary:hover {
-        background: #af4ea9;
-    }
-
-    .card-title-custom {
-        font-size: 25px;
-        color: #2755e8;
-        margin: 10px 0;
-    }
-
-    .image-container {
-        width: 100%;
-        height: auto;
-        overflow: hidden;
-    }
-
-    .section-products {
-        padding-top: 190px; /* Añadir margen superior para separar del navbar */
-    }
-
-    .section-products h3 {
-        font-size: 35px;
-        color: #c750c0; /* Puedes ajustar el color si lo deseas */
-        text-align: left;
-        margin-bottom: 5px;
-    }
-</style>
 
 <section class="section-products padding-section">
     <!-- Contenido de los productos -->
@@ -76,6 +33,11 @@
                     <p class="card-text" style="color: #797777">{{ product.dimensions|default:'-' }}</p>
                     <div style="display: flex; justify-content: center; margin-bottom: 25px;">
                         <a href="{% url 'service_product' product.id %}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get it now</a>
+                    </div>
+                    <div class="card-icons">
+                        <i class="bi bi-chat"></i>
+                        <i class="bi bi-heart"></i>
+                        <i class="bi bi-share"></i>
                     </div>
                 </div>
             </div>
