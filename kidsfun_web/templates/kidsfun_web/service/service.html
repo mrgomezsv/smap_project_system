@@ -1,7 +1,8 @@
 {% extends 'kidsfun_web/base.html' %}
 
-{% block content %}
 {% load static %}
+
+{% block content %}
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
 <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
 <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
@@ -49,9 +50,42 @@
 
 <div class="divisor-2"></div>
 
+<!-- Modal -->
+<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="commentModalLabel">Add Comment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="comment" class="form-label">Comment</label>
+            <textarea class="form-control" id="comment" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
     AOS.init();
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var chatIcons = document.querySelectorAll('.bi-chat');
+
+        chatIcons.forEach(function(icon) {
+            icon.addEventListener('click', function() {
+                var commentModal = new bootstrap.Modal(document.getElementById('commentModal'));
+                commentModal.show();
+            });
+        });
+    });
 </script>
 {% endblock %}
