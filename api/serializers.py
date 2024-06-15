@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.conf import settings
-from .models import Product
+from .models import Product, Like
 
 class ProductSerializer(serializers.ModelSerializer):
     img = serializers.SerializerMethodField()
@@ -34,3 +34,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def build_absolute_uri(self, url):
         return f'{settings.SITE_DOMAIN}{url}'
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = '__all__'

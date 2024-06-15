@@ -1,10 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 def image_path(instance, filename):
     return f'product_images/{filename}'
-
 
 class Product(models.Model):
     img = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
@@ -25,3 +23,15 @@ class Product(models.Model):
     def __str__(self):
         username = self.user.username if self.user else "Unknown User"
         return f"{self.title} - by {username}"
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    liked_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'likes_product'
+        unique_together = ('user', 'product')
+
+    def __str__(self):
+        return f'{self.user.username} likes {self.product.title}'
