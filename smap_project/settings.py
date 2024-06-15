@@ -71,6 +71,7 @@ TEMPLATES = [
             BASE_DIR / 't_app_product' / 'templates' / 'other_service',
             BASE_DIR / 't_app_product' / 'templates' / 'firebase_auth',
             BASE_DIR / 'kidsfun_web' / 'templates',
+            BASE_DIR / 'kidsfun_web' / 'templates' / 'modals_web',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
