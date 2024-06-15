@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 def image_path(instance, filename):
     return f'product_images/{filename}'
+
 
 class Product(models.Model):
     img = models.ImageField(upload_to=image_path, default='default_product_image.jpg')

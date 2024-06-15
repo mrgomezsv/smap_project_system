@@ -4,7 +4,7 @@ from t_app_product import views
 from django.conf import settings
 from django.conf.urls.static import static
 from t_app_product.views import process_checkbox, redirect_productc
-from api.views import ProductListCreate
+from api.views import ProductListCreate, ProductRetrieveUpdateDestroy
 
 
 urlpatterns = [
@@ -27,7 +27,8 @@ urlpatterns = [
     path('ticket_master/', views.ticket_master, name='ticket_master'),
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),
-    path('api/products/', ProductListCreate.as_view(), name='product-list'),
+    path('products/', ProductListCreate.as_view(), name='product-list-create'),
+    path('products/<int:pk>/', ProductRetrieveUpdateDestroy.as_view(), name='product-retrieve-update-destroy'),
 ]
 
 # Sirve las imágenes desde la carpeta media
