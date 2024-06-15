@@ -26,9 +26,9 @@ urlpatterns = [
     path('ticket_master/', views.ticket_master, name='ticket_master'),
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),
-    path('products/', ProductListCreate.as_view(), name='product-list-create'),
-    path('products/<int:pk>/', ProductRetrieveUpdateDestroy.as_view(), name='product-detail'),
-    path('products/<int:pk>/like/', LikeToggle.as_view(), name='like-toggle'),
+    path('api/products/', ProductListCreate.as_view(), name='product-list-create'),
+    path('api/products/<int:pk>/', ProductRetrieveUpdateDestroy.as_view(), name='product-detail'),
+    path('api/products/<int:pk>/like/', LikeToggle.as_view(), name='like-toggle'),
 ]
 
 # Sirve las imágenes desde la carpeta media

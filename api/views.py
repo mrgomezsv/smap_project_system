@@ -2,7 +2,8 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
-from .models import Product, Like
+from t_app_product.models import Product  # Asegúrate de importar el modelo Product correctamente
+from .models import Like
 from .serializers import ProductSerializer, LikeSerializer
 
 class ProductListCreate(generics.ListCreateAPIView):
