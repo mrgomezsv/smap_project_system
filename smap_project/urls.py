@@ -3,8 +3,8 @@ from django.urls import path, include
 from t_app_product import views
 from django.conf import settings
 from django.conf.urls.static import static
-from t_app_product.views import process_checkbox, redirect_productc
 from api.views import ProductListCreate, ProductRetrieveUpdateDestroy, LikeToggle
+from t_app_product.views import process_checkbox
 
 urlpatterns = [
     path('admin/', admin.site.urls),

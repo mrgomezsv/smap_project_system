@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from django.conf import settings
+from smap_project import settings
 from .models import Product, Like
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -38,4 +38,4 @@ class ProductSerializer(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
-        fields = '__all__'
+        fields = ('id', 'user', 'product', 'liked_at')  # Ajusta los campos según tu modelo Like
