@@ -248,6 +248,9 @@ def firebase_auth(request):
                     'last_sign_in_timestamp': last_sign_in_timestamp
                 })
 
+        # Ordenar la lista por last_sign_in_timestamp descendente
+        processed_data.sort(key=lambda x: x['last_sign_in_timestamp'], reverse=True)
+
         return processed_data
 
     # Obtener usuarios de Firebase
@@ -255,7 +258,6 @@ def firebase_auth(request):
 
     # Enviar los datos al template
     return render(request, 'firebase_auth.html', {'users': users})
-
 
 
 @login_required
