@@ -1,34 +1,30 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from .models import Product, Like
-from .serializers import ProductSerializer, LikeSerializer
+# He comentad este codigo para que la API no haga POST,
+# por el momento solo me interesa que haga GET
 
-class ProductListCreate(generics.ListCreateAPIView):
-    queryset = Product.objects.all()
+# from rest_framework import generics
+# from t_app_product.models import Product  # Importa el modelo de tu aplicación
+#
+# from .serializers import ProductSerializer
+#
+# class ProductListCreate(generics.ListCreateAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+
+
+# Solo hace GET
+from rest_framework import generics
+from t_app_product.models import Product  # Importa el modelo de tu aplicación
+from .serializers import ProductSerializer
+
+class ProductListCreate(generics.ListAPIView):
     serializer_class = ProductSerializer
 
-class ProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    def get_queryset(self):
+        # Filtra los productos para mostrar solo aquellos que están publicados
+        return Product.objects.filter(publicated=True)
 
-class LikeToggle(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        user = request.user
-        product_id = request.data.get('product_id')
-
-        try:
-            product = Product.objects.get(id=product_id)
-        except Product.DoesNotExist:
-            return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        try:
-            like = Like.objects.get(user=user, product=product)
-            like.delete()
-            return Response({'message': 'Like removed'}, status=status.HTTP_204_NO_CONTENT)
-        except Like.DoesNotExist:
-            Like.objects.create(user=user, product=product)
-            return Response({'message': 'Like added'}, status=status.HTTP_201_CREATED)
+    def get_serializer_context(self):
+        # Pasa el contexto del request al serializador
+        context = super().get_serializer_context()
+        context.update({"request": self.request})
+        return context

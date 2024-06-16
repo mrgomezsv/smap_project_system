@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from smap_project import settings
-from .models import Product, Like
+from django.conf import settings
+from .models import Product
 
 class ProductSerializer(serializers.ModelSerializer):
     img = serializers.SerializerMethodField()
@@ -34,8 +34,3 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def build_absolute_uri(self, url):
         return f'{settings.SITE_DOMAIN}{url}'
-
-class LikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Like
-        fields = ('id', 'user', 'product', 'liked_at')  # Ajusta los campos según tu modelo Like
