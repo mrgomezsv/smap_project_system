@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     't_app_product',
     'api',
+    'api_likes',
     'rest_framework',
     'kidsfun_web',
 ]
