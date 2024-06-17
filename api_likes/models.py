@@ -1,7 +1,4 @@
 from django.db import models
-
-# api_likes/models.py
-from django.db import models
 from django.contrib.auth.models import User
 from t_app_product.models import Product
 

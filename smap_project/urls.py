@@ -6,7 +6,6 @@ from django.conf.urls.static import static
 from t_app_product.views import process_checkbox, redirect_productc
 from api.views import ProductListCreate
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('kidsfun_web.urls')),  # Actualiza la URL principal
@@ -28,7 +27,7 @@ urlpatterns = [
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),
     path('api/products/', ProductListCreate.as_view(), name='product-list'),
-    path('api/likes', include('api_likes.urls')),  # Incluye las URLs de la aplicación api_likes
+    path('api/likes/', include('api_likes.urls')),  # Incluye las URLs de la aplicación api_likes
 ]
 
 # Sirve las imágenes desde la carpeta media
