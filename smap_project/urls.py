@@ -1,3 +1,4 @@
+# urls.py principal del proyecto
 from django.contrib import admin
 from django.urls import path, include
 from t_app_product import views
@@ -8,7 +9,7 @@ from api.views import ProductListCreate
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('kidsfun_web.urls')),  # Actualiza la URL principal
+    path('', include('kidsfun_web.urls')),
     path('about_smap/', views.about_smap, name='about_smap'),
     path('signup/', views.signup, name='signup'),
     path('product/', views.product, name='product'),
