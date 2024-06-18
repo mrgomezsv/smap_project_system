@@ -1,15 +1,16 @@
 # urls.py principal del proyecto
 from django.contrib import admin
 from django.urls import path, include
-from t_app_product import views
 from django.conf import settings
 from django.conf.urls.static import static
+
+from t_app_product import views
 from t_app_product.views import process_checkbox, redirect_productc
 from api.views import ProductListCreate
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('kidsfun_web.urls')),
+    path('', include('kidsfun_web.urls')),  # Aquí se incluyen las URLs de kidsfun_web
     path('about_smap/', views.about_smap, name='about_smap'),
     path('signup/', views.signup, name='signup'),
     path('product/', views.product, name='product'),
