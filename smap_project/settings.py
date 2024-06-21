@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     't_app_product',
     'api',
     'api_likes',
+    'api_commentary',
     'rest_framework',
     'kidsfun_web',
 ]
