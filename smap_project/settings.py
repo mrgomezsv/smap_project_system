@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     't_app_product',
     'api',
     'api_likes',
@@ -60,6 +61,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://kidsfunyfiestasinfantiles.com",
+    "http://localhost:8000",
+    # otros orígenes permitidos
 ]
 
 ROOT_URLCONF = 'smap_project.urls'
