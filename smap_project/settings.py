@@ -103,11 +103,11 @@ WSGI_APPLICATION = 'smap_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'smap_kf',
+        'NAME': 'smap_db',
         'USER': 'mrgomez',
-        'PASSWORD': 'Karin2100',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'PASSWORD': 'K@r1n2100',
+        'HOST': 'smap_db',  # Se mantiene como 'smap_db' ya que es el nombre del servicio de Docker
+        'PORT': '5432',     # Usa el puerto 5432 del contenedor, que está mapeado al puerto 5433 del host
     }
 }
 

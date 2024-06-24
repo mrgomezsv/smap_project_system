@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  smap_web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: gunicorn --bind 0.0.0.0:8000 smap_project.wsgi:application
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - smap_db
+
+  smap_db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: smap_db
+      POSTGRES_USER: mrgomez
+      POSTGRES_PASSWORD: K@r1n2100
+    ports:
+      - "5433:5432"  # Mapea el puerto 5433 del host al puerto 5432 del contenedor
