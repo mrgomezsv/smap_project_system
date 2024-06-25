@@ -10,12 +10,11 @@ from api.views import ProductListCreate
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('kidsfun_web.urls')),  # Aquí se incluyen las URLs de kidsfun_web
     path('about_smap/', views.about_smap, name='about_smap'),
     path('signup/', views.signup, name='signup'),
     path('product/', views.product, name='product'),
     path('logout/', views.signout, name='logout'),
-    path('signin/', views.signin, name='signin'),
+    path('', views.signin, name='signin'),
     path('product/create/', views.create_product, name='create_product'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('product/<int:product_id>/delete', views.delete_product, name='delete_product'),

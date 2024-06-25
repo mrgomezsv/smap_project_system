@@ -9,38 +9,30 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
 import os
 from pathlib import Path
-import environ
+from keyring import credentials
 from firebase_admin import credentials
 import firebase_admin
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Inicializar django-environ
-env = environ.Env(
-    # establecer valores por defecto
-    DEBUG=(bool, False)
-)
-
-# Cargar el archivo .env si existe
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = True
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+ALLOWED_HOSTS = ['kidsfunyfiestasinfantiles.com', '127.0.0.1', 'localhost', '82.165.210.146']
 
 # Firebase Admin SDK initialization
-cred_path = os.path.join(BASE_DIR, 'credentials', env('FIREBASE_CREDENTIALS'))
+cred_path = os.path.join(BASE_DIR, 'credentials', 'smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json')  # Reemplaza con la ruta a tus credenciales
 cred = credentials.Certificate(cred_path)
 
 # Application definition
@@ -58,7 +50,6 @@ INSTALLED_APPS = [
     'api_likes',
     'api_commentary',
     'rest_framework',
-    'kidsfun_web',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +63,11 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
+CORS_ALLOWED_ORIGINS = [
+    "https://kidsfunyfiestasinfantiles.com",
+    "http://localhost:8000",
+    # otros orígenes permitidos
+]
 
 ROOT_URLCONF = 'smap_project.urls'
 
@@ -84,8 +79,6 @@ TEMPLATES = [
             BASE_DIR / 't_app_product' / 'templates' / 'push_notificated',  # Agrega esta línea para cada directorio
             BASE_DIR / 't_app_product' / 'templates' / 'other_service',
             BASE_DIR / 't_app_product' / 'templates' / 'firebase_auth',
-            BASE_DIR / 'kidsfun_web' / 'templates',
-            BASE_DIR / 'kidsfun_web' / 'templates' / 'modals_web',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -107,11 +100,11 @@ WSGI_APPLICATION = 'smap_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT'),
+        'NAME': 'smap_kf',
+        'USER': 'mrgomez',
+        'PASSWORD': 'Karin2100',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -169,7 +162,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuración adicional para CSRF
-CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
+CSRF_TRUSTED_ORIGINS = ['https://kidsfunyfiestasinfantiles.com',]
 
 CSRF_COOKIE_SECURE = True
 
