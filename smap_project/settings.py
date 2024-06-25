@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['kidsfunyfiestasinfantiles.com', '127.0.0.1', 'localhost', '82.165.210.146']
+ALLOWED_HOSTS = ['smap.kidsfunyfiestasinfantiles.com', '127.0.0.1', 'localhost', '82.165.210.146']
 
 # Firebase Admin SDK initialization
 cred_path = os.path.join(BASE_DIR, 'credentials', 'smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json')  # Reemplaza con la ruta a tus credenciales
@@ -64,7 +64,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://kidsfunyfiestasinfantiles.com",
+    "https://smap.kidsfunyfiestasinfantiles.com",
     "http://localhost:8000",
     # otros orígenes permitidos
 ]
@@ -147,7 +147,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Definir las rutas adicionales para buscar archivos estáticos
 STATICFILES_DIRS = [
     BASE_DIR / "t_app_product" / "static",
-    BASE_DIR / "kidsfun_web" / "static",
 ]
 
 LOGIN_URL = '/signin'
@@ -162,7 +161,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuración adicional para CSRF
-CSRF_TRUSTED_ORIGINS = ['https://kidsfunyfiestasinfantiles.com',]
+CSRF_TRUSTED_ORIGINS = ['https://smap.kidsfunyfiestasinfantiles.com',]
 
 CSRF_COOKIE_SECURE = True
 
@@ -184,4 +183,4 @@ try:
 except ValueError:
     pass  # La aplicación de Firebase ya está inicializada
 
-SITE_DOMAIN = 'kidsfunyfiestasinfantiles.com'
+SITE_DOMAIN = 'smap.kidsfunyfiestasinfantiles.com'
