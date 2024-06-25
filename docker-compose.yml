@@ -8,16 +8,19 @@ services:
     command: gunicorn --bind 0.0.0.0:8000 smap_project.wsgi:application
     volumes:
       - .:/app
+      - ./credentials:/app/credentials  # Asegúrate de que las credenciales de Firebase estén disponibles
     ports:
       - "8070:8000"
     depends_on:
       - smap_db
+    env_file:
+      - .env
 
   smap_db:
     image: postgres:13
     environment:
       POSTGRES_DB: smap_db
       POSTGRES_USER: mrgomez
-      POSTGRES_PASSWORD: K@r1n2100
+      POSTGRES_PASSWORD: Karin2100
     ports:
       - "5433:5432"

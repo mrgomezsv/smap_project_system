@@ -119,3 +119,6 @@ find . -name .DS_Store -print0 | xargs -0 git rm --cachedgit
 
 # Ignorar archivos de configuración de IDEA
 .idea/
+
+# Credenciales
+.env
