@@ -166,7 +166,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuración adicional para CSRF
-CSRF_TRUSTED_ORIGINS = ['https://smap.kidsfunyfiestasinfantiles.com',]
+CSRF_TRUSTED_ORIGINS = [
+    'https://www.smap.kidsfunyfiestasinfantiles.com'
+]
 
 CSRF_COOKIE_SECURE = True
 
