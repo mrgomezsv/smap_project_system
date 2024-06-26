@@ -29,7 +29,7 @@ urlpatterns = [
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),
     path('api/products/', ProductListCreate.as_view(), name='product-list'),
-    path('api/likes/', include('api_likes.urls')),  # Incluye las URLs de la aplicación api_likes
+    # path('api/likes/', include('api_likes.urls')),  # Incluye las URLs de la aplicación api_likes
     path('api/', include('api_commentary.urls')),  # Incluye las URLs de la aplicación api_likes
 ]
 
