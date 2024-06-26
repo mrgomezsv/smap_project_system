@@ -4,9 +4,11 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from . import views
 
+app_name = 'api_commentary'
+
 router = DefaultRouter()
-router.register(r'', views.CommentaryViewSet)  # Cambiado r'commentary' a r''
+router.register(r'', views.CommentaryViewSet)
 
 urlpatterns = [
-    path('commentary/', include(router.urls)),  # Añadido 'commentary/' en path
+    path('commentary/', include(router.urls)),
 ]
