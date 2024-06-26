@@ -190,4 +190,4 @@ try:
 except ValueError:
     pass  # La aplicación de Firebase ya está inicializada
 
-SITE_DOMAIN = 'smap.kidsfunyfiestasinfantiles.com'
+SITE_DOMAIN = 'https://www.smap.kidsfunyfiestasinfantiles.com'
