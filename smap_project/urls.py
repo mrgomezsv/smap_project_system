@@ -14,8 +14,8 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('product/', views.product, name='product'),
     path('logout/', views.signout, name='logout'),
-    path('signin/', views.signin, name='signin'),  # Añadir esta línea para definir la URL de signin
-    path('', views.signin, name='home'),  # Mantener esto si deseas que la raíz redirija a signin
+    path('signin/', views.signin, name='signin'),
+    path('', views.signin, name='home'),
     path('product/create/', views.create_product, name='create_product'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('product/<int:product_id>/delete', views.delete_product, name='delete_product'),
@@ -29,8 +29,8 @@ urlpatterns = [
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),
     path('api/products/', ProductListCreate.as_view(), name='product-list'),
-    # path('api/likes/', include('api_likes.urls')),  # Incluye las URLs de la aplicación api_likes
-    path('api/', include('api_commentary.urls')),  # Incluye las URLs de la aplicación api_likes
+    path('api/', include('api_like.urls')),  # Incluye las URLs de la aplicación api_like
+    path('api/', include('api_commentary.urls')),  # Incluye las URLs de la aplicación api_commentary
 ]
 
 # Sirve las imágenes desde la carpeta media

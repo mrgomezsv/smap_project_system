@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     't_app_product',
     'api',
     'api_commentary',
+    'api_like',
     'rest_framework',
 ]
 
