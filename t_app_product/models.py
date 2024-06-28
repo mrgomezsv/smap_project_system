@@ -13,7 +13,7 @@ CATEGORY_CHOICES = [
 class Product(models.Model):
     img = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
     title = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    description = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     dimensions = models.CharField(max_length=50, blank=True, null=True)
