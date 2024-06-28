@@ -27,6 +27,11 @@ class ProductForm(forms.ModelForm):
             'img': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
         }
 
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price is None:
+            return 1
+        return price
 
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
