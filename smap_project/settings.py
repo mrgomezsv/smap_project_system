@@ -183,7 +183,7 @@ SESSION_COOKIE_SAMESITE = 'Lax'  # También puede ser 'Strict' dependiendo de tu
 
 # Opcionalmente, mantener ambas configuraciones para mayor seguridad
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expira al cerrar el navegador
-SESSION_COOKIE_AGE = 300  # Y/o expira en 5 minutos
+SESSION_COOKIE_AGE = 1800  # Y/o expira en 30 minutos en segundos
 
 try:
     firebase_admin.initialize_app(cred)
