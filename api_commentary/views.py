@@ -18,6 +18,7 @@ class CommentaryViewSet(viewsets.ModelViewSet):
 
         comments = self.queryset.filter(product_id=product_id)
         serializer = self.get_serializer(comments, many=True)
+
         return Response(serializer.data)
 
     def perform_create(self, serializer):
