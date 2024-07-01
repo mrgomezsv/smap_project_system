@@ -21,6 +21,8 @@ class Product(models.Model):
     publicated = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, related_name='t_app_products')
 
+    youtube_url = models.CharField(max_length=255)
+
     img1 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
     img2 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
     img3 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')

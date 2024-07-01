@@ -13,7 +13,7 @@
 
 # Solo hace GET
 from rest_framework import generics
-from t_app_product.models import Product  # Importa el modelo de tu aplicación
+from t_app_product.models import Product
 from .serializers import ProductSerializer
 
 class ProductListCreate(generics.ListAPIView):

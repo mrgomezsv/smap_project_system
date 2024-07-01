@@ -3,6 +3,7 @@ from django.conf import settings
 from .models import Product
 
 class ProductSerializer(serializers.ModelSerializer):
+    youtube_url = serializers.SerializerMethodField()
     img = serializers.SerializerMethodField()
     img1 = serializers.SerializerMethodField()
     img2 = serializers.SerializerMethodField()
@@ -33,4 +34,10 @@ class ProductSerializer(serializers.ModelSerializer):
         return self.build_absolute_uri(obj.img5.url)
 
     def build_absolute_uri(self, url):
+        request = self.context.get('request')
+        if request:
+            return request.build_absolute_uri(url)
         return f'{settings.SITE_DOMAIN}{url}'
+
+    def get_youtube_url(self, obj):
+        return f"https://www.youtube.com/watch?v={obj.youtube_url}"  # Utiliza `obj.youtube_url` en lugar de `obj.youtube_video_id`

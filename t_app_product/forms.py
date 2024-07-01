@@ -7,7 +7,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['title', 'description', 'price', 'category', 'dimensions', 'publicated', 'img', 'img1', 'img2',
-                  'img3', 'img4', 'img5']
+                  'img3', 'img4', 'img5', 'youtube_url']
         labels = {
             'title': 'Título',
             'description': 'Descripción',
@@ -15,6 +15,7 @@ class ProductForm(forms.ModelForm):
             'category': 'Categoría',
             'dimensions': 'Dimensiones',
             'publicated': 'Publicado',
+            'youtube_url': 'YouTube URL',
         }
 
         widgets = {
@@ -25,6 +26,7 @@ class ProductForm(forms.ModelForm):
             'dimensions': forms.TextInput(attrs={'class': 'form-control'}),
             'publicated': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'img': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+            'youtube_url': forms.URLInput(attrs={'class': 'form-control'}),
         }
 
     def clean_price(self):
