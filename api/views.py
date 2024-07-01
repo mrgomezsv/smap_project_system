@@ -21,7 +21,9 @@ class ProductListCreate(generics.ListAPIView):
 
     def get_queryset(self):
         # Filtra los productos para mostrar solo aquellos que están publicados
-        return Product.objects.filter(publicated=True)
+        queryset = Product.objects.filter(publicated=True)
+        # print("Queryset:", queryset)  # Añadir depuración aquí
+        return queryset
 
     def get_serializer_context(self):
         # Pasa el contexto del request al serializador

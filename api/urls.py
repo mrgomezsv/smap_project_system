@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.urls import path, include
 
 urlpatterns = [
-    path('api/', include('t_app_product.urls')),  # Asegúrate de que tus rutas de API estén incluidas
+    path('api/', include('t_app_product.urls')),
 ]
 
 if settings.DEBUG:

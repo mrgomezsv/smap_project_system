@@ -14,7 +14,7 @@ class Product(models.Model):
     important = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, related_name='api_products')
 
-    youtube_url = models.CharField(max_length=255)  # Asegúrate de que este campo esté aquí
+    youtube_url = models.CharField(max_length=255)
 
     img1 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
     img2 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
