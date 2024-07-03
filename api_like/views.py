@@ -7,13 +7,22 @@ from .serializers import LikeSerializer
 from django.db.models import Count
 
 @api_view(['POST'])
-def like_create(request):
+def like_toggle(request):
     if request.method == 'POST':
-        serializer = LikeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user_id = request.data.get('user')
+        product_id = request.data.get('product')
+
+        try:
+            existing_like = Like.objects.get(user=user_id, product=product_id)
+            existing_like.is_favorite = not existing_like.is_favorite
+            existing_like.save()
+            return Response({'is_favorite': existing_like.is_favorite}, status=status.HTTP_200_OK)
+        except Like.DoesNotExist:
+            serializer = LikeSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def user_likes(request, user_id):
