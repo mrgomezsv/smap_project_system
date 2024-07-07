@@ -6,7 +6,7 @@ def image_path(instance, filename):
 
 CATEGORY_CHOICES = [
         ('option1', 'Bounce House'),
-        ('option2', 'Mechanical Games'),
+        ('option2', 'Electric Games'),
         ('option3', 'Furniture'),
     ]
 
