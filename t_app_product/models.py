@@ -1,17 +1,14 @@
+# product/models.py
 from django.db import models
 from django.contrib.auth.models import User
 
-def image_path(instance, filename):
-    return f'product_images/{filename}'
-
 CATEGORY_CHOICES = [
-        ('option1', 'Bounce House'),
-        ('option2', 'Electric Games'),
-        ('option3', 'Furniture'),
-    ]
+    ('option1', 'Bounce House'),
+    ('option2', 'Electric Games'),
+    ('option3', 'Furniture'),
+]
 
 class Product(models.Model):
-    img = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -23,11 +20,19 @@ class Product(models.Model):
 
     youtube_url = models.CharField(max_length=255)
 
-    img1 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
-    img2 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
-    img3 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
-    img4 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
-    img5 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
-
     def __str__(self):
         return self.title + ' - by ' + self.user.username
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='product_images/', default='default_product_image.jpg')
+
+    def __str__(self):
+        return f"Image of {self.product.title}"
+
+class ProductVideo(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='videos')
+    youtube_url = models.CharField(max_length=255, default='default_youtube_url')
+
+    def __str__(self):
+        return f"Video of {self.product.title}"

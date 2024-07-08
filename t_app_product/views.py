@@ -2,15 +2,14 @@ import os
 
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import ProductForm
-from .models import Product
+from .forms import ProductForm, CustomUserCreationForm
+from .models import Product, ProductImage, ProductVideo
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
-from .forms import CustomUserCreationForm
 from firebase_admin import auth
 from datetime import datetime
 
@@ -109,6 +108,18 @@ def create_product(request):
             new_product = form.save(commit=False)
             new_product.user = request.user
             new_product.save()
+
+            # Guardar imágenes adicionales si se proporcionan
+            for i in range(1, 6):
+                image_field = request.FILES.get(f'img{i}')
+                if image_field:
+                    ProductImage.objects.create(product=new_product, image=image_field)
+
+            # Guardar video de YouTube si se proporciona
+            youtube_url = request.POST.get('youtube_url')
+            if youtube_url:
+                ProductVideo.objects.create(product=new_product, youtube_url=youtube_url)
+
             return redirect('product')
         except ValueError:
             return render(request, 'product/create_product.html', {
@@ -127,11 +138,14 @@ def product_detail(request, product_id):
         form = ProductForm(instance=product)
 
         # Obtiene las imágenes adicionales del producto
-        additional_images = [getattr(product, f'img{i}') for i in range(1, 6)]
+        additional_images = ProductImage.objects.filter(product=product)
 
-        # Renderiza la página de detalle del producto con el formulario, el producto y las imágenes adicionales
+        # Obtiene los videos de YouTube del producto
+        videos = ProductVideo.objects.filter(product=product)
+
+        # Renderiza la página de detalle del producto con el formulario, el producto, las imágenes adicionales y los videos
         return render(request, 'product/product_detail.html',
-                      {'product': product, 'form': form, 'additional_images': additional_images})
+                      {'product': product, 'form': form, 'additional_images': additional_images, 'videos': videos})
     else:
         try:
             # Obtiene el producto con el ID dado, sin importar el usuario
@@ -301,17 +315,14 @@ def productc(request):
 
     # Filtrar productos por nombre y/o categoría si hay consultas de búsqueda
     if query or category:
-        # products = Product.objects.filter(user=request.user)  # Comentario: Se elimina la filtración por usuario
-        products = Product.objects.all()  # Comentario: Se seleccionan todos los productos
+        products = Product.objects.all()  # Selecciona todos los productos
 
         if query:
             products = products.filter(Q(title__icontains=query) | Q(description__icontains=query))
         if category:
             products = products.filter(category=category)
     else:
-        # Si no hay consulta, mostrar todos los productos del usuario
-        # products = Product.objects.filter(user=request.user)  # Comentario: Se elimina la filtración por usuario
-        products = Product.objects.all()  # Comentario: Se seleccionan todos los productos
+        products = Product.objects.all()  # Muestra todos los productos si no hay consulta
 
     # Agrupar productos por categoría
     categorized_products = {}

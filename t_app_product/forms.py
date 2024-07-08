@@ -1,13 +1,14 @@
+# product/forms.py
 from django import forms
 from .models import Product
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['title', 'description', 'price', 'category', 'dimensions', 'publicated', 'img', 'img1', 'img2',
-                  'img3', 'img4', 'img5', 'youtube_url']
+        fields = ['title', 'description', 'price', 'category', 'dimensions', 'publicated', 'youtube_url']
         labels = {
             'title': 'Título',
             'description': 'Descripción',
@@ -19,13 +20,12 @@ class ProductForm(forms.ModelForm):
         }
 
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'required':True}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'required':True}),
-            'price': forms.NumberInput(attrs={'class': 'form-control', 'required':True}),
-            'category': forms.Select(attrs={'class': 'form-control', 'required':True}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'required': True}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'required': True}),
+            'category': forms.Select(attrs={'class': 'form-control', 'required': True}),
             'dimensions': forms.TextInput(attrs={'class': 'form-control'}),
             'publicated': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'img': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
             'youtube_url': forms.URLInput(attrs={'class': 'form-control'}),
         }
 
@@ -34,6 +34,7 @@ class ProductForm(forms.ModelForm):
         if price is None:
             return 1
         return price
+
 
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
