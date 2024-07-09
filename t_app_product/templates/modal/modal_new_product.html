@@ -39,6 +39,11 @@
                     Producto Publicado
                 </label>
             </div>
+            <div class="mb-3">
+                <label for="youtube_url" class="form-label">YouTube URL</label>
+                <input type="text" class="form-control" id="youtube_url" name="youtube_url"
+                       placeholder="Ejemplo: https://www.youtube.com/watch?v=yourvideo">
+            </div>
         </div>
         <div class="col-md-6">
             <div style="margin-bottom: 1px;"></div>
@@ -79,17 +84,18 @@
         <button id="cancelarBtn" type="button" class="btn btn-danger ml-2">Cancelar</button>
     </div>
 </div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#crearBtn').click(function () {
-            // Obtener los valores de los campos del formulario
             var title = $('#title').val();
             var description = $('#description').val();
             var price = $('#price').val();
             var category = $('#category').val();
             var dimensions = $('#dimensions').val();
-            var publicated  = $('#publicated ').prop('checked');
+            var publicated = $('#publicated').prop('checked');
+            var youtubeUrl = $('#youtube_url').val(); // Obtener el valor de YouTube URL
             var img = $('#img').prop('files')[0];
             var img1 = $('#img1').prop('files')[0];
             var img2 = $('#img2').prop('files')[0];
@@ -97,14 +103,14 @@
             var img4 = $('#img4').prop('files')[0];
             var img5 = $('#img5').prop('files')[0];
 
-            // Crear un objeto FormData para enviar los datos del formulario
             var formData = new FormData();
             formData.append('title', title);
             formData.append('description', description);
             formData.append('price', price);
             formData.append('category', category);
             formData.append('dimensions', dimensions);
-            formData.append('publicated ', publicated );
+            formData.append('publicated', publicated);
+            formData.append('youtube_url', youtubeUrl); // Agregar YouTube URL al formData
             formData.append('img', img);
             formData.append('img1', img1);
             formData.append('img2', img2);
@@ -112,10 +118,8 @@
             formData.append('img4', img4);
             formData.append('img5', img5);
 
-            // Obtener el token CSRF del cookie
             var csrftoken = getCookie('csrftoken');
 
-            // Agregar el token CSRF como un encabezado en la solicitud AJAX
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -124,7 +128,6 @@
                 }
             });
 
-            // Realizar una petición AJAX para enviar los datos del formulario al servidor
             $.ajax({
                 url: '/product/create/',
                 type: 'POST',
@@ -132,11 +135,9 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    // Si la creación del producto fue exitosa, redirigir a la página de productos
                     window.location.href = '/product/';
                 },
                 error: function (xhr, status, error) {
-                    // Si hay un error, mostrar un mensaje de error
                     console.error(error);
                     alert('Error al crear el producto. Por favor, intenta nuevamente.');
                 }
@@ -144,14 +145,12 @@
         });
     });
 
-    // Función para obtener el valor del token CSRF del cookie
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {
             var cookies = document.cookie.split(';');
             for (var i = 0; i < cookies.length; i++) {
                 var cookie = jQuery.trim(cookies[i]);
-                // Verificar si el cookie contiene el nombre buscado
                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                     break;
@@ -161,9 +160,7 @@
         return cookieValue;
     }
 
-    // Función para verificar si el método de solicitud es seguro para CSRF
     function csrfSafeMethod(method) {
-        // Estos métodos de solicitud no requieren CSRF
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
 
