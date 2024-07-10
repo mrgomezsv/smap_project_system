@@ -217,12 +217,6 @@ def create_event(request):
 
 
 @login_required
-def advance_payments(request):
-    # Lógica de la vista aquí
-    return render(request, 'advance_payments.html')
-
-
-@login_required
 def firebase_auth(request):
     # Función para obtener los usuarios de Firebase
     def get_firebase_users():

@@ -35,20 +35,20 @@ body{
             </li>
             <li class="li-item">
                 <p class="section-title">Sección</p>
-                <a href="/product">Productos</a>
+                <a href="/product" id="opcion1">Productos</a>
             </li>
             <li class="li-item">
                 <p class="section-title">Sección</p>
-                <a href="{% url 'event' %}" id="opcion4">Eventos</a>
+                <a href="{% url 'event' %}" id="opcion2">Eventos</a>
 
             </li>
             <li class="li-item">
                 <p class="section-title">Sección</p>
-                <a href="{% url 'push_notification' %}" id="opcion2">Envío de Notificaciones Push</a>
+                <a href="{% url 'ticket_master' %}" id="opcion3">Ticket Master</a>
             </li>
             <li class="li-item">
                 <p class="section-title">Sección</p>
-                <a href="{% url 'firebase_auth' %}" id="opcion3">Usuarios en la App</a>
+                <a href="{% url 'firebase_auth' %}" id="opcion4">Usuarios en la App</a>
             </li>
             <li class="li-item">
                 <p class="section-title">Sección</p>
@@ -56,16 +56,8 @@ body{
             </li>
             <li class="li-item">
                 <p class="section-title">Sección</p>
-                <a href="{% url 'advance_payments' %}" id="opcion6">Anticipos</a>
+                <a href="{% url 'push_notification' %}" id="opcion6">Envío de Notificaciones Push</a>
             </li>
-            <li class="li-item">
-                <p class="section-title">Sección</p>
-                <a href="{% url 'ticket_master' %}" id="opcion7">Ticket Master</a>
-            </li>
-            {#            <li>#}
-            {#                <p class="section-title">Section</p>#}
-            {#                <a href="/logout">Logout</a>#}
-            {#            </li>#}
         {% endif %}
     </ul>
 

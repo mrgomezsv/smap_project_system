@@ -25,7 +25,6 @@ urlpatterns = [
     path('create_event/', views.create_event, name='create_event'),
     path('disclaimer/', views.disclaimer, name='disclaimer'),
     path('sudo_admin/', views.sudo_admin, name='sudo_admin'),
-    path('advance_payments/', views.advance_payments, name='advance_payments'),
     path('ticket_master/', views.ticket_master, name='ticket_master'),
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),
