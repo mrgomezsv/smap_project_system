@@ -37,10 +37,10 @@ class Event(models.Model):
     description = models.TextField()
     location = models.CharField(max_length=200)
     start_datetime = models.DateTimeField()
-    end_datetime = models.DateTimeField()
+    # end_datetime = models.DateTimeField()
     organizer = models.ForeignKey(User, on_delete=models.CASCADE)  # Suponiendo que se utilice el modelo de usuario incorporado en Django
     ticket_price = models.DecimalField(max_digits=10, decimal_places=2)
-    ticket_quantity = models.IntegerField(default=0)
+    #  ticket_quantity = models.IntegerField(default=0)
     published = models.BooleanField(default=False)
 
     def __str__(self):

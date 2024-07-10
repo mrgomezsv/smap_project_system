@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product
+from .models import Product, Event
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -43,3 +43,9 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "first_name", "last_name", "email", "password1", "password2")
+
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['title', 'description', 'location', 'start_datetime', 'ticket_price', 'published']

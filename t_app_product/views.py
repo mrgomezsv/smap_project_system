@@ -13,6 +13,8 @@ from django.http import HttpResponse
 from .forms import CustomUserCreationForm
 from firebase_admin import auth
 from datetime import datetime
+from .models import Event
+from .forms import EventForm
 
 
 @login_required
@@ -198,6 +200,20 @@ def push_notification(request):
 def event(request):
     # Lógica de la vista aquí
     return render(request, 'event.html')
+
+@login_required
+def create_event(request):
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            # Guarda el evento en la base de datos
+            event = form.save(commit=False)
+            event.organizer = request.user  # Asigna el organizador (suponiendo que tienes autenticación de usuario)
+            event.save()
+            return redirect('event')  # Redirige a la vista de eventos (event.html)
+    else:
+        form = EventForm()
+    return render(request, 'create_event.html', {'form': form})
 
 
 @login_required

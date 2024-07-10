@@ -22,6 +22,7 @@ urlpatterns = [
     path('push_notification/', views.push_notification, name='push_notification'),
     path('firebase_auth/', views.firebase_auth, name='firebase_auth'),
     path('event/', views.event, name='event'),
+    path('create_event/', views.create_event, name='create_event'),
     path('disclaimer/', views.disclaimer, name='disclaimer'),
     path('sudo_admin/', views.sudo_admin, name='sudo_admin'),
     path('advance_payments/', views.advance_payments, name='advance_payments'),

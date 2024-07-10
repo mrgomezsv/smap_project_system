@@ -1,0 +1,48 @@
+<!-- new_event.html -->
+<div class="modal fade" id="newEventModal" tabindex="-1" role="dialog" aria-labelledby="newEventModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newEventModalLabel">Nuevo Evento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Formulario para crear un nuevo evento -->
+        <form method="POST" action="{% url 'create_event' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="id_title">Título:</label>
+            <input type="text" id="id_title" name="title" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="id_description">Descripción:</label>
+            <textarea id="id_description" name="description" class="form-control" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="id_location">Ubicación:</label>
+            <input type="text" id="id_location" name="location" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="id_start_datetime">Fecha y hora de inicio:</label>
+            <input type="datetime-local" id="id_start_datetime" name="start_datetime" class="form-control" required>
+          </div>
+<!--          <div class="form-group">-->
+<!--            <label for="id_end_datetime">Fecha y hora de fin:</label>-->
+<!--            <input type="datetime-local" id="id_end_datetime" name="end_datetime" class="form-control" required>-->
+<!--          </div>-->
+          <div class="form-group">
+              <label for="id_ticket_price">Precio de entrada:</label>
+              <input type="number" id="id_ticket_price" name="ticket_price" class="form-control" step="0.01" required>
+          </div>
+<!--          <div class="form-group">-->
+<!--            <label for="id_ticket_quantity">Cantidad de entradas:</label>-->
+<!--            <input type="number" id="id_ticket_quantity" name="ticket_quantity" class="form-control" required>-->
+<!--          </div>-->
+          <button type="submit" class="btn btn-primary">Crear Evento</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
