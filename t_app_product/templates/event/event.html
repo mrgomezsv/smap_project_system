@@ -78,6 +78,7 @@
                     <th>Lugar/Ubicación</th>
                     <th>Fecha y hora</th>
                     <th>Precio de la entrada</th>
+                    <th>Partners</th>
                     <th> </th>
                 </tr>
             </thead>
@@ -91,6 +92,7 @@
                     <td class="text-right">{{ event.location }}</td>
                     <td class="text-right">{{ event.start_datetime|date:"d/m/Y" }}</td>
                     <td class="text-right">${{ event.ticket_price|floatformat:"2" }}</td>
+                    <td class="text-right">{{ event.partners }}</td>
                     <td class="action-column d-none">
                         <a href="#" class="btn btn-danger btn-sm">
                             <i class="fas fa-trash-alt"></i>

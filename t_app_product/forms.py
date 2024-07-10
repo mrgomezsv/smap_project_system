@@ -48,4 +48,4 @@ class CustomUserCreationForm(UserCreationForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['title', 'description', 'location', 'start_datetime', 'ticket_price', 'published']
+        fields = ['title', 'description', 'location', 'start_datetime', 'ticket_price', 'published', 'partners']

@@ -32,6 +32,13 @@ class Product(models.Model):
     def __str__(self):
         return self.title + ' - by ' + self.user.username
 
+
+PARTNERS_CHOICES = [
+        ('partner1', 'Kidsfun'),
+        ('partner2', 'Tecun Productions'),
+        ('partner3', 'Otros'),
+    ]
+
 class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -42,6 +49,8 @@ class Event(models.Model):
     ticket_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     #  ticket_quantity = models.IntegerField(default=0)
     published = models.BooleanField(default=False)
+    partners = models.CharField(max_length=50, choices=PARTNERS_CHOICES)
+
 
     def __str__(self):
         return self.title

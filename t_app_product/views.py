@@ -206,14 +206,13 @@ def create_event(request):
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
-            # Guarda el evento en la base de datos
             event = form.save(commit=False)
-            event.organizer = request.user  # Asigna el organizador (suponiendo que tienes autenticación de usuario)
+            event.organizer = request.user
             event.save()
-            return redirect('event')  # Redirige a la vista de eventos (event.html)
+            return redirect('event')
     else:
         form = EventForm()
-    return render(request, 'create_event.html', {'form': form})
+    return render(request, 'event.html', {'form': form})
 
 
 @login_required

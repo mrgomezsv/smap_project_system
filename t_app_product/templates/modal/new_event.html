@@ -28,18 +28,19 @@
             <label for="id_start_datetime">Fecha y hora de inicio:</label>
             <input type="datetime-local" id="id_start_datetime" name="start_datetime" class="form-control" required>
           </div>
-<!--          <div class="form-group">-->
-<!--            <label for="id_end_datetime">Fecha y hora de fin:</label>-->
-<!--            <input type="datetime-local" id="id_end_datetime" name="end_datetime" class="form-control" required>-->
-<!--          </div>-->
           <div class="form-group">
               <label for="id_ticket_price">Precio de entrada:</label>
               <input type="number" id="id_ticket_price" name="ticket_price" class="form-control" step="0.01" required>
           </div>
-<!--          <div class="form-group">-->
-<!--            <label for="id_ticket_quantity">Cantidad de entradas:</label>-->
-<!--            <input type="number" id="id_ticket_quantity" name="ticket_quantity" class="form-control" required>-->
-<!--          </div>-->
+          <div class="form-group">
+            <label for="id_partners_id">Partner:</label>
+            <select id="id_partners_id" name="partners_id" class="form-control" required>
+              <option value="" disabled selected>Elige un socio</option>
+              <option value="partner1">Kidsfun</option>
+              <option value="partner2">Tecun Productions</option>
+              <option value="partner3">Otros</option>
+            </select>
+          </div>
           <button type="submit" class="btn btn-primary">Crear Evento</button>
         </form>
       </div>
