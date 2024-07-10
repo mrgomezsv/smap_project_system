@@ -21,7 +21,7 @@ class Product(models.Model):
     publicated = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, related_name='t_app_products')
 
-    youtube_url = models.CharField(max_length=255)
+    youtube_url = models.CharField(max_length=255, blank=True, null=True, default='')
 
     img1 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
     img2 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
@@ -31,3 +31,20 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title + ' - by ' + self.user.username
+
+class Event(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    location = models.CharField(max_length=200)
+    start_datetime = models.DateTimeField()
+    end_datetime = models.DateTimeField()
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE)  # Suponiendo que se utilice el modelo de usuario incorporado en Django
+    ticket_price = models.DecimalField(max_digits=10, decimal_places=2)
+    ticket_quantity = models.IntegerField(default=0)
+    published = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        db_table = 't_app_event'
