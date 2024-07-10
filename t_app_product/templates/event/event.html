@@ -43,5 +43,31 @@
         </div>
     </nav>
     {% load static %}
+<div class="container mt-5">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre del Evento</th>
+                <th>Descripción</th>
+                <th>Lugar/Ubicación</th>
+                <th>Fecha y hora</th>
+                <th>Precio de la entrada</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <td class="text-right">{{ event.title }}</td>
+                <td class="text-right">{{ event.description }}</td>
+                <td class="text-right">{{ event.location }}</td>
+                <td class="text-right">{{ event.start_datetime|date:"d/m/Y" }}</td>
+                <td class="text-right">${{ event.ticket_price|floatformat:"2" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
     {% include 'modal/new_event.html' %}
 {% endblock %}

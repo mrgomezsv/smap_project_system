@@ -198,8 +198,8 @@ def push_notification(request):
 
 @login_required
 def event(request):
-    # Lógica de la vista aquí
-    return render(request, 'event.html')
+    events = Event.objects.all()
+    return render(request, 'event.html', {'events': events})
 
 @login_required
 def create_event(request):
