@@ -195,9 +195,9 @@ def push_notification(request):
 
 
 @login_required
-def services(request):
+def event(request):
     # Lógica de la vista aquí
-    return render(request, 'services.html')
+    return render(request, 'event.html')
 
 
 @login_required
@@ -324,7 +324,7 @@ def productc(request):
 
 
 def is_mrgomez(user):
-    return user.username == 'mrgomez'
+   return user.username == 'mrgomez'
 
 
 @login_required
