@@ -12,6 +12,41 @@
                 display: none;
             }
         </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const selectAllCheckbox = document.getElementById('select-all');
+                const selectOneCheckboxes = document.querySelectorAll('input[type="checkbox"][id^="select-one"]');
+                const actionColumns = document.querySelectorAll('.action-column');
+
+                // Función para actualizar la visibilidad de las columnas de acciones
+                function updateActionColumnsVisibility() {
+                    selectOneCheckboxes.forEach(function (checkbox, index) {
+                        const actionColumn = actionColumns[index];
+                        if (checkbox.checked) {
+                            actionColumn.classList.remove('d-none');
+                        } else {
+                            actionColumn.classList.add('d-none');
+                        }
+                    });
+                }
+
+                // Evento para el checkbox "Select All"
+                selectAllCheckbox.addEventListener('change', function () {
+                    const isChecked = this.checked;
+                    selectOneCheckboxes.forEach(function (checkbox) {
+                        checkbox.checked = isChecked;
+                    });
+                    updateActionColumnsVisibility();
+                });
+
+                // Eventos para los checkboxes individuales
+                selectOneCheckboxes.forEach(function (checkbox, index) {
+                    checkbox.addEventListener('change', function () {
+                        updateActionColumnsVisibility();
+                    });
+                });
+            });
+        </script>
     </head>
 
     <!-- Navbar -->
@@ -23,17 +58,6 @@
                 <div class="form-check me-3 d-none" id="trash-icon">
                     <i class="fas fa-trash-alt mr-2"></i>
                 </div>
-                <!-- Checkbox principal "Seleccionar" en la barra de navegación -->
-                <form id="checkbox-form" method="post" action="{% url 'process_checkbox' %}">
-                    {% csrf_token %}
-<!--                    <div class="form-check me-3">-->
-<!--                        <input class="form-check-input" type="checkbox" value="true" name="checkbox_state"-->
-<!--                               id="flexCheckDefault">-->
-<!--                        <label class="form-check-label" for="flexCheckDefault">-->
-<!--                            Categorias-->
-<!--                        </label>-->
-<!--                    </div>-->
-                </form>
                 <a id="newEventBtn" href="#" class="btn btn-primary" data-toggle="modal" data-target="#newEventModal">Nuevo Evento</a>
                 <form class="d-flex ms-3" role="search" method="get">
                     <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
@@ -42,32 +66,41 @@
             </div>
         </div>
     </nav>
-    {% load static %}
-<div class="container mt-5">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nombre del Evento</th>
-                <th>Descripción</th>
-                <th>Lugar/Ubicación</th>
-                <th>Fecha y hora</th>
-                <th>Precio de la entrada</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for event in events %}
-            <tr>
-                <td class="text-right">{{ event.title }}</td>
-                <td class="text-right">{{ event.description }}</td>
-                <td class="text-right">{{ event.location }}</td>
-                <td class="text-right">{{ event.start_datetime|date:"d/m/Y" }}</td>
-                <td class="text-right">${{ event.ticket_price|floatformat:"2" }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
 
+    <div class="container mt-5">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>SKU</th>
+                    <th>Nombre del Evento</th>
+                    <th>Descripción</th>
+                    <th>Lugar/Ubicación</th>
+                    <th>Fecha y hora</th>
+                    <th>Precio de la entrada</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td><input type="checkbox" id="select-one-{{ forloop.counter }}" name="selected_events"></td>
+                    <td class="text-right"> </td>
+                    <td class="text-right">{{ event.title }}</td>
+                    <td class="text-right">{{ event.description }}</td>
+                    <td class="text-right">{{ event.location }}</td>
+                    <td class="text-right">{{ event.start_datetime|date:"d/m/Y" }}</td>
+                    <td class="text-right">${{ event.ticket_price|floatformat:"2" }}</td>
+                    <td class="action-column d-none">
+                        <a href="#" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     {% include 'modal/new_event.html' %}
 {% endblock %}
