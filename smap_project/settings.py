@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'corsheaders',
     't_app_product',
     'api',
+    'api_commentary',
+    'api_like',
     'rest_framework',
 ]
 

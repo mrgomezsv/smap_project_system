@@ -1,4 +1,3 @@
-# unified_api/models.py
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -26,27 +25,3 @@ class Product(models.Model):
     def __str__(self):
         username = self.user.username if self.user else "Unknown User"
         return f"{self.title} - by {username}"
-
-class Commentary(models.Model):
-    id = models.AutoField(primary_key=True)
-    comment = models.CharField(max_length=256)
-    user_id = models.CharField(max_length=100)
-    product_id = models.IntegerField()
-
-    def __str__(self):
-        return f'Commentary {self.id}'
-
-    class Meta:
-        db_table = 't_app_commentary'
-
-class Like(models.Model):
-    user = models.CharField(max_length=100)
-    product = models.CharField(max_length=100)
-    is_favorite = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 't_app_like'
-
-    def __str__(self):
-        return f"{self.user} - {self.product} - {self.is_favorite}"

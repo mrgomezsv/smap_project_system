@@ -1,12 +1,12 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import ProductViewSet, CommentViewSet, LikeViewSet
+# urls.py
 
-router = DefaultRouter()
-router.register(r'products', ProductViewSet, basename='product')
-router.register(r'comments', CommentViewSet, basename='comment')
-router.register(r'likes', LikeViewSet, basename='like')
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path, include
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/', include('t_app_product.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
