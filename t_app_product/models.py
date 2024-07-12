@@ -18,7 +18,7 @@ class Product(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     dimensions = models.CharField(max_length=50, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
-    publicated = models.BooleanField(default=False)
+    published = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, related_name='t_app_products')
 
     youtube_url = models.CharField(max_length=255, blank=True, null=True, default='')

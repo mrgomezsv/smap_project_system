@@ -84,9 +84,9 @@ def product(request):
         if query:
             # Verificar si el texto de búsqueda contiene "publicado" o "creado"
             if "publicado" in query.lower():
-                products = products.filter(publicated=True)
+                products = products.filter(published=True)
             elif "creado" in query.lower():
-                products = products.filter(publicated=False)
+                products = products.filter(published=False)
 
             # Continuar con la búsqueda por título y descripción si no se encontraron coincidencias de estado
             else:

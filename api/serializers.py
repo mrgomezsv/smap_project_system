@@ -1,36 +1,29 @@
 from rest_framework import serializers
+from .models import Product, Commentary, Like
 from django.conf import settings
-from .models import Product
 
 class ProductSerializer(serializers.ModelSerializer):
-    img = serializers.SerializerMethodField()
-    img1 = serializers.SerializerMethodField()
-    img2 = serializers.SerializerMethodField()
-    img3 = serializers.SerializerMethodField()
-    img4 = serializers.SerializerMethodField()
-    img5 = serializers.SerializerMethodField()
+    img = serializers.ImageField()
+    img1 = serializers.ImageField()
+    img2 = serializers.ImageField()
+    img3 = serializers.ImageField()
+    img4 = serializers.ImageField()
+    img5 = serializers.ImageField()
 
     class Meta:
         model = Product
         fields = '__all__'
 
-    def get_img(self, obj):
-        return self.build_absolute_uri(obj.img.url)
-
-    def get_img1(self, obj):
-        return self.build_absolute_uri(obj.img1.url)
-
-    def get_img2(self, obj):
-        return self.build_absolute_uri(obj.img2.url)
-
-    def get_img3(self, obj):
-        return self.build_absolute_uri(obj.img3.url)
-
-    def get_img4(self, obj):
-        return self.build_absolute_uri(obj.img4.url)
-
-    def get_img5(self, obj):
-        return self.build_absolute_uri(obj.img5.url)
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['img'] = self.build_absolute_uri(instance.img.url)
+        representation['img1'] = self.build_absolute_uri(instance.img1.url)
+        representation['img2'] = self.build_absolute_uri(instance.img2.url)
+        representation['img3'] = self.build_absolute_uri(instance.img3.url)
+        representation['img4'] = self.build_absolute_uri(instance.img4.url)
+        representation['img5'] = self.build_absolute_uri(instance.img5.url)
+        representation['youtube_url'] = instance.youtube_url
+        return representation
 
     def build_absolute_uri(self, url):
         request = self.context.get('request')
@@ -38,14 +31,17 @@ class ProductSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(url)
         return f'{settings.SITE_DOMAIN}{url}'
 
-    def to_representation(self, instance):
-        # Añadir depuración aquí
-        representation = super().to_representation(instance)
-        # print("Instance youtube_url:", instance.youtube_url)
-        # print("Serialized youtube_url:", representation.get('youtube_url'))
-        return representation
+class CommentarySerializer(serializers.ModelSerializer):
+    user_display_name = serializers.SerializerMethodField()
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['youtube_url'] = instance.youtube_url
-        return representation
+    class Meta:
+        model = Commentary
+        fields = ('id', 'comment', 'user_id', 'product_id', 'user_display_name')
+
+    def get_user_display_name(self, obj):
+        return "Nombre de usuario"  # Implementa lógica para obtener el nombre de usuario
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = '__all__'
