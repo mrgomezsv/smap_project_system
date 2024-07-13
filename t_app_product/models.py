@@ -33,6 +33,13 @@ class Product(models.Model):
         return self.title + ' - by ' + self.user.username
 
 
+class WaiverData(models.Model):
+    user_id = models.CharField(max_length=100)
+    user_name = models.CharField(max_length=100)
+    relative_name = models.CharField(max_length=100)
+    relative_age = models.IntegerField()
+
+
 PARTNERS_CHOICES = [
         ('partner1', 'Kidsfun'),
         ('partner2', 'Tecun Productions'),

@@ -13,8 +13,16 @@ from django.http import HttpResponse
 from .forms import CustomUserCreationForm
 from firebase_admin import auth
 from datetime import datetime
-from .models import Event
+from .models import Event, WaiverData
 from .forms import EventForm
+
+
+def waiver_data_view(request):
+    # Obtener todos los datos de waiver almacenados
+    waiver_data = WaiverData.objects.all()
+
+    # Renderizar la plantilla con los datos
+    return render(request, 'waiver_data.html', {'waiver_data': waiver_data})
 
 
 @login_required
