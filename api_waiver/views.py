@@ -1,4 +1,5 @@
-# api_waiver/views.py
+# En api_waiver/views.py
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Relative, UserData
@@ -13,17 +14,13 @@ def api_waiver(request):
         user_id = data.get('user_id', '')
         user_name = data.get('user_name', '')
 
-        # Guardar datos del usuario
-        user_data = UserData.objects.create(user_id=user_id, user_name=user_name)
+        # Guardar datos del usuario si no existe
+        user_data, created = UserData.objects.get_or_create(user_id=user_id, defaults={'user_name': user_name})
 
-        # Guardar datos de familiares
+        # Guardar datos de familiares asociados al usuario
         for relative_data in relatives_data:
-            Relative.objects.create(name=relative_data['name'], age=relative_data['age'])
+            Relative.objects.create(user=user_data, name=relative_data['name'], age=relative_data['age'])
 
         return JsonResponse({'message': 'Datos guardados correctamente.'}, status=200)
-    elif request.method == 'GET':
-        # Aquí puedes manejar la lógica para devolver datos si se realiza una solicitud GET
-        # Por ejemplo, puedes devolver una lista de datos guardados o información sobre la API
-        return JsonResponse({'info': 'Esta es la API Waiver. Para usarla, realiza una solicitud POST con los datos adecuados.'}, status=200)
     else:
         return JsonResponse({'error': 'Método no permitido.'}, status=405)
