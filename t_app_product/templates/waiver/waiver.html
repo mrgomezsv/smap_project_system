@@ -1,11 +1,54 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<head>
     {% load static %}
-
-    <main class="container py-5">
-        <div class="d-flex justify-content-center align-items-center">
-            <img src="{% static 'assets/under_disclaimer.png' %}" class="img-fluid" alt="Under Construction!!!">
+</head>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container d-flex align-items-center">
+        <h2 class="h2">Administracion del Modulo Waiver</h2>
+        <div class="d-flex ml-auto">
+            <a id="newNotificationBtn" href="" class="btn btn-primary">Editar Formato de Waiver</a>
         </div>
-    </main>
+    </div>
+</nav>
+
+    <div class="container mt-5">
+        <h2>Información del Waiver</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre Completo</th>
+                    <th>Correo Electrónico</th>
+                    <th>Número de Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Contacto de Emergencia</th>
+                    <th>Teléfono de Emergencia</th>
+                    <th>Relación de Emergencia</th>
+                    <th>Nombre del Menor</th>
+                    <th>Fecha de Nacimiento del Menor</th>
+                    <th>Relación con el Menor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for waiver in waivers %}
+                <tr>
+                    <td>{{ waiver.name }}</td>
+                    <td>{{ waiver.email }}</td>
+                    <td>{{ waiver.phone }}</td>
+                    <td>{{ waiver.address }}</td>
+                    <td>{{ waiver.birth_date }}</td>
+                    <td>{{ waiver.emergency_contact_name }}</td>
+                    <td>{{ waiver.emergency_contact_phone }}</td>
+                    <td>{{ waiver.emergency_contact_relationship }}</td>
+                    <td>{{ waiver.minor_name }}</td>
+                    <td>{{ waiver.minor_birth_date }}</td>
+                    <td>{{ waiver.minor_relationship }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 {% endblock %}
