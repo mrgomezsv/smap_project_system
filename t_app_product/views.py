@@ -276,9 +276,9 @@ def ticket_master(request):
 
 
 @login_required
-def disclaimer(request):
+def waiver(request):
     # Lógica de la vista aquí
-    return render(request, 'disclaimer.html')
+    return render(request, 'waiver/waiver.html')
 
 
 @login_required
