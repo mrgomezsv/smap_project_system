@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'api',
     'api_commentary',
     'api_like',
+    'api_waiver',
     'rest_framework',
 ]
 

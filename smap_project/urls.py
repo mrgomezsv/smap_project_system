@@ -1,4 +1,4 @@
-# urls.py principal del proyecto
+# smap_project/urls.py
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -18,7 +18,7 @@ urlpatterns = [
     path('', views.signin, name='home'),
     path('product/create/', views.create_product, name='create_product'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
-    path('product/<int:product_id>/delete', views.delete_product, name='delete_product'),
+    path('product/<int:product_id>/delete/', views.delete_product, name='delete_product'),
     path('push_notification/', views.push_notification, name='push_notification'),
     path('firebase_auth/', views.firebase_auth, name='firebase_auth'),
     path('event/', views.event, name='event'),
@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/products/', ProductListCreate.as_view(), name='product-list'),
     path('api/', include('api_like.urls')),  # Incluye las URLs de la aplicación api_like
     path('api/', include('api_commentary.urls')),  # Incluye las URLs de la aplicación api_commentary
+    path('api/', include('api_waiver.urls')),  # Incluye las URLs de la aplicación api_waiver
 ]
 
 # Sirve las imágenes desde la carpeta media
