@@ -34,10 +34,14 @@ class Product(models.Model):
 
 
 class WaiverData(models.Model):
-    user_id = models.CharField(max_length=100)
+    user_id = models.IntegerField()
     user_name = models.CharField(max_length=100)
     relative_name = models.CharField(max_length=100)
     relative_age = models.IntegerField()
+
+    class Meta:
+        db_table = 't_app_product_waiverdata'  # Nombre de la tabla en la base de datos
+
 
 
 PARTNERS_CHOICES = [

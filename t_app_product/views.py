@@ -18,10 +18,13 @@ from .forms import EventForm
 
 
 def waiver_data_view(request):
-    # Obtener todos los datos de waiver almacenados
     waiver_data = WaiverData.objects.all()
 
-    # Renderizar la plantilla con los datos
+    # Imprimir los datos en la terminal
+    for data in waiver_data:
+        print(
+            f"UserID: {data.user_id}, User Name: {data.user_name}, Relative Name: {data.relative_name}, Relative Age: {data.relative_age}")
+
     return render(request, 'waiver_data.html', {'waiver_data': waiver_data})
 
 
