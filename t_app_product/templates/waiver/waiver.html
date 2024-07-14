@@ -2,16 +2,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<head>
-    {% load static %}
-</head>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container d-flex align-items-center">
-        <h2 class="h2">Administración de Datos de Waiver</h2>
-    </div>
-</nav>
-
 <div class="container mt-5">
+    <h2>Administración de Datos de Waiver</h2>
+    {% if waiver_data %}
     <table class="table">
         <thead>
             <tr>
@@ -32,6 +25,8 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <p>No hay datos de waiver disponibles.</p>
+    {% endif %}
 </div>
-
 {% endblock %}
