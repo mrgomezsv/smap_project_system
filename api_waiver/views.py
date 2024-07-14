@@ -28,7 +28,7 @@ def api_waiver(request):
                 'user_name': user_name,
                 'relative_name': relative_data['name'],
                 'relative_age': relative_data['age'],
-                'timestamp': parse_datetime(relative_data['dateTime']),  # Ajustar nombre de campo según tu modelo
+                'created_at': parse_datetime(relative_data['dateTime']),  # Ajustar según tu modelo y campo
             })
             if serializer.is_valid():
                 waiver_data_objects.append(serializer.save())
