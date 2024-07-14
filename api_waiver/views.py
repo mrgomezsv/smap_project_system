@@ -37,8 +37,7 @@ def api_waiver(request):
                 waiver_data = serializer.save()
 
                 # Crear WaiverQR solo si no existe para este user_id
-                qr_value = f"{user_id}{waiver_data.timestamp}"  # Usar el timestamp de WaiverData
-                WaiverQR.objects.create(waiver_data=waiver_data, qr_value=qr_value)
+                WaiverQR.objects.create(waiver_data=waiver_data)
 
                 waiver_data_objects.append(waiver_data)
             else:

@@ -21,7 +21,7 @@ class WaiverQR(models.Model):
     qr_value = models.CharField(max_length=100, unique=True)
 
     def save(self, *args, **kwargs):
-        self.qr_value = f"{self.waiver_data.user_id}{self.waiver_data.timestamp}"
+        self.qr_value = self.waiver_data.user_id  # Usar solo user_id
         super().save(*args, **kwargs)
 
     def __str__(self):
