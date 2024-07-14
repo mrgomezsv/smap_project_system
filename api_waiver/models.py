@@ -7,10 +7,11 @@ class WaiverData(models.Model):
     user_name = models.CharField(max_length=100)
     relative_name = models.CharField(max_length=100)
     relative_age = models.IntegerField()
-    timestamp = models.DateTimeField(auto_now_add=True)  # Ajusta según tus necesidades
+    timestamp = models.CharField(max_length=30)  # Cambiado a CharField
 
     def __str__(self):
         return f"{self.user_name}'s waiver data for {self.relative_name}"
+
 
 
     class Meta:
