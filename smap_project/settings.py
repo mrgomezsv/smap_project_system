@@ -86,6 +86,7 @@ TEMPLATES = [
             BASE_DIR / 't_app_product' / 'templates' / 'other_service',
             BASE_DIR / 't_app_product' / 'templates' / 'firebase_auth',
             BASE_DIR / 't_app_product' / 'templates' / 'event',
+            BASE_DIR / 't_app_product' / 'templates' / 'waiver',
         ],
         'APP_DIRS': True,
         'OPTIONS': {

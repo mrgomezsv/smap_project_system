@@ -1,3 +1,5 @@
+# t_app_product/models.py
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -5,10 +7,10 @@ def image_path(instance, filename):
     return f'product_images/{filename}'
 
 CATEGORY_CHOICES = [
-        ('option1', 'Bounce House'),
-        ('option2', 'Electric Games'),
-        ('option3', 'Furniture'),
-    ]
+    ('option1', 'Bounce House'),
+    ('option2', 'Electric Games'),
+    ('option3', 'Furniture'),
+]
 
 class Product(models.Model):
     img = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
@@ -32,7 +34,6 @@ class Product(models.Model):
     def __str__(self):
         return self.title + ' - by ' + self.user.username
 
-
 class WaiverData(models.Model):
     user_id = models.IntegerField()
     user_name = models.CharField(max_length=100)
@@ -40,28 +41,24 @@ class WaiverData(models.Model):
     relative_age = models.IntegerField()
 
     class Meta:
-        db_table = 't_app_product_waiverdata'  # Nombre de la tabla en la base de datos
-
+        db_table = 't_app_product_waiverdata'
 
 
 PARTNERS_CHOICES = [
-        ('partner1', 'Kidsfun'),
-        ('partner2', 'Tecun Productions'),
-        ('partner3', 'Otros'),
-    ]
+    ('partner1', 'Kidsfun'),
+    ('partner2', 'Tecun Productions'),
+    ('partner3', 'Otros'),
+]
 
 class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     location = models.CharField(max_length=200)
     start_datetime = models.DateTimeField()
-    # end_datetime = models.DateTimeField()
-    organizer = models.ForeignKey(User, on_delete=models.CASCADE)  # Suponiendo que se utilice el modelo de usuario incorporado en Django
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE)
     ticket_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    #  ticket_quantity = models.IntegerField(default=0)
     published = models.BooleanField(default=False)
     partners = models.CharField(max_length=50, choices=PARTNERS_CHOICES)
-
 
     def __str__(self):
         return self.title

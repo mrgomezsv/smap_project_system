@@ -281,15 +281,14 @@ def ticket_master(request):
 
 @login_required
 def waiver(request):
-    # Lógica de la vista aquí
+    # Obtener todos los datos de WaiverData desde la base de datos
     waiver_data = WaiverData.objects.all()
 
-    # Imprimir los datos en la terminal
-    for data in waiver_data:
-        print(
-            f"UserID: {data.user_id}, User Name: {data.user_name}, Relative Name: {data.relative_name}, Relative Age: {data.relative_age}")
+    # Debugging: Imprimir los datos obtenidos
+    print(waiver_data)
 
-    return render(request, 'waiver/waiver.html')
+    # Renderizar la plantilla con los datos recuperados
+    return render(request, 'waiver.html', {'waiver_data': waiver_data})
 
 
 @login_required

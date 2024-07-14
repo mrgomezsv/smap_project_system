@@ -4,29 +4,11 @@
 {% block content %}
 <div class="container mt-5">
     <h2>Administración de Datos de Waiver</h2>
-    {% if waiver_data %}
-    <table class="table">
-        <thead>
-            <tr>
-                <th>UserID</th>
-                <th>Nombre del Usuario</th>
-                <th>Nombre del Familiar</th>
-                <th>Edad del Familiar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for data in waiver_data %}
-            <tr>
-                <td>{{ data.user_id }}</td>
-                <td>{{ data.user_name }}</td>
-                <td>{{ data.relative_name }}</td>
-                <td>{{ data.relative_age }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No hay datos de waiver disponibles.</p>
-    {% endif %}
+
+    <ul>
+        {% for data in waiver_data %}
+            <li>User ID: {{ data.user_id }}, User Name: {{ data.user_name }}, Relative Name: {{ data.relative_name }}, Relative Age: {{ data.relative_age }}</li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}
