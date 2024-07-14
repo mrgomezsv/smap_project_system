@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import WaiverData
 from .serializers import WaiverDataSerializer
+from datetime import datetime
+from django.utils.dateparse import parse_datetime
 
 @api_view(['POST'])
 def api_waiver(request):
@@ -25,7 +27,8 @@ def api_waiver(request):
                 'user_id': user_id,
                 'user_name': user_name,
                 'relative_name': relative_data['name'],
-                'relative_age': relative_data['age']
+                'relative_age': relative_data['age'],
+                'timestamp': parse_datetime(relative_data['dateTime']),  # Ajustar nombre de campo según tu modelo
             })
             if serializer.is_valid():
                 waiver_data_objects.append(serializer.save())

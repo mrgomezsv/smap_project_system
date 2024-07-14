@@ -6,4 +6,4 @@ from .models import WaiverData
 class WaiverDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = WaiverData
-        fields = ['user_id', 'user_name', 'relative_name', 'relative_age']
+        fields = ('id', 'user_id', 'user_name', 'relative_name', 'relative_age', 'timestamp')
