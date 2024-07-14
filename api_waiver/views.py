@@ -1,9 +1,9 @@
-# En api_waiver/views.py
+# api_waiver/views.py
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import WaiverData
+from .models import WaiverData, WaiverQR
 from .serializers import WaiverDataSerializer
 
 @api_view(['POST'])
@@ -18,6 +18,12 @@ def api_waiver(request):
         if not user_id or not user_name:
             return Response({'error': 'Datos de usuario incompletos.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Verificar si ya existe un registro WaiverQR para este user_id
+        existing_qr = WaiverQR.objects.filter(waiver_data__user_id=user_id).first()
+
+        if existing_qr:
+            return Response({'message': 'QR ya existe para este usuario.'}, status=status.HTTP_200_OK)
+
         # Guardar datos del usuario y familiares en una sola tabla
         waiver_data_objects = []
         for relative_data in relatives_data:
@@ -29,7 +35,13 @@ def api_waiver(request):
                 'timestamp': relative_data['dateTime'],  # Ajustar nombre de campo según tu modelo
             })
             if serializer.is_valid():
-                waiver_data_objects.append(serializer.save())
+                waiver_data = serializer.save()
+
+                # Crear WaiverQR solo si no existe para este user_id
+                qr_value = f"{waiver_data.user_id}{waiver_data.timestamp}"
+                WaiverQR.objects.create(waiver_data=waiver_data, qr_value=qr_value)
+
+                waiver_data_objects.append(waiver_data)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
