@@ -1,5 +1,3 @@
-# api_waiver/views.py
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -46,3 +44,17 @@ def api_waiver(request):
         return Response({'message': 'Datos guardados correctamente.'}, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET'])
+def get_waiver_data(request, user_id):
+    try:
+        waiver_data = WaiverQR.objects.get(user_id=user_id)
+        data = {
+            'user_id': waiver_data.user_id,
+            'qr_value': waiver_data.qr_value,
+        }
+        return Response(data, status=status.HTTP_200_OK)
+    except WaiverQR.DoesNotExist:
+        return Response({'error': 'No se encontraron datos para este usuario.'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
