@@ -19,7 +19,7 @@ def api_waiver(request):
             return Response({'error': 'Datos de usuario incompletos.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Verificar si ya existe un registro WaiverQR para este user_id
-        existing_qr = WaiverQR.objects.filter(waiver_data__user_id=user_id).first()
+        existing_qr = WaiverQR.objects.filter(user_id=user_id).first()
         if existing_qr:
             return Response({'message': 'Ya existe un QR para este usuario.'}, status=status.HTTP_200_OK)
 
@@ -37,7 +37,7 @@ def api_waiver(request):
                 waiver_data = serializer.save()
 
                 # Crear WaiverQR solo si no existe para este user_id
-                WaiverQR.objects.create(waiver_data=waiver_data)
+                WaiverQR.objects.create(user_id=user_id, qr_value=user_id)  # Crear con user_id
 
                 waiver_data_objects.append(waiver_data)
             else:

@@ -17,11 +17,13 @@ class WaiverData(models.Model):
 
 
 class WaiverQR(models.Model):
-    waiver_data = models.OneToOneField(WaiverData, on_delete=models.CASCADE, related_name='qr_data')
+    id = models.AutoField(primary_key=True)  # Mantén el campo id existente
     qr_value = models.CharField(max_length=100, unique=True)
+    user_id = models.CharField(max_length=100, unique=True)  # Nuevo campo user_id
 
     def save(self, *args, **kwargs):
-        self.qr_value = self.waiver_data.user_id  # Usar solo user_id
+        # Asigna el qr_value usando el user_id del waiver_data
+        self.qr_value = self.user_id
         super().save(*args, **kwargs)
 
     def __str__(self):
