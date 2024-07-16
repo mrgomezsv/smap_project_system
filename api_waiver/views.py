@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import WaiverData, WaiverQR
+from .serializers import WaiverQRSerializer
 from .serializers import WaiverDataSerializer
 
 @api_view(['POST'])
@@ -58,3 +59,18 @@ def get_waiver_data(request, user_id):
         return Response({'error': 'No se encontraron datos para este usuario.'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET', 'POST'])
+def api_waiver_qr(request):
+    if request.method == 'GET':
+        waivers = WaiverQR.objects.all()
+        serializer = WaiverQRSerializer(waivers, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = WaiverQRSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
