@@ -96,6 +96,17 @@ Asegúrate de tener Python instalado en tu sistema. Puedes descargarlo desde pyt
     
     CREATE DATABASE smap_kf;
 
+-.Borrar los datos
+    
+    DELETE FROM api_waiver_waiverqr;
+    DELETE FROM api_waiver_waiverdata;
+
+-.Restaorar la secuencia
+
+    ALTER SEQUENCE api_waiver_waiverqr_id_seq RESTART WITH 1;
+    ALTER SEQUENCE api_waiver_waiverdata_id_seq RESTART WITH 1;
+
+
 
 ##### Video de referencia:
     https://www.youtube.com/watch?v=e6PkGDH4wWA&t=5736s
