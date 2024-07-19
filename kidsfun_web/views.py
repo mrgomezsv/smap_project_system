@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from t_app_product.models import Product
 
 
-def kidsfun_web(request):
+def home(request):
     return render(request, 'kidsfun_web/home.html')
 
 def service(request):
