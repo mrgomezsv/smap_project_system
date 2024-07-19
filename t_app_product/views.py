@@ -15,17 +15,14 @@ from firebase_admin import auth
 from datetime import datetime
 from .models import Event, WaiverData
 from .forms import EventForm
-
-
-
-
+from django.views.decorators.csrf import csrf_protect
 
 
 @login_required
 def about_smap(request):
     return render(request, 'about_smap.html')
 
-
+@csrf_protect
 def signin(request):
     if request.method == 'GET':
         form = AuthenticationForm()

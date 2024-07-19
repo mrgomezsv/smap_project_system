@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'api_commentary',
     'api_like',
     'api_waiver',
+    'kidsfun_web',
     'rest_framework',
 ]
 
@@ -81,7 +82,9 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 't_app_product' / 'templates' / 'home',
+            BASE_DIR / 'kidsfun_web' / 'templates',  # Asegúrate de que esta línea esté presente
+            BASE_DIR / 'kidsfun_web' / 'templates' / 'kidsfun_web' / 'home',
+            BASE_DIR / 'kidsfun_web' / 'templates',
             BASE_DIR / 't_app_product' / 'templates' / 'push_notificated',
             BASE_DIR / 't_app_product' / 'templates' / 'other_service',
             BASE_DIR / 't_app_product' / 'templates' / 'firebase_auth',
