@@ -30,8 +30,8 @@ SECRET_KEY = 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'smap.kidsfunyfiestasinfantiles.com',
-    'www.smap.kidsfunyfiestasinfantiles.com',
+    'kidsfunyfiestasinfantiles.com',
+    'www.kidsfunyfiestasinfantiles.com',
     'localhost',
     '127.0.0.1',
 ]
@@ -71,7 +71,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://smap.kidsfunyfiestasinfantiles.com",
+    "https://kidsfunyfiestasinfantiles.com",
     "http://localhost:8000",
     # otros orígenes permitidos
 ]
@@ -173,7 +173,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuración adicional para CSRF
 CSRF_TRUSTED_ORIGINS = [
-    'https://www.smap.kidsfunyfiestasinfantiles.com'
+    'https://www.kidsfunyfiestasinfantiles.com'
 ]
 
 CSRF_COOKIE_SECURE = True
@@ -196,4 +196,4 @@ try:
 except ValueError:
     pass  # La aplicación de Firebase ya está inicializada
 
-SITE_DOMAIN = 'https://www.smap.kidsfunyfiestasinfantiles.com'
+SITE_DOMAIN = 'https://www.kidsfunyfiestasinfantiles.com'

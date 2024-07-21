@@ -6,5 +6,5 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('service/', views.service, name='service'),
     path('service/product/<int:product_id>/', views.service_product, name='service_product'),
-    # otras URL patterns...
+    path('kidsfun_web/', views.kidsfun_web, name='kidsfun_web'),  # Agregado aquí
 ]

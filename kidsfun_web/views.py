@@ -7,6 +7,9 @@ from t_app_product.models import Product
 def home(request):
     return render(request, 'kidsfun_web/home.html')
 
+def kidsfun_web(request):
+    return render(request, 'kidsfun_web/kidsfun_web.html')
+
 def service(request):
     # Obtener todos los products que están publicados
     products = Product.objects.filter(publicated=True)
