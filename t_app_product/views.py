@@ -123,7 +123,7 @@ def create_product(request):
 @login_required
 def product_detail(request, product_id):
     if request.method == 'GET':
-        # Obtiene el producto con el ID dado, sin importar el usuario
+        # Obtiene el producto con el ID dado
         product = get_object_or_404(Product, pk=product_id)
 
         # Crea un formulario para el producto
@@ -132,29 +132,43 @@ def product_detail(request, product_id):
         # Obtiene las imágenes adicionales del producto
         additional_images = [getattr(product, f'img{i}') for i in range(1, 6)]
 
-        # Renderiza la página de detalle del producto con el formulario, el producto y las imágenes adicionales
+        # Renderiza la página de detalle del producto
         return render(request, 'product/product_detail.html',
                       {'product': product, 'form': form, 'additional_images': additional_images})
     else:
         try:
-            # Obtiene el producto con el ID dado, sin importar el usuario
+            # Obtiene el producto con el ID dado
             product = get_object_or_404(Product, pk=product_id)
 
-            # Guarda los detalles del formulario en la base de datos
+            # Crea un formulario con los datos del POST y las imágenes
             form = ProductForm(request.POST, request.FILES, instance=product)
 
             if form.is_valid():
-                # Si se proporciona una nueva imagen principal, maneja la eliminación de la imagen anterior
-                if 'img' in request.FILES:
-                    old_image_path = product.img.path
+                # Guarda el producto para acceder a las imágenes antiguas después
+                old_product = Product.objects.get(pk=product_id)
+
+                # Guarda el formulario para actualizar el producto
+                form.save()
+
+                # Verifica y elimina la imagen principal si ha sido reemplazada
+                new_image = request.FILES.get('img')  # Ajusta el nombre del campo si es necesario
+                old_image = old_product.img
+                if new_image and old_image and old_image != new_image:
+                    old_image_path = old_image.path
                     if os.path.exists(old_image_path):
                         os.remove(old_image_path)
 
-                # Guarda el formulario
-                form.save()
+                # Elimina las imágenes adicionales si hay nuevas imágenes proporcionadas
+                for i in range(1, 6):
+                    new_image = request.FILES.get(f'img{i}')
+                    old_image = getattr(old_product, f'img{i}')
+                    if new_image and old_image and old_image != new_image:
+                        old_image_path = old_image.path
+                        if os.path.exists(old_image_path):
+                            os.remove(old_image_path)
 
-            # Redirige al usuario a la página de productos después de guardar los cambios
-            return redirect('product')
+                # Redirige al usuario a la página de productos después de guardar los cambios
+                return redirect('product')
         except ValueError:
             # Si ocurre algún error, muestra un mensaje de error en la página de detalle del producto
             return render(request, 'product/product_detail.html',
