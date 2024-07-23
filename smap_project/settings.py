@@ -12,10 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from keyring import credentials
-from firebase_admin import credentials
+from firebase_admin import credentials as firebase_credentials
 import firebase_admin
-
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,18 +28,16 @@ SECRET_KEY = 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'kidsfunyfiestasinfantiles.com',
-    'www.kidsfunyfiestasinfantiles.com',
+    'smap.webcraftedsolutions.net',
     'localhost',
     '127.0.0.1',
 ]
 
 # Firebase Admin SDK initialization
 cred_path = os.path.join(BASE_DIR, 'credentials', 'smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json')  # Reemplaza con la ruta a tus credenciales
-cred = credentials.Certificate(cred_path)
+cred = firebase_credentials.Certificate(cred_path)
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -71,9 +67,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://kidsfunyfiestasinfantiles.com",
-    "http://localhost:8000",
-    # otros orígenes permitidos
+    'https://smap.webcraftedsolutions.net',
 ]
 
 ROOT_URLCONF = 'smap_project.urls'
@@ -106,8 +100,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'smap_project.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -120,8 +112,6 @@ DATABASES = {
 }
 
 # Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -138,62 +128,42 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Definir las rutas adicionales para buscar archivos estáticos
 STATICFILES_DIRS = [
     BASE_DIR / "t_app_product" / "static",
 ]
 
-LOGIN_URL = '/signin'
-
+# Media files
 MEDIA_URL = '/media/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configuración adicional para CSRF
+# CSRF settings
 CSRF_TRUSTED_ORIGINS = [
-    'https://www.kidsfunyfiestasinfantiles.com'
+    'https://smap.webcraftedsolutions.net',
 ]
 
 CSRF_COOKIE_SECURE = True
-
-# Asegurarse de que las cookies de sesión solo se envíen a través de HTTPS
 SESSION_COOKIE_SECURE = True
-
-# Evitar que JavaScript acceda a las cookies de sesión
 SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 1800  # 30 minutes
 
-# Establecer SameSite para proteger contra ataques CSRF
-SESSION_COOKIE_SAMESITE = 'Lax'  # También puede ser 'Strict' dependiendo de tus necesidades
-
-# Opcionalmente, mantener ambas configuraciones para mayor seguridad
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expira al cerrar el navegador
-SESSION_COOKIE_AGE = 1800  # Y/o expira en 30 minutos en segundos
-
+# Firebase Admin SDK initialization
 try:
     firebase_admin.initialize_app(cred)
 except ValueError:
     pass  # La aplicación de Firebase ya está inicializada
 
-SITE_DOMAIN = 'https://www.kidsfunyfiestasinfantiles.com'
+# Site domain
+SITE_DOMAIN = 'https://smap.webcraftedsolutions.net'
