@@ -105,18 +105,29 @@ def product(request):
 @login_required
 def create_product(request):
     if request.method == 'GET':
-        return render(request, 'product/create_product.html', {'form': ProductForm()})
+        # Mostrar el formulario vacío para la creación de un producto
+        form = ProductForm()
+        return render(request, 'product/create_product.html', {'form': form})
     else:
-        try:
-            form = ProductForm(request.POST, request.FILES)
-            new_product = form.save(commit=False)
-            new_product.user = request.user
-            new_product.save()
-            return redirect('product')
-        except ValueError:
+        # Procesar el formulario POST
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                new_product = form.save(commit=False)
+                new_product.user = request.user
+                new_product.save()
+                return redirect('product')  # Redirige a la vista de productos después de guardar
+            except Exception as e:
+                # Captura cualquier excepción que pueda ocurrir al guardar el producto
+                return render(request, 'product/create_product.html', {
+                    'form': form,
+                    'error': f'Error al crear el producto: {e}'
+                })
+        else:
+            # Si el formulario no es válido, muestra los errores en el formulario
             return render(request, 'product/create_product.html', {
-                'form': ProductForm(),
-                'error': 'Please provide valid data'
+                'form': form,
+                'error': 'Por favor, corrige los errores a continuación.'
             })
 
 
