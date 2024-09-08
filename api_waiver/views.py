@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import WaiverData, WaiverQR
-from .serializers import WaiverQRSerializer, WaiverDataSerializer
+from .serializers import WaiverDataSerializer, WaiverQRSerializer
 
 @api_view(['POST'])
 def api_waiver(request):
@@ -20,8 +20,22 @@ def api_waiver(request):
 
         # Verificar si ya existe un registro WaiverQR para este user_id
         existing_qr = WaiverQR.objects.filter(user_id=user_id).first()
+
+        # Obtener los datos almacenados de WaiverData para este usuario
+        waiver_data = WaiverData.objects.filter(user_id=user_id)
+        waiver_data_serializer = WaiverDataSerializer(waiver_data, many=True)
+
         if existing_qr:
-            return Response({'message': 'Ya existe un QR para este usuario.'}, status=status.HTTP_200_OK)
+            # Imprimir en la terminal el qr_value y los datos almacenados
+            print(f"QR Value: {existing_qr.qr_value}")
+            print(f"Waiver Data: {waiver_data_serializer.data}")
+
+            # Devolver el QR junto con los datos almacenados
+            return Response({
+                'message': 'Ya existe un QR para este usuario.',
+                'qr_value': existing_qr.qr_value,
+                'waiver_data': waiver_data_serializer.data  # Enviar los datos almacenados
+            }, status=status.HTTP_200_OK)
 
         # Guardar datos del usuario y familiares en una sola tabla
         waiver_data_objects = []
@@ -37,40 +51,52 @@ def api_waiver(request):
                 waiver_data = serializer.save()
 
                 # Crear WaiverQR solo si no existe para este user_id
-                WaiverQR.objects.create(user_id=user_id, qr_value=user_id)  # Crear con user_id
-
+                waiver_qr = WaiverQR.objects.create(user_id=user_id, qr_value=user_id)  # Crear con user_id
                 waiver_data_objects.append(waiver_data)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({'message': 'Datos guardados correctamente.'}, status=status.HTTP_200_OK)
-    else:
-        return Response({'error': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        # Obtener los datos almacenados de WaiverData para este usuario nuevamente
+        waiver_data = WaiverData.objects.filter(user_id=user_id)
+        waiver_data_serializer = WaiverDataSerializer(waiver_data, many=True)
+
+        # Imprimir en la terminal el qr_value y los datos almacenados
+        print(f"QR Value: {waiver_qr.qr_value}")
+        print(f"Waiver Data: {waiver_data_serializer.data}")
+
+        # Devolver el qr_value junto con los datos almacenados
+        return Response({
+            'message': 'Datos guardados correctamente.',
+            'qr_value': waiver_qr.qr_value,
+            'waiver_data': waiver_data_serializer.data  # Enviar los datos almacenados
+        }, status=status.HTTP_200_OK)
+
+    return Response({'error': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @api_view(['GET'])
 def get_waiver_data(request, user_id):
     try:
-        waiver_data = WaiverQR.objects.get(user_id=user_id)
-        data = {
-            'user_id': waiver_data.user_id,
-            'qr_value': waiver_data.qr_value,
-        }
-        return Response(data, status=status.HTTP_200_OK)
-    except WaiverQR.DoesNotExist:
-        return Response({'error': 'No se encontraron datos para este usuario.'}, status=status.HTTP_404_NOT_FOUND)
+        # Obtener todos los datos correspondientes al user_id
+        waiver_data = WaiverData.objects.filter(user_id=user_id)
+        waiver_qr = WaiverQR.objects.filter(user_id=user_id).first()
+
+        if waiver_qr is None:
+            return Response({'error': 'No se encontró un QR para este usuario.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Serializar los datos
+        waiver_data_serializer = WaiverDataSerializer(waiver_data, many=True)
+        waiver_qr_serializer = WaiverQRSerializer(waiver_qr)
+
+        # Imprimir los datos en la terminal
+        print(f"QR Value: {waiver_qr.qr_value}")
+        print(f"Waiver Data: {waiver_data_serializer.data}")
+
+        # Devolver los datos en la respuesta
+        return Response({
+            'qr_value': waiver_qr_serializer.data['qr_value'],
+            'waiver_data': waiver_data_serializer.data
+        }, status=status.HTTP_200_OK)
+
     except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-@api_view(['GET', 'POST'])
-def api_waiver_qr(request):
-    if request.method == 'GET':
-        waivers = WaiverQR.objects.all()
-        serializer = WaiverQRSerializer(waivers, many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        serializer = WaiverQRSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        print(e)
+        return Response({'error': 'Ocurrió un error al obtener los datos.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
