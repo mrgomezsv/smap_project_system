@@ -51,12 +51,13 @@ def api_waiver(request):
             })
             if serializer.is_valid():
                 waiver_data = serializer.save()
-
-                # Crear WaiverQR solo si no existe para este user_id
-                waiver_qr = WaiverQR.objects.create(user_id=user_id, qr_value=user_id)  # Crear con user_id
                 waiver_data_objects.append(waiver_data)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # Crear WaiverQR solo si no existe para este user_id
+        if not existing_qr:
+            waiver_qr = WaiverQR.objects.create(user_id=user_id, qr_value=user_id)  # Crear con user_id
 
         # Obtener los datos almacenados de WaiverData para este usuario nuevamente
         waiver_data = WaiverData.objects.filter(user_id=user_id)
