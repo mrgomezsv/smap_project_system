@@ -5,6 +5,7 @@ from django.db import models
 class WaiverData(models.Model):
     user_id = models.CharField(max_length=100)
     user_name = models.CharField(max_length=100)
+    user_email = models.EmailField(max_length=255)  # Añadido el campo para el correo electrónico
     relative_name = models.CharField(max_length=100)
     relative_age = models.IntegerField()
     timestamp = models.CharField(max_length=30)  # Cambiado a CharField

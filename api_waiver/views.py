@@ -12,6 +12,7 @@ def api_waiver(request):
         data = request.data
         user_id = data.get('user_id', '')
         user_name = data.get('user_name', '')
+        user_email = data.get('user_email', '')  # Captura el correo electrónico
         relatives_data = data.get('relatives', [])
 
         # Validar datos
@@ -43,6 +44,7 @@ def api_waiver(request):
             serializer = WaiverDataSerializer(data={
                 'user_id': user_id,
                 'user_name': user_name,
+                'user_email': user_email,  # Incluir el correo electrónico
                 'relative_name': relative_data['name'],
                 'relative_age': relative_data['age'],
                 'timestamp': relative_data['dateTime'],  # Ajustar nombre de campo según tu modelo
