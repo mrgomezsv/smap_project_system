@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import WaiverData, WaiverQR
 from .serializers import WaiverDataSerializer, WaiverQRSerializer
+from .utils import create_waiver_pdf, send_email_with_pdf
 
 @api_view(['POST'])
 def api_waiver(request):
@@ -63,13 +64,17 @@ def api_waiver(request):
         waiver_data = WaiverData.objects.filter(user_id=user_id)
         waiver_data_serializer = WaiverDataSerializer(waiver_data, many=True)
 
+        # Generar el PDF y enviarlo por correo
+        pdf_buffer = create_waiver_pdf(user_name, user_email, relatives_data)
+        send_email_with_pdf(user_email, pdf_buffer)
+
         # Imprimir en la terminal el qr_value y los datos almacenados
         print(f"QR Value: {waiver_qr.qr_value}")
         print(f"Waiver Data: {waiver_data_serializer.data}")
 
         # Devolver el qr_value junto con los datos almacenados
         return Response({
-            'message': 'Datos guardados correctamente.',
+            'message': 'Datos guardados correctamente y correo enviado.',
             'qr_value': waiver_qr.qr_value,
             'waiver_data': waiver_data_serializer.data  # Enviar los datos almacenados
         }, status=status.HTTP_200_OK)
