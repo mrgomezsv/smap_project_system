@@ -21,6 +21,15 @@ class CommentaryViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
+    @action(detail=False, methods=['GET'])
+    def product_comment_count(self, request, pk=None):
+        product_id = request.query_params.get('product_id')
+        if not product_id:
+            return Response({"error": "product_id parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        comment_count = self.queryset.filter(product_id=product_id).count()
+        return Response({'total_comments': comment_count})
+
     def perform_create(self, serializer):
         serializer.save()
 
