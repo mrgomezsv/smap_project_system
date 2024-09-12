@@ -10,6 +10,10 @@ CATEGORY_CHOICES = [
     ('option1', 'Bounce House'),
     ('option2', 'Electric Games'),
     ('option3', 'Furniture'),
+    ('option 4', 'Concession Machines'),
+    ('option5', 'Competitive Games'),
+    ('option6', 'Equipment Rental'),
+    ('option7', 'Water Fun for Rent'),
 ]
 
 class Product(models.Model):
