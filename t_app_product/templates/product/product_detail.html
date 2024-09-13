@@ -39,6 +39,15 @@
                                 </div>
                                 {% endif %}
                                 {% endfor %}
+                                <!-- Campos adicionales -->
+                                <div class="form-group mb-3">
+                                    <label for="id_space" class="form-label">Espacio</label>
+                                    <input type="text" name="space" id="id_space" class="form-control" value="{{ product.space }}">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="id_circuits" class="form-label">Circuitos</label>
+                                    <input type="text" name="circuits" id="id_circuits" class="form-control" value="{{ product.circuits }}">
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -70,7 +79,7 @@
             </div>
 
             <div class="col-md-12">
-                <!-- Agrega esto al final de tu plantilla -->
+                <!-- Modal para comentarios -->
                 <div class="modal-dialog modal-dialog-centered custom-modal-width" id="commentModal"
                      style="display: block;">
                     <div class="modal-content">
@@ -79,9 +88,9 @@
                         </div>
                         <div style="margin-bottom: 20px;"></div>
                         <div class="modal-body">
-                                    <textarea class="form-control mb-3" id="commentText" rows="3"
-                                              placeholder="Postea un comentario sobre este producto"
-                                              oninput="checkInput()"></textarea>
+                            <textarea class="form-control mb-3" id="commentText" rows="3"
+                                      placeholder="Postea un comentario sobre este producto"
+                                      oninput="checkInput()"></textarea>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" id="submitButton"
@@ -91,7 +100,7 @@
                     </div>
                 </div>
             </div>
-                    <!-- Sección para mostrar comentarios -->
+            <!-- Sección para mostrar comentarios -->
             <div class="col-md-12">
                 <h5 class="mt-5">Comentarios sobre {{ product.title }}</h5>
                 <ul class="list-group">
