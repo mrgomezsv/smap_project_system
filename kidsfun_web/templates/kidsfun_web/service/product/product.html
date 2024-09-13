@@ -194,19 +194,27 @@
                 {{ product.title }}
             </h1>
         </div>
-
         <div class="row justify-content-center align-items-center">
             <div class="col-md-6 col-lg-6 des" data-aos="fade-right">
                 <!--                <h3>{{ product.title }}</h3>-->
                 <p>{{ product.description }}</p>
-                <p><strong>Category:</strong> {{ product.get_category_display }}</p>
-                <p><strong>Dimensions:</strong> {{ product.dimensions }}</p>
+                <p>Category: {{ product.get_category_display }}</p>
+                <p>Necessary Circuits: {% if product.circuits %}{{ product.circuits }}{% else %}-{% endif %}</p>
+                <p>Item Dimensions: {% if product.dimensions %}{{ product.dimensions }}{% else %}-{% endif %}</p>
+                <p>Space Needed: {% if product.space %}{{ product.space }}{% else %}-{% endif %}</p>
                 <a href="{% url 'service' %}" class="btn btn-violet shadow">Go back</a>
-                <style>@media (max-width: 576px) {
-  .des .btn-violet {
-    margin-bottom: 50px; /* Agrega un espacio debajo del botón en dispositivos móviles */
-  }
-}
+                <style>
+                    /* Asegúrate de que los párrafos no tengan texto en negrita */
+                    .des p {
+                        font-weight: normal; /* Elimina el estilo de negrita */
+                    }
+
+                    /* Espacio adicional para el botón en dispositivos móviles */
+                    @media (max-width: 576px) {
+                        .btn-violet {
+                            margin-bottom: 50px; /* Agrega un espacio debajo del botón en dispositivos móviles */
+                        }
+                    }
                 </style>
             </div>
             <div class="col-md-6 col-lg-6 anim_4">
