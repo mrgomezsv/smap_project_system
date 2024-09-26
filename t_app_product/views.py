@@ -295,7 +295,6 @@ def ticket_master(request):
 
 
 @login_required
-@login_required
 def waiver(request):
     # Obtener todos los datos de WaiverData desde la base de datos
     waiver_data = WaiverData.objects.all()
@@ -306,9 +305,7 @@ def waiver(request):
     if request.method == 'POST':
         form = WaiverValidatorForm(request.POST)
         if form.is_valid():
-            waiver_validator = form.save(commit=False)
-            waiver_validator.user = request.user
-            waiver_validator.save()
+            form.save()  # Guarda el formulario sin asignar 'user'
             return redirect('waiver')  # Asegúrate de que 'waiver' es el nombre correcto de la URL
     else:
         form = WaiverValidatorForm()

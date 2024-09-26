@@ -56,7 +56,7 @@ class EventForm(forms.ModelForm):
 class WaiverValidatorForm(forms.ModelForm):
     class Meta:
         model = WaiverValidator
-        fields = ['email']
+        fields = ['email']  # Solo el campo 'email'
         widgets = {
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',

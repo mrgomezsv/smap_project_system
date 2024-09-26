@@ -35,7 +35,6 @@
         <thead>
             <tr>
                 <th>Email</th>
-                <th>Usuario</th>
                 <th>Fecha de Creación</th>
             </tr>
         </thead>
@@ -43,7 +42,6 @@
             {% for validator in waiver_validators %}
                 <tr>
                     <td>{{ validator.email }}</td>
-                    <td>{{ validator.user.username }}</td>
                     <td>{{ validator.created_at }}</td>
                 </tr>
             {% endfor %}

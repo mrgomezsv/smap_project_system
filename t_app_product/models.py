@@ -74,7 +74,7 @@ class Event(models.Model):
 
 
 class WaiverValidator(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)  # Campo opcional
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
