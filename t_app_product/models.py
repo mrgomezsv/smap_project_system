@@ -71,3 +71,12 @@ class Event(models.Model):
 
     class Meta:
         db_table = 't_app_event'
+
+
+class WaiverValidator(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.EmailField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

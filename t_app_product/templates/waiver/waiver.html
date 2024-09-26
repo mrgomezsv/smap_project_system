@@ -1,14 +1,53 @@
-<!-- En waiver_data.html -->
+<!-- waiver.html -->
 {% extends 'base.html' %}
 
 {% block content %}
 <div class="container mt-5">
     <h2>Administración de Datos de Waiver</h2>
 
+    <!-- Mostrar WaiverData -->
     <ul>
         {% for data in waiver_data %}
-            <li>User ID: {{ data.user_id }}, User Name: {{ data.user_name }}, Relative Name: {{ data.relative_name }}, Relative Age: {{ data.relative_age }}</li>
+            <li>
+                User ID: {{ data.user_id }},
+                User Name: {{ data.user_name }},
+                Relative Name: {{ data.relative_name }},
+                Relative Age: {{ data.relative_age }}
+            </li>
         {% endfor %}
     </ul>
+
+    <hr>
+
+    <!-- Formulario para agregar nuevo correo electrónico -->
+    <h3>Agregar Nuevo Correo Electrónico</h3>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Agregar</button>
+    </form>
+
+    <hr>
+
+    <!-- Tabla de correos electrónicos -->
+    <h3>Lista de Correos Electrónicos</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Usuario</th>
+                <th>Fecha de Creación</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for validator in waiver_validators %}
+                <tr>
+                    <td>{{ validator.email }}</td>
+                    <td>{{ validator.user.username }}</td>
+                    <td>{{ validator.created_at }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

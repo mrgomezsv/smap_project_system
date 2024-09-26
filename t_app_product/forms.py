@@ -2,6 +2,7 @@ from django import forms
 from .models import Product, Event
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import WaiverValidator
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -49,3 +50,16 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = ['title', 'description', 'location', 'start_datetime', 'ticket_price', 'published', 'partners']
+
+
+
+class WaiverValidatorForm(forms.ModelForm):
+    class Meta:
+        model = WaiverValidator
+        fields = ['email']
+        widgets = {
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese el correo electrónico'
+            })
+        }

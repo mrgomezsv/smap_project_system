@@ -13,9 +13,13 @@ from django.http import HttpResponse
 from .forms import CustomUserCreationForm
 from firebase_admin import auth
 from datetime import datetime
-from .models import Event, WaiverData
+from .models import Event
 from .forms import EventForm
 from django.views.decorators.csrf import csrf_protect
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import WaiverData, WaiverValidator
+from .forms import WaiverValidatorForm
 
 
 @login_required
@@ -291,15 +295,31 @@ def ticket_master(request):
 
 
 @login_required
+@login_required
 def waiver(request):
     # Obtener todos los datos de WaiverData desde la base de datos
     waiver_data = WaiverData.objects.all()
 
-    # Debugging: Imprimir los datos obtenidos
-    print(waiver_data)
+    # Obtener todos los datos de WaiverValidator
+    waiver_validators = WaiverValidator.objects.all()
 
-    # Renderizar la plantilla con los datos recuperados
-    return render(request, 'waiver.html', {'waiver_data': waiver_data})
+    if request.method == 'POST':
+        form = WaiverValidatorForm(request.POST)
+        if form.is_valid():
+            waiver_validator = form.save(commit=False)
+            waiver_validator.user = request.user
+            waiver_validator.save()
+            return redirect('waiver')  # Asegúrate de que 'waiver' es el nombre correcto de la URL
+    else:
+        form = WaiverValidatorForm()
+
+    context = {
+        'waiver_data': waiver_data,
+        'waiver_validators': waiver_validators,
+        'form': form
+    }
+
+    return render(request, 'waiver.html', context)
 
 
 @login_required
