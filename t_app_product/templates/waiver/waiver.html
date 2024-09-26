@@ -20,7 +20,8 @@
     <hr>
 
     <!-- Formulario para agregar nuevo correo electrónico -->
-    <h3>Agregar Nuevo Correo Electrónico</h3>
+    <h3>Agregar Correo Electrónico</h3>
+    <p>En este apartado agregaremos los correos electronicos de los colaborares que validaran (escanearan) el QR de cada cliente en la APP</p>
     <form method="post" novalidate>
         {% csrf_token %}
         {{ form.as_p }}
@@ -30,7 +31,9 @@
     <hr>
 
     <!-- Tabla de correos electrónicos -->
-    <h3>Lista de Correos Electrónicos</h3>
+    <h3>Lista de Correos Electrónicos Autorizados para Validar QR en la APP</h3>
+    <p>Este es el listado de personas que en la App tendran acceso a Custom Waiver Validator en la APP, que es donde entraremos a leer y validar el QR del cliente, esto en la pantalla de Perfil para darle acceso a los juegos</p>
+    <p>Por el momento no se puede borrar o editar esta lista, pero se podra proximamente, por el momento solo se puede agregar</p>
     <table class="table table-striped">
         <thead>
             <tr>
