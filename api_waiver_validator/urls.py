@@ -5,7 +5,8 @@ from rest_framework import routers
 from .views import WaiverValidatorViewSet
 
 router = routers.DefaultRouter()
-router.register(r'waiver-validators', WaiverValidatorViewSet, basename='waivervalidator')
+# Registrar con un prefijo vacío
+router.register(r'', WaiverValidatorViewSet, basename='waivervalidator')
 
 urlpatterns = [
     path('', include(router.urls)),
