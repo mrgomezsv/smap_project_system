@@ -1,4 +1,5 @@
 # smap_project/urls.py
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -15,7 +16,7 @@ urlpatterns = [
     path('product/', views.product, name='product'),
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
-    path('', include('kidsfun_web.urls')),  # Cambia la URL raíz para que redirija a kidsfun/
+    path('', include('kidsfun_web.urls')),
     path('product/create/', views.create_product, name='create_product'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('product/<int:product_id>/delete/', views.delete_product, name='delete_product'),
@@ -29,11 +30,12 @@ urlpatterns = [
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),
     path('api/products/', ProductListCreate.as_view(), name='product-list'),
-    path('kidsfun/', include('kidsfun_web.urls')),
-    path('api/', include('api_like.urls')),
-    path('api/', include('api_commentary.urls')),
-    path('api/', include('api_waiver.urls')),
-    path('api/', include('api_wavier_validator.urls')),
+
+    # Usar sub-rutas para evitar conflictos
+    path('api/like/', include('api_like.urls')),
+    path('api/commentary/', include('api_commentary.urls')),
+    path('api/waiver/', include('api_waiver.urls')),
+    path('api/waiver_validator/', include('api_waiver_validator.urls')),
 ]
 
 # Sirve las imágenes desde la carpeta media

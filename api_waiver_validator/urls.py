@@ -1,4 +1,4 @@
-# api_app/urls.py
+# api_waiver_validator/urls.py
 
 from django.urls import path, include
 from rest_framework import routers
