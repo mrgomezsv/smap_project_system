@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'api_commentary',
     'api_like',
     'api_waiver',
+    'api_waiver_validator',
     'kidsfun_web',
     'rest_framework',
 ]
