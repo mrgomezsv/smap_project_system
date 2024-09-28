@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'api_waiver_validator',
     'kidsfun_web',
     'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -207,3 +208,7 @@ except ValueError:
     pass  # La aplicación de Firebase ya está inicializada
 
 SITE_DOMAIN = 'https://www.kidsfunyfiestasinfantiles.com'
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
