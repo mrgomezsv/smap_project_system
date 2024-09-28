@@ -188,11 +188,15 @@ Asegúrate de tener Python instalado en tu sistema. Puedes descargarlo desde pyt
     DELETE FROM api_waiver_waiverqr;
     DELETE FROM api_waiver_waiverdata;
 
+    DELETE FROM t_app_product_waivervalidator;    
+    ALTER SEQUENCE t_app_product_waivervalidator_id_seq RESTART WITH 1;
+
 -.Restaorar la secuencia
 
     ALTER SEQUENCE api_waiver_waiverqr_id_seq RESTART WITH 1;
     ALTER SEQUENCE api_waiver_waiverdata_id_seq RESTART WITH 1;
 
+    ALTER SEQUENCE t_app_product_waivervalidator_id_seq RESTART WITH 1;
 
 
 ##### Video de referencia:
