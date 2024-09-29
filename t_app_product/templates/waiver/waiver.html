@@ -7,33 +7,47 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="waiverTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="add-email-tab" data-bs-toggle="tab" href="#add-email" role="tab" aria-controls="add-email" aria-selected="true">
-                Agregar Correo Electrónico
+            <a class="nav-link active" id="registered-users-tab" data-bs-toggle="tab" href="#registered-users" role="tab" aria-controls="registered-users" aria-selected="true">
+                Clientes Registrados en el Waiver
             </a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="registered-users-tab" data-bs-toggle="tab" href="#registered-users" role="tab" aria-controls="registered-users" aria-selected="false">
-                Clientes Registrados en el Waiver
+            <a class="nav-link" id="add-email-tab" data-bs-toggle="tab" href="#add-email" role="tab" aria-controls="add-email" aria-selected="false">
+                Validar QR
             </a>
         </li>
     </ul>
 
     <!-- Tab content -->
     <div class="tab-content mt-3" id="waiverTabsContent">
+        <!-- Pestaña de Clientes Registrados en el Waiver -->
+        <div class="tab-pane fade show active" id="registered-users" role="tabpanel" aria-labelledby="registered-users-tab">
+            <h3>Clientes Registrados en el Waiver</h3>
+            <ul>
+                {% for data in waiver_data %}
+                    <li>
+                        User ID: {{ data.user_id }},
+                        User Name: {{ data.user_name }},
+                        Relative Name: {{ data.relative_name }},
+                        Relative Age: {{ data.relative_age }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
         <!-- Pestaña de Agregar Correo Electrónico -->
-        <div class="tab-pane fade show active" id="add-email" role="tabpanel" aria-labelledby="add-email-tab">
+        <div class="tab-pane fade" id="add-email" role="tabpanel" aria-labelledby="add-email-tab">
             <h3>Agregar Correo Electrónico</h3>
-            <p>En este apartado agregaremos los correos electronicos de los colaborares que validarán (escanearán) el QR de cada cliente en la APP.</p>
+            <p>En este apartado agregaremos los correos electrónicos de los colaborares que validarán (escanearán) el QR de cada cliente en la APP.</p>
             <form method="post" novalidate>
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-primary">Agregar</button>
             </form>
-
             <hr>
 
             <!-- Tabla de correos electrónicos -->
-            <h3>Lista de Correos Electrónicos Autorizados para Validar QR en la APP</h3>
+            <h3>Lista de Correos Electrónicos de Pesonas Autorizados para Validar QR en la APP</h3>
             <p>Este es el listado de personas que tendrán acceso a Custom Waiver Validator en la APP. Por el momento no se puede borrar o editar esta lista, pero se podrá próximamente, por el momento solo se puede agregar.</p>
             <table class="table table-striped">
                 <thead>
@@ -51,21 +65,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-
-        <!-- Pestaña de Clientes Registrados en el Waiver -->
-        <div class="tab-pane fade" id="registered-users" role="tabpanel" aria-labelledby="registered-users-tab">
-            <h3>Clientes Registrados en el Waiver</h3>
-            <ul>
-                {% for data in waiver_data %}
-                    <li>
-                        User ID: {{ data.user_id }},
-                        User Name: {{ data.user_name }},
-                        Relative Name: {{ data.relative_name }},
-                        Relative Age: {{ data.relative_age }}
-                    </li>
-                {% endfor %}
-            </ul>
         </div>
     </div>
 </div>
