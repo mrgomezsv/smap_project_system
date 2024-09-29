@@ -31,7 +31,6 @@ ALLOWED_HOSTS = [
     'www.kidsfunyfiestasinfantiles.com',
     'localhost',
     '127.0.0.1',
-    '82.165.210.146',
 ]
 
 # Firebase Admin SDK initialization
@@ -53,10 +52,8 @@ INSTALLED_APPS = [
     'api_commentary',
     'api_like',
     'api_waiver',
-    'api_waiver_validator',
     'kidsfun_web',
     'rest_framework',
-    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -209,7 +206,3 @@ except ValueError:
     pass  # La aplicación de Firebase ya está inicializada
 
 SITE_DOMAIN = 'https://www.kidsfunyfiestasinfantiles.com'
-
-REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-}
