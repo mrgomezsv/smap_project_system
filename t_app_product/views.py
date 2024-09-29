@@ -302,6 +302,11 @@ def waiver(request):
     # Obtener todos los datos de WaiverValidator
     waiver_validators = WaiverValidator.objects.all()
 
+    # Filas específicas para la tabla de clientes registrados en el waiver
+    waiver_clientes = WaiverData.objects.values(
+        'id', 'user_id', 'user_email', 'user_name', 'relative_name', 'relative_age', 'timestamp'
+    )
+
     if request.method == 'POST':
         form = WaiverValidatorForm(request.POST)
         if form.is_valid():
@@ -313,6 +318,7 @@ def waiver(request):
     context = {
         'waiver_data': waiver_data,
         'waiver_validators': waiver_validators,
+        'waiver_clientes': waiver_clientes,  # Pasamos los clientes al contexto
         'form': form
     }
 
