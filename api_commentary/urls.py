@@ -10,5 +10,5 @@ router = DefaultRouter()
 router.register(r'', views.CommentaryViewSet)
 
 urlpatterns = [
-    path('commentary/', include(router.urls)),
+    path('', include(router.urls)),
 ]

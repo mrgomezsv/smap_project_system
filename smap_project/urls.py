@@ -4,10 +4,23 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework import permissions
+from rest_framework.schemas import get_schema_view, openapi
 
 from t_app_product import views
 from t_app_product.views import process_checkbox, redirect_productc
 from api.views import ProductListCreate
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="API Waiver Validator",
+      default_version='v1',
+      description="Documentación de la API para Waiver Validator",
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,7 +29,7 @@ urlpatterns = [
     path('product/', views.product, name='product'),
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
-    path('', include('kidsfun_web.urls')),  # Cambia la URL raíz para que redirija a kidsfun/
+    path('', include('kidsfun_web.urls')),  # URL raíz
     path('product/create/', views.create_product, name='create_product'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('product/<int:product_id>/delete/', views.delete_product, name='delete_product'),
@@ -32,11 +45,17 @@ urlpatterns = [
     path('api/products/', ProductListCreate.as_view(), name='product-list'),
     path('kidsfun/', include('kidsfun_web.urls')),
 
-    # Asigna prefijos únicos a cada aplicación API
-    path('api/like/', include('api_like.urls')),
-    path('api/commentary/', include('api_commentary.urls')),
-    path('api/waiver/', include('api_waiver.urls')),
-    path('api/waiver-validator/', include('api_waiver_validator.urls')),
+    # Asignar prefijos únicos a cada API
+    path('api/like/', include('api_like.urls')),                  # API Like
+    path('api/commentary/', include('api_commentary.urls')),     # API Commentary
+    path('api/waiver/', include('api_waiver.urls')),              # API Waiver
+    path('api/waiver-validator/', include('api_waiver_validator.urls')),  # API Waiver Validator
+]
+
+# Documentación de la API (Opcional)
+urlpatterns += [
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 
 # Sirve las imágenes desde la carpeta media
