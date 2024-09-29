@@ -198,6 +198,9 @@ Asegúrate de tener Python instalado en tu sistema. Puedes descargarlo desde pyt
 
     ALTER SEQUENCE t_app_product_waivervalidator_id_seq RESTART WITH 1;
 
+    DELETE FROM t_app_product_waivervalidator;    
+    ALTER SEQUENCE t_app_product_waivervalidator_id_seq RESTART WITH 1;
+
 
 ##### Video de referencia:
     https://www.youtube.com/watch?v=e6PkGDH4wWA&t=5736s
