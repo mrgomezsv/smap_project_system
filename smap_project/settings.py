@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     'www.kidsfunyfiestasinfantiles.com',
     'localhost',
     '127.0.0.1',
+    '82.165.210.146',
 ]
 
 # Firebase Admin SDK initialization
