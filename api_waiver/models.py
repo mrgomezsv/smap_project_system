@@ -5,10 +5,10 @@ from django.db import models
 class WaiverData(models.Model):
     user_id = models.CharField(max_length=100)
     user_name = models.CharField(max_length=100)
-    user_email = models.EmailField(max_length=255)  # Añadido el campo para el correo electrónico
+    user_email = models.EmailField(max_length=255)
     relative_name = models.CharField(max_length=100)
     relative_age = models.IntegerField()
-    timestamp = models.CharField(max_length=30)  # Cambiado a CharField
+    timestamp = models.CharField(max_length=30)
 
     def __str__(self):
         return f"{self.user_name}'s waiver data for {self.relative_name}"
