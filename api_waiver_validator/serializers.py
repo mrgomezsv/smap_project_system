@@ -6,4 +6,4 @@ from t_app_product.models import WaiverValidator
 class WaiverValidatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = WaiverValidator
-        fields = ['id', 'user', 'email', 'created_at']
+        fields = ['email']

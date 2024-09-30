@@ -1,12 +1,9 @@
 # api_waiver_validator/urls.py
 
-from django.urls import path, include
-from rest_framework import routers
-from .views import WaiverValidatorViewSet
-
-router = routers.DefaultRouter()
-router.register(r'waiver-validators', WaiverValidatorViewSet, basename='waivervalidator')
+from django.urls import path
+from .views import check_waiver_validator
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/check-waiver-validator/', check_waiver_validator, name='check_waiver_validator'),
 ]
+

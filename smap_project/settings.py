@@ -14,6 +14,8 @@ from pathlib import Path
 from firebase_admin import credentials
 import firebase_admin
 
+import api_waiver_validator
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
     'api_commentary',
     'api_like',
     'api_waiver',
+    'api_waiver_validator',
     'kidsfun_web',
     'rest_framework',
 ]
