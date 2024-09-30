@@ -80,3 +80,15 @@ class WaiverValidator(models.Model):
 
     def __str__(self):
         return self.email
+
+class WaiverDataDB(models.Model):
+    user_id = models.CharField(max_length=100)
+    user_name = models.CharField(max_length=100)
+    relative_name = models.CharField(max_length=100)
+    relative_age = models.IntegerField()
+    timestamp = models.CharField(max_length=30)
+    user_email = models.EmailField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False  # Esto indica que Django no gestionará la creación ni las migraciones de esta tabla
+        db_table = 'api_waiver_waiverdata'

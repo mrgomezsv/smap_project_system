@@ -24,31 +24,31 @@
         <div class="tab-pane fade show active" id="registered-users" role="tabpanel" aria-labelledby="registered-users-tab">
             <h3>Clientes Registrados en el Waiver</h3>
             <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>ID Usuario</th>
-                        <th>Correo Electrónico</th>
-                        <th>Nombre Usuario</th>
-                        <th>Nombre del Familiar</th>
-                        <th>Edad del Familiar</th>
-                        <th>Fecha de Registro</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cliente in waiver_clientes %}
-                        <tr>
-                            <td>{{ cliente.id }}</td>
-                            <td>{{ cliente.user_id }}</td>
-                            <td>{{ cliente.user_email }}</td>
-                            <td>{{ cliente.user_name }}</td>
-                            <td>{{ cliente.relative_name }}</td>
-                            <td>{{ cliente.relative_age }}</td>
-                            <td>{{ cliente.timestamp }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Codigo QR</th>
+            <th>Nombre del Titular</th>
+            <th>Nombre del Familiar</th>
+            <th>Edad del Familiar</th>
+            <th>Fecha de Registro</th>
+            <th>Correo Electronico</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cliente in waiver_clientes %}
+            <tr>
+                <td>{{ cliente.id }}</td>
+                <td>{{ cliente.user_id }}</td>
+                <td>{{ cliente.user_name }}</td>
+                <td>{{ cliente.relative_name }}</td>
+                <td>{{ cliente.relative_age }}</td>
+                <td>{{ cliente.timestamp }}</td>
+                <td>{{ cliente.user_email }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
         </div>
 
         <!-- Pestaña de Agregar Correo Electrónico -->

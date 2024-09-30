@@ -1,14 +1,14 @@
 import os
 
 from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .forms import ProductForm
 from .models import Product
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 from .forms import CustomUserCreationForm
 from firebase_admin import auth
@@ -18,7 +18,7 @@ from .forms import EventForm
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import WaiverData, WaiverValidator
+from .models import WaiverDataDB
 from .forms import WaiverValidatorForm
 
 
@@ -296,15 +296,12 @@ def ticket_master(request):
 
 @login_required
 def waiver(request):
-    # Obtener todos los datos de WaiverData desde la base de datos
-    waiver_data = WaiverData.objects.all()
-
-    # Obtener todos los datos de WaiverValidator
-    waiver_validators = WaiverValidator.objects.all()
+    # Obtener todos los datos de WaiverDataDB desde la base de datos
+    waiver_data = WaiverDataDB.objects.all()
 
     # Filas específicas para la tabla de clientes registrados en el waiver
-    waiver_clientes = WaiverData.objects.values(
-        'id', 'user_id', 'user_email', 'user_name', 'relative_name', 'relative_age', 'timestamp'
+    waiver_clientes = WaiverDataDB.objects.values(
+        'id', 'user_id', 'user_name', 'relative_name', 'relative_age', 'timestamp', 'user_email'
     )
 
     if request.method == 'POST':
@@ -317,8 +314,7 @@ def waiver(request):
 
     context = {
         'waiver_data': waiver_data,
-        'waiver_validators': waiver_validators,
-        'waiver_clientes': waiver_clientes,  # Pasamos los clientes al contexto
+        'waiver_clientes': waiver_clientes,
         'form': form
     }
 
