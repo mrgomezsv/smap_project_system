@@ -81,6 +81,9 @@ class WaiverValidator(models.Model):
     def __str__(self):
         return self.email
 
+    class Meta:
+        db_table = 't_app_product_waivervalidator'
+
 class WaiverDataDB(models.Model):
     user_id = models.CharField(max_length=100)
     user_name = models.CharField(max_length=100)

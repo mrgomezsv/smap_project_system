@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .forms import ProductForm
-from .models import Product
+from .models import Product, WaiverValidator
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 from .forms import CustomUserCreationForm
@@ -299,6 +299,9 @@ def waiver(request):
     # Obtener todos los datos de WaiverDataDB desde la base de datos
     waiver_data = WaiverDataDB.objects.all()
 
+    # Obtener los colaboradores registrados
+    waiver_validators = WaiverValidator.objects.all()
+
     # Filas específicas para la tabla de clientes registrados en el waiver
     waiver_clientes = WaiverDataDB.objects.values(
         'id', 'user_id', 'user_name', 'relative_name', 'relative_age', 'timestamp', 'user_email'
@@ -308,13 +311,14 @@ def waiver(request):
         form = WaiverValidatorForm(request.POST)
         if form.is_valid():
             form.save()  # Guarda el formulario sin asignar 'user'
-            return redirect('waiver')  # Asegúrate de que 'waiver' es el nombre correcto de la URL
+            return redirect('waiver')  # Redirigir de nuevo para evitar reenvíos
     else:
         form = WaiverValidatorForm()
 
     context = {
         'waiver_data': waiver_data,
         'waiver_clientes': waiver_clientes,
+        'waiver_validators': waiver_validators,  # Pasamos los validadores al contexto
         'form': form
     }
 
