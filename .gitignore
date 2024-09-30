@@ -122,3 +122,6 @@ find . -name .DS_Store -print0 | xargs -0 git rm --cachedgit
 
 # Credenciales
 .env
+
+# Archivo de configuración de Django
+smap_project/settings.py

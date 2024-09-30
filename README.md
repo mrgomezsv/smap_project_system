@@ -204,3 +204,11 @@ Asegúrate de tener Python instalado en tu sistema. Puedes descargarlo desde pyt
 
 ##### Video de referencia:
     https://www.youtube.com/watch?v=e6PkGDH4wWA&t=5736s
+
+-.Tunes remoto para la db
+    
+    ssh -L 5432:localhost:5432 usuario@82.165.210.146
+
+-.En los settings mantener la direccion asi mientras desarrollo
+
+    'HOST': '82.165.210.146',
