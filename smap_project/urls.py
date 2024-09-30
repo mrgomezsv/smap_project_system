@@ -33,6 +33,7 @@ urlpatterns = [
     path('api/', include('api_like.urls')),  # Incluye las URLs de la aplicación api_like
     path('api/', include('api_commentary.urls')),  # Incluye las URLs de la aplicación api_commentary
     path('api/', include('api_waiver.urls')),  # Incluye las URLs de la aplicación api_waiver
+    path('api_waiver_validator/', include('api_waiver_validator.urls')),
 ]
 
 # Sirve las imágenes desde la carpeta media
