@@ -23,17 +23,23 @@
         <!-- Pestaña de Clientes Registrados en el Waiver -->
         <div class="tab-pane fade show active" id="registered-users" role="tabpanel" aria-labelledby="registered-users-tab">
             <h3>Clientes Registrados en el Waiver</h3>
-            <p>En esta pestaña, estan los clientes que ya se han registrado en el waiver en la app, y generado ya su QR</p>
-            <table class="table table-striped">
+            <p>En esta pestaña, están los clientes que ya se han registrado en el waiver en la app, y generado ya su QR</p>
+
+            <!-- Campo de Búsqueda -->
+            <div class="mb-3">
+                <input type="text" id="searchInput" class="form-control" placeholder="Buscar clientes...">
+            </div>
+
+            <table class="table table-striped" id="clientesTable">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Codigo QR Asociado</th>
+                        <th>Código QR Asociado</th>
                         <th>Nombre del Titular</th>
                         <th>Nombre del Familiar</th>
                         <th>Edad del Familiar</th>
                         <th>Fecha de Registro</th>
-                        <th>Correo Electronico</th>
+                        <th>Correo Electrónico</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,6 +56,11 @@
                     {% endfor %}
                 </tbody>
             </table>
+
+            <!-- Mensaje si no se encuentran resultados -->
+            {% if waiver_clientes.count == 0 %}
+                <p>No se encontraron clientes que coincidan con la búsqueda.</p>
+            {% endif %}
         </div>
 
         <!-- Pestaña de Agregar Correo Electrónico -->
@@ -87,4 +98,38 @@
 
     </div>
 </div>
+
+<!-- Script de Búsqueda -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const table = document.getElementById('clientesTable');
+        const tbody = table.getElementsByTagName('tbody')[0];
+        const rows = tbody.getElementsByTagName('tr');
+
+        searchInput.addEventListener('keyup', function() {
+            const filter = searchInput.value.toLowerCase();
+
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                let match = false;
+
+                for (let j = 0; j < cells.length; j++) {
+                    const cellText = cells[j].textContent.toLowerCase();
+                    if (cellText.indexOf(filter) > -1) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                if (match) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        });
+    });
+</script>
+
 {% endblock %}
