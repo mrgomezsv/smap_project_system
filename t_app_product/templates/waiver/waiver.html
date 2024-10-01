@@ -22,19 +22,22 @@
     <div class="tab-content mt-3" id="waiverTabsContent">
         <!-- Pestaña de Clientes Registrados en el Waiver -->
         <div class="tab-pane fade show active" id="registered-users" role="tabpanel" aria-labelledby="registered-users-tab">
-            <h3>Clientes Registrados en el Waiver</h3>
-            <p>En esta pestaña, están los clientes que ya se han registrado en el waiver en la app, y generado ya su QR.</p>
-
-            <!-- Campo de Búsqueda Mejorado -->
-            <div class="d-flex justify-content-end mb-3">
-                <div class="input-group" style="width: 300px;">
-                    <!-- Ícono de Búsqueda -->
-                    <span class="input-group-text" id="search-icon">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <!-- Campo de Entrada de Búsqueda -->
-                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar..." aria-label="Buscar" aria-describedby="search-icon">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                <div>
+                    <h3>Clientes Registrados en el Waiver</h3>
+                    <p>En esta pestaña, están los clientes que ya se han registrado en el waiver en la app, y generado ya su QR.</p>
                 </div>
+                <!-- Formulario de Búsqueda Mejorado -->
+                <form class="d-flex ms-3 my-2" role="search" method="get">
+                    <div class="input-group">
+                        <!-- Ícono de Búsqueda -->
+                        <span class="input-group-text" id="search-icon">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <!-- Campo de Entrada de Búsqueda -->
+                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar..." aria-label="Buscar" aria-describedby="search-icon">
+                    </div>
+                </form>
             </div>
 
             <table class="table table-striped" id="clientesTable">
@@ -105,6 +108,9 @@
 
     </div>
 </div>
+
+<!-- Incluir Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 <!-- Script de Búsqueda -->
 <script>
