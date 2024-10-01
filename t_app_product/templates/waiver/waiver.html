@@ -23,11 +23,18 @@
         <!-- Pestaña de Clientes Registrados en el Waiver -->
         <div class="tab-pane fade show active" id="registered-users" role="tabpanel" aria-labelledby="registered-users-tab">
             <h3>Clientes Registrados en el Waiver</h3>
-            <p>En esta pestaña, están los clientes que ya se han registrado en el waiver en la app, y generado ya su QR</p>
+            <p>En esta pestaña, están los clientes que ya se han registrado en el waiver en la app, y generado ya su QR.</p>
 
-            <!-- Campo de Búsqueda -->
-            <div class="mb-3">
-                <input type="text" id="searchInput" class="form-control" placeholder="Buscar clientes...">
+            <!-- Campo de Búsqueda Mejorado -->
+            <div class="d-flex justify-content-end mb-3">
+                <div class="input-group" style="width: 300px;">
+                    <!-- Ícono de Búsqueda -->
+                    <span class="input-group-text" id="search-icon">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <!-- Campo de Entrada de Búsqueda -->
+                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar..." aria-label="Buscar" aria-describedby="search-icon">
+                </div>
             </div>
 
             <table class="table table-striped" id="clientesTable">
@@ -77,7 +84,7 @@
 
             <!-- Tabla de correos electrónicos -->
             <h3>Lista de Correos Electrónicos Autorizados para Validar QR en la APP</h3>
-            <p>Este es el listado de personas que tendrán acceso a Custom Waiver Validator en la APP. Por el momento no se puede borrar o editar esta lista, pero se podrá próximamente, por el momento solo se puede agregar.</p>
+            <p>Este es el listado de personas que tendrán acceso a Custom Waiver Validator en la APP. Por el momento no se puede borrar o editar esta lista, pero se podrá próximamente; por el momento solo se puede agregar.</p>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -126,6 +133,22 @@
                     rows[i].style.display = '';
                 } else {
                     rows[i].style.display = 'none';
+                }
+            }
+
+            // Mostrar mensaje si no hay coincidencias
+            const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+            const noResultsMessage = document.getElementById('no-results-message');
+            if (visibleRows.length === 0) {
+                if (!noResultsMessage) {
+                    const message = document.createElement('p');
+                    message.id = 'no-results-message';
+                    message.textContent = 'No se encontraron clientes que coincidan con la búsqueda.';
+                    table.parentNode.insertBefore(message, table.nextSibling);
+                }
+            } else {
+                if (noResultsMessage) {
+                    noResultsMessage.remove();
                 }
             }
         });
