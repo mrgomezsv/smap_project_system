@@ -1,26 +1,21 @@
 import os
 
+from .forms import EventForm
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import ProductForm
-from .models import Product, WaiverValidator
-from django.contrib.auth.decorators import user_passes_test
-from django.http import HttpResponse
-from .forms import CustomUserCreationForm
+from .forms import ProductForm, WaiverValidatorForm, CustomUserCreationForm
+from .models import Product, WaiverValidator, Event, WaiverDataDB
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 from firebase_admin import auth
 from datetime import datetime
-from .models import Event
-from .forms import EventForm
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import WaiverDataDB, WaiverValidator
-from .forms import WaiverValidatorForm
+from django.views.decorators.http import require_POST
 
 
 @login_required
@@ -297,13 +292,8 @@ def ticket_master(request):
 
 @login_required
 def waiver(request):
-    # Obtener todos los datos de WaiverDataDB desde la base de datos
     waiver_data = WaiverDataDB.objects.all()
-
-    # Obtener los colaboradores registrados
     waiver_validators = WaiverValidator.objects.all()
-
-    # Filas específicas para la tabla de clientes registrados en el waiver
     waiver_clientes = WaiverDataDB.objects.values(
         'id', 'user_id', 'user_name', 'relative_name', 'relative_age', 'timestamp', 'user_email'
     )
@@ -311,27 +301,28 @@ def waiver(request):
     if request.method == 'POST':
         form = WaiverValidatorForm(request.POST)
         if form.is_valid():
-            form.save()  # Guarda el formulario sin asignar 'user'
-            return redirect('waiver')  # Redirigir de nuevo para evitar reenvíos
+            form.save()
+            return HttpResponseRedirect(reverse('waiver') + '?active_tab=add-email')
     else:
         form = WaiverValidatorForm()
 
     context = {
         'waiver_data': waiver_data,
         'waiver_clientes': waiver_clientes,
-        'waiver_validators': waiver_validators,  # Pasamos los validadores al contexto
-        'form': form
+        'waiver_validators': waiver_validators,
+        'form': form,
+        'request': request  # Aseguramos que 'request' esté disponible en la plantilla
     }
 
     return render(request, 'waiver.html', context)
 
+
+@require_POST
 def delete_validator(request, validator_id):
     validator = get_object_or_404(WaiverValidator, pk=validator_id)
-    if request.method == 'POST':
-        validator.delete()
-        messages.success(request, 'Colaborador eliminado exitosamente.')
-        return redirect('waiver')
-    return render(request, 'delete_validator_confirm.html', {'validator': validator})
+    validator.delete()
+    messages.success(request, 'Colaborador eliminado exitosamente.')
+    return HttpResponseRedirect(reverse('waiver') + '?active_tab=add-email')
 
 
 @login_required
