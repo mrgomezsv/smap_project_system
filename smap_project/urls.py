@@ -24,6 +24,7 @@ urlpatterns = [
     path('event/', views.event, name='event'),
     path('create_event/', views.create_event, name='create_event'),
     path('waiver/', views.waiver, name='waiver'),
+    path('waiver/delete/<int:validator_id>/', views.delete_validator, name='delete_validator'),
     path('sudo_admin/', views.sudo_admin, name='sudo_admin'),
     path('ticket_master/', views.ticket_master, name='ticket_master'),
     path('process-checkbox/', process_checkbox, name='process_checkbox'),

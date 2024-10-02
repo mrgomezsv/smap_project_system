@@ -325,8 +325,8 @@ def waiver(request):
 
     return render(request, 'waiver.html', context)
 
-def delete_validator(request, pk):
-    validator = get_object_or_404(WaiverValidator, pk=pk)
+def delete_validator(request, validator_id):
+    validator = get_object_or_404(WaiverValidator, pk=validator_id)
     if request.method == 'POST':
         validator.delete()
         messages.success(request, 'Colaborador eliminado exitosamente.')

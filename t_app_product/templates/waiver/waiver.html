@@ -87,33 +87,39 @@
 
             <!-- Tabla de correos electrónicos -->
             <h3>Lista de Correos Electrónicos Autorizados para Validar QR en la APP</h3>
-            <p>Este es el listado de personas que tendrán acceso a Custom Waiver Validator en la APP. Por el momento no se puede borrar o editar esta lista, pero se podrá próximamente; por el momento solo se puede agregar.</p>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th></th> <!-- Nueva columna para el checkbox -->
-                        <th>Email</th>
-                        <th>Fecha de Creación</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for validator in waiver_validators %}
+            <p>Este es el listado de personas que tendrán acceso a Custom Waiver Validator en la APP. Ahora puedes eliminar colaboradores seleccionando el checkbox y haciendo clic en el ícono de basurero.</p>
+            <form method="post" id="delete-form">
+                {% csrf_token %}
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td>
-                                <!-- Checkbox -->
-                                <input type="checkbox" class="item-checkbox">
-                            </td>
-                            <td>{{ validator.email }}</td>
-                            <td>{{ validator.created_at }}</td>
-                            <td>
-                                <!-- Ícono de basurero oculto por defecto -->
-                                <i class="bi bi-trash trash-icon" style="display: none;"></i>
-                            </td>
+                            <th></th> <!-- Columna para el checkbox -->
+                            <th>Email</th>
+                            <th>Fecha de Creación</th>
+                            <th>Acciones</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for validator in waiver_validators %}
+                            <tr>
+                                <td>
+                                    <!-- Checkbox -->
+                                    <input type="checkbox" class="item-checkbox">
+                                </td>
+                                <td>{{ validator.email }}</td>
+                                <td>{{ validator.created_at }}</td>
+                                <td>
+                                    <!-- Botón de eliminación -->
+                                    <button type="submit" formaction="{% url 'delete_validator' validator_id=validator.id %}" formmethod="post" class="btn btn-link trash-icon" style="display: none;" onclick="return confirm('¿Estás seguro de que deseas eliminar este colaborador?');">
+                                        {% csrf_token %}
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
         </div>
 
     </div>
@@ -127,48 +133,50 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Script de Búsqueda
         const searchInput = document.getElementById('searchInput');
-        const table = document.getElementById('clientesTable');
-        const tbody = table.getElementsByTagName('tbody')[0];
-        const rows = tbody.getElementsByTagName('tr');
+        if (searchInput) {
+            const table = document.getElementById('clientesTable');
+            const tbody = table.getElementsByTagName('tbody')[0];
+            const rows = tbody.getElementsByTagName('tr');
 
-        searchInput.addEventListener('keyup', function() {
-            const filter = searchInput.value.toLowerCase();
+            searchInput.addEventListener('keyup', function() {
+                const filter = searchInput.value.toLowerCase();
 
-            for (let i = 0; i < rows.length; i++) {
-                const cells = rows[i].getElementsByTagName('td');
-                let match = false;
+                for (let i = 0; i < rows.length; i++) {
+                    const cells = rows[i].getElementsByTagName('td');
+                    let match = false;
 
-                for (let j = 0; j < cells.length; j++) {
-                    const cellText = cells[j].textContent.toLowerCase();
-                    if (cellText.indexOf(filter) > -1) {
-                        match = true;
-                        break;
+                    for (let j = 0; j < cells.length; j++) {
+                        const cellText = cells[j].textContent.toLowerCase();
+                        if (cellText.indexOf(filter) > -1) {
+                            match = true;
+                            break;
+                        }
+                    }
+
+                    if (match) {
+                        rows[i].style.display = '';
+                    } else {
+                        rows[i].style.display = 'none';
                     }
                 }
 
-                if (match) {
-                    rows[i].style.display = '';
+                // Mostrar mensaje si no hay coincidencias
+                const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+                const noResultsMessage = document.getElementById('no-results-message');
+                if (visibleRows.length === 0) {
+                    if (!noResultsMessage) {
+                        const message = document.createElement('p');
+                        message.id = 'no-results-message';
+                        message.textContent = 'No se encontraron clientes que coincidan con la búsqueda.';
+                        table.parentNode.insertBefore(message, table.nextSibling);
+                    }
                 } else {
-                    rows[i].style.display = 'none';
+                    if (noResultsMessage) {
+                        noResultsMessage.remove();
+                    }
                 }
-            }
-
-            // Mostrar mensaje si no hay coincidencias
-            const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
-            const noResultsMessage = document.getElementById('no-results-message');
-            if (visibleRows.length === 0) {
-                if (!noResultsMessage) {
-                    const message = document.createElement('p');
-                    message.id = 'no-results-message';
-                    message.textContent = 'No se encontraron clientes que coincidan con la búsqueda.';
-                    table.parentNode.insertBefore(message, table.nextSibling);
-                }
-            } else {
-                if (noResultsMessage) {
-                    noResultsMessage.remove();
-                }
-            }
-        });
+            });
+        }
 
         // Manejo de checkbox y visibilidad del ícono de basurero
         const checkboxes = document.querySelectorAll('.item-checkbox');
