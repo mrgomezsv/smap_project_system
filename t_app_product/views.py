@@ -16,9 +16,10 @@ from datetime import datetime
 from .models import Event
 from .forms import EventForm
 from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import WaiverDataDB
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import WaiverDataDB, WaiverValidator
 from .forms import WaiverValidatorForm
 
 
@@ -323,6 +324,14 @@ def waiver(request):
     }
 
     return render(request, 'waiver.html', context)
+
+def delete_validator(request, pk):
+    validator = get_object_or_404(WaiverValidator, pk=pk)
+    if request.method == 'POST':
+        validator.delete()
+        messages.success(request, 'Colaborador eliminado exitosamente.')
+        return redirect('waiver')
+    return render(request, 'delete_validator_confirm.html', {'validator': validator})
 
 
 @login_required
