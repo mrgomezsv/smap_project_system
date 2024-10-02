@@ -91,10 +91,10 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th></th> <!-- Columna para los checkboxes -->
+                        <th></th> <!-- Nueva columna para el checkbox -->
                         <th>Email</th>
                         <th>Fecha de Creación</th>
-                        <th>Acciones</th> <!-- Columna para el ícono de basurero -->
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -102,13 +102,13 @@
                         <tr>
                             <td>
                                 <!-- Checkbox -->
-                                <input type="checkbox" name="validator_ids" value="{{ validator.id }}">
+                                <input type="checkbox" class="item-checkbox">
                             </td>
                             <td>{{ validator.email }}</td>
                             <td>{{ validator.created_at }}</td>
                             <td>
-                                <!-- Ícono de basurero -->
-                                <i class="bi bi-trash"></i>
+                                <!-- Ícono de basurero oculto por defecto -->
+                                <i class="bi bi-trash trash-icon" style="display: none;"></i>
                             </td>
                         </tr>
                     {% endfor %}
@@ -122,9 +122,10 @@
 <!-- Incluir Bootstrap Icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-<!-- Script de Búsqueda -->
+<!-- Script de Búsqueda y manejo de checkbox -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Script de Búsqueda
         const searchInput = document.getElementById('searchInput');
         const table = document.getElementById('clientesTable');
         const tbody = table.getElementsByTagName('tbody')[0];
@@ -167,6 +168,21 @@
                     noResultsMessage.remove();
                 }
             }
+        });
+
+        // Manejo de checkbox y visibilidad del ícono de basurero
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                const row = checkbox.closest('tr');
+                const trashIcon = row.querySelector('.trash-icon');
+                if (checkbox.checked) {
+                    trashIcon.style.display = 'inline'; // Mostrar el ícono
+                } else {
+                    trashIcon.style.display = 'none'; // Ocultar el ícono
+                }
+            });
         });
     });
 </script>
