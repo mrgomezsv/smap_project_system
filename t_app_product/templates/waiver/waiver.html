@@ -91,14 +91,19 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th></th> <!-- Columna para los checkboxes -->
                         <th>Email</th>
                         <th>Fecha de Creación</th>
-                        <th>Acciones</th> <!-- Nueva columna para el ícono -->
+                        <th>Acciones</th> <!-- Columna para el ícono de basurero -->
                     </tr>
                 </thead>
                 <tbody>
                     {% for validator in waiver_validators %}
                         <tr>
+                            <td>
+                                <!-- Checkbox -->
+                                <input type="checkbox" name="validator_ids" value="{{ validator.id }}">
+                            </td>
                             <td>{{ validator.email }}</td>
                             <td>{{ validator.created_at }}</td>
                             <td>
