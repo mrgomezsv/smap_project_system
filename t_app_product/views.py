@@ -211,7 +211,7 @@ def signout(request):
 
 
 # Cargar las credenciales del archivo JSON de Firebase
-with open('ruta/a/tus/credenciales_firebase.json') as f:
+with open('../credentials/smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json') as f:
     firebase_credentials = json.load(f)
 
 # Crear instancia de FCM
