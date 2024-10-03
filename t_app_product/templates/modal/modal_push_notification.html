@@ -1,32 +1,33 @@
+<!-- modal.html -->
 <div class="container mt-5">
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+
+    <div id="newPushNotification" class="componente-con-borde" style="display: none;">
         <div class="mb-3">
-            <h3>Nueva Notificación</h3>
+            <h3>Nueva Notificacion</h3>
         </div>
         <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Título de la notificación</label>
-            <input type="text" class="form-control" id="exampleFormControlInput1" name="title"
-                   placeholder="Ingresa un título opcional">
+            <input type="email" class="form-control" id="exampleFormControlInput1"
+                   placeholder="Ingresa un titulo opcional">
         </div>
         <div class="mb-3">
             <label for="exampleFormControlTextarea1" class="form-label">Texto de la notificación</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" name="message"
-                      placeholder="Ingresa el texto de la notificación" rows="3"></textarea>
+            <textarea class="form-control" id="exampleFormControlTextarea1"
+                      placeholder="Ingresa el texto de la notificacion" rows="3"></textarea>
         </div>
         <div class="mb-3">
-            <label for="formFile" class="form-label">URL de imagen de notificación (opcional)</label>
-            <input class="form-control" type="text" id="formFile" name="image_url"
+            <label for="formFile" class="form-label">Imagen de notificación (opcional)</label>
+            <input class="form-control" type="file" id="formFile"
                    placeholder="Ejemplo: https://tuapp.com/imagen.png">
         </div>
         <div class="mb-3">
             <label for="exampleFormControlInput2" class="form-label">Nombre de la notificación</label>
-            <input type="text" class="form-control" id="exampleFormControlInput2" name="notification_name"
+            <input type="email" class="form-control" id="exampleFormControlInput2"
                    placeholder="Ingresa un nombre opcional">
         </div>
         <div class="mt-4 justify-content-end">
             <button type="submit" class="btn btn-primary">Enviar</button>
             <button id="cancelarBtn" type="button" class="btn btn-danger ml-2">Cancelar</button>
         </div>
-    </form>
+    </div>
 </div>

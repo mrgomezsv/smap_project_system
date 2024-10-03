@@ -1,24 +1,26 @@
 import os
 
-from .forms import EventForm
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, render, redirect, reverse
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import ProductForm, WaiverValidatorForm, CustomUserCreationForm
-from .models import Product, WaiverValidator, Event, WaiverDataDB
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib import messages
+from .forms import ProductForm
+from .models import Product, WaiverValidator
+from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponse
+from .forms import CustomUserCreationForm
 from firebase_admin import auth
 from datetime import datetime
+from .models import Event
+from .forms import EventForm
 from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.http import require_POST
-from django.shortcuts import render
-from pyfcm import FCMNotification
-import json
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import WaiverDataDB, WaiverValidator
+from .forms import WaiverValidatorForm
 
 
 @login_required
@@ -209,37 +211,8 @@ def signout(request):
     return redirect('home')
 
 
-
-# Cargar las credenciales del archivo JSON de Firebase
-with open('../credentials/smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json') as f:
-    firebase_credentials = json.load(f)
-
-# Crear instancia de FCM
-push_service = FCMNotification(api_key=firebase_credentials['api_key'])
-
 @login_required
 def push_notification(request):
-    if request.method == 'POST':
-        # Obtener datos del formulario
-        title = request.POST.get('title')
-        message = request.POST.get('message')
-        image_url = request.POST.get('image_url')  # Si agregas soporte para imágenes
-        notification_name = request.POST.get('notification_name')
-
-        # Enviar notificación a todos los dispositivos o a un token en específico
-        result = push_service.notify_topic_subscribers(
-            topic_name="general",  # O usa un token de dispositivo específico si lo necesitas
-            message_title=title,
-            message_body=message,
-            data_message={"notification_name": notification_name},
-            sound="default",
-            click_action="FLUTTER_NOTIFICATION_CLICK",
-            android_image=image_url if image_url else None  # Si hay una imagen
-        )
-
-        # Retorna respuesta a la plantilla o redirige a otro lugar
-        return render(request, 'push_notification.html', {'result': result})
-
     return render(request, 'push_notification.html')
 
 
@@ -324,8 +297,13 @@ def ticket_master(request):
 
 @login_required
 def waiver(request):
+    # Obtener todos los datos de WaiverDataDB desde la base de datos
     waiver_data = WaiverDataDB.objects.all()
+
+    # Obtener los colaboradores registrados
     waiver_validators = WaiverValidator.objects.all()
+
+    # Filas específicas para la tabla de clientes registrados en el waiver
     waiver_clientes = WaiverDataDB.objects.values(
         'id', 'user_id', 'user_name', 'relative_name', 'relative_age', 'timestamp', 'user_email'
     )
@@ -333,28 +311,27 @@ def waiver(request):
     if request.method == 'POST':
         form = WaiverValidatorForm(request.POST)
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('waiver') + '?active_tab=add-email')
+            form.save()  # Guarda el formulario sin asignar 'user'
+            return redirect('waiver')  # Redirigir de nuevo para evitar reenvíos
     else:
         form = WaiverValidatorForm()
 
     context = {
         'waiver_data': waiver_data,
         'waiver_clientes': waiver_clientes,
-        'waiver_validators': waiver_validators,
-        'form': form,
-        'request': request  # Aseguramos que 'request' esté disponible en la plantilla
+        'waiver_validators': waiver_validators,  # Pasamos los validadores al contexto
+        'form': form
     }
 
     return render(request, 'waiver.html', context)
 
-
-@require_POST
 def delete_validator(request, validator_id):
     validator = get_object_or_404(WaiverValidator, pk=validator_id)
-    validator.delete()
-    messages.success(request, 'Colaborador eliminado exitosamente.')
-    return HttpResponseRedirect(reverse('waiver') + '?active_tab=add-email')
+    if request.method == 'POST':
+        validator.delete()
+        messages.success(request, 'Colaborador eliminado exitosamente.')
+        return redirect('waiver')
+    return render(request, 'delete_validator_confirm.html', {'validator': validator})
 
 
 @login_required
