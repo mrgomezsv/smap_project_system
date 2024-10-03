@@ -149,6 +149,7 @@ Asegúrate de tener Python instalado en tu sistema. Puedes descargarlo desde pyt
     pip install v
     pip install Werkzeug
     pip install zipp
+    pip install pyfcm
 
 
 4.Crear una migración:
