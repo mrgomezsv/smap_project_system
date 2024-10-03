@@ -16,6 +16,9 @@ from firebase_admin import auth
 from datetime import datetime
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
+from django.shortcuts import render
+from pyfcm import FCMNotification
+import json
 
 
 @login_required
@@ -206,8 +209,37 @@ def signout(request):
     return redirect('home')
 
 
+
+# Cargar las credenciales del archivo JSON de Firebase
+with open('ruta/a/tus/credenciales_firebase.json') as f:
+    firebase_credentials = json.load(f)
+
+# Crear instancia de FCM
+push_service = FCMNotification(api_key=firebase_credentials['api_key'])
+
 @login_required
 def push_notification(request):
+    if request.method == 'POST':
+        # Obtener datos del formulario
+        title = request.POST.get('title')
+        message = request.POST.get('message')
+        image_url = request.POST.get('image_url')  # Si agregas soporte para imágenes
+        notification_name = request.POST.get('notification_name')
+
+        # Enviar notificación a todos los dispositivos o a un token en específico
+        result = push_service.notify_topic_subscribers(
+            topic_name="general",  # O usa un token de dispositivo específico si lo necesitas
+            message_title=title,
+            message_body=message,
+            data_message={"notification_name": notification_name},
+            sound="default",
+            click_action="FLUTTER_NOTIFICATION_CLICK",
+            android_image=image_url if image_url else None  # Si hay una imagen
+        )
+
+        # Retorna respuesta a la plantilla o redirige a otro lugar
+        return render(request, 'push_notification.html', {'result': result})
+
     return render(request, 'push_notification.html')
 
 
