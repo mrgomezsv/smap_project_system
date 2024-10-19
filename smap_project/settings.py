@@ -116,6 +116,9 @@ DATABASES = {
         'PASSWORD': 'Karin2100',
         'HOST': '82.165.210.146',
         'PORT': '5432',
+        'OPTIONS': {
+                    'sslmode': 'require',  # o 'prefer' si permites conexiones sin SSL también
+                },
     }
 }
 
