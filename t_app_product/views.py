@@ -1,7 +1,6 @@
 import os
 
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
@@ -17,12 +16,14 @@ from .models import Event
 from .forms import EventForm
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from .models import WaiverDataDB, WaiverValidator
 from .forms import WaiverValidatorForm
-from firebase_admin import messaging
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from firebase_admin import messaging
+from django.views.decorators.csrf import csrf_exempt
 
 
 @login_required
@@ -403,20 +404,29 @@ def sudo_admin(request):
     return render(request, 'sudo/sudo_admin.html', {'users': users})
 
 @login_required
+@csrf_exempt
 def send_push_notification(request):
-    # Este es el token del dispositivo al que se enviará la notificación
-    registration_token = request.GET.get('token')
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        body = request.POST.get('body')
+        user_token = request.POST.get('user')
+        image = request.FILES.get('image')
 
-    # Definir el contenido de la notificación
-    message = messaging.Message(
-        notification=messaging.Notification(
-            title='Título de la Notificación',
-            body='Cuerpo de la notificación',
-        ),
-        token=registration_token,
-    )
+        # Preparar la notificación
+        message = messaging.Message(
+            notification=messaging.Notification(
+                title=title,
+                body=body,
+                image=image.url if image else None
+            ),
+            token=user_token,
+        )
 
-    # Enviar la notificación
-    response = messaging.send(message)
+        try:
+            # Enviar la notificación
+            response = messaging.send(message)
+            return JsonResponse({'success': True, 'message_id': response})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
 
-    return JsonResponse({'message_id': response})
+    return render(request, 'tu_template.html')  # Redirige a la página deseada después del POST
