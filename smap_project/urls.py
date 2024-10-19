@@ -20,6 +20,7 @@ urlpatterns = [
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('product/<int:product_id>/delete/', views.delete_product, name='delete_product'),
     path('push_notification/', views.push_notification, name='push_notification'),
+    path('performance/', views.performance, name='performance'),
     path('firebase_auth/', views.firebase_auth, name='firebase_auth'),
     path('event/', views.event, name='event'),
     path('create_event/', views.create_event, name='create_event'),

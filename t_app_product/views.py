@@ -294,6 +294,11 @@ def ticket_master(request):
     # Lógica de la vista aquí
     return render(request, 'ticket_master.html')
 
+@login_required
+def performance(request):
+    # Lógica de la vista aquí
+    return render(request, 'performance.html')
+
 
 @login_required
 def waiver(request):

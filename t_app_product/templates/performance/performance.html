@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <head>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/push_notification.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    </head>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #F4F1FF !important; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div class="container d-flex align-items-center">
+            <h2 class="h2">Rendimiento de la App</h2>
+            <div class="d-flex ml-auto">
+                <a id="crearProductoBtn" href="#" class="btn btn-primary">Crear Nueva</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Incluye el contenido del modal desde el archivo separado -->
+    {% include 'modal/modal_push_notification.html' %}
+
+    <div class="container mt-5">
+        <table class="table">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all"></th>
+                <th>ID</th>
+                <th>Titulo de la notificacion</th>
+                <th>Texto de la nottificacion</th>
+                <th>Imagen de la notificacion</th>
+                <th>Nombre de la notificacion</th>
+                <th>Fecha de Envio</th>
+                <th>Usuario</th>
+                <th class="trash-column"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Aquí van las filas de la tabla -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.getElementById('crearProductoBtn').addEventListener('click', function (event) {
+            event.preventDefault(); // Evita que el enlace se comporte como un enlace normal
+            var componente = document.getElementById('newPushNotification');
+            if (componente.style.display === 'none') {
+                componente.style.display = 'block';
+            } else {
+                componente.style.display = 'none';
+            }
+        });
+
+        // Agrega un evento de clic al botón de cancelar
+        document.getElementById('cancelarBtn').addEventListener('click', function () {
+            var componente = document.getElementById('newPushNotification');
+            componente.style.display = 'none';
+        });
+    </script>
+
+{% endblock %}
