@@ -1,60 +1,115 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <head>
-        {% load static %}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/push_notification.css' %}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    </head>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #F4F1FF !important; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-        <div class="container d-flex align-items-center">
-            <h2 class="h2">Historial de Notificaciones</h2>
-            <div class="d-flex ml-auto">
-                <a id="crearProductoBtn" href="#" class="btn btn-primary">Crear Nueva</a>
-            </div>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/push_notification.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #F4F1FF !important; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+    <div class="container d-flex align-items-center">
+        <h2 class="h2">Historial de Notificaciones</h2>
+        <div class="d-flex ml-auto">
+            <a id="crearProductoBtn" href="#" class="btn btn-primary">Crear Nueva</a>
         </div>
-    </nav>
-
-    <!-- Incluye el contenido del modal desde el archivo separado -->
-    {% include 'modal/modal_push_notification.html' %}
-
-    <div class="container mt-5">
-        <table class="table">
-            <thead>
-            <tr>
-                <th><input type="checkbox" id="select-all"></th>
-                <th>ID</th>
-                <th>Titulo de la notificacion</th>
-                <th>Texto de la nottificacion</th>
-                <th>Imagen de la notificacion</th>
-                <th>Nombre de la notificacion</th>
-                <th>Fecha de Envio</th>
-                <th>Usuario</th>
-                <th class="trash-column"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Aquí van las filas de la tabla -->
-            </tbody>
-        </table>
     </div>
+</nav>
 
-    <script>
-        document.getElementById('crearProductoBtn').addEventListener('click', function (event) {
-            event.preventDefault(); // Evita que el enlace se comporte como un enlace normal
-            var componente = document.getElementById('newPushNotification');
-            if (componente.style.display === 'none') {
-                componente.style.display = 'block';
-            } else {
-                componente.style.display = 'none';
-            }
-        });
+<!-- Modal para crear nueva notificación -->
+<div id="newPushNotification" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Crear Notificación Push</h5>
+            <button type="button" id="cancelarBtn" class="close" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="pushNotificationForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title">Título</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="body">Texto de la Notificación</label>
+                    <textarea class="form-control" id="body" name="body" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="image">Imagen</label>
+                    <input type="file" class="form-control-file" id="image" name="image">
+                </div>
+                <div class="form-group">
+                    <label for="user">Destinatario (Token de Usuario)</label>
+                    <input type="text" class="form-control" id="user" name="user" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar Notificación</button>
+            </form>
+        </div>
+    </div>
+</div>
 
-        // Agrega un evento de clic al botón de cancelar
-        document.getElementById('cancelarBtn').addEventListener('click', function () {
-            var componente = document.getElementById('newPushNotification');
+<div class="container mt-5">
+    <table class="table">
+        <thead>
+        <tr>
+            <th><input type="checkbox" id="select-all"></th>
+            <th>ID</th>
+            <th>Título de la Notificación</th>
+            <th>Texto de la Notificación</th>
+            <th>Imagen de la Notificación</th>
+            <th>Nombre de la Notificación</th>
+            <th>Fecha de Envío</th>
+            <th>Usuario</th>
+            <th class="trash-column"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Aquí se insertarán las filas con el historial de notificaciones -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Mostrar el modal al hacer clic en "Crear Nueva"
+    document.getElementById('crearProductoBtn').addEventListener('click', function (event) {
+        event.preventDefault(); // Evita que el enlace se comporte como un enlace normal
+        var componente = document.getElementById('newPushNotification');
+        if (componente.style.display === 'none') {
+            componente.style.display = 'block';
+        } else {
             componente.style.display = 'none';
-        });
-    </script>
-    
+        }
+    });
+
+    // Ocultar el modal al hacer clic en "Cancelar"
+    document.getElementById('cancelarBtn').addEventListener('click', function () {
+        var componente = document.getElementById('newPushNotification');
+        componente.style.display = 'none';
+    });
+
+    // Enviar el formulario de notificación push
+    document.getElementById('pushNotificationForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evita el envío estándar del formulario
+
+        var formData = new FormData(this);
+
+        // Usar fetch para enviar el formulario al servidor
+        fetch("{% url 'send_push_notification' %}", {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Notificación enviada con éxito");
+                document.getElementById('newPushNotification').style.display = 'none';
+            } else {
+                alert("Error al enviar la notificación: " + data.error);
+            }
+        })
+        .catch(error => console.log('Error:', error));
+    });
+</script>
+
 {% endblock %}
