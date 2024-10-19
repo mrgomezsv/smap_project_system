@@ -21,6 +21,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import WaiverDataDB, WaiverValidator
 from .forms import WaiverValidatorForm
+from firebase_admin import messaging
+from django.http import JsonResponse
 
 
 @login_required
@@ -399,3 +401,22 @@ def is_mrgomez(user):
 def sudo_admin(request):
     users = User.objects.all()
     return render(request, 'sudo/sudo_admin.html', {'users': users})
+
+@login_required
+def send_push_notification(request):
+    # Este es el token del dispositivo al que se enviará la notificación
+    registration_token = request.GET.get('token')
+
+    # Definir el contenido de la notificación
+    message = messaging.Message(
+        notification=messaging.Notification(
+            title='Título de la Notificación',
+            body='Cuerpo de la notificación',
+        ),
+        token=registration_token,
+    )
+
+    # Enviar la notificación
+    response = messaging.send(message)
+
+    return JsonResponse({'message_id': response})
