@@ -216,3 +216,150 @@ Asegúrate de tener Python instalado en tu sistema. Puedes descargarlo desde pyt
 -.En los settings mantener la direccion asi mientras desarrollo
 
     'HOST': '82.165.210.146',
+
+
+
+# Guía de Despliegue en Producción para Proyecto Django
+
+Esta guía detalla los pasos para desplegar un proyecto Django en producción utilizando Gunicorn y Nginx.
+
+## Paso 1: Instalación de Gunicorn
+Instala Gunicorn en tu entorno virtual de Python:
+   
+    pip install gunicorn
+
+
+## Paso 2: Crear archivo de servicio para Gunicorn
+Crea un archivo de servicio para Gunicorn en /etc/systemd/system/gunicorn.service:
+
+    sudo nano /etc/systemd/system/gunicorn.service
+
+Agrega el siguiente contenido:
+
+ini
+    
+    [Unit]
+    Description=gunicorn daemon
+    After=network.target
+    
+    [Service]
+    User=root
+    Group=www-data
+    WorkingDirectory=/root/smap_project_system
+    ExecStart=/root/smap_project_system/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn/gunicorn.sock smap_project.wsgi:application
+    
+    [Install]
+    WantedBy=multi-user.target
+
+
+## Paso 3: Crear directorio para el socket de Gunicorn
+Crea un directorio para el socket de Gunicorn:
+
+
+    sudo mkdir /run/gunicorn
+    sudo chown root:www-data /run/gunicorn
+    sudo chmod 775 /run/gunicorn
+
+## Paso 4: Recargar y reiniciar Gunicorn
+Recarga systemd y reinicia Gunicorn:
+
+    sudo systemctl daemon-reload
+    sudo systemctl start gunicorn
+    sudo systemctl enable gunicorn
+
+## Paso 5: Configurar Nginx
+Crea o edita el archivo de configuración de Nginx en /etc/nginx/sites-available/kidsfun:
+
+    sudo nano /etc/nginx/sites-available/kidsfun
+
+Agrega el siguiente contenido:
+
+## nginx
+
+    server {
+        listen 443 ssl;
+        server_name kidsfunyfiestasinfantiles.com www.kidsfunyfiestasinfantiles.com;
+    
+        location = /favicon.ico { access_log off; log_not_found off; }
+    
+        location /static/ {
+            alias /root/smap_project_system/staticfiles/;
+        }
+    
+        location /media/ {
+            alias /root/smap_project_system/media/;
+        }
+    
+        location / {
+            include proxy_params;
+            proxy_pass http://unix:/run/gunicorn/gunicorn.sock;
+        }
+    
+        ssl_certificate /etc/letsencrypt/live/kidsfunyfiestasinfantiles.com/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/kidsfunyfiestasinfantiles.com/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+    }
+    
+    server {
+        listen 80;
+        server_name kidsfunyfiestasinfantiles.com www.kidsfunyfiestasinfantiles.com;
+    
+        if ($host = www.kidsfunyfiestasinfantiles.com) {
+            return 301 https://$host$request_uri;
+        } # managed by Certbot
+    
+        if ($host = kidsfunyfiestasinfantiles.com) {
+            return 301 https://$host$request_uri;
+        } # managed by Certbot
+    
+        location / {
+            return 404;
+        }
+    }
+
+## Paso 6: Crear enlace simbólico para Nginx
+Crea un enlace simbólico para habilitar el archivo de configuración de Nginx:
+
+    sudo ln -s /etc/nginx/sites-available/kidsfun /etc/nginx/sites-enabled
+
+## Paso 7: Recargar y reiniciar Nginx
+Recarga y reinicia Nginx:
+
+    sudo nginx -t
+    sudo systemctl restart nginx
+
+## Paso 8: Configurar archivos estáticos en Django
+En tu archivo settings.py, configura los archivos estáticos y directorios:
+
+python
+
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    
+    STATICFILES_DIRS = [
+        BASE_DIR / "static",
+        BASE_DIR / "t_app_product" / "static",
+    ]
+    
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+## Paso 9: Recolectar archivos estáticos
+Ejecuta el comando para recolectar los archivos estáticos:
+
+    python manage.py collectstatic
+
+## Paso 10: Configurar HTTPS con Certbot
+Instala Certbot y configura HTTPS:
+
+    sudo apt-get install certbot python3-certbot-nginx
+    sudo certbot --nginx -d kidsfunyfiestasinfantiles.com -d www.kidsfunyfiestasinfantiles.com
+
+## Paso 11: Verificar el estado
+Revisa el estado de Gunicorn y Nginx para asegurarte de que todo esté funcionando correctamente:
+
+
+    sudo systemctl status gunicorn
+    sudo systemctl status nginx
+
