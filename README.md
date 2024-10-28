@@ -363,3 +363,17 @@ Revisa el estado de Gunicorn y Nginx para asegurarte de que todo esté funcionan
     sudo systemctl status gunicorn
     sudo systemctl status nginx
 
+
+
+
+### Actualizar para ver CAMBIOS en PRODUCCION
+
+Limpiar la caché del navegador: Prueba recargando la página con Ctrl + F5 (Windows) o Cmd + Shift + R (Mac) para forzar una recarga completa.
+
+Reiniciar el servidor de Gunicorn: Si tienes habilitado el modo producción, reinicia Gunicorn para asegurarte de que los cambios se carguen correctamente:
+
+    sudo systemctl restart gunicorn
+
+Verificar la caché de Nginx: Nginx podría estar sirviendo una versión en caché. Intenta limpiar la caché de Nginx reiniciándolo:
+
+    sudo systemctl restart nginx
