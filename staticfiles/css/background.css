@@ -1,0 +1,23 @@
+:root {
+    --primary: #4978F0;
+    --primary-light: #E1EEF5;
+    --secondary: #1D1D1D;
+    --background: #F4F1FF;
+    --text: #1F2346;
+    --primary-dark: #314A86;
+    --background-dark: #1F1F1F;
+    --text-dark: #FFFFFF;
+    --button-login: #14e930;
+}
+
+body {
+    font-size: 16px;
+    background-color: var(--background);
+    color: var(--text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark-mode body {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
