@@ -36,6 +36,7 @@ urlpatterns = [
     path('api/', include('api_commentary.urls')),  # Incluye las URLs de la aplicación api_commentary
     path('api/', include('api_waiver.urls')),  # Incluye las URLs de la aplicación api_waiver
     path('api_waiver_validator/', include('api_waiver_validator.urls')),
+    path('firebase_auth/', views.firebase_auth, name='firebase_auth'),
 ]
 
 # Sirve las imágenes desde la carpeta media
@@ -44,3 +45,6 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # Sirve los archivos estáticos durante el desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# Configura el manejador de la página 404
+handler404 = 't_app_product.views.error_404_view'

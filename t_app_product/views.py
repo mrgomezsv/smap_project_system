@@ -430,3 +430,7 @@ def send_push_notification(request):
             return JsonResponse({'success': False, 'error': str(e)})
 
     return render(request, 'tu_template.html')  # Redirige a la página deseada después del POST
+
+def error_404_view(request, exception):
+    return render(request, '404.html', status=404)
+
