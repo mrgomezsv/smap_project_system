@@ -211,7 +211,7 @@ def delete_product(request, product_id):
 @login_required
 def signout(request):
     logout(request)
-    return redirect('home') # Redirige a la página principal después de cerrar sesión
+    return redirect('home')
 
 
 @login_required
@@ -430,7 +430,3 @@ def send_push_notification(request):
             return JsonResponse({'success': False, 'error': str(e)})
 
     return render(request, 'tu_template.html')  # Redirige a la página deseada después del POST
-
-def error_404_view(request, exception):
-    return render(request, '404.html', status=404)
-
