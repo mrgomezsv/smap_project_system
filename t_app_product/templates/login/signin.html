@@ -17,17 +17,18 @@
             align-items: center;
             font-family: Arial, sans-serif;
             background-image: url("{% static 'images/background.png' %}"); /* Imagen de fondo */
-            background-size: cover; /* Hace que la imagen cubra toda la pantalla */
-            background-position: center; /* Centra la imagen */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
-        .form-wrapper {
-            background: rgba(243, 241, 255, 0.9); /* Fondo semi-transparente */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-        }
+<!--        .form-wrapper {-->
+<!--            background: rgba(243, 241, 255, 0.9); /* Fondo semi-transparente */-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            align-items: center;-->
+<!--            width: 100%;-->
+<!--            height: 100%;-->
+<!--        }-->
         .form-side {
             background: #f3f1ff;
             padding: 20px;
@@ -71,10 +72,8 @@
             text-align: center;
         }
         @media (max-width: 768px) {
-            .form-wrapper {
-                align-items: flex-start;
-                padding-top: 50px;
-                background: #f3f1ff;
+            .form-side {
+                transform: translateX(0);  /* El formulario se centra al quitar el desplazamiento en móviles */
             }
         }
     </style>
