@@ -70,13 +70,18 @@ body{
         <div class="btn-group dropup">
             <button type="button" class="btn btn-transparent dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false">
-
             </button>
             <ul class="dropdown-menu">
                 {% if user.username == 'mrgomez' %}
                     <li><a class="dropdown-item" href="/sudo_admin">Sudo Admin</a></li>
                 {% endif %}
-                <li><a class="dropdown-item" href="/logout">Cerrar Sesión</a></li>
+                <!-- Formulario POST para cerrar sesión con token CSRF -->
+                <li>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item">Cerrar Sesión</button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>

@@ -211,7 +211,7 @@ def delete_product(request, product_id):
 @login_required
 def signout(request):
     logout(request)
-    return redirect('home')
+    return redirect('home') # Redirige a la página principal después de cerrar sesión
 
 
 @login_required
