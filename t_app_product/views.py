@@ -220,6 +220,35 @@ def push_notification(request):
 
 
 @login_required
+@csrf_exempt
+def send_push_notification(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        body = request.POST.get('body')
+        user_token = request.POST.get('user')
+        image = request.FILES.get('image')
+
+        # Preparar la notificación
+        message = messaging.Message(
+            notification=messaging.Notification(
+                title=title,
+                body=body,
+                image=image.url if image else None
+            ),
+            token=user_token,
+        )
+
+        try:
+            # Enviar la notificación
+            response = messaging.send(message)
+            return JsonResponse({'success': True, 'message_id': response})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return render(request, 'tu_template.html')  # Redirige a la página deseada después del POST
+
+
+@login_required
 def event(request):
     events = Event.objects.all()
     return render(request, 'event.html', {'events': events})
@@ -402,31 +431,3 @@ def is_mrgomez(user):
 def sudo_admin(request):
     users = User.objects.all()
     return render(request, 'sudo/sudo_admin.html', {'users': users})
-
-@login_required
-@csrf_exempt
-def send_push_notification(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        body = request.POST.get('body')
-        user_token = request.POST.get('user')
-        image = request.FILES.get('image')
-
-        # Preparar la notificación
-        message = messaging.Message(
-            notification=messaging.Notification(
-                title=title,
-                body=body,
-                image=image.url if image else None
-            ),
-            token=user_token,
-        )
-
-        try:
-            # Enviar la notificación
-            response = messaging.send(message)
-            return JsonResponse({'success': True, 'message_id': response})
-        except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)})
-
-    return render(request, 'tu_template.html')  # Redirige a la página deseada después del POST
