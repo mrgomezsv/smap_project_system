@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views  # Importación para usar LogoutView
 
 from t_app_product import views
 from t_app_product.views import process_checkbox, redirect_productc
@@ -13,7 +14,7 @@ urlpatterns = [
     path('about_smap/', views.about_smap, name='about_smap'),
     path('signup/', views.signup, name='signup'),
     path('product/', views.product, name='product'),
-    path('logout/', views.signout, name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),  # Cambio para usar LogoutView
     path('signin/', views.signin, name='signin'),
     path('', include('kidsfun_web.urls')),  # Cambia la URL raíz para que redirija a kidsfun/
     path('product/create/', views.create_product, name='create_product'),

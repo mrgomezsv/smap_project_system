@@ -12,22 +12,15 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from firebase_admin import credentials
-import firebase_admin
 
-import api_waiver_validator
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Ruta base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
+# Configuración de la clave secreta y modo de depuración
 SECRET_KEY = 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+# Hosts permitidos en producción
 ALLOWED_HOSTS = [
     'kidsfunyfiestasinfantiles.com',
     'www.kidsfunyfiestasinfantiles.com',
@@ -35,12 +28,11 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
-# Firebase Admin SDK initialization
-cred_path = os.path.join(BASE_DIR, 'credentials', 'smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json')  # Reemplaza con la ruta a tus credenciales
+# Inicialización del SDK de Firebase Admin
+cred_path = os.path.join(BASE_DIR, 'credentials', 'smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json')
 cred = credentials.Certificate(cred_path)
 
-# Application definition
-
+# Definición de aplicaciones instaladas
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -70,21 +63,22 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+# Configuración de CORS
 CORS_ALLOWED_ORIGINS = [
     "https://kidsfunyfiestasinfantiles.com",
     "http://localhost:8000",
-    # otros orígenes permitidos
 ]
 
+# Configuración de la URL raíz
 ROOT_URLCONF = 'smap_project.urls'
 
+# Plantillas
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'kidsfun_web' / 'templates',  # Asegúrate de que esta línea esté presente
-            BASE_DIR / 'kidsfun_web' / 'templates' / 'kidsfun_web' / 'home',
             BASE_DIR / 'kidsfun_web' / 'templates',
+            BASE_DIR / 'kidsfun_web' / 'templates' / 'kidsfun_web' / 'home',
             BASE_DIR / 't_app_product' / 'templates' / 'push_notificated',
             BASE_DIR / 't_app_product' / 'templates' / 'other_service',
             BASE_DIR / 't_app_product' / 'templates' / 'firebase_auth',
@@ -103,143 +97,31 @@ TEMPLATES = [
     },
 ]
 
+# Configuración de la aplicación WSGI
 WSGI_APPLICATION = 'smap_project.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'smap_kf',
-#         'USER': 'mrgomez',
-#         'PASSWORD': 'Karin2100',
-#         'HOST': '82.165.210.146',
-#         'PORT': '5432',
-#         'OPTIONS': {
-#                     'sslmode': 'require',  # o 'prefer' si permites conexiones sin SSL también
-#                 },
-#     }
-# }
-
+# Base de datos
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'smap_kf',
         'USER': 'mrgomez',
         'PASSWORD': 'Karin2100',
-        'HOST': 'localhost',
+        'HOST': '82.165.210.146',
         'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+# Configuración de redirección después del logout
+LOGOUT_REDIRECT_URL = '/'  # Redirige a la página de inicio después de cerrar sesión
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
+# Configuración de archivos estáticos
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
-# Definir las rutas adicionales para buscar archivos estáticos
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-    BASE_DIR / "t_app_product" / "static",
-]
-
-LOGIN_URL = '/signin'
-
+# Configuración de archivos multimedia
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Configuración adicional para CSRF
-CSRF_TRUSTED_ORIGINS = [
-    'https://kidsfunyfiestasinfantiles.com',
-    'https://www.kidsfunyfiestasinfantiles.com',
-]
-
-CSRF_COOKIE_SECURE = True
-
-# Asegurarse de que las cookies de sesión solo se envíen a través de HTTPS
-SESSION_COOKIE_SECURE = True
-
-# Evitar que JavaScript acceda a las cookies de sesión
-SESSION_COOKIE_HTTPONLY = True
-
-# Establecer SameSite para proteger contra ataques CSRF
-SESSION_COOKIE_SAMESITE = 'Lax'  # También puede ser 'Strict' dependiendo de tus necesidades
-
-# Opcionalmente, mantener ambas configuraciones para mayor seguridad
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expira al cerrar el navegador
-SESSION_COOKIE_AGE = 1800  # Y/o expira en 30 minutos en segundos
-
-# Configuración de correo electrónico
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'kidsfun.developer@gmail.com'  # Reemplaza con tu dirección de correo de Gmail
-EMAIL_HOST_PASSWORD = 'Karin2100'  # Reemplaza con tu contraseña de Gmail
-DEFAULT_FROM_EMAIL = 'kidsfun.developer@gmail.com'  # Reemplaza con tu dirección de correo de Gmail
-
-# Nota: Considera usar contraseñas de aplicación específicas si tienes habilitada la verificación en dos pasos
-
-try:
-    firebase_admin.initialize_app(cred)
-except ValueError:
-    pass  # La aplicación de Firebase ya está inicializada
-
-SITE_DOMAIN = 'https://www.kidsfunyfiestasinfantiles.com'
-
-
-# Configuración de LOGGING
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'django_error.log'),
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
-}
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
