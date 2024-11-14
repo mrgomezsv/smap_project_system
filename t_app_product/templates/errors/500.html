@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>SMAP Application - Error 500</title>
+    <link rel="shortcut icon" href="{% static 'asset/favicon.jpg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/singin.css' %}">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-image: url("{% static 'images/background.png' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .form-side {
+            background: #f3f1ff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centra el contenido horizontalmente */
+            transform: translateX(-50px); /* Mueve el cuadro hacia la izquierda */
+            text-align: center; /* Alinea texto al centro */
+        }
+        .icon {
+            font-size: 50px;
+            color: #ff5c8e;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 0;
+            animation: fadeIn 1s ease-out;
+        }
+        p {
+            font-size: 18px;
+            margin: 20px 0 40px 0;
+            animation: fadeIn 1s ease-out 0.5s;
+        }
+        a {
+            text-decoration: none;
+            font-size: 18px;
+            background-color: #ff5c8e;
+            padding: 12px 30px;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #ff4a7e;
+        }
+        @media (max-width: 768px) {
+            .form-side {
+                transform: translateX(0); /* Centrar cuadro en dispositivos móviles */
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="form-wrapper">
+    <div class="form-side">
+        <div class="icon">
+            &#128577; <!-- Otro ícono para el error 500, como una carita triste -->
+        </div>
+        <h1>500 Error Interno del Servidor</h1>
+        <p>Ha ocurrido un error inesperado en el servidor. Estamos trabajando para solucionarlo.</p>
+        <a href="{% url 'home' %}">Volvamos al Kidsfun</a>
+    </div>
+</div>
+</body>
+</html>
