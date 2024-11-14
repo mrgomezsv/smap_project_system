@@ -1,37 +1,56 @@
-<!-- templates/errors/404.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página no encontrada</title>
+    {% load static %}
+    <title>SMAP Application - Error 404</title>
+    <link rel="shortcut icon" href="{% static 'asset/favicon.jpg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/singin.css' %}">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #4e9af1, #ff5c8e);
-            color: white;
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
+            font-family: Arial, sans-serif;
+            background-image: url("{% static 'images/background.png' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .form-side {
+            background: #f3f1ff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            display: flex;
             flex-direction: column;
+            align-items: flex-start;
+            padding-left: 30px; /* Mueve el contenido hacia la derecha */
         }
-
-        h1 {
-            font-size: 80px;
-            font-weight: bold;
+        .icon {
+            font-size: 50px;
+            color: #ff5c8e;
             margin-bottom: 20px;
-            animation: fadeIn 1s ease-out;
         }
-
+        h1 {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 0;
+            animation: fadeIn 1s ease-out;
+            padding-left: 10px; /* Ajuste adicional hacia la derecha */
+        }
         p {
-            font-size: 24px;
-            margin-bottom: 40px;
+            font-size: 18px;
+            margin: 20px 0 40px 10px; /* Margen para posicionar debajo del h1 */
             animation: fadeIn 1s ease-out 0.5s;
         }
-
         a {
             text-decoration: none;
             font-size: 18px;
@@ -40,30 +59,29 @@
             border-radius: 5px;
             color: white;
             transition: background-color 0.3s ease;
+            margin-left: 10px; /* Alineación con los otros elementos */
         }
-
         a:hover {
             background-color: #ff4a7e;
         }
-
-        .icon {
-            font-size: 120px;
-            margin-bottom: 20px;
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+        @media (max-width: 768px) {
+            .form-side {
+                padding-left: 20px;
+                align-items: center; /* Centrar contenido en dispositivos móviles */
+            }
         }
     </style>
 </head>
 <body>
-    <div class="icon">
-        <!-- Icono de error, puedes usar una fuente como Font Awesome -->
-        &#9888;
+<div class="form-wrapper">
+    <div class="form-side">
+        <div class="icon">
+            &#9888;
+        </div>
+        <h1>404 ¡Ups! Página no encontrada</h1>
+        <p>La página que buscas no existe o ha sido movida.</p>
+        <a href="{% url 'home' %}">Volver al inicio</a>
     </div>
-    <h1>¡Ups! Página no encontrada</h1>
-    <p>La página que buscas no existe o ha sido movida.</p>
-    <a href="{% url 'home' %}">Volver al inicio</a>
+</div>
 </body>
 </html>
