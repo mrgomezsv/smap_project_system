@@ -31,8 +31,9 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            padding-left: 30px; /* Mueve el contenido hacia la derecha */
+            align-items: center; /* Centra el contenido horizontalmente */
+            transform: translateX(-50px); /* Mueve el cuadro hacia la izquierda */
+            text-align: center; /* Alinea texto al centro */
         }
         .icon {
             font-size: 50px;
@@ -44,11 +45,10 @@
             font-weight: bold;
             margin: 0;
             animation: fadeIn 1s ease-out;
-            padding-left: 10px; /* Ajuste adicional hacia la derecha */
         }
         p {
             font-size: 18px;
-            margin: 20px 0 40px 10px; /* Margen para posicionar debajo del h1 */
+            margin: 20px 0 40px 0;
             animation: fadeIn 1s ease-out 0.5s;
         }
         a {
@@ -59,15 +59,13 @@
             border-radius: 5px;
             color: white;
             transition: background-color 0.3s ease;
-            margin-left: 10px; /* Alineación con los otros elementos */
         }
         a:hover {
             background-color: #ff4a7e;
         }
         @media (max-width: 768px) {
             .form-side {
-                padding-left: 20px;
-                align-items: center; /* Centrar contenido en dispositivos móviles */
+                transform: translateX(0); /* Centrar cuadro en dispositivos móviles */
             }
         }
     </style>
@@ -80,7 +78,7 @@
         </div>
         <h1>404 ¡Ups! Página no encontrada</h1>
         <p>La página que buscas no existe o ha sido movida.</p>
-        <a href="{% url 'home' %}">Volver al inicio</a>
+        <a href="{% url 'home' %}">Volvamos al Kisdfun</a>
     </div>
 </div>
 </body>
