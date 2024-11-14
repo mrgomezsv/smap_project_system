@@ -44,3 +44,7 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # Sirve los archivos estáticos durante el desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# Configura las vistas de error
+handler404 = 't_app_product.views.handler404'
+handler500 = 't_app_product.views.handler500'
