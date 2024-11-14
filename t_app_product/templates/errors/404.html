@@ -3,11 +3,67 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página no encontrada</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #4e9af1, #ff5c8e);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 80px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        p {
+            font-size: 24px;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-out 0.5s;
+        }
+
+        a {
+            text-decoration: none;
+            font-size: 18px;
+            background-color: #ff5c8e;
+            padding: 12px 30px;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #ff4a7e;
+        }
+
+        .icon {
+            font-size: 120px;
+            margin-bottom: 20px;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
 </head>
 <body>
-    <h1>404 - Página no encontrada</h1>
-    <p>Lo sentimos, pero la página que buscas no existe.</p>
+    <div class="icon">
+        <!-- Icono de error, puedes usar una fuente como Font Awesome -->
+        &#9888;
+    </div>
+    <h1>¡Ups! Página no encontrada</h1>
+    <p>La página que buscas no existe o ha sido movida.</p>
     <a href="{% url 'home' %}">Volver al inicio</a>
 </body>
 </html>
