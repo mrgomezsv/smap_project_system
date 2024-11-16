@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'kidsfunyfiestasinfantiles.com',
@@ -128,7 +128,7 @@ DATABASES = {
         'NAME': 'smap_kf',
         'USER': 'mrgomez',
         'PASSWORD': 'Karin2100',
-        'HOST': 'localhost',
+        'HOST': '82.165.210.146',
         'PORT': '5432',
     }
 }
@@ -171,7 +171,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Definir las rutas adicionales para buscar archivos estáticos
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "t_app_product" / "static",
+    # BASE_DIR / "t_app_product" / "static",
 ]
 
 LOGIN_URL = '/signin'
