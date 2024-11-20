@@ -12,6 +12,7 @@
 
 
 # Solo hace GET
+from rest_framework.response import Response
 from rest_framework import generics
 from t_app_product.models import Product
 from .serializers import ProductSerializer
@@ -21,9 +22,15 @@ class ProductListCreate(generics.ListAPIView):
 
     def get_queryset(self):
         # Filtra los productos para mostrar solo aquellos que están publicados
-        queryset = Product.objects.filter(publicated=True)
-        # print("Queryset:", queryset)  # Añadir depuración aquí
-        return queryset
+        return Product.objects.filter(publicated=True)
+
+    def list(self, request, *args, **kwargs):
+        # Serializamos los datos
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        # Devolvemos los datos asegurándonos de que estén en UTF-8
+        return Response(serializer.data, content_type="application/json; charset=utf-8")
 
     def get_serializer_context(self):
         # Pasa el contexto del request al serializador

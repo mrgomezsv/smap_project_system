@@ -39,13 +39,6 @@ class ProductSerializer(serializers.ModelSerializer):
         return f'{settings.SITE_DOMAIN}{url}'
 
     def to_representation(self, instance):
-        # Añadir depuración aquí
-        representation = super().to_representation(instance)
-        # print("Instance youtube_url:", instance.youtube_url)
-        # print("Serialized youtube_url:", representation.get('youtube_url'))
-        return representation
-
-    def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['youtube_url'] = instance.youtube_url
         return representation

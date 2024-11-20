@@ -70,6 +70,18 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+# Agregamos la codificación predeterminada de Django REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_CHARSET': 'utf-8',  # Aseguramos que la codificación sea UTF-8
+}
+
+# Configuración adicional
+DEFAULT_CHARSET = 'utf-8'
+
+
 CORS_ALLOWED_ORIGINS = [
     "https://kidsfunyfiestasinfantiles.com",
     "http://localhost:8000",
