@@ -10,6 +10,7 @@ chardet==5.2.0
 charset-normalizer==3.3.2
 cryptography==42.0.7
 decorator==5.1.1
+distlib==0.3.9
 Django==4.2.13
 django-cors-headers==4.4.0
 django-environ==0.11.2
@@ -17,6 +18,7 @@ django-filter==24.3
 djangorestframework==3.15.1
 docopt==0.6.2
 docutils==0.21.2
+filelock==3.17.0
 firebase-admin==6.5.0
 future==0.18.2
 google-api-core==2.19.0
@@ -51,6 +53,7 @@ num2words==0.5.13
 packaging==24.1
 passlib==1.7.4
 pillow==10.3.0
+platformdirs==4.3.6
 polib==1.2.0
 proto-plus==1.23.0
 protobuf==4.25.3
@@ -64,6 +67,7 @@ pyOpenSSL==24.1.0
 pyparsing==3.1.2
 PyPDF2==3.0.1
 python-dateutil==2.9.0.post0
+python-decouple==3.8
 pytz==2024.1
 reportlab==4.2.0
 requests==2.32.2
@@ -75,5 +79,6 @@ typing_extensions==4.11.0
 uritemplate==4.1.1
 urllib3==2.2.1
 v==1
+virtualenv==20.29.1
 Werkzeug==3.0.3
 zipp==3.18.2
