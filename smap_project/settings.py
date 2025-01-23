@@ -14,6 +14,9 @@ from pathlib import Path
 from decouple import config
 from firebase_admin import credentials
 import firebase_admin
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -152,8 +155,8 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',  # Motor de base de datos PostgreSQL
-        'NAME': os.getenv('DB_NAME', 'default_name'),  # Nombre de la base de datos
-        'USER': os.getenv('DB_USER', 'defult_name'),  # Usuario de la base de datos
+        'NAME': os.getenv('DB_NAME'),  # Nombre de la base de datos
+        'USER': os.getenv('DB_USER'),  # Usuario de la base de datos
         'PASSWORD': os.getenv('DB_PASSWORD'),  # Contraseña del usuario
         'HOST': os.getenv('DB_HOST'),  # Dirección del servidor de la base de datos
         'PORT': os.getenv('DB_PORT'),  # Puerto del servidor
