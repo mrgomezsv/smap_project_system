@@ -174,5 +174,15 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# ==========================================
+# Archivos estáticos y media
+# ==========================================
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # Carpeta para servir archivos estáticos en producción
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Carpeta para archivos subidos por los usuarios
+
 # Configuración de la URL raíz para el administrador de archivos estáticos
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
