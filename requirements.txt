@@ -11,7 +11,7 @@ charset-normalizer==3.3.2
 cryptography==42.0.7
 decorator==5.1.1
 distlib==0.3.9
-Django==4.2.13
+django>=4.2
 django-cors-headers==4.4.0
 django-environ==0.11.2
 django-filter==24.3
@@ -33,7 +33,7 @@ google-resumable-media==2.7.0
 googleapis-common-protos==1.63.0
 grpcio==1.64.0
 grpcio-status==1.62.2
-gunicorn==23.0.0
+gunicorn>=20.0
 httplib2==0.22.0
 idna==3.7
 importlib_metadata==7.1.0
@@ -57,8 +57,8 @@ platformdirs==4.3.6
 polib==1.2.0
 proto-plus==1.23.0
 protobuf==4.25.3
-psutil==5.9.8
-psycopg2-binary==2.9.9
+psutil
+psycopg2-binary>=2.9
 pyasn1==0.6.0
 pyasn1_modules==0.4.0
 pycparser==2.22
@@ -67,7 +67,7 @@ pyOpenSSL==24.1.0
 pyparsing==3.1.2
 PyPDF2==3.0.1
 python-dateutil==2.9.0.post0
-python-decouple==3.8
+python-decouple>=3.8
 pytz==2024.1
 reportlab==4.2.0
 requests==2.32.2
@@ -82,3 +82,4 @@ v==1
 virtualenv==20.29.1
 Werkzeug==3.0.3
 zipp==3.18.2
+python-decouple

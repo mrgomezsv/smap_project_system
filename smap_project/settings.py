@@ -14,9 +14,7 @@ from pathlib import Path
 from decouple import config
 from firebase_admin import credentials
 import firebase_admin
-from dotenv import load_dotenv
 
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -186,3 +184,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Carpeta para archivos subidos po
 
 # Configuración de la URL raíz para el administrador de archivos estáticos
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ==========================================
+# Definir el archivo de rutas (ROOT_URLCONF)
+# ==========================================
+ROOT_URLCONF = 'smap_project.urls'
