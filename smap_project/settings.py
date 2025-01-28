@@ -11,25 +11,23 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-from decouple import config
 from firebase_admin import credentials
 import firebase_admin
 
+import api_waiver_validator
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ==========================================
-# Configuración básica del proyecto
-# ==========================================
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECRET_KEY: Usa una variable de entorno en producción para mayor seguridad
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2')
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2'
 
-# DEBUG: Siempre debe estar en False en producción
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# ALLOWED_HOSTS: Lista de dominios desde los cuales puede accederse al proyecto
 ALLOWED_HOSTS = [
     'kidsfunyfiestasinfantiles.com',
     'www.kidsfunyfiestasinfantiles.com',
@@ -37,19 +35,11 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
-# ==========================================
-# Configuración de Firebase
-# ==========================================
+# Firebase Admin SDK initialization
+cred_path = os.path.join(BASE_DIR, 'credentials', 'smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json')  # Reemplaza con la ruta a tus credenciales
+cred = credentials.Certificate(cred_path)
 
-# Inicializamos Firebase Admin SDK
-cred_path = os.path.join(BASE_DIR, 'credentials', 'smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json')  # Cambia esta ruta si es necesario
-if os.path.exists(cred_path):  # Validamos que el archivo de credenciales exista
-    cred = credentials.Certificate(cred_path)
-    firebase_admin.initialize_app(cred)
-
-# ==========================================
-# Aplicaciones instaladas
-# ==========================================
+# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -58,8 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',  # Para habilitar CORS
-    'rest_framework',  # Framework para crear APIs REST
+    'corsheaders',
     't_app_product',
     'api',
     'api_commentary',
@@ -67,58 +56,39 @@ INSTALLED_APPS = [
     'api_waiver',
     'api_waiver_validator',
     'kidsfun_web',
+    'rest_framework',
 ]
 
-# ==========================================
-# Middlewares
-# ==========================================
-
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',  # Seguridad
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # Para habilitar CORS
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
-# ==========================================
-# Configuración de CORS
-# ==========================================
+# Agregamos la codificación predeterminada de Django REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_CHARSET': 'utf-8',  # Aseguramos que la codificación sea UTF-8
+}
+
+# Configuración adicional
+DEFAULT_CHARSET = 'utf-8'
+
 
 CORS_ALLOWED_ORIGINS = [
     "https://kidsfunyfiestasinfantiles.com",
-    "http://kidsfunyfiestasinfantiles.com",
+    "http://localhost:8000",
+    # otros orígenes permitidos
 ]
 
-# ==========================================
-# Configuración de archivos estáticos y multimedia
-# ==========================================
-
-# Configuración de archivos estáticos
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-
-# Configuración de archivos multimedia
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-
-# ==========================================
-# Configuración de Django REST Framework
-# ==========================================
-
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',  # Para respuestas JSON
-    ],
-    'DEFAULT_CHARSET': 'utf-8',  # Asegura codificación UTF-8
-}
-
-# ==========================================
-# Configuración de los Template
-# ==========================================
+ROOT_URLCONF = 'smap_project.urls'
 
 TEMPLATES = [
     {
@@ -145,47 +115,123 @@ TEMPLATES = [
     },
 ]
 
-# ==========================================
-# Configuración de base de datos
-# ==========================================
+WSGI_APPLICATION = 'smap_project.wsgi.application'
 
-# Base de datos en producción: Usa PostgreSQL o el servicio que uses
+# Database
+# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'smap_kf',
+#         'USER': 'mrgomez',
+#         'PASSWORD': 'Karin2100',
+#         'HOST': '82.165.210.146',
+#         'PORT': '5432',
+#         'OPTIONS': {
+#                     'sslmode': 'require',  # o 'prefer' si permites conexiones sin SSL también
+#                 },
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # Motor de base de datos PostgreSQL
-        'NAME': os.getenv('DB_NAME'),  # Nombre de la base de datos
-        'USER': os.getenv('DB_USER'),  # Usuario de la base de datos
-        'PASSWORD': os.getenv('DB_PASSWORD'),  # Contraseña del usuario
-        'HOST': os.getenv('DB_HOST'),  # Dirección del servidor de la base de datos
-        'PORT': os.getenv('DB_PORT'),  # Puerto del servidor
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'smap_kf',
+        'USER': 'mrgomez',
+        'PASSWORD': 'Karin2100',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
-# ==========================================
-# Otras configuraciones opcionales
-# ==========================================
+# Password validation
+# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
-# Configuración de idioma y zona horaria
-LANGUAGE_CODE = 'es-es'  # Español (España)
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+# Internationalization
+# https://docs.djangoproject.com/en/4.2/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
+
 USE_TZ = True
 
-# ==========================================
-# Archivos estáticos y media
-# ==========================================
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # Carpeta para servir archivos estáticos en producción
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Definir las rutas adicionales para buscar archivos estáticos
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    BASE_DIR / "t_app_product" / "static",
+]
+
+LOGIN_URL = '/signin'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Carpeta para archivos subidos por los usuarios
+# MEDIA_ROOT = os.path.join(BASE_DIR, '/root/smap_project_system/media/')
+MEDIA_ROOT = '/root/smap_project_system/media/'
 
-# Configuración de la URL raíz para el administrador de archivos estáticos
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ==========================================
-# Definir el archivo de rutas (ROOT_URLCONF)
-# ==========================================
-ROOT_URLCONF = 'smap_project.urls'
+# Configuración adicional para CSRF
+CSRF_TRUSTED_ORIGINS = [
+    'https://kidsfunyfiestasinfantiles.com',
+    'https://www.kidsfunyfiestasinfantiles.com',
+]
+
+CSRF_COOKIE_SECURE = True
+
+# Asegurarse de que las cookies de sesión solo se envíen a través de HTTPS
+SESSION_COOKIE_SECURE = True
+
+# Evitar que JavaScript acceda a las cookies de sesión
+SESSION_COOKIE_HTTPONLY = True
+
+# Establecer SameSite para proteger contra ataques CSRF
+SESSION_COOKIE_SAMESITE = 'Lax'  # También puede ser 'Strict' dependiendo de tus necesidades
+
+# Opcionalmente, mantener ambas configuraciones para mayor seguridad
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expira al cerrar el navegador
+SESSION_COOKIE_AGE = 1800  # Y/o expira en 30 minutos en segundos
+
+# Configuración de correo electrónico
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kidsfun.developer@gmail.com'  # Reemplaza con tu dirección de correo de Gmail
+EMAIL_HOST_PASSWORD = 'Karin2100'  # Reemplaza con tu contraseña de Gmail
+DEFAULT_FROM_EMAIL = 'kidsfun.developer@gmail.com'  # Reemplaza con tu dirección de correo de Gmail
+
+# Nota: Considera usar contraseñas de aplicación específicas si tienes habilitada la verificación en dos pasos
+
+try:
+    firebase_admin.initialize_app(cred)
+except ValueError:
+    pass  # La aplicación de Firebase ya está inicializada
+
+SITE_DOMAIN = 'https://www.kidsfunyfiestasinfantiles.com'

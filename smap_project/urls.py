@@ -36,7 +36,7 @@ urlpatterns = [
     path('api/', include('api_commentary.urls')),  # Incluye las URLs de la aplicación api_commentary
     path('api/', include('api_waiver.urls')),  # Incluye las URLs de la aplicación api_waiver
     path('api_waiver_validator/', include('api_waiver_validator.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # Para servir archivos estáticos y multimedia
+]
 
 # Sirve las imágenes desde la carpeta media
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
