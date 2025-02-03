@@ -128,7 +128,7 @@ DATABASES = {
         'NAME': 'smap_kf',
         'USER': 'mrgomez',
         'PASSWORD': 'Karin2100',
-        'HOST': '82.165.210.146',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
