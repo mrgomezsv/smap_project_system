@@ -53,5 +53,8 @@ def service_product(request, product_id):
 def contact(request):
     return render(request, 'kidsfun_web/contact/contact.html')
 
+def mobile_app(request):
+    return render(request, 'kidsfun_web/mobile_app.html')
+
 def custom_404(request, exception):
     return render(request, '404.html', status=404)
