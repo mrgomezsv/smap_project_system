@@ -30,6 +30,7 @@ urlpatterns = [
     path('ticket_master/', views.ticket_master, name='ticket_master'),
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),
+    path('chats/', views.redirect_chats, name='chats'),
     path('api/products/', ProductListCreate.as_view(), name='product-list'),
     path('kidsfun/', include('kidsfun_web.urls')),
     path('api/', include('api_like.urls')),  # Incluye las URLs de la aplicación api_like

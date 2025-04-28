@@ -375,6 +375,10 @@ def delete_validator(request, validator_id):
 def redirect_productc(request):
     return render(request, 'product/productc.html')
 
+@login_required
+def redirect_chats(request):
+    return render(request, 'chats/chats.html')
+
 
 @login_required
 def process_checkbox(request):
