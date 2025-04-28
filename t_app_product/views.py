@@ -1,4 +1,5 @@
 import os
+import json
 
 from django.db.models import Q
 from django.contrib.auth.forms import AuthenticationForm
@@ -24,6 +25,8 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from firebase_admin import messaging
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from .models import ChatAdministrator, ChatRoom, ChatMessage
 
 
 @login_required
@@ -377,7 +380,47 @@ def redirect_productc(request):
 
 @login_required
 def redirect_chats(request):
-    return render(request, 'chats/chats.html')
+    if request.method == 'POST':
+        # Manejar la creación de un nuevo chat
+        initial_message = request.POST.get('initial_message')
+        if not initial_message:
+            messages.error(request, 'El mensaje inicial es requerido.')
+            return redirect('chats')
+
+        try:
+            # Crear nuevo chat
+            chat = ChatRoom.objects.create(user=request.user)
+            
+            # Crear mensaje inicial
+            ChatMessage.objects.create(
+                chat_room=chat,
+                sender=request.user,
+                content=initial_message
+            )
+            
+            messages.success(request, 'Chat iniciado exitosamente.')
+            return redirect('chats')
+        except Exception as e:
+            messages.error(request, f'Error al iniciar el chat: {str(e)}')
+            return redirect('chats')
+
+    # Obtener todos los chats del usuario
+    user_chats = ChatRoom.objects.filter(user=request.user).order_by('-last_message_at')
+    
+    # Obtener el chat actual si se especifica en la URL
+    current_chat_id = request.GET.get('chat_id')
+    current_chat = None
+    
+    if current_chat_id:
+        try:
+            current_chat = ChatRoom.objects.get(id=current_chat_id, user=request.user)
+        except ChatRoom.DoesNotExist:
+            pass
+    
+    return render(request, 'chats/chats.html', {
+        'user_chats': user_chats,
+        'current_chat': current_chat
+    })
 
 
 @login_required
@@ -441,3 +484,178 @@ def handler404(request, exception):
 
 def handler500(request):
     return render(request, 'errors/500.html', status=500)
+
+@login_required
+def chat_dashboard(request):
+    # Verificar si el usuario es un administrador de chat
+    if not ChatAdministrator.objects.filter(user=request.user, is_active=True).exists():
+        messages.error(request, 'No tiene permisos para acceder al panel de chat.')
+        return redirect('home')
+
+    active_chats = ChatRoom.objects.filter(is_active=True).order_by('-last_message_at')
+    chat_admins = ChatAdministrator.objects.all().order_by('-created_at')
+    
+    return render(request, 'chat/chat.html', {
+        'active_chats': active_chats,
+        'chat_admins': chat_admins
+    })
+
+@login_required
+@require_http_methods(['POST'])
+def add_chat_admin(request):
+    if not request.user.is_staff:
+        messages.error(request, 'No tiene permisos para realizar esta acción.')
+        return redirect('chat_dashboard')
+
+    email = request.POST.get('email')
+    if not email:
+        messages.error(request, 'El correo electrónico es requerido.')
+        return redirect('chat_dashboard')
+
+    try:
+        user = User.objects.get(email=email)
+        ChatAdministrator.objects.create(user=user, email=email)
+        messages.success(request, 'Administrador agregado exitosamente.')
+    except User.DoesNotExist:
+        messages.error(request, 'El usuario con este correo electrónico no existe.')
+    except Exception as e:
+        messages.error(request, f'Error al agregar administrador: {str(e)}')
+
+    return redirect('chat_dashboard')
+
+@login_required
+@require_http_methods(['POST'])
+def toggle_chat_admin(request, admin_id):
+    if not request.user.is_staff:
+        messages.error(request, 'No tiene permisos para realizar esta acción.')
+        return redirect('chat_dashboard')
+
+    try:
+        admin = ChatAdministrator.objects.get(id=admin_id)
+        admin.is_active = not admin.is_active
+        admin.save()
+        messages.success(request, f'Administrador {"desactivado" if not admin.is_active else "activado"} exitosamente.')
+    except ChatAdministrator.DoesNotExist:
+        messages.error(request, 'Administrador no encontrado.')
+    except Exception as e:
+        messages.error(request, f'Error al actualizar administrador: {str(e)}')
+
+    return redirect('chat_dashboard')
+
+@login_required
+def get_chat_messages(request, chat_id):
+    if not ChatAdministrator.objects.filter(user=request.user, is_active=True).exists():
+        return JsonResponse({'error': 'No autorizado'}, status=403)
+
+    try:
+        chat = ChatRoom.objects.get(id=chat_id)
+        messages = ChatMessage.objects.filter(chat_room=chat).order_by('timestamp')
+        
+        return JsonResponse({
+            'messages': [{
+                'sender': msg.sender.username,
+                'content': msg.content,
+                'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+                'is_admin': msg.sender == request.user
+            } for msg in messages]
+        })
+    except ChatRoom.DoesNotExist:
+        return JsonResponse({'error': 'Chat no encontrado'}, status=404)
+
+@login_required
+@require_http_methods(['POST'])
+def send_message(request, chat_id):
+    if not ChatAdministrator.objects.filter(user=request.user, is_active=True).exists():
+        return JsonResponse({'error': 'No autorizado'}, status=403)
+
+    try:
+        chat = ChatRoom.objects.get(id=chat_id)
+        data = json.loads(request.body)
+        message_content = data.get('message')
+
+        if not message_content:
+            return JsonResponse({'error': 'El mensaje no puede estar vacío'}, status=400)
+
+        message = ChatMessage.objects.create(
+            chat_room=chat,
+            sender=request.user,
+            content=message_content
+        )
+
+        chat.last_message_at = message.timestamp
+        chat.save()
+
+        return JsonResponse({'success': True})
+    except ChatRoom.DoesNotExist:
+        return JsonResponse({'error': 'Chat no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@login_required
+def user_chats(request):
+    if request.method == 'POST':
+        # Manejar la creación de un nuevo chat
+        initial_message = request.POST.get('initial_message')
+        if not initial_message:
+            messages.error(request, 'El mensaje inicial es requerido.')
+            return redirect('user_chats')
+
+        try:
+            # Crear nuevo chat
+            chat = ChatRoom.objects.create(user=request.user)
+            
+            # Crear mensaje inicial
+            ChatMessage.objects.create(
+                chat_room=chat,
+                sender=request.user,
+                content=initial_message
+            )
+            
+            messages.success(request, 'Chat iniciado exitosamente.')
+            return redirect(f'user_chats?chat_id={chat.id}')
+        except Exception as e:
+            messages.error(request, f'Error al iniciar el chat: {str(e)}')
+            return redirect('user_chats')
+
+    # Obtener todos los chats del usuario
+    user_chats = ChatRoom.objects.filter(user=request.user).order_by('-last_message_at')
+    
+    # Obtener el chat actual si se especifica en la URL
+    current_chat_id = request.GET.get('chat_id')
+    current_chat = None
+    
+    if current_chat_id:
+        try:
+            current_chat = ChatRoom.objects.get(id=current_chat_id, user=request.user)
+        except ChatRoom.DoesNotExist:
+            pass
+    
+    return render(request, 'chats/chats.html', {
+        'user_chats': user_chats,
+        'current_chat': current_chat
+    })
+
+@login_required
+@require_http_methods(['POST'])
+def start_new_chat(request):
+    initial_message = request.POST.get('initial_message')
+    if not initial_message:
+        messages.error(request, 'El mensaje inicial es requerido.')
+        return redirect('user_chats')
+
+    try:
+        # Crear nuevo chat
+        chat = ChatRoom.objects.create(user=request.user)
+        
+        # Crear mensaje inicial
+        ChatMessage.objects.create(
+            chat_room=chat,
+            sender=request.user,
+            content=initial_message
+        )
+        
+        messages.success(request, 'Chat iniciado exitosamente.')
+        return redirect(f'user_chats?chat_id={chat.id}')
+    except Exception as e:
+        messages.error(request, f'Error al iniciar el chat: {str(e)}')
+        return redirect('user_chats')

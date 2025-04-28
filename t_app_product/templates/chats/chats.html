@@ -1,8 +1,218 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="chat-container">
-    <h1>Chats</h1>
-    <!-- Add your chat content here -->
+<div class="container mt-5">
+    <div class="row">
+        <!-- Lista de chats del usuario -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Mis Chats</h5>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newChatModal">
+                        <i class="bi bi-plus-circle"></i> Nuevo Chat
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush" id="userChatList">
+                        {% for chat in user_chats %}
+                        <a href="#" class="list-group-item list-group-item-action chat-item {% if chat.id == current_chat.id %}active{% endif %}" 
+                           data-chat-id="{{ chat.id }}">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Chat con Administrador</h6>
+                                <small>{{ chat.last_message_at|timesince }}</small>
+                            </div>
+                            <p class="mb-1 text-muted">{{ chat.last_message|truncatechars:50 }}</p>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área de chat -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0" id="currentChatTitle">
+                        {% if current_chat %}
+                            Chat con Administrador
+                        {% else %}
+                            Seleccione un chat o inicie uno nuevo
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="chat-messages" id="chatMessages" style="height: 400px; overflow-y: auto;">
+                        {% if current_chat %}
+                            {% for message in current_chat.messages.all %}
+                            <div class="message {% if message.sender == request.user %}user{% else %}admin{% endif %}">
+                                <div class="message-content">
+                                    <strong>{{ message.sender.username }}</strong>
+                                    <p>{{ message.content }}</p>
+                                    <small>{{ message.timestamp|date:"d/m/Y H:i" }}</small>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <form id="messageForm" class="mt-3" {% if not current_chat %}style="display: none;"{% endif %}>
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="messageInput" placeholder="Escriba su mensaje...">
+                            <button class="btn btn-primary" type="submit">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Modal para nuevo chat -->
+<div class="modal fade" id="newChatModal" tabindex="-1" aria-labelledby="newChatModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newChatModalLabel">Iniciar Nuevo Chat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newChatForm" method="post" action="{% url 'chats' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="initialMessage" class="form-label">Mensaje Inicial</label>
+                        <textarea class="form-control" id="initialMessage" name="initial_message" rows="3" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="newChatForm" class="btn btn-primary">Iniciar Chat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para el manejo del chat -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatList = document.getElementById('userChatList');
+    const chatMessages = document.getElementById('chatMessages');
+    const messageForm = document.getElementById('messageForm');
+    const messageInput = document.getElementById('messageInput');
+    let currentChatId = null;
+
+    // Función para cargar mensajes
+    function loadMessages(chatId) {
+        fetch(`/chat/messages/${chatId}/`)
+            .then(response => response.json())
+            .then(data => {
+                chatMessages.innerHTML = '';
+                data.messages.forEach(message => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${message.is_admin ? 'admin' : 'user'}`;
+                    messageDiv.innerHTML = `
+                        <div class="message-content">
+                            <strong>${message.sender}</strong>
+                            <p>${message.content}</p>
+                            <small>${message.timestamp}</small>
+                        </div>
+                    `;
+                    chatMessages.appendChild(messageDiv);
+                });
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            });
+    }
+
+    // Evento para seleccionar un chat
+    chatList.addEventListener('click', function(e) {
+        const chatItem = e.target.closest('.chat-item');
+        if (chatItem) {
+            e.preventDefault();
+            currentChatId = chatItem.dataset.chatId;
+            
+            // Actualizar UI
+            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
+            chatItem.classList.add('active');
+            document.getElementById('currentChatTitle').textContent = 'Chat con Administrador';
+            messageForm.style.display = 'block';
+            
+            loadMessages(currentChatId);
+        }
+    });
+
+    // Evento para enviar mensaje
+    messageForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!currentChatId) return;
+
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        fetch(`/chat/send/${currentChatId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                messageInput.value = '';
+                loadMessages(currentChatId);
+            }
+        });
+    });
+
+    // Actualizar mensajes cada 5 segundos
+    setInterval(() => {
+        if (currentChatId) {
+            loadMessages(currentChatId);
+        }
+    }, 5000);
+});
+</script>
+
+<style>
+.chat-messages {
+    padding: 1rem;
+}
+
+.message {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.message.admin {
+    background-color: #e3f2fd;
+    margin-left: 20%;
+}
+
+.message.user {
+    background-color: #f5f5f5;
+    margin-right: 20%;
+}
+
+.message-content {
+    padding: 0.5rem;
+}
+
+.message-content strong {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.message-content small {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.chat-item.active {
+    background-color: #e3f2fd;
+    border-color: #90caf9;
+}
+</style>
 {% endblock %} 

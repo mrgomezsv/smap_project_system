@@ -95,3 +95,41 @@ class WaiverDataDB(models.Model):
     class Meta:
         managed = False  # Esto indica que Django no gestionará la creación ni las migraciones de esta tabla
         db_table = 'api_waiver_waiverdata'
+
+class ChatAdministrator(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.EmailField(unique=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
+
+    class Meta:
+        db_table = 't_app_chat_administrator'
+
+class ChatRoom(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_rooms')
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+    last_message_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Chat with {self.user.username}"
+
+    class Meta:
+        db_table = 't_app_chat_room'
+
+class ChatMessage(models.Model):
+    chat_room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Message from {self.sender.username} at {self.timestamp}"
+
+    class Meta:
+        db_table = 't_app_chat_message'
+        ordering = ['timestamp']

@@ -3,92 +3,61 @@
 {% block title %}Kidsfun Mobile App{% endblock %}
 
 {% block content %}
-<style>
-    /* mobile_app.css */
-.mobile-app-section {
-    padding: 60px 0;
-    background-color: #fff;
-}
-
-.app-features {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-.app-features li {
-    padding: 8px 0;
-    font-size: 1.1rem;
-}
-
-.app-screenshot {
-    max-height: 500px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.feature-icon {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-}
-
-.download-buttons .btn {
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-weight: 500;
-}
-
-@media (max-width: 768px) {
-    .app-screenshot {
-        max-height: 300px;
-        margin-bottom: 30px;
-    }
-}
-</style>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/mobile_app.css' %}"/>
     
-    <section class="mobile-app-section">
+    <main class="mobile-app-section">
         <div class="container">
-            <!-- Encabezado -->
-            <div class="row justify-content-center pt-5">
+            <!-- Header -->
+            <header class="row justify-content-center pt-4">
                 <h1 class="text-center">
                     <span class="text-red">Kidsfun</span> 
                     <span class="text-blue">Mobile App</span>
                 </h1>
-            </div>
+            </header>
             
-            <!-- Descripción de la app -->
-            <div class="row align-items-center py-5">
+            <!-- App Description -->
+            <section class="row align-items-center py-4" aria-labelledby="app-description">
                 <div class="col-lg-6 order-lg-1 order-2" data-aos="fade-right">
-                    <h2 class="section-title text-orange">Nuestra Aplicación Móvil</h2>
+                    <h2 id="app-description" class="section-title text-orange">Nuestra Aplicación Móvil</h2>
                     <p>Descubre todas las funcionalidades que hemos desarrollado para hacer tu experiencia con Kidsfun aún más fácil y divertida.</p>
-                    <ul class="app-features">
-                        <li><i class="bi bi-check-circle-fill text-green"></i> Conoce nuestros Productos y Servicios en Inflables y otros</li>
-                        <li><i class="bi bi-check-circle-fill text-green"></i> Visualiza nuestro catálogo completo</li>
-<!--                        <li><i class="bi bi-check-circle-fill text-green"></i> Recibe notificaciones de promociones</li>-->
-                        <li><i class="bi bi-check-circle-fill text-green"></i> Comenta y deja tu like en nuestros productos y servicios</li>
+                    <ul class="app-features" role="list">
+                        <li><i class="bi bi-check-circle-fill text-green" aria-hidden="true"></i> Conoce nuestros Productos y Servicios en Inflables y otros</li>
+                        <li><i class="bi bi-check-circle-fill text-green" aria-hidden="true"></i> Visualiza nuestro catálogo completo</li>
+                        <li><i class="bi bi-check-circle-fill text-green" aria-hidden="true"></i> Comenta y deja tu like en nuestros productos y servicios</li>
                     </ul>
                     
                     <div class="download-buttons mt-4">
-<!--                        <a href="#" class="btn btn-dark me-2">-->
-<!--                            <i class="bi bi-apple"></i> App Store-->
-<!--                        </a>-->
-                        <a href="https://play.google.com/store/apps/details?id=com.kidsfun.app.kidsfun">
-                            <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" style="height: 75px;">
+                        <a href="https://play.google.com/store/apps/details?id=com.kidsfun.app.kidsfun" 
+                           class="download-link" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Descargar en Google Play">
+                            <img alt="Get it on Google Play" 
+                                 src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" 
+                                 width="200" 
+                                 height="75"
+                                 loading="lazy">
                         </a>
                     </div>
                 </div>
                 <div class="col-lg-6 order-lg-2 order-1 text-center" data-aos="fade-left">
-                    <img src="{% static 'img/img_app.png' %}" alt="App Screenshot" class="img-fluid app-screenshot">
+                    <img src="{% static 'img/img_app.png' %}" 
+                         alt="Captura de pantalla de la aplicación Kidsfun" 
+                         class="img-fluid app-screenshot"
+                         width="300"
+                         height="600"
+                         loading="lazy">
                 </div>
-            </div>
+            </section>
             
-            <!-- Características destacadas -->
-            <div class="row features-highlight py-5">
+            <!-- Featured Features -->
+            <section class="row features-highlight py-4" aria-labelledby="featured-features">
+                <h2 id="featured-features" class="visually-hidden">Características destacadas</h2>
 
                 <div class="col-md-4 text-center" data-aos="zoom-in" data-aos-delay="100">
                     <div class="feature-icon">
-                        <i class="bi bi-images text-blue"></i>
+                        <i class="bi bi-images text-blue" aria-hidden="true"></i>
                     </div>
                     <h3 class="text-orange">Galería Completa</h3>
                     <p>Explora fotos reales de nuestros productos en y servicios en alquiler.</p>
@@ -96,7 +65,7 @@
 
                 <div class="col-md-4 text-center" data-aos="zoom-in">
                     <div class="feature-icon">
-                        <i class="bi bi-calendar-check text-violet"></i>
+                        <i class="bi bi-calendar-check text-violet" aria-hidden="true"></i>
                     </div>
                     <h3 class="text-orange">Comenta y Ranking</h3>
                     <p>Dejanos tus comentarios, valoramos tu opinión.</p>
@@ -104,12 +73,12 @@
                 
                 <div class="col-md-4 text-center" data-aos="zoom-in" data-aos-delay="200">
                     <div class="feature-icon">
-                        <i class="bi bi-qr-code-scan text-yellow"></i>
+                        <i class="bi bi-qr-code-scan text-yellow" aria-hidden="true"></i>
                     </div>
                     <h3 class="text-orange">QR Pass</h3>
                     <p>Registrate para optener tu QR Pass gratis!</p>
                 </div>
-            </div>
+            </section>
         </div>
-    </section>
+    </main>
 {% endblock %}
