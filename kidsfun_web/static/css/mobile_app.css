@@ -1,0 +1,129 @@
+/* Mobile App Styles */
+.mobile-app-section {
+    padding: 3.75rem 0;
+    background-color: #fff;
+    margin-top: 4rem;
+}
+
+/* App Features List */
+.app-features {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 1.5rem 0;
+}
+
+.app-features li {
+    padding: 0.5rem 0;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.app-features li i {
+    flex-shrink: 0;
+}
+
+/* App Screenshot */
+.app-screenshot {
+    max-height: 500px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.app-screenshot:hover {
+    transform: scale(1.02);
+}
+
+/* Feature Icons */
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.feature-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Download Buttons */
+.download-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.download-link {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.download-link:hover {
+    transform: scale(1.05);
+}
+
+.download-link img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Features Highlight Section */
+.features-highlight {
+    margin-top: 2rem;
+}
+
+.features-highlight .col-md-4 {
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.features-highlight .col-md-4:hover {
+    transform: translateY(-5px);
+}
+
+/* Accessibility */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mobile-app-section {
+        padding: 2rem 0;
+        margin-top: 3rem;
+    }
+
+    .app-screenshot {
+        max-height: 300px;
+        margin-bottom: 2rem;
+    }
+
+    .features-highlight .col-md-4 {
+        margin-bottom: 2rem;
+    }
+
+    .download-buttons {
+        justify-content: center;
+    }
+}
+
+/* Animation Optimizations */
+[data-aos] {
+    will-change: transform, opacity;
+}
+
+/* Performance Optimizations */
+* {
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+} 
