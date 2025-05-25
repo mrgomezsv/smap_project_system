@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Waiver - KidsFun</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #FF6B6B;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #dddddd;
+            border-radius: 0 0 5px 5px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #666666;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #FF6B6B;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .relative-info {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>¡Gracias por registrarte en KidsFun!</h1>
+        </div>
+        <div class="content">
+            <p>Hola {{ user_name }},</p>
+            
+            <p>Gracias por completar el registro del waiver para nuestros servicios. Tu información ha sido registrada exitosamente.</p>
+            
+            <div class="qr-code">
+                <p><strong>Tu código QR único:</strong></p>
+                <p style="font-size: 24px; font-weight: bold;">{{ qr_value }}</p>
+            </div>
+
+            <h3>Información registrada:</h3>
+            {% for relative in relatives %}
+            <div class="relative-info">
+                <p><strong>Nombre:</strong> {{ relative.name }}</p>
+                <p><strong>Edad:</strong> {{ relative.age }}</p>
+                <p><strong>Fecha de registro:</strong> {{ relative.dateTime }}</p>
+            </div>
+            {% endfor %}
+
+            <p><strong>Importante:</strong></p>
+            <ul>
+                <li>Por favor, guarda este correo electrónico como comprobante de tu registro.</li>
+                <li>Presenta tu código QR al llegar a nuestras instalaciones.</li>
+                <li>Este código QR es único y personal.</li>
+            </ul>
+
+            <p>Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos.</p>
+            
+            <p>¡Esperamos verte pronto en KidsFun!</p>
+            
+            <p>Saludos cordiales,<br>El equipo de KidsFun</p>
+        </div>
+        <div class="footer">
+            <p>© 2024 KidsFun. Todos los derechos reservados.</p>
+            <p>Este es un correo automático, por favor no responda a este mensaje.</p>
+        </div>
+    </div>
+</body>
+</html> 

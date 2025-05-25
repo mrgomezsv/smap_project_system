@@ -13,12 +13,14 @@ def api_waiver(request):
         data = request.data
         user_id = data.get('user_id', '')
         user_name = data.get('user_name', '')
-        user_email = data.get('user_email', '')  # Captura el correo electrónico
+        user_email = data.get('user_email', '')
         relatives_data = data.get('relatives', [])
 
         # Validar datos
-        if not user_id or not user_name:
-            return Response({'error': 'Datos de usuario incompletos.'}, status=status.HTTP_400_BAD_REQUEST)
+        if not user_id or not user_name or not user_email:
+            return Response({
+                'error': 'Datos de usuario incompletos. Se requiere user_id, user_name y user_email.'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         # Verificar si ya existe un registro WaiverQR para este user_id
         existing_qr = WaiverQR.objects.filter(user_id=user_id).first()
@@ -28,27 +30,23 @@ def api_waiver(request):
         waiver_data_serializer = WaiverDataSerializer(waiver_data, many=True)
 
         if existing_qr:
-            # Imprimir en la terminal el qr_value y los datos almacenados
-            print(f"QR Value: {existing_qr.qr_value}")
-            print(f"Waiver Data: {waiver_data_serializer.data}")
-
-            # Devolver el QR junto con los datos almacenados
+            # Si ya existe un QR, devolver los datos existentes
             return Response({
                 'message': 'Ya existe un QR para este usuario.',
                 'qr_value': existing_qr.qr_value,
-                'waiver_data': waiver_data_serializer.data  # Enviar los datos almacenados
+                'waiver_data': waiver_data_serializer.data
             }, status=status.HTTP_200_OK)
 
-        # Guardar datos del usuario y familiares en una sola tabla
+        # Guardar datos del usuario y familiares
         waiver_data_objects = []
         for relative_data in relatives_data:
             serializer = WaiverDataSerializer(data={
                 'user_id': user_id,
                 'user_name': user_name,
-                'user_email': user_email,  # Incluir el correo electrónico
+                'user_email': user_email,
                 'relative_name': relative_data['name'],
                 'relative_age': relative_data['age'],
-                'timestamp': relative_data['dateTime'],  # Ajustar nombre de campo según tu modelo
+                'timestamp': relative_data['dateTime'],
             })
             if serializer.is_valid():
                 waiver_data = serializer.save()
@@ -56,27 +54,34 @@ def api_waiver(request):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # Crear WaiverQR solo si no existe para este user_id
-        if not existing_qr:
-            waiver_qr = WaiverQR.objects.create(user_id=user_id, qr_value=user_id)  # Crear con user_id
+        # Crear WaiverQR
+        waiver_qr = WaiverQR.objects.create(user_id=user_id, qr_value=user_id)
 
-        # Obtener los datos almacenados de WaiverData para este usuario nuevamente
+        # Generar el PDF
+        pdf_buffer = create_waiver_pdf(user_name, user_email, relatives_data)
+
+        # Enviar el correo electrónico
+        email_sent = send_email_with_pdf(
+            user_email=user_email,
+            pdf_buffer=pdf_buffer,
+            user_name=user_name,
+            qr_value=waiver_qr.qr_value,
+            relatives_data=relatives_data
+        )
+
+        if not email_sent:
+            # Si el correo no se pudo enviar, registrar el error pero continuar
+            print(f"Error: No se pudo enviar el correo a {user_email}")
+
+        # Obtener los datos actualizados
         waiver_data = WaiverData.objects.filter(user_id=user_id)
         waiver_data_serializer = WaiverDataSerializer(waiver_data, many=True)
 
-        # Generar el PDF y enviarlo por correo
-        pdf_buffer = create_waiver_pdf(user_name, user_email, relatives_data)
-        send_email_with_pdf(user_email, pdf_buffer)
-
-        # Imprimir en la terminal el qr_value y los datos almacenados
-        print(f"QR Value: {waiver_qr.qr_value}")
-        print(f"Waiver Data: {waiver_data_serializer.data}")
-
-        # Devolver el qr_value junto con los datos almacenados
         return Response({
             'message': 'Datos guardados correctamente y correo enviado.',
             'qr_value': waiver_qr.qr_value,
-            'waiver_data': waiver_data_serializer.data  # Enviar los datos almacenados
+            'waiver_data': waiver_data_serializer.data,
+            'email_sent': email_sent
         }, status=status.HTTP_200_OK)
 
     return Response({'error': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

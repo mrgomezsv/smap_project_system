@@ -1,151 +1,233 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <head>
-        {% load static %}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/product.css' %}">
-        <style>
-            /* Estilo para ocultar los checkboxes de los productos por defecto */
-            .hidden-checkbox {
-                display: none;
-            }
-        </style>
-    </head>
+<div class="container-fluid px-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center py-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="bi bi-box-seam-fill me-2"></i>
+            Gestión de Productos
+        </h1>
+        <div class="d-flex gap-2">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newProductModal">
+                <i class="bi bi-plus-circle me-2"></i>
+                Nuevo Producto
+            </button>
+        </div>
+    </div>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #F4F1FF !important; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-        <div class="container d-flex align-items-center">
-            <h1 class="h2">Productos</h1>
-            <div class="d-flex ml-auto">
-                <!-- Bote de basura oculto -->
-                <div class="form-check me-3 d-none" id="trash-icon">
-                    <i class="fas fa-trash-alt mr-2"></i>
+    <!-- Search and Filter Section -->
+    <div class="card shadow-sm mb-4" style="background-color: #F4F1FF;">
+        <div class="card-body">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <form class="d-flex gap-2" method="get">
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: white;">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="search" class="form-control" name="q" placeholder="Buscar productos..." aria-label="Search">
+                        </div>
+                        <button class="btn btn-primary" type="submit">Buscar</button>
+                    </form>
                 </div>
-                <!-- Checkbox principal "Seleccionar" en la barra de navegación -->
-                <form id="checkbox-form" method="post" action="{% url 'process_checkbox' %}">
-                    {% csrf_token %}
-                    <div class="form-check me-3">
-                        <input class="form-check-input" type="checkbox" value="true" name="checkbox_state"
-                               id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Categorias
-                        </label>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-md-end gap-2">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="checkbox_state">
+                            <label class="form-check-label" for="flexCheckDefault">Mostrar Categorías</label>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-funnel-fill me-2"></i>
+                                Filtrar
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Todos</a></li>
+                                <li><a class="dropdown-item" href="#">Publicados</a></li>
+                                <li><a class="dropdown-item" href="#">No Publicados</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </form>
-                <a id="newProductoBtn" href="" class="btn btn-primary">Nuevo Producto</a>
-                <form class="d-flex ms-3" role="search" method="get">
-                    <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </form>
+                </div>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <div class="container mt-5">
-    <!-- Contenido principal de la página -->
-    <div class="row row-cols-1 row-cols-md-4">
+    <!-- Products Grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
         {% for product in products %}
-            <div class="col mb-4">
-                <div class="card h-100 d-flex flex-column flex-fill bg-color" style="background-color: #F4F1FF; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                    <div class="card-body d-flex flex-column">
-                        <div class="form-check me-3" d-none>
-                            <input class="form-check-input product-checkbox"
-                                   style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);" type="checkbox"
-                                   id="productCheckbox_{{ product.id }}">
+        <div class="col">
+            <div class="card h-100 shadow-sm hover-shadow" style="background-color: #F4F1FF;">
+                <!-- Product Image -->
+                <div class="position-relative">
+                    <img src="{{ product.img.url }}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
+                    <div class="position-absolute top-0 end-0 p-2">
+                        <span class="badge {% if product.publicated %}bg-success{% else %}bg-warning{% endif %}">
+                            {% if product.publicated %}Publicado{% else %}Creado{% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-truncate">{{ product.title }}</h5>
+                    <p class="card-text small text-muted mb-2">{{ product.description|truncatechars:100 }}</p>
+                    
+                    <div class="mb-2">
+                        <span class="badge bg-primary">{{ product.get_category_display }}</span>
+                    </div>
+
+                    <div class="small text-muted mb-3">
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="bi bi-rulers me-2"></i>
+                            <span>{{ product.dimensions|default:'Sin dimensiones' }}</span>
                         </div>
-                        <div class="image-container">
-                            <img src="{{ product.img.url }}" alt="Product Image">
-                        </div>
-                        <h5 class="card-title">{{ product.title }}</h5>
-                        {#<p class="card-text">{{ product.description }}</p>#}
-                        <p class="card-text">{{ product.description|slice:":27" }}{% if product.description|length > 27 %}
-                            ...{% endif %}</p>
-<!--                        <p class="card-text">Precio: {{ product.price }}</p>-->
-                        <p class="card-text">Categoría: {{ product.get_category_display }}</p>
-                        <p class="card-text">Dimensiones: {{ product.dimensions|default:'-' }}</p>
-                        <p class="card-text">Estado: {% if product.publicated %}Publicado{% else %}Creado{% endif %}</p>
                         {% if user.username == 'mrgomez' %}
-                            <p class="card-text">Usuario: {{ product.user.username }}</p>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person me-2"></i>
+                            <span>{{ product.user.username }}</span>
+                        </div>
                         {% endif %}
-                        <a href="{% url 'product_detail' product.id %}" class="btn btn-primary mt-auto">Ver
-                            Detalles</a>
+                    </div>
+
+                    <div class="mt-auto">
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-eye me-2"></i>
+                            Ver Detalles
+                        </a>
                     </div>
                 </div>
             </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info" role="alert" style="background-color: #F4F1FF; border-color: #4e73df;">
+                <i class="bi bi-info-circle me-2"></i>
+                No hay productos disponibles.
+            </div>
+        </div>
         {% endfor %}
     </div>
+
+    <!-- Pagination -->
+    {% if products.has_other_pages %}
+    <nav class="mt-4" aria-label="Product pagination">
+        <ul class="pagination justify-content-center">
+            {% if products.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in products.paginator.page_range %}
+            <li class="page-item {% if products.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if products.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ products.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
 </div>
 
+<!-- Include Modal -->
+{% include 'modal/modal_new_product.html' %}
 
-    <!-- Incluye el contenido del modal desde el archivo separado -->
-    {% include 'modal/modal_new_product.html' %}
+<style>
+:root {
+    --primary-color: #4e73df;
+    --secondary-color: #858796;
+    --success-color: #1cc88a;
+    --info-color: #36b9cc;
+    --warning-color: #f6c23e;
+    --danger-color: #e74a3b;
+    --light-color: #f8f9fc;
+    --dark-color: #5a5c69;
+    --background-color: #F4F1FF;
+}
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const checkbox = document.querySelector('#flexCheckDefault');
-            const form = document.querySelector('#checkbox-form');
+.hover-shadow {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
 
-            checkbox.addEventListener('change', function () {
-                // Envía el formulario sin redireccionar
-                form.submit();
-            });
+.hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.card-img-top {
+    border-top-left-radius: calc(0.25rem - 1px);
+    border-top-right-radius: calc(0.25rem - 1px);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #2e59d9;
+    border-color: #2e59d9;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.pagination .page-link {
+    color: var(--primary-color);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.badge.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.alert-info {
+    color: var(--primary-color);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Category Toggle
+    const categoryToggle = document.querySelector('#flexCheckDefault');
+    if (categoryToggle) {
+        categoryToggle.addEventListener('change', function() {
+            // Add your category toggle logic here
         });
+    }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const checkbox = document.querySelector('#flexCheckDefault');
-            const form = document.querySelector('#checkbox-form');
-            const productCheckboxes = document.querySelectorAll('.product-checkbox');
-            const trashIcon = document.getElementById('trash-icon');
-
-            // Oculta los checkboxes de los productos por defecto al cargar la página
-            productCheckboxes.forEach(function (checkbox) {
-                checkbox.classList.add('hidden-checkbox');
-            });
-            trashIcon.classList.add('d-none');
-
-            checkbox.addEventListener('change', function () {
-                // Envía el formulario sin redireccionar
-                form.submit();
-            });
-
-            const selectAllCheckbox = document.querySelector('#flexSelectedAll');
-
-            selectAllCheckbox.addEventListener('change', function () {
-                // Si el checkbox "Seleccionar" está marcado, muestra los checkbox de los productos y el bote de basura
-                if (this.checked) {
-                    productCheckboxes.forEach(function (checkbox) {
-                        checkbox.classList.remove('hidden-checkbox');
-                        checkbox.checked = false; // Establece el estado a false cuando se muestran
-                    });
-                    trashIcon.classList.remove('d-none');
-                } else {
-                    // Si el checkbox "Seleccionar" no está marcado, oculta los checkbox de los productos y el bote de basura
-                    productCheckboxes.forEach(function (checkbox) {
-                        checkbox.classList.add('hidden-checkbox');
-                        checkbox.checked = false; // Establece el estado a false cuando se ocultan
-                    });
-                    trashIcon.classList.add('d-none');
-                }
-            });
-        });
-
-        document.getElementById('newProductoBtn').addEventListener('click', function (event) {
-            event.preventDefault(); // Evita que el enlace se comporte como un enlace normal
-            var componente = document.getElementById('newProductModal');
-            if (componente.style.display === 'none') {
-                componente.style.display = 'block';
-            } else {
-                componente.style.display = 'none';
-            }
-        });
-
-        // Agrega un evento de clic al botón de cancelar
-        document.getElementById('cancelarBtn').addEventListener('click', function () {
-            var componente = document.getElementById('newProductModal');
-            componente.style.display = 'none';
-        });
-    </script>
-
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
 {% endblock %}

@@ -377,3 +377,114 @@ Reiniciar el servidor de Gunicorn: Si tienes habilitado el modo producción, rei
 Verificar la caché de Nginx: Nginx podría estar sirviendo una versión en caché. Intenta limpiar la caché de Nginx reiniciándolo:
 
     sudo systemctl restart nginx
+
+## Configuración del Sistema de Correos Electrónicos para Waiver
+
+### 1. Configuración de Gmail
+Para usar Gmail como proveedor de correo electrónico, necesitas seguir estos pasos:
+
+1. Activar la verificación en dos pasos en tu cuenta de Gmail:
+   - Ve a tu cuenta de Google
+   - Seguridad > Verificación en dos pasos
+   - Activa la verificación en dos pasos
+
+2. Generar una contraseña de aplicación:
+   - Ve a tu cuenta de Google
+   - Seguridad > Contraseñas de aplicación
+   - Selecciona "Otra" como tipo de aplicación
+   - Dale un nombre (por ejemplo, "KidsFun Waiver")
+   - Copia la contraseña generada
+
+3. Actualizar la configuración en `settings.py`:
+   ```python
+   # Configuración de correo electrónico
+   EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+   EMAIL_HOST = 'smtp.gmail.com'
+   EMAIL_PORT = 587
+   EMAIL_USE_TLS = True
+   EMAIL_HOST_USER = 'tu_correo@gmail.com'  # Tu correo de Gmail
+   EMAIL_HOST_PASSWORD = 'tu_contraseña_de_aplicacion'  # La contraseña de aplicación generada
+   DEFAULT_FROM_EMAIL = 'tu_correo@gmail.com'
+   ```
+
+### 2. Estructura del Sistema de Correos
+El sistema de correos para el waiver incluye:
+
+1. Plantilla HTML (`api_waiver/templates/api_waiver/email/waiver_confirmation.html`):
+   - Diseño responsivo
+   - Información del usuario
+   - Código QR
+   - Detalles de los familiares registrados
+   - Instrucciones importantes
+
+2. Generación de PDF (`api_waiver/utils.py`):
+   - Crea un PDF con los detalles del waiver
+   - Incluye información del usuario y familiares
+   - Se adjunta automáticamente al correo
+
+### 3. Uso de la API
+Para registrar un waiver y enviar el correo, envía una petición POST a `/api/waiver/` con el siguiente formato:
+
+```json
+{
+    "user_id": "123",
+    "user_name": "Juan Pérez",
+    "user_email": "juan@ejemplo.com",
+    "relatives": [
+        {
+            "name": "María Pérez",
+            "age": 8,
+            "dateTime": "2024-03-20 10:00:00"
+        }
+    ]
+}
+```
+
+La API responderá con:
+```json
+{
+    "message": "Datos guardados correctamente y correo enviado.",
+    "qr_value": "123",
+    "waiver_data": [...],
+    "email_sent": true
+}
+```
+
+### 4. Pruebas del Sistema de Correos
+Para probar el sistema de correos en desarrollo:
+
+1. Usa el backend de consola (solo para desarrollo):
+   ```python
+   # En settings.py
+   EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+   ```
+   Esto mostrará los correos en la consola en lugar de enviarlos.
+
+2. Verifica los logs:
+   - Los errores de envío se registran en la consola
+   - Revisa la respuesta de la API para el campo `email_sent`
+
+### 5. Solución de Problemas Comunes
+
+1. Error de autenticación en Gmail:
+   - Verifica que la contraseña de aplicación sea correcta
+   - Asegúrate de que la verificación en dos pasos esté activada
+   - Confirma que el correo electrónico esté correctamente escrito
+
+2. Correos no enviados:
+   - Revisa los logs del servidor
+   - Verifica la configuración de Gmail
+   - Asegúrate de que el correo del destinatario sea válido
+
+3. Problemas con el PDF:
+   - Verifica que los datos del usuario sean correctos
+   - Asegúrate de que el formato de fecha sea válido
+   - Confirma que todos los campos requeridos estén presentes
+
+### 6. Notas de Seguridad
+
+1. Nunca compartas tu contraseña de aplicación
+2. Mantén actualizada la configuración de seguridad de Gmail
+3. Usa HTTPS en producción
+4. Considera implementar rate limiting para la API
+5. Valida siempre los correos electrónicos de entrada

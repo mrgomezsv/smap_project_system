@@ -4,7 +4,7 @@ let password = document.getElementById("password");
 let confirmPassword = document.getElementById("confirm-password");
 
 signupForm.addEventListener("submit", (e) => {
-  e.preventDefault();
+  // e.preventDefault(); // Comentado para permitir el envío normal del formulario
 
   console.log("Email:", email.value);
   console.log("Password:", password.value);
