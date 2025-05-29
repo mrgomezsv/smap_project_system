@@ -5,55 +5,164 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmación de Waiver - KidsFun</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Titan+One&family=Varela+Round&display=swap');
+
+        :root {
+            --color-yellow-menu: #f5a91b;
+            --color-green: #00d084;
+            --color-yellow: #fcb900;
+            --color-red: #f00;
+            --color-violeta: #c751c0;
+            --color-darkgreen: #305e27;
+            --color-lightblue: #2855e9;
+            --color-gray: #f5f3f3;
+            --color-footer: #0a1844;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Varela Round', sans-serif;
             line-height: 1.6;
-            color: #333333;
+            color: #1F2346;
             margin: 0;
             padding: 0;
+            background-color: var(--color-gray);
         }
+
         .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-        }
-        .header {
-            background-color: #FF6B6B;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 5px 5px 0 0;
-        }
-        .content {
             background-color: #ffffff;
-            padding: 20px;
-            border: 1px solid #dddddd;
-            border-radius: 0 0 5px 5px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        .header {
+            background-color: var(--color-yellow-menu);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+            font-family: 'Titan One', cursive;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            padding: 30px 20px;
+            background-color: #ffffff;
+        }
+
+        .greeting {
+            font-size: 24px;
+            color: var(--color-lightblue);
+            margin-bottom: 20px;
+            font-family: 'Titan One', cursive;
+        }
+
+        .qr-section {
+            background-color: var(--color-gray);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .qr-code {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--color-violeta);
+            font-family: 'Titan One', cursive;
+            margin: 15px 0;
+        }
+
+        .relative-info {
+            background-color: var(--color-gray);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 15px;
+            border-left: 4px solid var(--color-yellow-menu);
+        }
+
+        .relative-info h3 {
+            color: var(--color-lightblue);
+            margin-top: 0;
+            font-family: 'Titan One', cursive;
+        }
+
+        .important-notes {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .important-notes h3 {
+            color: var(--color-darkgreen);
+            margin-top: 0;
+            font-family: 'Titan One', cursive;
+        }
+
+        .important-notes ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .important-notes li {
+            margin: 8px 0;
+        }
+
         .footer {
             text-align: center;
             padding: 20px;
-            font-size: 12px;
-            color: #666666;
+            background-color: var(--color-footer);
+            color: white;
+            border-radius: 0 0 20px 20px;
+            font-size: 14px;
         }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
         .button {
             display: inline-block;
-            padding: 10px 20px;
-            background-color: #FF6B6B;
+            padding: 12px 25px;
+            background-color: var(--color-violeta);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 15px;
             margin: 20px 0;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
         }
-        .qr-code {
-            text-align: center;
-            margin: 20px 0;
+
+        .button:hover {
+            background-color: #af4ea9;
         }
-        .relative-info {
-            background-color: #f9f9f9;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .greeting {
+                font-size: 20px;
+            }
+
+            .qr-code {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
@@ -63,40 +172,45 @@
             <h1>¡Gracias por registrarte en KidsFun!</h1>
         </div>
         <div class="content">
-            <p>Hola {{ user_name }},</p>
+            <div class="greeting">Hola {{ user_name }},</div>
             
             <p>Gracias por completar el registro del waiver para nuestros servicios. Tu información ha sido registrada exitosamente.</p>
             
-            <div class="qr-code">
-                <p><strong>Tu código QR único:</strong></p>
-                <p style="font-size: 24px; font-weight: bold;">{{ qr_value }}</p>
+            <div class="qr-section">
+                <h3>Tu código QR único</h3>
+                <div class="qr-code">{{ qr_value }}</div>
+                <p>Presenta este código al llegar a nuestras instalaciones</p>
             </div>
 
-            <h3>Información registrada:</h3>
+            <h3 style="color: var(--color-lightblue); font-family: 'Titan One', cursive;">Información registrada:</h3>
             {% for relative in relatives %}
             <div class="relative-info">
-                <p><strong>Nombre:</strong> {{ relative.name }}</p>
-                <p><strong>Edad:</strong> {{ relative.age }}</p>
+                <h3>{{ relative.name }}</h3>
+                <p><strong>Edad:</strong> {{ relative.age }} años</p>
                 <p><strong>Fecha de registro:</strong> {{ relative.dateTime }}</p>
             </div>
             {% endfor %}
 
-            <p><strong>Importante:</strong></p>
-            <ul>
-                <li>Por favor, guarda este correo electrónico como comprobante de tu registro.</li>
-                <li>Presenta tu código QR al llegar a nuestras instalaciones.</li>
-                <li>Este código QR es único y personal.</li>
-            </ul>
+            <div class="important-notes">
+                <h3>Información Importante</h3>
+                <ul>
+                    <li>Por favor, guarda este correo electrónico como comprobante de tu registro.</li>
+                    <li>Presenta tu código QR al llegar a nuestras instalaciones.</li>
+                    <li>Este código QR es único y personal.</li>
+                    <li>Si necesitas actualizar la información, contacta con nuestro equipo.</li>
+                </ul>
+            </div>
 
             <p>Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos.</p>
             
-            <p>¡Esperamos verte pronto en KidsFun!</p>
+            <p style="color: var(--color-violeta); font-weight: bold;">¡Esperamos verte pronto en KidsFun!</p>
             
-            <p>Saludos cordiales,<br>El equipo de KidsFun</p>
+            <p>Saludos cordiales,<br><strong>El equipo de KidsFun</strong></p>
         </div>
         <div class="footer">
-            <p>© 2024 KidsFun. Todos los derechos reservados.</p>
+            <p>© 2025 KidsFun. Todos los derechos reservados.</p>
             <p>Este es un correo automático, por favor no responda a este mensaje.</p>
+            <p style="font-size: 12px; opacity: 0.8;">KidsFun - Fiestas Infantiles</p>
         </div>
     </div>
 </body>
