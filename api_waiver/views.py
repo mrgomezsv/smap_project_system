@@ -5,7 +5,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import WaiverData, WaiverQR
 from .serializers import WaiverDataSerializer, WaiverQRSerializer
-from .utils import create_waiver_pdf, send_email_with_pdf
+from .utils import create_waiver_pdf
+from t_app_product.utils import send_waiver_confirmation_email
+import tempfile
+import os
 
 @api_view(['POST'])
 def api_waiver(request):
@@ -59,15 +62,32 @@ def api_waiver(request):
 
         # Generar el PDF
         pdf_buffer = create_waiver_pdf(user_name, user_email, relatives_data)
+        
+        # Guardar PDF temporalmente para adjuntarlo al correo
+        pdf_path = None
+        if pdf_buffer:
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
+                tmp_file.write(pdf_buffer.getvalue())
+                pdf_path = tmp_file.name
 
-        # Enviar el correo electrónico
-        email_sent = send_email_with_pdf(
-            user_email=user_email,
-            pdf_buffer=pdf_buffer,
-            user_name=user_name,
+        # Preparar datos para el correo
+        user_data = {
+            'user_name': user_name,
+            'user_email': user_email,
+            'relatives': relatives_data,
+            'timestamp': relatives_data[0]['dateTime'] if relatives_data else ''
+        }
+
+        # Enviar el correo electrónico usando la nueva función
+        email_sent = send_waiver_confirmation_email(
+            user_data=user_data,
             qr_value=waiver_qr.qr_value,
-            relatives_data=relatives_data
+            pdf_path=pdf_path
         )
+
+        # Limpiar archivo temporal
+        if pdf_path and os.path.exists(pdf_path):
+            os.unlink(pdf_path)
 
         if not email_sent:
             # Si el correo no se pudo enviar, registrar el error pero continuar

@@ -206,16 +206,16 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expira al cerrar el navegador
 SESSION_COOKIE_AGE = 1800  # Y/o expira en 30 minutos en segundos
 
 # Configuración de correo electrónico
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'kidsfun.developer@gmail.com'
-# EMAIL_HOST_PASSWORD = 'Karin2100'
-# DEFAULT_FROM_EMAIL = 'kidsfun.developer@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kidsfun.developer@gmail.com'
+EMAIL_HOST_PASSWORD = 'Karin2100'  # Reemplaza con la contraseña de 16 caracteres que generaste
+DEFAULT_FROM_EMAIL = 'kidsfun.developer@gmail.com'
 
 # Configuración para pruebas (mostrar correos en consola)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 try:
     firebase_admin.initialize_app(cred)
