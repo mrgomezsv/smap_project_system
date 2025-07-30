@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'api_like',
     'api_waiver',
     'api_waiver_validator',
+    'waiver_v2',  # Nueva aplicación para waivers v2
     'kidsfun_web',
     'rest_framework',
 ]
@@ -108,20 +109,7 @@ WSGI_APPLICATION = 'smap_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'smap_kf',
-#         'USER': 'mrgomez',
-#         'PASSWORD': 'Karin2100',
-#         'HOST': '82.165.210.146',
-#         'PORT': '5432',
-#         'OPTIONS': {
-#                     'sslmode': 'require',  # o 'prefer' si permites conexiones sin SSL también
-#                 },
-#     }
-# }
-
+# Configuración de base de datos para producción
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -223,3 +211,11 @@ except ValueError:
     pass  # La aplicación de Firebase ya está inicializada
 
 SITE_DOMAIN = 'https://www.kidsfunyfiestasinfantiles.com'
+
+# Importar configuración local para desarrollo
+try:
+    from .local_settings import *
+    print("🔧 Configuración local importada - Modo desarrollo")
+except ImportError:
+    print("🚀 Configuración de producción activa")
+    pass

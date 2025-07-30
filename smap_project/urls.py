@@ -37,6 +37,7 @@ urlpatterns = [
     path('api/', include('api_like.urls')),  # Incluye las URLs de la aplicación api_like
     path('api/', include('api_commentary.urls')),  # Incluye las URLs de la aplicación api_commentary
     path('api/', include('api_waiver.urls')),  # Incluye las URLs de la aplicación api_waiver
+    path('api/v2/', include('waiver_v2.urls')),  # Incluye las URLs de la nueva aplicación waiver_v2
     path('api_waiver_validator/', include('api_waiver_validator.urls')),
 ]
 

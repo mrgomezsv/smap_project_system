@@ -8,7 +8,6 @@ class WaiverDataSerializer(serializers.ModelSerializer):
         model = WaiverData
         fields = ('id', 'user_id', 'user_name', 'user_email', 'relative_name', 'relative_age', 'timestamp')
 
-
 class WaiverQRSerializer(serializers.ModelSerializer):
     class Meta:
         model = WaiverQR
