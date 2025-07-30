@@ -125,3 +125,9 @@ find . -name .DS_Store -print0 | xargs -0 git rm --cachedgit
 
 # Archivo de configuración de Django
 smap_project/settings.py
+# Archivos de desarrollo local y túnel SSH
+smap_project/local_settings.py
+setup_db_tunnel.sh
+close_db_tunnel.sh
+test_db_connection.py
+SSH_TUNNEL_SETUP.md
