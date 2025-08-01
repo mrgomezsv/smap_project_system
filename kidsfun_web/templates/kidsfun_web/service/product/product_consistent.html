@@ -1,0 +1,505 @@
+{% extends 'kidsfun_web/base.html' %}
+
+{% block title %}{{ product.title }} - Kidsfun{% endblock %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/css/lightbox.min.css">
+
+<style>
+    /* Estilos específicos para la página de productos - Consistente con el diseño actual */
+    .product-hero {
+        background: linear-gradient(135deg, var(--color-yellow-menu) 0%, var(--color-violeta) 100%);
+        color: white;
+        padding: 200px 0 100px; /* Ajustado para el navbar fijo */
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('{% static "img/CLOUD-V2.png" %}') repeat;
+        opacity: 0.1;
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .product-hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .product-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .product-subtitle {
+        font-size: 1.25rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+    }
+
+    .category-badge {
+        display: inline-block;
+        background: var(--color-yellow);
+        color: #333;
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .product-main-image {
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+
+    .product-main-image:hover {
+        transform: scale(1.02);
+    }
+
+    .product-info {
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-top: -50px;
+        position: relative;
+        z-index: 3;
+    }
+
+    .product-description {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 2rem;
+    }
+
+    .product-specs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .spec-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: var(--color-gray);
+        border-radius: 15px;
+        border-left: 4px solid var(--color-violeta);
+        transition: transform 0.3s ease;
+    }
+
+    .spec-item:hover {
+        transform: translateY(-2px);
+    }
+
+    .spec-icon {
+        width: 30px;
+        height: 30px;
+        color: var(--color-violeta);
+    }
+
+    .spec-label {
+        font-weight: 600;
+        color: #333;
+        font-size: 0.9rem;
+    }
+
+    .spec-value {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .gallery-section {
+        padding: 4rem 0;
+        background: var(--color-gray);
+    }
+
+    .gallery-title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        color: #333;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .gallery-item {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .gallery-item:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover img {
+        transform: scale(1.1);
+    }
+
+    .gallery-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+    }
+
+    .gallery-zoom-icon {
+        color: white;
+        font-size: 2rem;
+        background: rgba(0,0,0,0.6);
+        padding: 1rem;
+        border-radius: 50%;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+
+    .btn-back {
+        background: var(--color-lightblue);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 15px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn-back:hover {
+        background: #1a3bb8;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    .btn-contact {
+        background: var(--color-violeta);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 15px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn-contact:hover {
+        background: #af4ea9;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    /* Animaciones */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .animate-delay-1 { animation-delay: 0.1s; }
+    .animate-delay-2 { animation-delay: 0.2s; }
+    .animate-delay-3 { animation-delay: 0.3s; }
+    .animate-delay-4 { animation-delay: 0.4s; }
+    .animate-delay-5 { animation-delay: 0.5s; }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .product-title {
+            font-size: 2.5rem;
+        }
+        
+        .product-subtitle {
+            font-size: 1.1rem;
+        }
+        
+        .product-info {
+            margin-top: -30px;
+            padding: 2rem;
+        }
+        
+        .gallery-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .product-specs {
+            grid-template-columns: 1fr;
+        }
+        
+        .product-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="product-hero">
+    <div class="container">
+        <div class="product-hero-content">
+            <div class="category-badge animate-fade-in-up animate-delay-1">
+                {{ product.get_category_display }}
+            </div>
+            <h1 class="product-title animate-fade-in-up animate-delay-2">
+                {{ product.title }}
+            </h1>
+            <p class="product-subtitle animate-fade-in-up animate-delay-3">
+                {{ product.description|truncatewords:15 }}
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Product Information -->
+<section class="product-info">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 animate-fade-in-up animate-delay-1">
+                <a href="{{ product.img.url }}" data-lightbox="product-gallery" data-title="{{ product.title }}">
+                    <img src="{{ product.img.url }}" alt="{{ product.title }}" class="product-main-image w-100">
+                </a>
+            </div>
+            <div class="col-lg-6 animate-fade-in-up animate-delay-2">
+                <div class="product-description">
+                    {{ product.description }}
+                </div>
+                
+                <div class="product-specs">
+                    <div class="spec-item">
+                        <i class="bi bi-tag spec-icon"></i>
+                        <div>
+                            <div class="spec-label">Categoría</div>
+                            <div class="spec-value">{{ product.get_category_display }}</div>
+                        </div>
+                    </div>
+                    
+                    {% if product.circuits %}
+                    <div class="spec-item">
+                        <i class="bi bi-lightning spec-icon"></i>
+                        <div>
+                            <div class="spec-label">Circuitos Necesarios</div>
+                            <div class="spec-value">{{ product.circuits }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.dimensions %}
+                    <div class="spec-item">
+                        <i class="bi bi-rulers spec-icon"></i>
+                        <div>
+                            <div class="spec-label">Dimensiones</div>
+                            <div class="spec-value">{{ product.dimensions }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.space %}
+                    <div class="spec-item">
+                        <i class="bi bi-arrows-expand spec-icon"></i>
+                        <div>
+                            <div class="spec-label">Espacio Requerido</div>
+                            <div class="spec-value">{{ product.space }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="product-actions">
+                    <a href="{% url 'service' %}" class="btn-back">
+                        <i class="bi bi-arrow-left"></i>
+                        Volver a Servicios
+                    </a>
+                    <a href="{% url 'contact' %}" class="btn-contact">
+                        <i class="bi bi-telephone"></i>
+                        Contactar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+{% if product.img1 or product.img2 or product.img3 or product.img4 or product.img5 %}
+<section class="gallery-section">
+    <div class="container">
+        <h2 class="gallery-title animate-fade-in-up animate-delay-1">
+            Galería de Imágenes
+        </h2>
+        
+        <div class="gallery-grid">
+            {% if product.img1 %}
+            <div class="gallery-item animate-fade-in-up animate-delay-2">
+                <a href="{{ product.img1.url }}" data-lightbox="product-gallery" data-title="{{ product.title }}">
+                    <img src="{{ product.img1.url }}" alt="{{ product.title }}">
+                    <div class="gallery-overlay">
+                        <i class="bi bi-zoom-in gallery-zoom-icon"></i>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+            
+            {% if product.img2 %}
+            <div class="gallery-item animate-fade-in-up animate-delay-3">
+                <a href="{{ product.img2.url }}" data-lightbox="product-gallery" data-title="{{ product.title }}">
+                    <img src="{{ product.img2.url }}" alt="{{ product.title }}">
+                    <div class="gallery-overlay">
+                        <i class="bi bi-zoom-in gallery-zoom-icon"></i>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+            
+            {% if product.img3 %}
+            <div class="gallery-item animate-fade-in-up animate-delay-4">
+                <a href="{{ product.img3.url }}" data-lightbox="product-gallery" data-title="{{ product.title }}">
+                    <img src="{{ product.img3.url }}" alt="{{ product.title }}">
+                    <div class="gallery-overlay">
+                        <i class="bi bi-zoom-in gallery-zoom-icon"></i>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+            
+            {% if product.img4 %}
+            <div class="gallery-item animate-fade-in-up animate-delay-5">
+                <a href="{{ product.img4.url }}" data-lightbox="product-gallery" data-title="{{ product.title }}">
+                    <img src="{{ product.img4.url }}" alt="{{ product.title }}">
+                    <div class="gallery-overlay">
+                        <i class="bi bi-zoom-in gallery-zoom-icon"></i>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+            
+            {% if product.img5 %}
+            <div class="gallery-item animate-fade-in-up animate-delay-1">
+                <a href="{{ product.img5.url }}" data-lightbox="product-gallery" data-title="{{ product.title }}">
+                    <img src="{{ product.img5.url }}" alt="{{ product.title }}">
+                    <div class="gallery-overlay">
+                        <i class="bi bi-zoom-in gallery-zoom-icon"></i>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Related Products Section -->
+<section class="related-products" style="padding: 4rem 0;">
+    <div class="container">
+        <h2 class="text-center mb-5">Productos Relacionados</h2>
+        <div class="row">
+            <div class="col-12 text-center">
+                <a href="{% url 'service' %}" class="btn btn-violet btn-lg">
+                    <i class="bi bi-grid-3x3-gap"></i>
+                    Ver Todos los Productos
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/js/lightbox.min.js"></script>
+<script>
+    // Configuración de Lightbox
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true,
+        'albumLabel': 'Imagen %1 de %2',
+        'fadeDuration': 300,
+        'imageFadeDuration': 300
+    });
+
+    // Animaciones adicionales
+    document.addEventListener('DOMContentLoaded', function() {
+        // Agregar animaciones al hacer scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observar elementos con animaciones
+        document.querySelectorAll('.animate-fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>
+{% endblock %} 
