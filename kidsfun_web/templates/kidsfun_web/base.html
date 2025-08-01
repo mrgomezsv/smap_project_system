@@ -123,6 +123,181 @@
                 font-size: 22px;
             }
         }
+
+        /* Modal de WhatsApp */
+        .whatsapp-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .whatsapp-modal-content {
+            background: white;
+            margin: 15% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+            overflow: hidden;
+        }
+
+        .whatsapp-modal-header {
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .whatsapp-modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .whatsapp-modal-header .close {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .whatsapp-modal-header .close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .whatsapp-modal-body {
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .whatsapp-modal-body .whatsapp-icon {
+            font-size: 4rem;
+            color: #25d366;
+            margin-bottom: 20px;
+        }
+
+        .whatsapp-modal-body h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .whatsapp-modal-body p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .whatsapp-modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-whatsapp:hover {
+            background: #128c7e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive para el modal */
+        @media (max-width: 768px) {
+            .whatsapp-modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+
+            .whatsapp-modal-body {
+                padding: 25px 15px;
+            }
+
+            .whatsapp-modal-body .whatsapp-icon {
+                font-size: 3rem;
+            }
+
+            .whatsapp-modal-actions {
+                flex-direction: column;
+            }
+
+            .btn-whatsapp, .btn-cancel {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -162,10 +337,34 @@
 
 <!-- Botón flotante de WhatsApp -->
 <div class="whatsapp-float">
-    <a href="https://wa.me/3478704240?text=Hola! Me interesa conocer más sobre sus servicios de fiestas infantiles" target="_blank" rel="noopener noreferrer">
+    <a href="#" onclick="openWhatsAppModal(); return false;">
         <i class="bi bi-whatsapp"></i>
         <div class="tooltip">¡Chatea con nosotros!</div>
     </a>
+</div>
+
+<!-- Modal de WhatsApp -->
+<div id="whatsappModal" class="whatsapp-modal">
+    <div class="whatsapp-modal-content">
+        <div class="whatsapp-modal-header">
+            <h3><i class="bi bi-whatsapp"></i> ¡Conecta con nosotros!</h3>
+            <button class="close" onclick="closeWhatsAppModal()">&times;</button>
+        </div>
+        <div class="whatsapp-modal-body">
+            <div class="whatsapp-icon">
+                <i class="bi bi-whatsapp"></i>
+            </div>
+            <h4>¿Te interesan nuestros servicios?</h4>
+            <p>¡Estamos aquí para ayudarte a crear la fiesta perfecta para tu pequeño! Chatea con nosotros y te responderemos en minutos.</p>
+            <div class="whatsapp-modal-actions">
+                <a href="https://wa.me/3478704240?text=Hola! Vi su sitio web Kidsfun y me interesa conocer más sobre sus servicios de fiestas infantiles. ¿Podrían ayudarme?" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                    <i class="bi bi-whatsapp"></i>
+                    ¡Chatear ahora!
+                </a>
+                <button class="btn-cancel" onclick="closeWhatsAppModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Footer -->
@@ -224,6 +423,32 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
     AOS.init();
+
+    // Funciones para el modal de WhatsApp
+    function openWhatsAppModal() {
+        document.getElementById('whatsappModal').style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Prevenir scroll
+    }
+
+    function closeWhatsAppModal() {
+        document.getElementById('whatsappModal').style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restaurar scroll
+    }
+
+    // Cerrar modal al hacer clic fuera de él
+    window.onclick = function(event) {
+        const modal = document.getElementById('whatsappModal');
+        if (event.target === modal) {
+            closeWhatsAppModal();
+        }
+    }
+
+    // Cerrar modal con la tecla Escape
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeWhatsAppModal();
+        }
+    });
 </script>
 </body>
 </html>
