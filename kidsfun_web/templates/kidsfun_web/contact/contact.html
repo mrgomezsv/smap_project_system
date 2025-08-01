@@ -1,121 +1,223 @@
 {% extends 'kidsfun_web/base.html' %}
 
 {% block content %}
+{% load static %}
 
-<html lang="en">
-<head>
-    <title>Kidsfun y Fiestas Infantiles</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}"/> <!-- Asegúrate de que este archivo exista y contenga tus estilos -->
-    <link rel="icon" href="{% static 'img/favicon/favicon-16x16.png' %}" type="image/x-icon"/>
-</head>
+<style>
+    .section-form {
+        padding: 120px 0 80px; /* Ajustado para el navbar fijo */
+        background: linear-gradient(135deg, var(--color-yellow-menu) 0%, var(--color-violeta) 100%);
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
 
-<body>
-<header class="menu">
-    <!-- Header content -->
-</header>
+    .section-form::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('{% static "img/CLOUD-V2.png" %}') repeat;
+        opacity: 0.1;
+        animation: float 20s ease-in-out infinite;
+    }
 
-<!-- Resto de tu contenido HTML -->
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
 
-    <!----------------------------------section form ------------------------>
-    <section class="section-form padding-section">
-        <div class="container">
-            <div class="row justify-content-center align-items-center g-2">
-                <h1><span class="text-red anim_1">Contact </span><span class="text-orange anim_2">Us</span></h1>
-            </div>
-            <div class="line my-4"></div>
-            <div class="row mt-5">
-                <div class="col-12 col-sm-12 col-md-6">
-                    <div class="row justify-content-center align-items-center g-2">
-                        <h2 data-aos="fade-up">
-                            <span class="text-green">Write to us </span>
-                            <span class="text-blue">or give </span>
-                            <span class="text-violet">us a call</span>
-                        </h2>
-                        <!-- <p data-aos="fade-up" class="text-blue">1144 North Ave Nueva Rochelle, Nueva York, Estados Unidos 10804</p> -->
-                        <p data-aos="fade-up"><span class="text-violet">Tel: </span>+1 (347) 870-4240</p>
-                        <p data-aos="fade-up"><span class="text-violet">WhatsApp: </span>+1 (929) 392-6596</p>
-                        <p data-aos="fade-up"><span class="text-violet">Emails: </span>hello@kidsfunyfiestasinfantiles.com</p>
-                        <p data-aos="fade-up">sales@kidsfunyfiestasinfantiles.com</p>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-12 col-md-6">
-                    <form class="row g-3 shadow p-2 anim_4" action="./form/form.php" method="post">
-                        <div class="col-md-6">
-                            <label for="firstName" class="form-label">First name</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="lastName" class="form-label">Last name</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName">
-                        </div>
-                        <div class="col-12">
-                            <label for="contactNumber" class="form-label">Your Contact Number</label>
-                            <input type="text" class="form-control" id="contactNumber" name="contactNumber" placeholder="+1 (000) 000 - 0000">
-                        </div>
-                        <div class="col-12">
-                            <label for="email" class="form-label">Your Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="example@mail.com">
-                        </div>
-                        <div class="col-md-12">
-                            <label for="reason" class="form-label">Reason</label>
-                            <input type="text" class="form-control" id="reason" name="reason">
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-violet">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+    .section-form .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    .section-form h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .section-form h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .section-form p {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .contact-form {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        color: #333;
+    }
+
+    .contact-form .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .contact-form .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .contact-form .form-control:focus {
+        border-color: var(--color-violeta);
+        box-shadow: 0 0 0 0.2rem rgba(199, 81, 192, 0.25);
+    }
+
+    .contact-form .btn-violet {
+        background: var(--color-violeta);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 15px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .contact-form .btn-violet:hover {
+        background: #af4ea9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    .line {
+        height: 4px;
+        background: linear-gradient(90deg, var(--color-red), var(--color-orange), var(--color-yellow), var(--color-green));
+        border-radius: 2px;
+        margin: 2rem auto;
+        max-width: 200px;
+    }
+
+    /* Animaciones */
+    .anim_1, .anim_2, .anim_3, .anim_4 {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .anim_1 { animation-delay: 0.1s; }
+    .anim_2 { animation-delay: 0.2s; }
+    .anim_3 { animation-delay: 0.3s; }
+    .anim_4 { animation-delay: 0.4s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .section-form {
+            padding: 100px 0 60px;
+        }
+
+        .section-form h1 {
+            font-size: 2.5rem;
+        }
+
+        .section-form h2 {
+            font-size: 1.5rem;
+        }
+
+        .contact-form {
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .section-form h1 {
+            font-size: 2rem;
+        }
+
+        .contact-form {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<section class="section-form">
+    <div class="container">
+        <div class="row justify-content-center align-items-center g-2">
+            <h1>
+                <span class="text-red anim_1">Contact </span>
+                <span class="text-orange anim_2">Us</span>
+            </h1>
         </div>
-    </section>
-
-    <div class="divisor-2"></div>
-    <footer class="">
-        <div class="container">
-            <div class="row justify-content-center align-items-center pb-3">
-                <div class="col-3 col-lg-1">
-                    <a class="fac" href="https://www.facebook.com/BouncehouseNY">
-                        <i class="bi bi-facebook"></i>
-                    </a>
-                </div>
-                <div class="col-3 col-lg-1">
-                    <a class="ins" href="https://www.instagram.com/kidsfunyfiestasinfantiles/">
-                        <i class="bi bi-instagram"></i>
-                    </a>
-                </div>
-                <div class="col-3 col-lg-1">
-                    <a class="wha" href="https://wa.me/3478704240">
-                        <i class="bi bi-whatsapp"></i>
-                    </a>
-                </div>
-                <div class="col-lg-8 text-center text-lg-end mt-3 mt-lg-0">
-                    <p>
-                        <span class="text-violet">Copyright &copy; </span>
-                        <span class="text-orange">Kidsfun y Fiestas Infantiles </span>
-                        <span class="text-yellow">2023 Kidsfun y </span>
-                        <span class="text-green">Fiestas Infantiles</span>
+        <div class="line my-4"></div>
+        
+        <div class="row mt-5">
+            <div class="col-12 col-sm-12 col-md-6">
+                <div class="row justify-content-center align-items-center g-2">
+                    <h2 data-aos="fade-up">
+                        <span class="text-green">Write to us </span>
+                        <span class="text-blue">or give </span>
+                        <span class="text-violet">us a call</span>
+                    </h2>
+                    <p data-aos="fade-up">
+                        <span class="text-violet">Tel: </span>+1 (347) 870-4240
                     </p>
+                    <p data-aos="fade-up">
+                        <span class="text-violet">WhatsApp: </span>+1 (929) 392-6596
+                    </p>
+                    <p data-aos="fade-up">
+                        <span class="text-violet">Emails: </span>hello@kidsfunyfiestasinfantiles.com
+                    </p>
+                    <p data-aos="fade-up">sales@kidsfunyfiestasinfantiles.com</p>
                 </div>
             </div>
-            <div class="row justify-content-center align-items-center pb-3">
-                <a href="#" class="text-end power">Power by webforallsv.com</a>
+            
+            <div class="col-12 col-sm-12 col-md-6">
+                <form class="row g-3 contact-form anim_4" action="./form/form.php" method="post">
+                    <div class="col-md-6">
+                        <label for="firstName" class="form-label">First name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lastName" class="form-label">Last name</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="contactNumber" class="form-label">Your Contact Number</label>
+                        <input type="text" class="form-control" id="contactNumber" name="contactNumber" placeholder="+1 (000) 000 - 0000" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="email" class="form-label">Your Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="example@mail.com" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="reason" class="form-label">Reason</label>
+                        <input type="text" class="form-control" id="reason" name="reason" required>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-violet">Submit</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </footer>
+    </div>
+</section>
 
-<footer class="">
-    <!-- Footer content -->
-</footer>
-
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
     AOS.init();
 </script>
-</body>
-</html>
 {% endblock %}
