@@ -47,7 +47,7 @@ def service_product(request, product_id):
     # Continúa imprimiendo cualquier otro dato que desees
 
     # Devolver la renderización de la plantilla con el producto
-    return render(request, 'kidsfun_web/service/product/product.html', {'product': product})
+    return render(request, 'kidsfun_web/service/product/product_modern.html', {'product': product})
 
 
 def contact(request):
