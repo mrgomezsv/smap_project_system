@@ -488,3 +488,6 @@ Para probar el sistema de correos en desarrollo:
 3. Usa HTTPS en producción
 4. Considera implementar rate limiting para la API
 5. Valida siempre los correos electrónicos de entrada
+
+
+mario revisar commit 391b551307157dfc3758463c469624b863f5378a

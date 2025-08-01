@@ -13,6 +13,10 @@ import os
 from pathlib import Path
 from firebase_admin import credentials
 import firebase_admin
+from dotenv import load_dotenv
+
+# Cargar variables de entorno
+load_dotenv()
 
 import api_waiver_validator
 
@@ -23,10 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = [
     'kidsfunyfiestasinfantiles.com',
@@ -36,8 +40,12 @@ ALLOWED_HOSTS = [
 ]
 
 # Firebase Admin SDK initialization
-cred_path = os.path.join(BASE_DIR, 'credentials', 'smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json')  # Reemplaza con la ruta a tus credenciales
-cred = credentials.Certificate(cred_path)
+cred_path = os.path.join(BASE_DIR, 'credentials', 'smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json')
+if os.path.exists(cred_path):
+    cred = credentials.Certificate(cred_path)
+else:
+    # Fallback para desarrollo sin credenciales de Firebase
+    cred = None
 
 # Application definition
 
@@ -63,18 +71,18 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "https://kidsfunyfiestasinfantiles.com",
     "http://localhost:8000",
-    # otros orígenes permitidos
+    "http://127.0.0.1:8000",
 ]
 
 ROOT_URLCONF = 'smap_project.urls'
@@ -83,7 +91,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'kidsfun_web' / 'templates',  # Asegúrate de que esta línea esté presente
+            BASE_DIR / 'kidsfun_web' / 'templates',
             BASE_DIR / 'kidsfun_web' / 'templates' / 'kidsfun_web' / 'home',
             BASE_DIR / 'kidsfun_web' / 'templates',
             BASE_DIR / 't_app_product' / 'templates' / 'push_notificated',
@@ -113,11 +121,11 @@ WSGI_APPLICATION = 'smap_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'smap_kf',
-        'USER': 'mrgomez',
-        'PASSWORD': 'Karin2100',
-        'HOST': '82.165.210.146',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME', 'smap_kf'),
+        'USER': os.getenv('DB_USER', 'mrgomez'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'Karin2100'),
+        'HOST': os.getenv('DB_HOST', '82.165.210.146'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
@@ -142,9 +150,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Mexico_City'
 
 USE_I18N = True
 
@@ -159,7 +167,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Definir las rutas adicionales para buscar archivos estáticos
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    # BASE_DIR / "t_app_product" / "static",
 ]
 
 LOGIN_URL = '/signin'
@@ -187,30 +194,72 @@ SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
 
 # Establecer SameSite para proteger contra ataques CSRF
-SESSION_COOKIE_SAMESITE = 'Lax'  # También puede ser 'Strict' dependiendo de tus necesidades
+SESSION_COOKIE_SAMESITE = 'Lax'
 
 # Opcionalmente, mantener ambas configuraciones para mayor seguridad
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expira al cerrar el navegador
-SESSION_COOKIE_AGE = 1800  # Y/o expira en 30 minutos en segundos
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 1800
 
 # Configuración de correo electrónico
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'kidsfun.developer@gmail.com'
-EMAIL_HOST_PASSWORD = 'Karin2100'  # Reemplaza con la contraseña de 16 caracteres que generaste
-DEFAULT_FROM_EMAIL = 'kidsfun.developer@gmail.com'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'kidsfun.developer@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'Karin2100')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'kidsfun.developer@gmail.com')
 
 # Configuración para pruebas (mostrar correos en consola)
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-try:
-    firebase_admin.initialize_app(cred)
-except ValueError:
-    pass  # La aplicación de Firebase ya está inicializada
+# Inicializar Firebase solo si las credenciales existen
+if cred:
+    try:
+        firebase_admin.initialize_app(cred)
+    except ValueError:
+        pass  # La aplicación de Firebase ya está inicializada
 
 SITE_DOMAIN = 'https://www.kidsfunyfiestasinfantiles.com'
+
+# Configuración de logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
 
 # Importar configuración local para desarrollo
 try:
