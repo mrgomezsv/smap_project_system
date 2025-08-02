@@ -116,6 +116,9 @@ install_dependencies() {
 setup_environment() {
     print_status "Configurando variables de entorno..."
     
+    # Generar clave secreta segura
+    DJANGO_SECRET_KEY=$(openssl rand -hex 32)
+    
     # Verificar si existe .env
     if [ ! -f ".env" ]; then
         print_warning "No se encontró archivo .env. Creando desde ejemplo..."
@@ -126,7 +129,7 @@ setup_environment() {
             print_warning "Creando archivo .env básico..."
             cat > .env << EOF
 # Configuración de Django
-DJANGO_SECRET_KEY=django-insecure-(y@^qkirxh^6wd9#913ts$a!3j@!gfrnsv-lj@_%$+%$iml*k2
+DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY
 DEBUG=False
 
 # Configuración de Base de Datos
@@ -140,16 +143,61 @@ DB_PORT=5432
 EMAIL_HOST_USER=kidsfun.developer@gmail.com
 EMAIL_HOST_PASSWORD=Karin2100
 DEFAULT_FROM_EMAIL=kidsfun.developer@gmail.com
+
+# Configuración del servidor
+ALLOWED_HOSTS=kidsfunyfiestasinfantiles.com,www.kidsfunyfiestasinfantiles.com,localhost,127.0.0.1
 EOF
         fi
+    else
+        # Actualizar la clave secreta en el archivo .env existente
+        if grep -q "DJANGO_SECRET_KEY=" .env; then
+            sed -i "s/DJANGO_SECRET_KEY=.*/DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY/" .env
+        else
+            echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY" >> .env
+        fi
+        
+        # Asegurar que DEBUG esté en False para producción
+        sed -i "s/DEBUG=True/DEBUG=False/" .env
+        sed -i "s/DEBUG=true/DEBUG=False/" .env
     fi
     
     # Cargar variables de entorno
     if [ -f ".env" ]; then
-        export $(cat .env | grep -v '^#' | xargs)
+        # Cargar variables de forma segura
+        set -a
+        source .env
+        set +a
     fi
     
     print_success "Variables de entorno configuradas"
+}
+
+# Función para verificar y corregir conexión a base de datos
+fix_database_connection() {
+    print_status "Verificando conexión a la base de datos..."
+    
+    # Cargar variables de entorno
+    if [ -f ".env" ]; then
+        set -a
+        source .env
+        set +a
+    fi
+    
+    # Variables por defecto
+    DB_NAME=${DB_NAME:-"smap_kf"}
+    DB_USER=${DB_USER:-"mrgomez"}
+    DB_HOST=${DB_HOST:-"82.165.210.146"}
+    DB_PORT=${DB_PORT:-"5432"}
+    DB_PASSWORD=${DB_PASSWORD:-"Karin2100"}
+    
+    # Probar conexión
+    if PGPASSWORD="$DB_PASSWORD" psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1;" > /dev/null 2>&1; then
+        print_success "Conexión a base de datos exitosa"
+    else
+        print_error "Error al conectar con la base de datos"
+        print_warning "Verifica las credenciales en el archivo .env"
+        exit 1
+    fi
 }
 
 # Función para ejecutar migraciones
@@ -190,9 +238,9 @@ check_permissions() {
     chmod +x deploy.sh
     
     # Verificar permisos de directorios importantes
-    chmod 755 staticfiles/
-    chmod 755 media/
-    chmod 755 logs/
+    chmod 755 staticfiles/ 2>/dev/null || true
+    chmod 755 media/ 2>/dev/null || true
+    chmod 755 logs/ 2>/dev/null || true
     
     print_success "Permisos verificados"
 }
@@ -209,8 +257,8 @@ restart_services() {
             print_success "Nginx reiniciado"
         fi
         
-        if systemctl is-active --quiet gunicorn; then
-            sudo systemctl restart gunicorn
+        if systemctl is-active --quiet kidsfun_gunicorn; then
+            sudo systemctl restart kidsfun_gunicorn
             print_success "Gunicorn reiniciado"
         fi
     elif command -v service &> /dev/null; then
@@ -250,6 +298,46 @@ check_deployment() {
     print_success "Despliegue verificado correctamente"
 }
 
+# Función para ejecutar monitoreo
+run_monitoring() {
+    print_status "Ejecutando monitoreo del sistema..."
+    
+    if [ -f "monitor.sh" ]; then
+        chmod +x monitor.sh
+        ./monitor.sh
+    else
+        print_warning "Script de monitoreo no encontrado"
+    fi
+}
+
+# Función para mostrar resumen final
+show_deployment_summary() {
+    echo ""
+    echo "=========================================="
+    print_success "🎉 DESPLIEGUE COMPLETADO EXITOSAMENTE"
+    echo "=========================================="
+    echo "✅ Backup de base de datos creado"
+    echo "✅ Repositorio actualizado"
+    echo "✅ Dependencias instaladas"
+    echo "✅ Variables de entorno configuradas"
+    echo "✅ Conexión a base de datos verificada"
+    echo "✅ Migraciones ejecutadas"
+    echo "✅ Archivos estáticos recolectados"
+    echo "✅ Permisos verificados"
+    echo "✅ Servicios reiniciados"
+    echo "✅ Despliegue verificado"
+    echo ""
+    echo "🌐 El proyecto está listo para producción"
+    echo "URL: https://kidsfunyfiestasinfantiles.com"
+    echo ""
+    echo "📊 Para monitorear el sistema:"
+    echo "   ./monitor.sh"
+    echo ""
+    echo "🔄 Para futuras actualizaciones:"
+    echo "   ./deploy.sh"
+    echo "=========================================="
+}
+
 # Función principal
 main() {
     echo "=========================================="
@@ -270,18 +358,14 @@ main() {
     update_repository
     install_dependencies
     setup_environment
+    fix_database_connection
     run_migrations
     collect_static
     check_permissions
     restart_services
     check_deployment
-    
-    echo "=========================================="
-    print_success "🎉 DESPLIEGUE COMPLETADO EXITOSAMENTE"
-    echo "=========================================="
-    echo "El proyecto está listo para producción"
-    echo "URL: https://kidsfunyfiestasinfantiles.com"
-    echo "=========================================="
+    run_monitoring
+    show_deployment_summary
 }
 
 # Ejecutar función principal
