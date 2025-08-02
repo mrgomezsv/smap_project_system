@@ -1,9 +1,19 @@
+# Django y componentes principales
 Django==4.2.11
 djangorestframework==3.14.0
 django-cors-headers==4.3.1
+
+# Base de datos
 psycopg2-binary==2.9.9
-firebase-admin==6.4.0
+
+# Variables de entorno
 python-dotenv==1.0.0
+
+# Manejo de imágenes
 Pillow==10.1.0
-gunicorn==21.2.0
-whitenoise==6.6.0
+
+# Firebase
+firebase-admin==6.4.0
+
+# Utilidades adicionales
+requests==2.31.0
