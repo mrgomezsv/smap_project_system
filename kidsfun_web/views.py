@@ -15,7 +15,7 @@ def home(request):
     return render(request, 'kidsfun_web/home.html')
 
 def kidsfun_web(request):
-    return render(request, 'kidsfun_web/kidsfun_web.html')
+    return render(request, 'kidsfun_web/home.html')
 
 def service(request):
     # Obtener todos los products que están publicados
