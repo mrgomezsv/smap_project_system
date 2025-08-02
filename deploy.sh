@@ -245,9 +245,82 @@ check_permissions() {
     print_success "Permisos verificados"
 }
 
+# Función para crear configuración de Gunicorn
+setup_gunicorn_config() {
+    print_status "Configurando Gunicorn..."
+    
+    # Crear directorio de logs si no existe
+    mkdir -p logs
+    
+    # Crear archivo de configuración de Gunicorn
+    cat > gunicorn.conf.py << 'EOF'
+bind = "127.0.0.1:8000"
+workers = 4
+worker_class = "sync"
+worker_connections = 1000
+timeout = 30
+keepalive = 2
+max_requests = 1000
+max_requests_jitter = 100
+preload_app = True
+reload = False
+daemon = False
+user = "root"
+group = "root"
+tmp_upload_dir = None
+logconfig_dict = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'generic': {
+            'format': '%(asctime)s [%(process)d] [%(levelname)s] %(message)s',
+            'datefmt': '[%Y-%m-%d %H:%M:%S %z]',
+            'class': 'logging.Formatter'
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'generic',
+            'stream': 'ext://sys.stdout'
+        },
+        'error_file': {
+            'class': 'logging.FileHandler',
+            'formatter': 'generic',
+            'filename': 'logs/gunicorn_error.log'
+        },
+        'access_file': {
+            'class': 'logging.FileHandler',
+            'formatter': 'generic',
+            'filename': 'logs/gunicorn_access.log'
+        }
+    },
+    'loggers': {
+        'gunicorn.error': {
+            'level': 'INFO',
+            'handlers': ['console', 'error_file'],
+            'propagate': False,
+            'qualname': 'gunicorn.error'
+        },
+        'gunicorn.access': {
+            'level': 'INFO',
+            'handlers': ['console', 'access_file'],
+            'propagate': False,
+            'qualname': 'gunicorn.access'
+        }
+    }
+}
+EOF
+    
+    print_success "Configuración de Gunicorn creada"
+}
+
 # Función para reiniciar servicios
 restart_services() {
     print_status "Reiniciando servicios..."
+    
+    # Configurar Gunicorn antes de reiniciar
+    setup_gunicorn_config
     
     # Intentar reiniciar servicios comunes (ajustar según el servidor)
     if command -v systemctl &> /dev/null; then
@@ -270,6 +343,23 @@ restart_services() {
     fi
     
     print_success "Servicios reiniciados"
+    
+    # Verificar que Gunicorn esté funcionando
+    sleep 3
+    if systemctl is-active --quiet kidsfun_gunicorn; then
+        print_success "Gunicorn está ejecutándose correctamente"
+    else
+        print_warning "Gunicorn no está ejecutándose. Intentando reiniciar..."
+        sudo systemctl restart kidsfun_gunicorn
+        sleep 2
+        if systemctl is-active --quiet kidsfun_gunicorn; then
+            print_success "Gunicorn reiniciado exitosamente"
+        else
+            print_error "Error: Gunicorn no puede iniciarse"
+            print_status "Verificando logs de Gunicorn..."
+            sudo journalctl -u kidsfun_gunicorn -n 5 --no-pager
+        fi
+    fi
 }
 
 # Función para verificar el estado del despliegue
