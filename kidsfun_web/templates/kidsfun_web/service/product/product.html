@@ -103,6 +103,117 @@
       border-radius: 15px;
     }
 
+    /* Estilos para la sección de likes y comentarios */
+    .interaction-section {
+      background-color: #f8f9fa;
+      padding: 50px 0;
+      margin-top: 50px;
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      margin-bottom: 30px;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      padding: 15px 25px;
+      background-color: white;
+      border-radius: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .likes-stat {
+      color: #dc3545;
+    }
+
+    .comments-stat {
+      color: #007bff;
+    }
+
+    .comments-section {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .comment-item {
+      background-color: white;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .comment-user {
+      font-weight: bold;
+      color: var(--color-violet);
+    }
+
+    .comment-date {
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .comment-text {
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .no-comments {
+      text-align: center;
+      color: #6c757d;
+      font-style: italic;
+      padding: 30px;
+    }
+
+    .comment-form-container {
+      margin-bottom: 30px;
+    }
+
+    .comment-form-container .input-group {
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 25px;
+      overflow: hidden;
+    }
+
+    .comment-form-container .form-control {
+      border: none;
+      padding: 15px 20px;
+      font-size: 16px;
+    }
+
+    .comment-form-container .form-control:focus {
+      box-shadow: none;
+      border-color: var(--color-violet);
+    }
+
+    .comment-form-container .btn {
+      border: none;
+      padding: 15px 20px;
+      border-radius: 0 25px 25px 0;
+    }
+
+    #likes-container {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    #likes-container:hover {
+      transform: scale(1.05);
+    }
+
     /* Animaciones */
     @keyframes fadeIn {
       0% {
@@ -159,6 +270,11 @@
 
       .row.justify-content-center.align-items-center {
         flex-direction: column; /* Cambia la dirección del contenedor en dispositivos móviles */
+      }
+
+      .stats-container {
+        flex-direction: column;
+        gap: 20px;
       }
     }
 
@@ -263,10 +379,61 @@
     </div>
 </section>
 
+<!-- Sección de interacción (likes y comentarios) -->
+<section class="interaction-section">
+    <div class="container">
+        <div class="stats-container" data-aos="fade-up">
+            <div class="stat-item likes-stat" id="likes-container">
+                <i class="bi bi-heart-fill" id="like-icon"></i>
+                <span id="likes-count">{{ likes_count|default:0 }} Likes</span>
+            </div>
+            <div class="stat-item comments-stat">
+                <i class="bi bi-chat-fill"></i>
+                <span id="comments-count">{{ comments_count|default:0 }} Comments</span>
+            </div>
+        </div>
+        
+        <!-- Formulario para agregar comentarios -->
+        <div class="comment-form-container text-center mb-4" data-aos="fade-up">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="comment-input" placeholder="Write a comment...">
+                        <button class="btn btn-violet" type="button" id="submit-comment">
+                            <i class="bi bi-send"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comments-section" data-aos="fade-up">
+            <h3 class="text-center mb-4">Comments</h3>
+            <div id="comments-list">
+                {% if comments %}
+                    {% for comment in comments %}
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <div class="comment-user">User {{ comment.user_id }}</div>
+                            <div class="comment-date">{{ comment.id }}</div>
+                        </div>
+                        <div class="comment-text">{{ comment.comment }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-comments">
+                        <i class="bi bi-chat-dots"></i>
+                        <p>No comments yet. Be the first to comment!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
 <div class="divisor-2"></div>
 
 <script>
-
     // Obtén el elemento del título del producto
     const productTitle = document.getElementById('product-title');
 
@@ -302,6 +469,112 @@
         }
     });
 
+    // Funcionalidad para likes
+    document.getElementById('likes-container').addEventListener('click', function() {
+        const productId = '{{ product.id }}';
+        
+        fetch(`/web-like/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: 'web_user'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Actualizar el contador de likes
+                document.getElementById('likes-count').textContent = `${data.total_likes} Likes`;
+                
+                // Cambiar el icono según el estado
+                const likeIcon = document.getElementById('like-icon');
+                if (data.is_favorite) {
+                    likeIcon.className = 'bi bi-heart-fill';
+                    likeIcon.style.color = '#dc3545';
+                } else {
+                    likeIcon.className = 'bi bi-heart';
+                    likeIcon.style.color = '#6c757d';
+                }
+            } else {
+                console.error('Error:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    // Funcionalidad para comentarios
+    document.getElementById('submit-comment').addEventListener('click', function() {
+        const commentInput = document.getElementById('comment-input');
+        const commentText = commentInput.value.trim();
+        
+        if (!commentText) {
+            alert('Please write a comment first!');
+            return;
+        }
+        
+        const productId = {{ product.id }};
+        
+        fetch(`/web-comment/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                comment: commentText,
+                user_id: 'web_user'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Limpiar el input
+                commentInput.value = '';
+                
+                // Actualizar el contador de comentarios
+                document.getElementById('comments-count').textContent = `${data.total_comments} Comments`;
+                
+                // Agregar el nuevo comentario a la lista
+                const commentsList = document.getElementById('comments-list');
+                const noComments = commentsList.querySelector('.no-comments');
+                
+                if (noComments) {
+                    noComments.remove();
+                }
+                
+                const newComment = document.createElement('div');
+                newComment.className = 'comment-item';
+                newComment.innerHTML = `
+                    <div class="comment-header">
+                        <div class="comment-user">User ${data.comment.user_id}</div>
+                        <div class="comment-date">${data.comment.id}</div>
+                    </div>
+                    <div class="comment-text">${data.comment.comment}</div>
+                `;
+                
+                commentsList.insertBefore(newComment, commentsList.firstChild);
+                
+                // Mostrar mensaje de éxito
+                alert('Comment added successfully!');
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error adding comment. Please try again.');
+        });
+    });
+
+    // Permitir enviar comentario con Enter
+    document.getElementById('comment-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            document.getElementById('submit-comment').click();
+        }
+    });
 </script>
 
 <script src="{% static 'js/bootstrap.min.js' %}"></script>

@@ -38,6 +38,36 @@
         flex-direction: column;
         justify-content: space-between;
     }
+
+    .card-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+        border-radius: 0 0 20px 20px;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .stat-item i {
+        font-size: 16px;
+    }
+
+    .likes-count {
+        color: #dc3545;
+    }
+
+    .comments-count {
+        color: #007bff;
+    }
 </style>
 
 <section class="section-products padding-section">
@@ -63,10 +93,15 @@
                     <div class="card-footer bg-transparent">
                         <a href="{% url 'service_product' product.id %}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get it now</a>
                     </div>
-                    <div class="card-icons d-none">
-                        <i class="bi bi-chat"></i>
-                        <i class="bi bi-heart"></i>
-                        <i class="bi bi-share"></i>
+                    <div class="card-stats">
+                        <div class="stat-item likes-count">
+                            <i class="bi bi-heart-fill"></i>
+                            <span>{{ product.likes_count|default:0 }}</span>
+                        </div>
+                        <div class="stat-item comments-count">
+                            <i class="bi bi-chat-fill"></i>
+                            <span>{{ product.comments_count|default:0 }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
