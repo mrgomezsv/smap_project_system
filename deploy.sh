@@ -58,13 +58,6 @@ backup_database() {
 update_repository() {
     print_status "Actualizando repositorio desde Git..."
     
-    # Verificar si hay cambios sin commitear
-    if ! git diff-index --quiet HEAD --; then
-        print_warning "Hay cambios sin commitear. Creando commit automático..."
-        git add .
-        git commit -m "Auto-commit antes del despliegue - $(date)"
-    fi
-    
     # Obtener cambios del repositorio remoto
     git fetch origin
     
