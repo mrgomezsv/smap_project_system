@@ -4,7 +4,7 @@ from rest_framework import status
 from django.utils import timezone
 from .models import WaiverQRV2, WaiverDataV2
 from .serializers import WaiverQRV2Serializer, WaiverCreateV2Serializer, WaiverDataV2Serializer
-from api_waiver.utils import create_waiver_pdf
+# from api_waiver.utils import create_waiver_pdf  # Comentado - API eliminada
 from t_app_product.utils import send_waiver_confirmation_email
 import tempfile
 import os
@@ -58,8 +58,9 @@ def api_waiver_v2(request):
             if serializer.is_valid():
                 waiver_qr = serializer.save()
                 
-                # Generar el PDF
-                pdf_buffer = create_waiver_pdf(user_name, user_email, relatives_data)
+                # Comentado: Generar el PDF
+                # pdf_buffer = create_waiver_pdf(user_name, user_email, relatives_data)
+                pdf_buffer = None  # Valor por defecto
                 
                 # Guardar PDF temporalmente para adjuntarlo al correo
                 pdf_path = None

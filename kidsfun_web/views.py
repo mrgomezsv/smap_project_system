@@ -7,8 +7,8 @@ from django.views.decorators.http import require_POST
 import json
 
 from t_app_product.models import Product
-from api_like.models import Like
-from api_commentary.models import Commentary
+# from api_like.models import Like  # Comentado - API eliminada
+# from api_commentary.models import Commentary  # Comentado - API eliminada
 
 
 def home(request):
@@ -24,11 +24,13 @@ def service(request):
     # Crear un diccionario para almacenar los products agrupados por categoría
     products_or_category = {}
     for product in products:
-        # Obtener el conteo de likes para este producto
-        likes_count = Like.objects.filter(product=str(product.id), is_favorite=True).count()
+        # Comentado: Obtener el conteo de likes para este producto
+        # likes_count = Like.objects.filter(product=str(product.id), is_favorite=True).count()
+        likes_count = 0  # Valor por defecto
         
-        # Obtener el conteo de comentarios para este producto
-        comments_count = Commentary.objects.filter(product_id=product.id).count()
+        # Comentado: Obtener el conteo de comentarios para este producto
+        # comments_count = Commentary.objects.filter(product_id=product.id).count()
+        comments_count = 0  # Valor por defecto
         
         # Agregar los conteos al producto
         product.likes_count = likes_count
@@ -41,23 +43,24 @@ def service(request):
     
     return render(request, 'kidsfun_web/service/service.html', {'products_or_category': products_or_category})
 
-
 def service_product(request, product_id):
     # Obtener el producto correspondiente al product_id o mostrar una página 404 si no existe
     product = get_object_or_404(Product, pk=product_id)
 
-    # Obtener el conteo de likes para este producto
-    likes_count = Like.objects.filter(product=str(product.id), is_favorite=True).count()
+    # Comentado: Obtener el conteo de likes para este producto
+    # likes_count = Like.objects.filter(product=str(product.id), is_favorite=True).count()
+    likes_count = 0  # Valor por defecto
     
-    # Obtener todos los comentarios para este producto
-    comments = Commentary.objects.filter(product_id=product.id).order_by('-id')
+    # Comentado: Obtener todos los comentarios para este producto
+    # comments = Commentary.objects.filter(product_id=product.id).order_by('-id')
+    comments = []  # Lista vacía por defecto
     
     # Agregar los datos al contexto
     context = {
         'product': product,
         'likes_count': likes_count,
         'comments': comments,
-        'comments_count': comments.count()
+        'comments_count': len(comments)
     }
 
     # Devolver la renderización de la plantilla con el producto
@@ -67,30 +70,31 @@ def service_product(request, product_id):
 @csrf_exempt
 @require_POST
 def web_like(request, product_id):
-    """Vista para manejar likes desde la web"""
+    """Vista para manejar likes desde la web (versión local sin base de datos)"""
     try:
         # Obtener datos del request
         data = json.loads(request.body)
         user_id = data.get('user_id', 'web_user')  # Usuario por defecto para web
         
-        # Verificar si ya existe un like para este usuario y producto
-        like, created = Like.objects.get_or_create(
-            user=user_id,
-            product=str(product_id),
-            defaults={'is_favorite': True}
-        )
+        # Comentado: Verificar si ya existe un like para este usuario y producto
+        # like, created = Like.objects.get_or_create(
+        #     user=user_id,
+        #     product=str(product_id),
+        #     defaults={'is_favorite': True}
+        # )
         
-        if not created:
-            # Si ya existe, cambiar el estado
-            like.is_favorite = not like.is_favorite
-            like.save()
+        # if not created:
+        #     # Si ya existe, cambiar el estado
+        #     like.is_favorite = not like.is_favorite
+        #     like.save()
         
-        # Obtener el conteo total de likes
-        total_likes = Like.objects.filter(product=str(product_id), is_favorite=True).count()
+        # Comentado: Obtener el conteo total de likes
+        # total_likes = Like.objects.filter(product=str(product_id), is_favorite=True).count()
+        total_likes = 0  # Valor por defecto
         
         return JsonResponse({
             'success': True,
-            'is_favorite': like.is_favorite,
+            'is_favorite': True,  # Valor por defecto
             'total_likes': total_likes
         })
         
@@ -104,7 +108,7 @@ def web_like(request, product_id):
 @csrf_exempt
 @require_POST
 def web_comment(request, product_id):
-    """Vista para manejar comentarios desde la web"""
+    """Vista para manejar comentarios desde la web (versión local sin base de datos)"""
     try:
         # Obtener datos del request
         data = json.loads(request.body)
@@ -117,23 +121,24 @@ def web_comment(request, product_id):
                 'error': 'Comment text is required'
             }, status=400)
         
-        # Crear el comentario
-        comment = Commentary.objects.create(
-            comment=comment_text,
-            user_id=user_id,
-            product_id=product_id
-        )
+        # Comentado: Crear el comentario
+        # comment = Commentary.objects.create(
+        #     comment=comment_text,
+        #     user_id=user_id,
+        #     product_id=product_id
+        # )
         
-        # Obtener el conteo total de comentarios
-        total_comments = Commentary.objects.filter(product_id=product_id).count()
+        # Comentado: Obtener el conteo total de comentarios
+        # total_comments = Commentary.objects.filter(product_id=product_id).count()
+        total_comments = 0  # Valor por defecto
         
         return JsonResponse({
             'success': True,
             'comment': {
-                'id': comment.id,
-                'comment': comment.comment,
-                'user_id': comment.user_id,
-                'product_id': comment.product_id
+                'id': 1,  # Valor por defecto
+                'comment': comment_text,
+                'user_id': user_id,
+                'product_id': product_id
             },
             'total_comments': total_comments
         })

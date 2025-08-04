@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 # Cargar variables de entorno
 load_dotenv()
 
-import api_waiver_validator
+# import api_waiver_validator  # Comentado - API eliminada
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -58,11 +58,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     't_app_product',
-    'api',
-    'api_commentary',
-    'api_like',
-    'api_waiver',
-    'api_waiver_validator',
     'waiver_v2',  # Nueva aplicación para waivers v2
     'kidsfun_web',
     'rest_framework',

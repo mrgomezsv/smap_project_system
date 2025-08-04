@@ -2,8 +2,8 @@
 
 ## 🚀 Configuración Rápida
 
-### Opción 1: Modo Local (Sin APIs)
-Para ejecutar el proyecto sin las aplicaciones de API (recomendado para desarrollo):
+### Ejecutar el Proyecto
+Para ejecutar el proyecto (configurado para desarrollo local):
 
 ```bash
 ./run_local.sh
@@ -12,21 +12,10 @@ Para ejecutar el proyecto sin las aplicaciones de API (recomendado para desarrol
 **Características:**
 - ✅ Conectado a la base de datos remota
 - ✅ Funcionalidades web completas
-- ⚠️ Likes y comentarios muestran valores por defecto
+- ⚠️ Likes y comentarios muestran valores por defecto (APIs eliminadas)
 - ✅ Gestión de productos funcional
 - ✅ Sistema de waivers disponible
-
-### Opción 2: Modo Completo (Con APIs)
-Para ejecutar el proyecto con todas las funcionalidades:
-
-```bash
-./run_normal.sh
-```
-
-**Características:**
-- ✅ Todas las funcionalidades habilitadas
-- ✅ APIs de likes, comentarios y waivers
-- ✅ Sistema completo de gestión
+- ✅ Todas las páginas web funcionando
 
 ## 📋 URLs Disponibles
 

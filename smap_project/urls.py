@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 
 from t_app_product import views
 from t_app_product.views import process_checkbox, redirect_productc
-from api.views import ProductListCreate
+# from api.views import ProductListCreate  # Comentado - API eliminada
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,13 +32,13 @@ urlpatterns = [
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),
     path('chats/', views.redirect_chats, name='chats'),
-    path('api/products/', ProductListCreate.as_view(), name='product-list'),
+    # path('api/products/', ProductListCreate.as_view(), name='product-list'),  # Comentado - API eliminada
     path('kidsfun/', include('kidsfun_web.urls')),
-    path('api/', include('api_like.urls')),  # Incluye las URLs de la aplicación api_like
-    path('api/', include('api_commentary.urls')),  # Incluye las URLs de la aplicación api_commentary
-    path('api/', include('api_waiver.urls')),  # Incluye las URLs de la aplicación api_waiver
+    # path('api/', include('api_like.urls')),  # Comentado - API eliminada
+    # path('api/', include('api_commentary.urls')),  # Comentado - API eliminada
+    # path('api/', include('api_waiver.urls')),  # Comentado - API eliminada
     path('api/v2/', include('waiver_v2.urls')),  # Incluye las URLs de la nueva aplicación waiver_v2
-    path('api_waiver_validator/', include('api_waiver_validator.urls')),
+    # path('api_waiver_validator/', include('api_waiver_validator.urls')),  # Comentado - API eliminada
 ]
 
 # Sirve las imágenes desde la carpeta media

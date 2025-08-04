@@ -6,8 +6,8 @@ echo "🔧 Configurando proyecto para ejecución local sin APIs..."
 # Activar entorno virtual
 source venv/bin/activate
 
-# Cambiar configuración a local
-sed -i '' 's/DJANGO_SETTINGS_MODULE.*/DJANGO_SETTINGS_MODULE = "smap_project.settings_local"/' manage.py
+# Configuración ya está en modo local
+echo "✅ Configuración local activa"
 
 # Ejecutar migraciones
 echo "📦 Ejecutando migraciones..."
