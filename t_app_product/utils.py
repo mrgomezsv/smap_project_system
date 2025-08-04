@@ -104,7 +104,7 @@ def send_waiver_confirmation_email(user_data, qr_value, pdf_path=None):
     
     return send_email_with_template(
         subject=subject,
-        template_name='api_waiver/email/waiver_confirmation.html',
+        template_name='t_app_product/email/waiver_confirmation.html',
         context=context,
         to_email=user_data.get('user_email', ''),
         attachments=attachments
