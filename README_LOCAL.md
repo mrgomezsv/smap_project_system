@@ -6,6 +6,9 @@
 Para ejecutar el proyecto (configurado para desarrollo local):
 
 ```bash
+mkdir -p "logs"
+touch logs/django.log
+
 ./run_local.sh
 ```
 
