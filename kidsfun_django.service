@@ -1,0 +1,22 @@
+[Unit]
+Description=KidsFun Django Application
+After=network.target
+
+[Service]
+Type=notify
+User=www-data
+Group=www-data
+RuntimeDirectory=kidsfun_django
+WorkingDirectory=/var/www/kidsfun_django
+Environment="PATH=/var/www/kidsfun_django/venv/bin"
+Environment="DJANGO_SETTINGS_MODULE=smap_project.production_settings"
+ExecStart=/var/www/kidsfun_django/venv/bin/gunicorn --config gunicorn.conf.py smap_project.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target 
