@@ -11,4 +11,5 @@ urlpatterns = [
     path('mobile-app/', views.mobile_app, name='mobile_app'),
     path('web-like/<str:product_id>/', views.web_like, name='web_like'),
     path('web-comment/<int:product_id>/', views.web_comment, name='web_comment'),
+    path('terminos-y-condiciones/', views.terms_conditions, name='terms_conditions'),
 ]

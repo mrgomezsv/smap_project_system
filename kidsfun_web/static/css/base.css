@@ -325,3 +325,21 @@
             display: inline-block;
             margin: 0 5px;
         }
+
+        /* Estilos para los enlaces del footer */
+        .footer-links {
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+
+        .footer-link {
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: "Varela Round", sans-serif;
+        }
+
+        .footer-link:hover {
+            color: var(--color-green);
+            text-decoration: underline;
+        }

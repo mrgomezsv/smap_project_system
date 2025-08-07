@@ -158,3 +158,7 @@ def mobile_app(request):
 
 def custom_404(request, exception):
     return render(request, '404.html', status=404)
+
+def terms_conditions(request):
+    """Vista para la página de términos y condiciones"""
+    return render(request, 'kidsfun_web/terms_conditions.html')

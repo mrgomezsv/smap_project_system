@@ -1,0 +1,124 @@
+{% extends 'kidsfun_web/base.html' %}
+{% load static %}
+
+{% block title %}Términos y Condiciones - Kidsfun y Fiestas Infantiles{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">
+                        <i class="bi bi-file-text me-2"></i>
+                        Términos y Condiciones
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Última actualización:</strong> {{ "now"|date:"d/m/Y" }}
+                    </div>
+
+                    <section class="mb-4">
+                        <h2 class="h4 text-primary">1. Aceptación de los Términos</h2>
+                        <p>Al acceder y utilizar este sitio web, usted acepta estar sujeto a estos términos y condiciones de uso. Si no está de acuerdo con alguna parte de estos términos, le recomendamos que no utilice nuestro sitio.</p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h2 class="h4 text-primary">2. Descripción del Servicio</h2>
+                        <p>Kidsfun y Fiestas Infantiles es una empresa dedicada al entretenimiento infantil, especializada en:</p>
+                        <ul>
+                            <li>Alquiler de inflables y toboganes</li>
+                            <li>Organización de fiestas infantiles</li>
+                            <li>Servicios de entretenimiento para niños</li>
+                            <li>Venta de productos relacionados con fiestas infantiles</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-4">
+                        <h2 class="h4 text-primary">3. Uso del Sitio Web</h2>
+                        <p>Usted se compromete a utilizar este sitio web únicamente para fines legales y de acuerdo con estos términos. Está prohibido:</p>
+                        <ul>
+                            <li>Usar el sitio para cualquier propósito ilegal o no autorizado</li>
+                            <li>Transmitir virus, malware o código dañino</li>
+                            <li>Interferir con el funcionamiento del sitio</li>
+                            <li>Intentar acceder a áreas restringidas del sitio</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-4">
+                        <h2 class="h4 text-primary">4. Privacidad y Datos Personales</h2>
+                        <p>Su privacidad es importante para nosotros. Recopilamos, usamos y protegemos su información personal de acuerdo con nuestra Política de Privacidad, que forma parte de estos términos.</p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h2 class="h4 text-primary">5. Reservas y Pagos</h2>
+                        <p>Para realizar reservas de nuestros servicios:</p>
+                        <ul>
+                            <li>Se requiere un depósito del 50% para confirmar la reserva</li>
+                            <li>El pago restante debe realizarse antes del evento</li>
+                            <li>Las cancelaciones con menos de 48 horas de anticipación pueden incurrir en cargos</li>
+                            <li>Los precios están sujetos a cambios sin previo aviso</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-4">
+                        <h2 class="h4 text-primary">6. Responsabilidades</h2>
+                        <p>Kidsfun y Fiestas Infantiles se compromete a:</p>
+                        <ul>
+                            <li>Proporcionar servicios de calidad y seguros</li>
+                            <li>Llegar puntualmente a los eventos</li>
+                            <li>Mantener el equipo en buenas condiciones</li>
+                            <li>Contar con personal capacitado y responsable</li>
+                        </ul>
+                        <p>Los clientes se comprometen a:</p>
+                        <ul>
+                            <li>Proporcionar información precisa para las reservas</li>
+                            <li>Supervisar a los niños durante el evento</li>
+                            <li>Respetar las instrucciones de seguridad</li>
+                            <li>Notificar cualquier problema inmediatamente</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-4">
+                        <h2 class="h4 text-primary">7. Limitación de Responsabilidad</h2>
+                        <p>Kidsfun y Fiestas Infantiles no será responsable por:</p>
+                        <ul>
+                            <li>Daños personales causados por el mal uso del equipo</li>
+                            <li>Pérdidas o daños a propiedad personal</li>
+                            <li>Cancelaciones debido a condiciones climáticas extremas</li>
+                            <li>Interrupciones del servicio por causas ajenas a nuestro control</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-4">
+                        <h2 class="h4 text-primary">8. Propiedad Intelectual</h2>
+                        <p>Todo el contenido de este sitio web, incluyendo textos, imágenes, logos y diseño, es propiedad de Kidsfun y Fiestas Infantiles y está protegido por las leyes de propiedad intelectual.</p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h2 class="h4 text-primary">9. Modificaciones</h2>
+                        <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios entrarán en vigor inmediatamente después de su publicación en el sitio web.</p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h2 class="h4 text-primary">10. Contacto</h2>
+                        <p>Si tiene alguna pregunta sobre estos términos y condiciones, puede contactarnos:</p>
+                        <ul>
+                            <li><strong>Email:</strong> info@kidsfun.com</li>
+                            <li><strong>Teléfono:</strong> +52 712 345 6789</li>
+                            <li><strong>WhatsApp:</strong> +52 775 635 10</li>
+                        </ul>
+                    </section>
+
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Importante:</strong> Al utilizar nuestros servicios, usted confirma que ha leído, entendido y aceptado estos términos y condiciones.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
