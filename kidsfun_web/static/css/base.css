@@ -299,7 +299,7 @@
             color: #fff;
             font-family: "Varela Round", sans-serif;
             margin-bottom: 0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             line-height: 1.4;
         }
@@ -309,7 +309,7 @@
             color: #fff;
             font-family: "Varela Round", sans-serif;
             margin-bottom: 0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             line-height: 1.4;
         }
@@ -319,7 +319,7 @@
             color: #fff;
             font-family: "Varela Round", sans-serif;
             margin-bottom: 0;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             text-align: center;
             line-height: 1.4;
             padding: 0.3rem 0;
@@ -333,7 +333,7 @@
         .heart-animated {
             color: var(--color-green) !important;
             animation: heartbeat 1.5s ease-in-out infinite;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             margin: 0 3px;
             display: inline-block;
         }
@@ -344,7 +344,7 @@
             transition: all 0.3s ease;
             font-weight: 600;
             position: relative;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
 
         .developer-link:hover {
@@ -376,7 +376,7 @@
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 400;
         }
 
@@ -426,15 +426,15 @@
             footer p,
             footer .power,
             .copyright-text {
-                font-size: 0.8rem;
+                font-size: 0.85rem;
             }
 
             .developer-credit {
-                font-size: 0.7rem;
+                font-size: 0.85rem;
             }
 
             .footer-link {
-                font-size: 0.7rem;
+                font-size: 0.85rem;
             }
         }
 
@@ -492,13 +492,13 @@
         }
 
         .footer-section-header i {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--color-yellow-menu);
         }
 
         .footer-section-header h4 {
             margin: 0;
-            font-size: 1.25rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: #fff;
         }
@@ -521,7 +521,7 @@
         /* Descripción */
         .footer-description {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin-bottom: 1.5rem;
             line-height: 1.6;
         }
@@ -539,14 +539,14 @@
 
         .contact-item i {
             color: var(--color-yellow-menu);
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         .contact-link {
             color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .contact-link:hover {
@@ -588,10 +588,11 @@
             padding: 0.5rem 0;
             transition: all 0.3s ease;
             border-radius: 8px;
+            font-size: 0.85rem;
         }
 
         .social-link i {
-            font-size: 1.2rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
@@ -643,11 +644,12 @@
             gap: 0.5rem;
             color: rgba(255, 255, 255, 0.9);
             transition: all 0.3s ease;
+            font-size: 0.85rem;
         }
 
         .info-item i {
             color: var(--color-yellow-menu);
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         .info-item:hover {
