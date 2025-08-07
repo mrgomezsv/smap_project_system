@@ -4,9 +4,9 @@ import json
 from django.db.models import Q
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.db import IntegrityError
-from .forms import ProductForm
+from .forms import ProductForm, CustomPasswordChangeForm
 from .models import Product
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
@@ -54,6 +54,24 @@ def signin(request):
         else:
             error_message = 'Por favor, verifica tus credenciales'
             return render(request, 'login/signin.html', {'form': form, 'error': error_message})
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Actualizar la sesión para evitar que el usuario sea desconectado
+            update_session_auth_hash(request, user)
+            messages.success(request, '¡Tu contraseña ha sido cambiada exitosamente!')
+            return redirect('home')
+        else:
+            messages.error(request, 'Por favor, corrige los errores a continuación.')
+    else:
+        form = CustomPasswordChangeForm(request.user)
+    
+    return render(request, 'login/change_password.html', {'form': form})
 
 
 def signup(request):

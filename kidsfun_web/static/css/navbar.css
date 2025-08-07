@@ -105,6 +105,131 @@ body {
   color: var(--color-lightblue) !important;
 }
 
+/* ====================== */
+/* BOTÓN DE LOGIN MEJORADO */
+/* ====================== */
+.navbar-nav .nav-item .login-btn {
+  background: linear-gradient(135deg, var(--color-violeta) 0%, var(--color-lightblue) 100%);
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 25px !important;
+  text-decoration: none !important;
+  margin-left: 15px !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.navbar-nav .nav-item .login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.navbar-nav .nav-item .login-btn:hover::before {
+  left: 100%;
+}
+
+.navbar-nav .nav-item .login-btn:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  background: linear-gradient(135deg, var(--color-lightblue) 0%, var(--color-violeta) 100%) !important;
+}
+
+.navbar-nav .nav-item .login-btn:active {
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.navbar-nav .nav-item .login-btn i {
+  margin-right: 8px;
+  font-size: 1.1em;
+  transition: transform 0.3s ease;
+}
+
+.navbar-nav .nav-item .login-btn:hover i {
+  transform: translateX(3px);
+}
+
+/* Botón para usuario autenticado */
+.navbar-nav .nav-item .admin-btn {
+  background: linear-gradient(135deg, var(--color-green) 0%, var(--color-darkgreen) 100%);
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 25px !important;
+  text-decoration: none !important;
+  margin-left: 15px !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.navbar-nav .nav-item .admin-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.navbar-nav .nav-item .admin-btn:hover::before {
+  left: 100%;
+}
+
+.navbar-nav .nav-item .admin-btn:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  background: linear-gradient(135deg, var(--color-darkgreen) 0%, var(--color-green) 100%) !important;
+}
+
+.navbar-nav .nav-item .admin-btn:active {
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.navbar-nav .nav-item .admin-btn i {
+  margin-right: 8px;
+  font-size: 1.1em;
+  transition: transform 0.3s ease;
+}
+
+.navbar-nav .nav-item .admin-btn:hover i {
+  transform: translateX(3px);
+}
+
+/* Responsive para botones */
+@media (max-width: 768px) {
+  .navbar-nav .nav-item .login-btn,
+  .navbar-nav .nav-item .admin-btn {
+    margin: 10px 0 !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 15px 24px !important;
+  }
+}
+
 /* Botón toggler móvil */
 .navbar-toggler {
   border: none;

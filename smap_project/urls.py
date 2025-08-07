@@ -15,6 +15,7 @@ urlpatterns = [
     path('product/', views.product, name='product'),
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
+    path('change-password/', views.change_password, name='change_password'),
     path('', include('kidsfun_web.urls')),  # Cambia la URL raíz para que redirija a kidsfun/
     path('product/create/', views.create_product, name='create_product'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),

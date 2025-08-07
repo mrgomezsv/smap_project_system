@@ -127,6 +127,14 @@
                 </label>
             </div>
             <button class="my-form__button" type="submit">Iniciar Sesión</button>
+            
+            <!-- Enlace para cambiar contraseña -->
+            <div class="text-center" style="margin-top: 15px;">
+                <a href="{% url 'change_password' %}" style="color: #007BFF; text-decoration: none; font-size: 14px;">
+                    ¿Olvidaste tu contraseña? Cambiarla aquí
+                </a>
+            </div>
+            
             <div class="welcome-message">
                 <div class="my-form__actions">
                     <div class="my-form__row centered-content">
