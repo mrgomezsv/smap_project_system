@@ -317,43 +317,60 @@ def firebase_auth(request):
             if not firebase_admin._apps:
                 return []
             
-            # Obtener la primera página de usuarios
-            page = auth.list_users()
+            try:
+                # Obtener la primera página de usuarios
+                page = auth.list_users()
+            except Exception as e:
+                # Si hay un error al listar usuarios, probablemente las credenciales no son válidas
+                print(f"Error al listar usuarios de Firebase: {str(e)}")
+                return []
 
             # Procesar los usuarios de la página actual
             processed_data = []
             for user in page.users:
-                creation_timestamp = datetime.fromtimestamp(user.user_metadata.creation_timestamp / 1000)
-                last_sign_in_timestamp = datetime.fromtimestamp(user.user_metadata.last_sign_in_timestamp / 1000)
+                try:
+                    creation_timestamp = datetime.fromtimestamp(user.user_metadata.creation_timestamp / 1000)
+                    last_sign_in_timestamp = datetime.fromtimestamp(user.user_metadata.last_sign_in_timestamp / 1000)
+                except:
+                    creation_timestamp = datetime.now()
+                    last_sign_in_timestamp = datetime.now()
 
                 processed_data.append({
                     'uid': user.uid,
-                    'email': user.email,
-                    'display_name': user.display_name,
-                    'phone_number': user.phone_number,
-                    'photo_url': user.photo_url,
-                    'provider_id': user.provider_id,
+                    'email': user.email or 'N/A',
+                    'display_name': user.display_name or 'N/A',
+                    'phone_number': user.phone_number or 'N/A',
+                    'photo_url': user.photo_url or 'N/A',
+                    'provider_id': user.provider_id or 'N/A',
                     'creation_timestamp': creation_timestamp,
                     'last_sign_in_timestamp': last_sign_in_timestamp
                 })
 
             # Verificar si hay más páginas y procesarlas
             while page.has_next_page:
-                page = auth.list_users(page.next_page_token)
-                for user in page.users:
-                    creation_timestamp = datetime.fromtimestamp(user.user_metadata.creation_timestamp / 1000)
-                    last_sign_in_timestamp = datetime.fromtimestamp(user.user_metadata.last_sign_in_timestamp / 1000)
+                try:
+                    page = auth.list_users(page.next_page_token)
+                    for user in page.users:
+                        try:
+                            creation_timestamp = datetime.fromtimestamp(user.user_metadata.creation_timestamp / 1000)
+                            last_sign_in_timestamp = datetime.fromtimestamp(user.user_metadata.last_sign_in_timestamp / 1000)
+                        except:
+                            creation_timestamp = datetime.now()
+                            last_sign_in_timestamp = datetime.now()
 
-                    processed_data.append({
-                        'uid': user.uid,
-                        'email': user.email,
-                        'display_name': user.display_name,
-                        'phone_number': user.phone_number,
-                        'photo_url': user.photo_url,
-                        'provider_id': user.provider_id,
-                        'creation_timestamp': creation_timestamp,
-                        'last_sign_in_timestamp': last_sign_in_timestamp
-                    })
+                        processed_data.append({
+                            'uid': user.uid,
+                            'email': user.email or 'N/A',
+                            'display_name': user.display_name or 'N/A',
+                            'phone_number': user.phone_number or 'N/A',
+                            'photo_url': user.photo_url or 'N/A',
+                            'provider_id': user.provider_id or 'N/A',
+                            'creation_timestamp': creation_timestamp,
+                            'last_sign_in_timestamp': last_sign_in_timestamp
+                        })
+                except Exception as e:
+                    print(f"Error al procesar página adicional: {str(e)}")
+                    break
 
             # Ordenar la lista por last_sign_in_timestamp descendente
             processed_data.sort(key=lambda x: x['last_sign_in_timestamp'], reverse=True)

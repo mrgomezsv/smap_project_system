@@ -50,10 +50,19 @@
             <p class="mb-0">
                 <strong>Para configurar Firebase:</strong>
                 <ol>
-                    <li>Crear la carpeta <code>credentials</code> en la raíz del proyecto</li>
-                    <li>Agregar el archivo <code>smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json</code> en la carpeta credentials</li>
-                    <li>Reiniciar el servidor</li>
+                    <li>Ve a <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a></li>
+                    <li>Selecciona tu proyecto <code>smap-kf</code></li>
+                    <li>Ve a <strong>Configuración del proyecto</strong> → <strong>Cuentas de servicio</strong></li>
+                    <li>Haz clic en <strong>Generar nueva clave privada</strong></li>
+                    <li>Descarga el archivo JSON y renómbralo a: <code>smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json</code></li>
+                    <li>Colócalo en la carpeta <code>credentials/</code> del proyecto</li>
+                    <li>Reinicia el servidor Django</li>
                 </ol>
+            </p>
+            <hr>
+            <p class="mb-0">
+                <strong>📁 Estructura esperada:</strong><br>
+                <code>smap_project_system/credentials/smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json</code>
             </p>
         </div>
     {% elif error_message %}
@@ -64,43 +73,53 @@
                 Error al conectar con Firebase
             </h4>
             <p>{{ error_message }}</p>
+            <hr>
+            <p class="mb-0">
+                <strong>Posibles soluciones:</strong>
+                <ul>
+                    <li>Verifica que las credenciales son válidas</li>
+                    <li>Verifica que el proyecto de Firebase existe</li>
+                    <li>Verifica que tienes permisos de administrador en Firebase</li>
+                    <li>Reinicia el servidor Django</li>
+                </ul>
+            </p>
         </div>
     {% elif users %}
         <!-- Tabla de usuarios cuando Firebase está configurado -->
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">
+                <i class="fas fa-check-circle"></i>
+                Firebase configurado correctamente
+            </h4>
+            <p>Se encontraron <strong>{{ users|length }}</strong> usuarios registrados en Firebase.</p>
+        </div>
+        
         <table class="table">
             <thead>
                 <tr>
-    <!--                <th>Auth ID</th>-->
                     <th>Nombre</th>
                     <th>Email</th>
-    <!--                <th>Teléfono</th>-->
                     <th>Foto de Perfil</th>
                     <th>Proveedores</th>
                     <th>Fecha de Creación</th>
                     <th>Fecha de Último Acceso</th>
-                    <!-- Agrega otras columnas según lo necesites -->
                 </tr>
             </thead>
             <tbody>
                 {% for user in users %}
                 <tr>
-    <!--                <td>{{ user.uid }}</td>-->
                     <td>{{ user.display_name|default:"N/A" }}</td>
                     <td>{{ user.email|default:"N/A" }}</td>
-    <!--                <td>{{ user.phone_number }}</td>-->
                     <td>
-                        {% if user.photo_url %}
+                        {% if user.photo_url and user.photo_url != 'N/A' %}
                             <img src="{{ user.photo_url }}" alt="Foto de Perfil" style="width:50px; height:50px; border-radius:50%;">
                         {% else %}
-                            N/A
+                            <span class="text-muted">Sin foto</span>
                         {% endif %}
                     </td>
                     <td>{{ user.provider_id|default:"N/A" }}</td>
-    <!--                <td>{{ user.creation_timestamp|date:"Y-m-d H:i:s" }}</td>-->
-    <!--                <td>{{ user.last_sign_in_timestamp|date:"Y-m-d H:i:s" }}</td>-->
-                    <td>{{ user.creation_timestamp|date:"d/m/Y"|default:"N/A" }}</td>
-                    <td>{{ user.last_sign_in_timestamp|date:"d/m/Y"|default:"N/A" }}</td>
-                    <!-- Agrega otras celdas según lo necesites -->
+                    <td>{{ user.creation_timestamp|date:"d/m/Y H:i"|default:"N/A" }}</td>
+                    <td>{{ user.last_sign_in_timestamp|date:"d/m/Y H:i"|default:"N/A" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
