@@ -254,29 +254,54 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
         }
 
-        footer a {
-            display: block;
-            font-size: 40px;
-            text-align: center;
-            width: 40px;
-            margin: auto;
-            transition: all 0.4s;
+        /* Estilos para las redes sociales */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
         }
 
-        footer .fac {
+        .social-link {
+            display: inline-block;
+            font-size: 1.8rem;
+            text-align: center;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-link.fac {
             color: var(--color-lightblue);
         }
 
-        footer .ins {
+        .social-link.ins {
             color: var(--color-violeta);
         }
 
-        footer .wha {
+        .social-link.wha {
             color: var(--color-green);
         }
 
-        footer a:hover {
+        .social-link:hover {
             color: #fff;
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Estilos para el texto del footer */
+        .copyright-text {
+            color: #fff;
+            font-family: "Varela Round", sans-serif;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+            cursor: pointer;
+            line-height: 1.4;
         }
 
         footer p,
@@ -284,7 +309,7 @@
             color: #fff;
             font-family: "Varela Round", sans-serif;
             margin-bottom: 0;
-            font-size: 13px;
+            font-size: 0.9rem;
             cursor: pointer;
             line-height: 1.4;
         }
@@ -294,7 +319,7 @@
             color: #fff;
             font-family: "Varela Round", sans-serif;
             margin-bottom: 0;
-            font-size: 12px;
+            font-size: 0.8rem;
             text-align: center;
             line-height: 1.4;
             padding: 0.3rem 0;
@@ -308,7 +333,7 @@
         .heart-animated {
             color: var(--color-green) !important;
             animation: heartbeat 1.5s ease-in-out infinite;
-            font-size: 12px;
+            font-size: 0.8rem;
             margin: 0 3px;
             display: inline-block;
         }
@@ -319,7 +344,7 @@
             transition: all 0.3s ease;
             font-weight: 600;
             position: relative;
-            font-size: 12px; /* Mismo tamaño que el resto del texto */
+            font-size: 0.8rem;
         }
 
         .developer-link:hover {
@@ -343,31 +368,22 @@
             width: 100%;
         }
 
-        /* Estilos mejorados para los enlaces del footer */
         .footer-links {
-            margin-bottom: 0;
-            font-size: 11px;
-            padding: 0.3rem 0;
+            margin-top: 0.5rem;
         }
 
         .footer-link {
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: all 0.3s ease;
-            font-family: "Varela Round", sans-serif;
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: inline-block;
-            font-size: 11px; /* Mismo tamaño que el resto del texto */
+            font-size: 0.8rem;
+            font-weight: 400;
         }
 
         .footer-link:hover {
-            color: var(--color-green);
-            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            text-decoration: none;
             transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         /* Animación del corazón mejorada */
@@ -395,17 +411,29 @@
                 padding: 1rem 0 0.5rem 0;
             }
 
+            .social-links {
+                gap: 1rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .social-link {
+                font-size: 1.5rem;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+            }
+
             footer p,
-            footer .power {
-                font-size: 12px;
+            footer .power,
+            .copyright-text {
+                font-size: 0.8rem;
             }
 
             .developer-credit {
-                font-size: 11px;
+                font-size: 0.7rem;
             }
 
             .footer-link {
-                font-size: 10px;
-                padding: 0.15rem 0.5rem;
+                font-size: 0.7rem;
             }
         }
