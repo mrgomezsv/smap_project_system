@@ -64,23 +64,38 @@
                         </p>
                         
                         <div class="qr-container">
-                            <div class="qr-code-wrapper">
-                                <img src="data:image/png;base64,{{ qr_code_base64 }}" 
-                                     alt="QR Code para descargar la app de Kidsfun" 
-                                     class="qr-code-image"
-                                     width="200"
-                                     height="200">
-                            </div>
-                            <div class="qr-instructions mt-3">
-                                <p class="text-muted">
-                                    <i class="bi bi-phone me-1"></i>
-                                    Abre la cámara de tu teléfono y apunta al código QR
-                                </p>
-                                <p class="text-muted">
-                                    <i class="bi bi-arrow-down me-1"></i>
-                                    Toca la notificación que aparece para descargar la app
-                                </p>
-                            </div>
+                            {% if qr_available and qr_code_base64 %}
+                                <div class="qr-code-wrapper">
+                                    <img src="data:image/png;base64,{{ qr_code_base64 }}" 
+                                         alt="QR Code para descargar la app de Kidsfun" 
+                                         class="qr-code-image"
+                                         width="200"
+                                         height="200">
+                                </div>
+                                <div class="qr-instructions mt-3">
+                                    <p class="text-muted">
+                                        <i class="bi bi-phone me-1"></i>
+                                        Abre la cámara de tu teléfono y apunta al código QR
+                                    </p>
+                                    <p class="text-muted">
+                                        <i class="bi bi-arrow-down me-1"></i>
+                                        Toca la notificación que aparece para descargar la app
+                                    </p>
+                                </div>
+                            {% else %}
+                                <div class="qr-code-wrapper">
+                                    <div class="qr-placeholder">
+                                        <i class="bi bi-qr-code" style="font-size: 4rem; color: #6c757d;"></i>
+                                        <p class="text-muted mt-2">QR Code no disponible</p>
+                                    </div>
+                                </div>
+                                <div class="qr-instructions mt-3">
+                                    <p class="text-muted">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                        El QR code no está disponible en este momento
+                                    </p>
+                                </div>
+                            {% endif %}
                         </div>
                         
                         <div class="qr-alternative mt-4">

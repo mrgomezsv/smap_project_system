@@ -6,9 +6,16 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.conf import settings
 import json
-import qrcode
 import io
 import base64
+
+# Importación condicional de qrcode
+try:
+    import qrcode
+    QRCODE_AVAILABLE = True
+except ImportError:
+    QRCODE_AVAILABLE = False
+    print("Warning: qrcode module not available. QR code functionality will be disabled.")
 
 from t_app_product.models import Product
 # from api_like.models import Like  # Comentado - API eliminada
@@ -180,7 +187,8 @@ def mobile_app(request):
     
     context = {
         'qr_code_base64': qr_code_base64,
-        'app_download_url': "https://play.google.com/store/apps/details?id=com.kidsfun.app.kidsfun"
+        'app_download_url': "https://play.google.com/store/apps/details?id=com.kidsfun.app.kidsfun",
+        'qr_available': qr_code_base64 is not None
     }
     
     return render(request, 'kidsfun_web/mobile_app.html', context)
@@ -194,25 +202,33 @@ def terms_conditions(request):
 
 def generate_app_qr(request):
     """Genera un QR code para descargar la app de Kidsfun"""
-    # URL de descarga de la app (Google Play Store)
-    app_download_url = "https://play.google.com/store/apps/details?id=com.kidsfun.app.kidsfun"
+    if not QRCODE_AVAILABLE:
+        # Si qrcode no está disponible, retornar una imagen placeholder o None
+        return None
     
-    # Crear el QR code
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(app_download_url)
-    qr.make(fit=True)
-    
-    # Crear la imagen del QR code
-    img = qr.make_image(fill_color="black", back_color="white")
-    
-    # Convertir la imagen a base64
-    buffer = io.BytesIO()
-    img.save(buffer, format='PNG')
-    img_str = base64.b64encode(buffer.getvalue()).decode()
-    
-    return img_str
+    try:
+        # URL de descarga de la app (Google Play Store)
+        app_download_url = "https://play.google.com/store/apps/details?id=com.kidsfun.app.kidsfun"
+        
+        # Crear el QR code
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(app_download_url)
+        qr.make(fit=True)
+        
+        # Crear la imagen del QR code
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Convertir la imagen a base64
+        buffer = io.BytesIO()
+        img.save(buffer, format='PNG')
+        img_str = base64.b64encode(buffer.getvalue()).decode()
+        
+        return img_str
+    except Exception as e:
+        print(f"Error generating QR code: {str(e)}")
+        return None

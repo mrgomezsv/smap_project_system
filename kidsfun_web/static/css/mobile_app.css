@@ -134,6 +134,21 @@
     color: #f00 !important; /* color-red */
 }
 
+.qr-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 2px dashed #dee2e6;
+}
+
+.qr-placeholder i {
+    margin-bottom: 1rem;
+}
+
 /* Features Highlight Section */
 .features-highlight {
     margin-top: 2rem;
