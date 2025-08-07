@@ -21,6 +21,14 @@
                   <li><a class="dropdown-item" href="{% url 'firebase_auth' %}">Usuarios de Firebase</a></li>
                   <li><a class="dropdown-item" href="{% url 'event' %}">Gestión de Eventos</a></li>
                   <li><a class="dropdown-item" href="{% url 'chats' %}">Chats</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><h6 class="dropdown-header">APIs del Sistema</h6></li>
+                  <li><a class="dropdown-item" href="/api/products/" target="_blank">Productos API</a></li>
+                  <li><a class="dropdown-item" href="/api/products/category/JUGUETES/" target="_blank">Productos por Categoría API</a></li>
+                  <li><a class="dropdown-item" href="/api/v2/waiver/" target="_blank">Waiver API v2</a></li>
+                  <li><a class="dropdown-item" href="/api/v2/waiver/validate-waiver-status/" target="_blank">Validar Waiver API</a></li>
+                  <li><a class="dropdown-item" href="/api/v2/waiver/user/test/" target="_blank">Usuarios Waiver API</a></li>
+                  <li><a class="dropdown-item" href="/api/v2/waiver/QR123/" target="_blank">QR Waiver API</a></li>
               </ul>
             </div>
             <a id="createUserButtom" href="{% url 'signup' %}" class="btn btn-primary ml-2">Nuevo Usuario</a>

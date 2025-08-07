@@ -499,10 +499,14 @@ def process_checkbox(request):
         print("El estado del checkbox es:", checkbox_state)
 
         if checkbox_state == 'true':
-            # Redirige a la nueva página HTML
+            # Guardar el estado en la sesión
+            request.session['show_categories'] = True
+            # Redirige a la página con categorías
             return redirect('productc')
         else:
-            # Redirige a product.html si el checkbox está marcado como false
+            # Guardar el estado en la sesión
+            request.session['show_categories'] = False
+            # Redirige a la página sin categorías
             print("Redirigiendo a product.html")
             return redirect('product')
     else:
@@ -744,24 +748,108 @@ def user_chats(request):
 @login_required
 @require_http_methods(['POST'])
 def start_new_chat(request):
-    initial_message = request.POST.get('initial_message')
-    if not initial_message:
-        messages.error(request, 'El mensaje inicial es requerido.')
-        return redirect('user_chats')
+    if not ChatAdministrator.objects.filter(user=request.user, is_active=True).exists():
+        messages.error(request, 'No tiene permisos para iniciar chats.')
+        return redirect('chat_dashboard')
 
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        if not user_id:
+            messages.error(request, 'ID de usuario requerido.')
+            return redirect('chat_dashboard')
+
+        try:
+            # Verificar si ya existe un chat activo con este usuario
+            existing_chat = ChatRoom.objects.filter(
+                user_id=user_id,
+                is_active=True
+            ).first()
+
+            if existing_chat:
+                messages.info(request, 'Ya existe un chat activo con este usuario.')
+                return redirect('chat_dashboard')
+
+            # Crear nuevo chat
+            new_chat = ChatRoom.objects.create(
+                user_id=user_id,
+                is_active=True
+            )
+
+            messages.success(request, 'Chat iniciado exitosamente.')
+            return redirect('chat_dashboard')
+
+        except Exception as e:
+            messages.error(request, f'Error al iniciar chat: {str(e)}')
+            return redirect('chat_dashboard')
+
+    return redirect('chat_dashboard')
+
+
+# APIs del Sistema
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.core.serializers import serialize
+import json
+
+@api_view(['GET'])
+def api_products(request):
+    """API para obtener todos los productos"""
     try:
-        # Crear nuevo chat
-        chat = ChatRoom.objects.create(user=request.user)
+        products = Product.objects.all()
+        products_data = []
         
-        # Crear mensaje inicial
-        ChatMessage.objects.create(
-            chat_room=chat,
-            sender=request.user,
-            content=initial_message
-        )
+        for product in products:
+            products_data.append({
+                'id': product.id,
+                'title': product.title,
+                'description': product.description,
+                'category': product.get_category_display(),
+                'dimensions': product.dimensions,
+                'publicated': product.publicated,
+                'user': product.user.username,
+                'image_url': request.build_absolute_uri(product.img.url) if product.img else None,
+                'created_at': product.created_at.isoformat() if product.created_at else None,
+            })
         
-        messages.success(request, 'Chat iniciado exitosamente.')
-        return redirect(f'user_chats?chat_id={chat.id}')
+        return Response({
+            'products': products_data,
+            'total_count': len(products_data)
+        }, status=status.HTTP_200_OK)
+        
     except Exception as e:
-        messages.error(request, f'Error al iniciar el chat: {str(e)}')
-        return redirect('user_chats')
+        return Response({
+            'error': f'Error al obtener productos: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+def api_products_by_category(request, category):
+    """API para obtener productos por categoría"""
+    try:
+        products = Product.objects.filter(category=category)
+        products_data = []
+        
+        for product in products:
+            products_data.append({
+                'id': product.id,
+                'title': product.title,
+                'description': product.description,
+                'category': product.get_category_display(),
+                'dimensions': product.dimensions,
+                'publicated': product.publicated,
+                'user': product.user.username,
+                'image_url': request.build_absolute_uri(product.img.url) if product.img else None,
+                'created_at': product.created_at.isoformat() if product.created_at else None,
+            })
+        
+        return Response({
+            'products': products_data,
+            'category': category,
+            'total_count': len(products_data)
+        }, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        return Response({
+            'error': f'Error al obtener productos por categoría: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

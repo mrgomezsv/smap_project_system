@@ -33,10 +33,14 @@
                 </div>
                 <div class="col-md-6">
                     <div class="d-flex justify-content-md-end gap-2">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="checkbox_state">
-                            <label class="form-check-label" for="flexCheckDefault">Mostrar Categorías</label>
-                        </div>
+                        <form id="category-toggle-form" method="post" action="{% url 'process_checkbox' %}" class="d-flex align-items-center">
+                            {% csrf_token %}
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="checkbox_state" 
+                                       {% if request.session.show_categories %}checked{% endif %}>
+                                <label class="form-check-label" for="flexCheckDefault">Mostrar Categorías</label>
+                            </div>
+                        </form>
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                 <i class="bi bi-funnel-fill me-2"></i>
@@ -217,9 +221,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Category Toggle
     const categoryToggle = document.querySelector('#flexCheckDefault');
+    const categoryForm = document.querySelector('#category-toggle-form');
+    
     if (categoryToggle) {
         categoryToggle.addEventListener('change', function() {
-            // Add your category toggle logic here
+            // Envía automáticamente el formulario cuando el estado del checkbox cambia
+            categoryForm.submit();
         });
     }
 

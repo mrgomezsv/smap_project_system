@@ -34,6 +34,9 @@ urlpatterns = [
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),
     path('chats/', views.redirect_chats, name='chats'),
+    # APIs del Sistema
+    path('api/products/', views.api_products, name='api_products'),
+    path('api/products/category/<str:category>/', views.api_products_by_category, name='api_products_by_category'),
     # path('api/products/', ProductListCreate.as_view(), name='product-list'),  # Comentado - API eliminada
     path('kidsfun/', include('kidsfun_web.urls')),
     # path('api/', include('api_like.urls')),  # Comentado - API eliminada
