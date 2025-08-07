@@ -16,7 +16,6 @@ urlpatterns = [
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
     path('change-password/', views.change_password, name='change_password'),
-    path('', include('kidsfun_web.urls')),  # Cambia la URL raíz para que redirija a kidsfun/
     path('product/create/', views.create_product, name='create_product'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('product/<int:product_id>/delete/', views.delete_product, name='delete_product'),
@@ -37,8 +36,8 @@ urlpatterns = [
     # APIs del Sistema
     path('api/products/', views.api_products, name='api_products'),
     path('api/products/category/<str:category>/', views.api_products_by_category, name='api_products_by_category'),
-    # path('api/products/', ProductListCreate.as_view(), name='product-list'),  # Comentado - API eliminada
-    path('kidsfun/', include('kidsfun_web.urls')),
+    # path('api/products/', ProductListCreate.as_view(), name='product-list')  # Comentado - API eliminada
+    path('', include('kidsfun_web.urls')),  # URLs principales en la raíz
     # path('api/', include('api_like.urls')),  # Comentado - API eliminada
     # path('api/', include('api_commentary.urls')),  # Comentado - API eliminada
     # path('api/', include('api_waiver.urls')),  # Comentado - API eliminada
