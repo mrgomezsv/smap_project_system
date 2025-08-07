@@ -109,7 +109,7 @@
                     </div>
                     <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
                         {% for product in products_in_category %}
-                        <div class="col mb-4" data-aos="zoom-in" data-aos-delay="{{ forloop.counter|multiply:100 }}">
+                        <div class="col mb-4" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:1 }}">
                             <div class="card h-100">
                                 <div class="image-container">
                                     {% if product.img %}

@@ -239,6 +239,19 @@
 
         footer {
             background-color: var(--color-footer);
+            padding: 1.5rem 0 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
         }
 
         footer a {
@@ -271,6 +284,128 @@
             color: #fff;
             font-family: "Varela Round", sans-serif;
             margin-bottom: 0;
-            font-size: 18px;
+            font-size: 13px;
             cursor: pointer;
+            line-height: 1.4;
+        }
+
+        /* Estilos mejorados para el crédito del desarrollador */
+        .developer-credit {
+            color: #fff;
+            font-family: "Varela Round", sans-serif;
+            margin-bottom: 0;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.4;
+            padding: 0.3rem 0;
+        }
+
+        .developer-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+        }
+
+        .heart-animated {
+            color: var(--color-green) !important;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            font-size: 12px;
+            margin: 0 3px;
+            display: inline-block;
+        }
+
+        .developer-link {
+            color: var(--color-green);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            position: relative;
+            font-size: 12px; /* Mismo tamaño que el resto del texto */
+        }
+
+        .developer-link:hover {
+            color: #fff;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .developer-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--color-green);
+            transition: width 0.3s ease;
+        }
+
+        .developer-link:hover::after {
+            width: 100%;
+        }
+
+        /* Estilos mejorados para los enlaces del footer */
+        .footer-links {
+            margin-bottom: 0;
+            font-size: 11px;
+            padding: 0.3rem 0;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: "Varela Round", sans-serif;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: inline-block;
+            font-size: 11px; /* Mismo tamaño que el resto del texto */
+        }
+
+        .footer-link:hover {
+            color: var(--color-green);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animación del corazón mejorada */
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+            }
+            14% {
+                transform: scale(1.1);
+            }
+            28% {
+                transform: scale(1);
+            }
+            42% {
+                transform: scale(1.1);
+            }
+            70% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive para el footer */
+        @media (max-width: 768px) {
+            footer {
+                padding: 1rem 0 0.5rem 0;
+            }
+
+            footer p,
+            footer .power {
+                font-size: 12px;
+            }
+
+            .developer-credit {
+                font-size: 11px;
+            }
+
+            .footer-link {
+                font-size: 10px;
+                padding: 0.15rem 0.5rem;
+            }
         }

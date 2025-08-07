@@ -38,6 +38,7 @@ def service(request):
         
         # Obtener todos los products que están publicados
         products = Product.objects.filter(publicated=True).order_by('category', 'title')
+        print(f"Productos encontrados: {products.count()}")
         
         # Crear un diccionario para almacenar los products agrupados por categoría
         products_or_category = {}
@@ -56,6 +57,8 @@ def service(request):
                 except Exception as product_error:
                     print(f"Error procesando producto {product.id}: {str(product_error)}")
                     continue
+        
+        print(f"Categorías encontradas: {list(products_or_category.keys())}")
         
         context = {
             'products_or_category': products_or_category
