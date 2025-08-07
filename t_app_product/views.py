@@ -528,8 +528,16 @@ def is_mrgomez(user):
 @login_required
 @user_passes_test(is_mrgomez)
 def sudo_admin(request):
-    users = User.objects.all()
-    return render(request, 'sudo/sudo_admin.html', {'users': users})
+    try:
+        users = User.objects.all().order_by('-date_joined')
+        return render(request, 'sudo/sudo_admin.html', {'users': users})
+    except Exception as e:
+        # Si hay un error, mostrar mensaje informativo
+        error_message = f"Error al cargar usuarios: {str(e)}"
+        return render(request, 'sudo/sudo_admin.html', {
+            'users': [],
+            'error_message': error_message
+        })
 
 def handler404(request, exception):
     return render(request, 'errors/404.html', status=404)

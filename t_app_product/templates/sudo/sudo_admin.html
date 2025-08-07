@@ -11,16 +11,16 @@
     <div class="container d-flex align-items-center">
         <h2 class="h2">Usuarios Registrados</h2>
         <div class="d-flex ml-auto">
-            <div class="dropdown  mx-2">
+            <div class="dropdown mx-2">
               <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Apis link
+                Acciones
               </a>
               <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{% url 'product-list' %}">Products API</a></li>
-                  <li><a class="dropdown-item" href="{% url 'api_commentary:commentary-list' %}">Comentarios API</a></li>
-                  <li><a class="dropdown-item" href="{% url 'like-toggle' %}">Likes API</a></li>
-                  <li><a class="dropdown-item" href="{% url 'api_waiver' %}">Waiver API</a></li>
-                  <li><a class="dropdown-item" href="{% url 'list_waiver_validators' %}">Waiver Validator API</a></li>
+                  <li><a class="dropdown-item" href="{% url 'product' %}">Gestión de Productos</a></li>
+                  <li><a class="dropdown-item" href="{% url 'waiver' %}">Gestión de Waivers</a></li>
+                  <li><a class="dropdown-item" href="{% url 'firebase_auth' %}">Usuarios de Firebase</a></li>
+                  <li><a class="dropdown-item" href="{% url 'event' %}">Gestión de Eventos</a></li>
+                  <li><a class="dropdown-item" href="{% url 'chats' %}">Chats</a></li>
               </ul>
             </div>
             <a id="createUserButtom" href="{% url 'signup' %}" class="btn btn-primary ml-2">Nuevo Usuario</a>
@@ -28,27 +28,34 @@
     </div>
 </nav>
 
-
 <body style="background-color: #F4F1FF">
     <div class="container mt-5" style="background-color: #F4F1FF !important">
-
-        <table class="table" style="background-color: #F4F1FF !important">
-            <thead>
-            <tr style="background-color: #F4F1FF !important">
-                <th><input type="checkbox" id="select-all"></th> <!-- Checkbox para seleccionar todos -->
-                <th>ID</th>
-                <th>Nombre de Usuario</th>
-                <th>Correo Electrónico</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Fecha de Registro</th>
-                <th>Ultimo Inicio de Sesion</th>
-                <th class="trash-column"></th> <!-- Columna para el icono del bote de basura -->
-            </tr>
-            </thead>
-            <tbody style="background-color: #F4F1FF !important">
-            {% for user in users %}
-                {% with random_boolean=user.checkbox_state %}
+        {% if error_message %}
+            <!-- Mensaje de error -->
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Error al cargar usuarios
+                </h4>
+                <p>{{ error_message }}</p>
+            </div>
+        {% elif users %}
+            <table class="table" style="background-color: #F4F1FF !important">
+                <thead>
+                <tr style="background-color: #F4F1FF !important">
+                    <th><input type="checkbox" id="select-all"></th> <!-- Checkbox para seleccionar todos -->
+                    <th>ID</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Correo Electrónico</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Fecha de Registro</th>
+                    <th>Ultimo Inicio de Sesion</th>
+                    <th class="trash-column"></th> <!-- Columna para el icono del bote de basura -->
+                </tr>
+                </thead>
+                <tbody style="background-color: #F4F1FF !important">
+                {% for user in users %}
                     <tr>
                         <td class="checkbox-container">
                             <input type="checkbox" name="selected_users" value="{{ user.id }}"
@@ -58,20 +65,28 @@
                         </td> <!-- Checkbox de usuario -->
                         <td>{{ user.id }}</td>
                         <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.first_name }}</td>
-                        <td>{{ user.last_name }}</td>
-                        <td>{{ user.date_joined }}</td>
-                        <td>{{ user.last_login }}</td>
-                        <td class="form-check me-3 {% if not random_boolean %}hide-trash{% endif %} trash-column"
+                        <td>{{ user.email|default:"N/A" }}</td>
+                        <td>{{ user.first_name|default:"N/A" }}</td>
+                        <td>{{ user.last_name|default:"N/A" }}</td>
+                        <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
+                        <td>{{ user.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</td>
+                        <td class="form-check me-3 hide-trash trash-column"
                             id="trash-icon-{{ user.id }}">
                             <i class="fas fa-trash-alt trash-icon mr-2"></i>
                         </td>
                     </tr>
-                {% endwith %}
-            {% endfor %}
-            </tbody>
-        </table>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                <h4 class="alert-heading">
+                    <i class="fas fa-info-circle"></i>
+                    No hay usuarios registrados
+                </h4>
+                <p>No se encontraron usuarios en el sistema.</p>
+            </div>
+        {% endif %}
     </div>
 </body>
 
@@ -85,5 +100,14 @@
                 trashIcon.classList.add('hide-trash');
             }
         }
+
+        // Función para seleccionar/deseleccionar todos
+        document.getElementById('select-all').addEventListener('change', function() {
+            var checkboxes = document.querySelectorAll('input[name="selected_users"]');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = this.checked;
+                toggleTrashIconVisibility(checkbox.value);
+            });
+        });
     </script>
 {% endblock %}
