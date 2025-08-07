@@ -64,46 +64,90 @@
     .comments-count {
         color: #007bff;
     }
+
+    .no-products {
+        text-align: center;
+        padding: 3rem 1rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 20px;
+        margin: 2rem 0;
+    }
+
+    .error-message {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 1rem;
+        border-radius: 10px;
+        margin: 1rem 0;
+        border: 1px solid #f5c6cb;
+    }
 </style>
 
 <section class="section-products padding-section">
     <!-- Contenido de los productos -->
     <div class="container" style="margin-top: 50px;">
-        {% for category, products_in_category in products_or_category.items %}
-        <div class="row" data-aos="fade-up">
-            <div class="col-12">
-                <h3 class="pb-5 text-violet t-sm-center">{{ products_in_category.0.get_category_display }}</h3>
+        {% if error_message %}
+            <div class="error-message">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                {{ error_message }}
             </div>
-        </div>
-        <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
-            {% for product in products_in_category %}
-            <div class="col mb-4" data-aos="zoom-in" data-aos-delay="{{ forloop.counter|multiply:100 }}">
-                <div class="card h-100">
-                    <div class="image-container">
-                        <img class="card-img-top" src="{{ product.img.url }}" alt="Product Image">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title card-title-custom">{{ product.title }}</h5>
-                        <p class="card-text" style="color: #797777">{{ product.dimensions|default:'-' }}</p>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <a href="{% url 'service_product' product.id %}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get it now</a>
-                    </div>
-                    <div class="card-stats">
-                        <div class="stat-item likes-count">
-                            <i class="bi bi-heart-fill"></i>
-                            <span>{{ product.likes_count|default:0 }}</span>
-                        </div>
-                        <div class="stat-item comments-count">
-                            <i class="bi bi-chat-fill"></i>
-                            <span>{{ product.comments_count|default:0 }}</span>
+        {% endif %}
+
+        {% if products_or_category %}
+            {% for category, products_in_category in products_or_category.items %}
+                {% if products_in_category %}
+                    <div class="row" data-aos="fade-up">
+                        <div class="col-12">
+                            <h3 class="pb-5 text-violet t-sm-center">
+                                {% if products_in_category.0 %}
+                                    {{ products_in_category.0.get_category_display }}
+                                {% else %}
+                                    {{ category }}
+                                {% endif %}
+                            </h3>
                         </div>
                     </div>
-                </div>
-            </div>
+                    <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
+                        {% for product in products_in_category %}
+                        <div class="col mb-4" data-aos="zoom-in" data-aos-delay="{{ forloop.counter|multiply:100 }}">
+                            <div class="card h-100">
+                                <div class="image-container">
+                                    {% if product.img %}
+                                        <img class="card-img-top" src="{{ product.img.url }}" alt="Product Image">
+                                    {% else %}
+                                        <img class="card-img-top" src="{% static 'img/default_product_image.jpg' %}" alt="Default Product Image">
+                                    {% endif %}
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title card-title-custom">{{ product.title }}</h5>
+                                    <p class="card-text" style="color: #797777">{{ product.dimensions|default:'-' }}</p>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <a href="{% url 'service_product' product.id %}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get it now</a>
+                                </div>
+                                <div class="card-stats">
+                                    <div class="stat-item likes-count">
+                                        <i class="bi bi-heart-fill"></i>
+                                        <span>{{ product.likes_count|default:0 }}</span>
+                                    </div>
+                                    <div class="stat-item comments-count">
+                                        <i class="bi bi-chat-fill"></i>
+                                        <span>{{ product.comments_count|default:0 }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             {% endfor %}
-        </div>
-        {% endfor %}
+        {% else %}
+            <div class="no-products">
+                <i class="bi bi-box-seam" style="font-size: 3rem; color: #6c757d; margin-bottom: 1rem;"></i>
+                <h3 class="text-muted">No hay productos disponibles</h3>
+                <p class="text-muted">En este momento no tenemos productos publicados. ¡Vuelve pronto!</p>
+            </div>
+        {% endif %}
     </div>
 </section>
 
