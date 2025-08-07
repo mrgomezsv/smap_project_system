@@ -36,43 +36,84 @@
     </nav>
 
 <div class="container mt-5">
-    <table class="table">
-        <thead>
-            <tr>
-<!--                <th>Auth ID</th>-->
-                <th>Nombre</th>
-                <th>Email</th>
-<!--                <th>Teléfono</th>-->
-                <th>Foto de Perfil</th>
-                <th>Proveedores</th>
-                <th>Fecha de Creación</th>
-                <th>Fecha de Último Acceso</th>
-                <!-- Agrega otras columnas según lo necesites -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-<!--                <td>{{ user.uid }}</td>-->
-                <td>{{ user.display_name }}</td>
-                <td>{{ user.email }}</td>
-<!--                <td>{{ user.phone_number }}</td>-->
-                <td>
-                    {% if user.photo_url %}
-                        <img src="{{ user.photo_url }}" alt="Foto de Perfil" style="width:50px; height:50px; border-radius:50%;">
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
-                <td>{{ user.provider_id }}</td>
-<!--                <td>{{ user.creation_timestamp|date:"Y-m-d H:i:s" }}</td>-->
-<!--                <td>{{ user.last_sign_in_timestamp|date:"Y-m-d H:i:s" }}</td>-->
-                <td>{{ user.creation_timestamp|date:"d/m/Y" }}</td>
-                <td>{{ user.last_sign_in_timestamp|date:"d/m/Y" }}</td>
-                <!-- Agrega otras celdas según lo necesites -->
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {% if firebase_not_configured %}
+        <!-- Mensaje cuando Firebase no está configurado -->
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">
+                <i class="fas fa-exclamation-triangle"></i>
+                Firebase no está configurado
+            </h4>
+            <p>
+                La funcionalidad de usuarios de Firebase no está disponible porque las credenciales de Firebase no están configuradas.
+            </p>
+            <hr>
+            <p class="mb-0">
+                <strong>Para configurar Firebase:</strong>
+                <ol>
+                    <li>Crear la carpeta <code>credentials</code> en la raíz del proyecto</li>
+                    <li>Agregar el archivo <code>smap-kf-firebase-adminsdk-xqq0l-dc3c83c990.json</code> en la carpeta credentials</li>
+                    <li>Reiniciar el servidor</li>
+                </ol>
+            </p>
+        </div>
+    {% elif error_message %}
+        <!-- Mensaje de error -->
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">
+                <i class="fas fa-exclamation-circle"></i>
+                Error al conectar con Firebase
+            </h4>
+            <p>{{ error_message }}</p>
+        </div>
+    {% elif users %}
+        <!-- Tabla de usuarios cuando Firebase está configurado -->
+        <table class="table">
+            <thead>
+                <tr>
+    <!--                <th>Auth ID</th>-->
+                    <th>Nombre</th>
+                    <th>Email</th>
+    <!--                <th>Teléfono</th>-->
+                    <th>Foto de Perfil</th>
+                    <th>Proveedores</th>
+                    <th>Fecha de Creación</th>
+                    <th>Fecha de Último Acceso</th>
+                    <!-- Agrega otras columnas según lo necesites -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+    <!--                <td>{{ user.uid }}</td>-->
+                    <td>{{ user.display_name|default:"N/A" }}</td>
+                    <td>{{ user.email|default:"N/A" }}</td>
+    <!--                <td>{{ user.phone_number }}</td>-->
+                    <td>
+                        {% if user.photo_url %}
+                            <img src="{{ user.photo_url }}" alt="Foto de Perfil" style="width:50px; height:50px; border-radius:50%;">
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>{{ user.provider_id|default:"N/A" }}</td>
+    <!--                <td>{{ user.creation_timestamp|date:"Y-m-d H:i:s" }}</td>-->
+    <!--                <td>{{ user.last_sign_in_timestamp|date:"Y-m-d H:i:s" }}</td>-->
+                    <td>{{ user.creation_timestamp|date:"d/m/Y"|default:"N/A" }}</td>
+                    <td>{{ user.last_sign_in_timestamp|date:"d/m/Y"|default:"N/A" }}</td>
+                    <!-- Agrega otras celdas según lo necesites -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <!-- Mensaje cuando no hay usuarios -->
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">
+                <i class="fas fa-info-circle"></i>
+                No hay usuarios registrados
+            </h4>
+            <p>No se encontraron usuarios en Firebase o la conexión no está configurada correctamente.</p>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -27,6 +27,7 @@ from firebase_admin import messaging
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .models import ChatAdministrator, ChatRoom, ChatMessage
+import firebase_admin
 
 
 @login_required
@@ -309,31 +310,18 @@ def create_event(request):
 
 @login_required
 def firebase_auth(request):
-    # Función para obtener los usuarios de Firebase
-    def get_firebase_users():
-        # Obtener la primera página de usuarios
-        page = auth.list_users()
+    try:
+        # Función para obtener los usuarios de Firebase
+        def get_firebase_users():
+            # Verificar si Firebase está configurado
+            if not firebase_admin._apps:
+                return []
+            
+            # Obtener la primera página de usuarios
+            page = auth.list_users()
 
-        # Procesar los usuarios de la página actual
-        processed_data = []
-        for user in page.users:
-            creation_timestamp = datetime.fromtimestamp(user.user_metadata.creation_timestamp / 1000)
-            last_sign_in_timestamp = datetime.fromtimestamp(user.user_metadata.last_sign_in_timestamp / 1000)
-
-            processed_data.append({
-                'uid': user.uid,
-                'email': user.email,
-                'display_name': user.display_name,
-                'phone_number': user.phone_number,
-                'photo_url': user.photo_url,
-                'provider_id': user.provider_id,
-                'creation_timestamp': creation_timestamp,
-                'last_sign_in_timestamp': last_sign_in_timestamp
-            })
-
-        # Verificar si hay más páginas y procesarlas
-        while page.has_next_page:
-            page = auth.list_users(page.next_page_token)
+            # Procesar los usuarios de la página actual
+            processed_data = []
             for user in page.users:
                 creation_timestamp = datetime.fromtimestamp(user.user_metadata.creation_timestamp / 1000)
                 last_sign_in_timestamp = datetime.fromtimestamp(user.user_metadata.last_sign_in_timestamp / 1000)
@@ -349,16 +337,43 @@ def firebase_auth(request):
                     'last_sign_in_timestamp': last_sign_in_timestamp
                 })
 
-        # Ordenar la lista por last_sign_in_timestamp descendente
-        processed_data.sort(key=lambda x: x['last_sign_in_timestamp'], reverse=True)
+            # Verificar si hay más páginas y procesarlas
+            while page.has_next_page:
+                page = auth.list_users(page.next_page_token)
+                for user in page.users:
+                    creation_timestamp = datetime.fromtimestamp(user.user_metadata.creation_timestamp / 1000)
+                    last_sign_in_timestamp = datetime.fromtimestamp(user.user_metadata.last_sign_in_timestamp / 1000)
 
-        return processed_data
+                    processed_data.append({
+                        'uid': user.uid,
+                        'email': user.email,
+                        'display_name': user.display_name,
+                        'phone_number': user.phone_number,
+                        'photo_url': user.photo_url,
+                        'provider_id': user.provider_id,
+                        'creation_timestamp': creation_timestamp,
+                        'last_sign_in_timestamp': last_sign_in_timestamp
+                    })
 
-    # Obtener usuarios de Firebase
-    users = get_firebase_users()
+            # Ordenar la lista por last_sign_in_timestamp descendente
+            processed_data.sort(key=lambda x: x['last_sign_in_timestamp'], reverse=True)
 
-    # Enviar los datos al template
-    return render(request, 'firebase_auth.html', {'users': users})
+            return processed_data
+
+        # Obtener usuarios de Firebase
+        users = get_firebase_users()
+
+        # Enviar los datos al template
+        return render(request, 'firebase_auth.html', {'users': users})
+    
+    except Exception as e:
+        # Si hay un error, mostrar mensaje informativo
+        error_message = f"Error al conectar con Firebase: {str(e)}"
+        return render(request, 'firebase_auth.html', {
+            'users': [],
+            'error_message': error_message,
+            'firebase_not_configured': True
+        })
 
 
 @login_required
