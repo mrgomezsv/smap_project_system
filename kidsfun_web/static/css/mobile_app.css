@@ -68,6 +68,72 @@
     height: auto;
 }
 
+/* QR Code Section */
+.qr-download-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 2px solid #e9ecef;
+}
+
+.qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.qr-code-wrapper {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 2px solid #e9ecef;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.qr-code-wrapper:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.qr-code-image {
+    border-radius: 10px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.qr-instructions {
+    text-align: center;
+}
+
+.qr-instructions p {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.qr-instructions i {
+    color: #fcb900; /* color-yellow */
+}
+
+.qr-alternative {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.qr-alternative a {
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.qr-alternative a:hover {
+    color: #f00 !important; /* color-red */
+}
+
 /* Features Highlight Section */
 .features-highlight {
     margin-top: 2rem;

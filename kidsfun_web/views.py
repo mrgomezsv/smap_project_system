@@ -1,10 +1,14 @@
 # kidsfun_web/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.conf import settings
 import json
+import qrcode
+import io
+import base64
 
 from t_app_product.models import Product
 # from api_like.models import Like  # Comentado - API eliminada
@@ -154,7 +158,16 @@ def contact(request):
     return render(request, 'kidsfun_web/contact/contact.html')
 
 def mobile_app(request):
-    return render(request, 'kidsfun_web/mobile_app.html')
+    """Vista para la página de la aplicación móvil con QR code"""
+    # Generar el QR code para la app
+    qr_code_base64 = generate_app_qr(request)
+    
+    context = {
+        'qr_code_base64': qr_code_base64,
+        'app_download_url': "https://play.google.com/store/apps/details?id=com.kidsfun.app.kidsfun"
+    }
+    
+    return render(request, 'kidsfun_web/mobile_app.html', context)
 
 def custom_404(request, exception):
     return render(request, '404.html', status=404)
@@ -162,3 +175,28 @@ def custom_404(request, exception):
 def terms_conditions(request):
     """Vista para la página de términos y condiciones"""
     return render(request, 'kidsfun_web/terms_conditions.html')
+
+def generate_app_qr(request):
+    """Genera un QR code para descargar la app de Kidsfun"""
+    # URL de descarga de la app (Google Play Store)
+    app_download_url = "https://play.google.com/store/apps/details?id=com.kidsfun.app.kidsfun"
+    
+    # Crear el QR code
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(app_download_url)
+    qr.make(fit=True)
+    
+    # Crear la imagen del QR code
+    img = qr.make_image(fill_color="black", back_color="white")
+    
+    # Convertir la imagen a base64
+    buffer = io.BytesIO()
+    img.save(buffer, format='PNG')
+    img_str = base64.b64encode(buffer.getvalue()).decode()
+    
+    return img_str
