@@ -36,23 +36,17 @@ def service(request):
         
         # Crear un diccionario para almacenar los products agrupados por categoría
         products_or_category = {}
-        for product in products:
-            # Comentado: Obtener el conteo de likes para este producto
-            # likes_count = Like.objects.filter(product=str(product.id), is_favorite=True).count()
-            likes_count = 0  # Valor por defecto
-            
-            # Comentado: Obtener el conteo de comentarios para este producto
-            # comments_count = Commentary.objects.filter(product_id=product.id).count()
-            comments_count = 0  # Valor por defecto
-            
-            # Agregar los conteos al producto
-            product.likes_count = likes_count
-            product.comments_count = comments_count
-            
-            category = product.category
-            if category not in products_or_category:
-                products_or_category[category] = []
-            products_or_category[category].append(product)
+        
+        if products.exists():
+            for product in products:
+                # Agregar los conteos al producto
+                product.likes_count = 0  # Valor por defecto
+                product.comments_count = 0  # Valor por defecto
+                
+                category = product.category
+                if category not in products_or_category:
+                    products_or_category[category] = []
+                products_or_category[category].append(product)
         
         context = {
             'products_or_category': products_or_category
@@ -65,7 +59,7 @@ def service(request):
         print(f"Error en vista service: {str(e)}")
         # Retornar una página de error más amigable
         context = {
-            'error_message': 'Lo sentimos, hubo un problema al cargar los productos. Por favor, intenta de nuevo más tarde.',
+            'error_message': f'Lo sentimos, hubo un problema al cargar los productos: {str(e)}. Por favor, intenta de nuevo más tarde.',
             'products_or_category': {}
         }
         return render(request, 'kidsfun_web/service/service.html', context)
