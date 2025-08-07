@@ -340,10 +340,10 @@
                         <a class="nav-link" href="{% url 'service' %}">Products and services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                        <a class="nav-link" href="{% url 'mobile_app' %}">Mobile App</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'mobile_app' %}">Mobile App</a>
+                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
                     </li>
                     <!-- Botón de Login -->
                     <li class="nav-item">
@@ -400,60 +400,93 @@
 </div>
 
 <!-- Footer -->
-<footer class="">
+<footer class="vg-footer">
     <div class="container">
-        <!-- Redes Sociales -->
-        <div class="row justify-content-center align-items-center pb-3">
-            <div class="col-12 text-center">
-                <div class="social-links">
-                    <a href="https://www.facebook.com/kidsfunyfiestasinfantiles" target="_blank" rel="noopener noreferrer" class="social-link fac">
-                        <i class="bi bi-facebook"></i>
-                    </a>
-                    <a href="https://www.instagram.com/kidsfunyfiestasinfantiles" target="_blank" rel="noopener noreferrer" class="social-link ins">
-                        <i class="bi bi-instagram"></i>
-                    </a>
-                    <a href="https://wa.me/+19293926596?text=Hola! Vi su sitio web Kidsfun y me interesa conocer más sobre sus servicios de fiestas infantiles. ¿Podrían ayudarme?" target="_blank" rel="noopener noreferrer" class="social-link wha">
-                        <i class="bi bi-whatsapp"></i>
-                    </a>
+        <div class="row">
+            <!-- Sección de Contacto -->
+            <div class="col-lg-4 py-3">
+                <div class="footer-info">
+                    <div class="footer-section-header">
+                        <i class="bi bi-envelope"></i>
+                        <h4>Contáctanos</h4>
+                    </div>
+                    <p class="footer-description">¿Listo para crear la fiesta perfecta? ¡Hablemos de tus ideas!</p>
+                    <div class="contact-item">
+                        <i class="bi bi-envelope"></i>
+                        <a href="mailto:info@kidsfunyfiestasinfantiles.com" class="contact-link">info@kidsfunyfiestasinfantiles.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="bi bi-telephone"></i>
+                        <a href="tel:+50377563510" class="contact-link">+503 7756-3510</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sección de Redes Sociales -->
+            <div class="col-md-6 col-lg-4 py-3">
+                <div class="float-lg-right">
+                    <div class="footer-section-header">
+                        <i class="bi bi-share"></i>
+                        <h4>Síguenos</h4>
+                    </div>
+                    <p class="footer-description">Conéctate con nosotros en redes sociales</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/kidsfunyfiestasinfantiles" class="social-link facebook" target="_blank" rel="noopener">
+                            <i class="bi bi-facebook"></i>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="https://www.instagram.com/kidsfunyfiestasinfantiles" class="social-link instagram" target="_blank" rel="noopener">
+                            <i class="bi bi-instagram"></i>
+                            <span>Instagram</span>
+                        </a>
+                        <a href="https://wa.me/77563510?text=Hola! Vi su sitio web Kidsfun y me interesa conocer más sobre sus servicios de fiestas infantiles. ¿Podrían ayudarme?" class="social-link whatsapp" target="_blank" rel="noopener">
+                            <i class="bi bi-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sección de Información -->
+            <div class="col-md-6 col-lg-4 py-3">
+                <div class="float-lg-right">
+                    <div class="footer-section-header">
+                        <i class="bi bi-info-circle"></i>
+                        <h4>Información</h4>
+                    </div>
+                    <p class="footer-description">Todo lo que necesitas saber sobre nosotros</p>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <i class="bi bi-geo-alt"></i>
+                            <span>El Salvador</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-clock"></i>
+                            <span>Lun - Dom: 8:00 AM - 8:00 PM</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-star"></i>
+                            <span>Servicios de Calidad</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Copyright -->
-        <div class="row justify-content-center align-items-center pb-2">
-            <div class="col-lg-8 text-center text-lg-end mt-3 mt-lg-0">
-                <p class="copyright-text">
-                    <span class="text-violet">Copyright &copy; </span>
-                    <span class="text-orange">Kidsfun y Fiestas Infantiles </span>
-                    <span class="text-yellow" id="copyrightYear">2025</span>
-                    <span class="text-green"> - Entretenimiento Infantil de Calidad</span>
-                </p>
-            </div>
-        </div>
-        
-        <!-- Crédito del desarrollador -->
-        <div class="row justify-content-center align-items-center pb-1">
-            <div class="col-12 text-center">
-                <p class="developer-credit">
-                    <span class="developer-text">Desarrollado con </span>
-                    <i class="bi bi-heart-fill heart-animated"></i>
-                    <span class="developer-text"> por </span>
-                    <a href="https://mrgomezsv.github.io/" target="_blank" rel="noopener noreferrer" class="developer-link">
-                        <strong>Mario Roberto</strong>
-                    </a>
-                </p>
-            </div>
-        </div>
-        
-        <!-- Enlaces del footer -->
-        <div class="row justify-content-center align-items-center">
-            <div class="col-12 text-center">
-                <p class="footer-links">
-                    <a href="{% url 'terms_conditions' %}" class="footer-link">
-                        <i class="bi bi-file-text me-1"></i>
-                        Términos y Condiciones
-                    </a>
-                </p>
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="copyright">© <span id="copyrightYear">2025</span> - Kidsfun y Fiestas Infantiles. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="made-with">
+                        Desarrollado con <i class="bi bi-heart-fill heart-animated"></i> por 
+                        <a href="https://mrgomezsv.github.io/" target="_blank" rel="noopener noreferrer" class="developer-link">
+                            <strong>Mario Roberto</strong>
+                        </a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
