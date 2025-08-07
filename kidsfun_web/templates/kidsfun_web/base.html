@@ -383,32 +383,26 @@
 <footer class="">
     <div class="container">
         <div class="row justify-content-center align-items-center pb-3">
-            <div class="col-3 col-lg-1">
-                <a class="fac" href="https://www.facebook.com/BouncehouseNY">
-                    <i class="bi bi-facebook"></i>
-                </a>
-            </div>
-            <div class="col-3 col-lg-1">
-                <a class="ins" href="https://www.instagram.com/kidsfunyfiestasinfantiles/">
-                    <i class="bi bi-instagram"></i>
-                </a>
-            </div>
-            <div class="col-3 col-lg-1">
-                <a class="wha" href="https://wa.me/77563510">
-                    <i class="bi bi-whatsapp"></i>
-                </a>
-            </div>
             <div class="col-lg-8 text-center text-lg-end mt-3 mt-lg-0">
                 <p>
                     <span class="text-violet">Copyright &copy; </span>
                     <span class="text-orange">Kidsfun y Fiestas Infantiles </span>
-                    <span class="text-yellow" id="copyrightYear">2024</span>
-                    <span class="text-green">Fiestas Infantiles</span>
+                    <span class="text-yellow" id="copyrightYear">2025</span>
+                    <span class="text-green"> - Entretenimiento Infantil de Calidad</span>
                 </p>
             </div>
         </div>
         <div class="row justify-content-center align-items-center pb-3">
-            <a href="https://webcraftedsolutions.net/" class="text-end power">Power by webcraftedsolutions.net</a>
+            <div class="col-12 text-center">
+                <p class="developer-credit">
+                    <span class="developer-text">Desarrollado con </span>
+                    <i class="bi bi-heart-fill text-danger" style="color: #28a745 !important; animation: heartbeat 1.5s ease-in-out infinite;"></i>
+                    <span class="developer-text"> por </span>
+                    <a href="https://mrgomezsv.github.io/" target="_blank" rel="noopener noreferrer" class="developer-link">
+                        <strong>Mario Roberto</strong>
+                    </a>
+                </p>
+            </div>
         </div>
     </div>
 </footer>
@@ -416,17 +410,11 @@
     // Obtiene el elemento span donde se mostrará el año actual
     var copyrightYearSpan = document.getElementById("copyrightYear");
 
-    // Obtiene el contenido actual del span
-    var currentContent = copyrightYearSpan.textContent;
-
     // Obtiene el año actual
     var currentYear = new Date().getFullYear();
 
-    // Reemplaza el año en el contenido del span
-    var newContent = currentContent.replace("2024", currentYear);
-
-    // Actualiza el contenido del span con el año actualizado
-    copyrightYearSpan.textContent = newContent;
+    // Actualiza el contenido del span con el año actual
+    copyrightYearSpan.textContent = currentYear;
 </script>
 
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
