@@ -66,7 +66,7 @@ create_backup() {
     ssh ${SERVER_USER}@${SERVER_IP} "cd ${PROJECT_PATH} && \
         if [ -d 'backup' ]; then rm -rf backup; fi && \
         mkdir -p backup && \
-        cp -r . backup/$(date +%Y%m%d_%H%M%S) && \
+        tar -czf backup/backup_$(date +%Y%m%d_%H%M%S).tar.gz --exclude='backup' --exclude='.git' . && \
         echo 'Backup creado exitosamente'"
     
     print_success "Backup creado"
