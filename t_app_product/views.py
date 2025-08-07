@@ -46,8 +46,8 @@ def signin(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                # Redirigir al home después del login exitoso
-                return redirect('home')
+                # Redirigir al dashboard de productos después del login exitoso
+                return redirect('product')
             else:
                 error_message = 'Usuario o contraseña incorrectos'
                 return render(request, 'login/signin.html', {'form': form, 'error': error_message})
@@ -89,7 +89,7 @@ def signup(request):
                 )
                 user.save()
                 login(request, user)
-                return redirect('home')  # Redirigir a 'home' después del inicio de sesión
+                return redirect('product')  # Redirigir al dashboard de productos después del registro
             except IntegrityError:
                 return render(
                     request,
