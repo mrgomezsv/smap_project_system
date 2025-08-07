@@ -100,11 +100,7 @@
                         <div class="col-12">
                             <h3 class="pb-5 text-violet t-sm-center">
                                 {% if products_in_category.0 %}
-                                    {% if products_in_category.0.get_category_display %}
-                                        {{ products_in_category.0.get_category_display }}
-                                    {% else %}
-                                        {{ products_in_category.0.category }}
-                                    {% endif %}
+                                    {{ products_in_category.0.get_category_display|default:category }}
                                 {% else %}
                                     {{ category }}
                                 {% endif %}
@@ -119,7 +115,7 @@
                                     {% if product.img %}
                                         <img class="card-img-top" src="{{ product.img.url }}" alt="Product Image">
                                     {% else %}
-                                        <img class="card-img-top" src="{% static 'img/default_product_image.jpg' %}" alt="Default Product Image">
+                                        <img class="card-img-top" src="{% static 'img/404_image.png' %}" alt="Default Product Image">
                                     {% endif %}
                                 </div>
                                 <div class="card-body">
@@ -156,17 +152,4 @@
 </section>
 
 <div class="divisor-2"></div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var chatIcons = document.querySelectorAll('.bi-chat');
-
-        chatIcons.forEach(function(icon) {
-            icon.addEventListener('click', function() {
-                var commentModal = new bootstrap.Modal(document.getElementById('commentModal'));
-                commentModal.show();
-            });
-        });
-    });
-</script>
 {% endblock %}

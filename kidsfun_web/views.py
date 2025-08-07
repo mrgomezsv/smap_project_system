@@ -31,22 +31,31 @@ def kidsfun_web(request):
 def service(request):
     """Vista para mostrar productos y servicios"""
     try:
+        # Verificar si el modelo Product está disponible
+        from django.apps import apps
+        if not apps.is_installed('t_app_product'):
+            raise Exception("La aplicación t_app_product no está instalada")
+        
         # Obtener todos los products que están publicados
-        products = Product.objects.filter(publicated=True)
+        products = Product.objects.filter(publicated=True).order_by('category', 'title')
         
         # Crear un diccionario para almacenar los products agrupados por categoría
         products_or_category = {}
         
         if products.exists():
             for product in products:
-                # Agregar los conteos al producto
-                product.likes_count = 0  # Valor por defecto
-                product.comments_count = 0  # Valor por defecto
-                
-                category = product.category
-                if category not in products_or_category:
-                    products_or_category[category] = []
-                products_or_category[category].append(product)
+                try:
+                    # Agregar los conteos al producto
+                    product.likes_count = 0  # Valor por defecto
+                    product.comments_count = 0  # Valor por defecto
+                    
+                    category = product.category
+                    if category not in products_or_category:
+                        products_or_category[category] = []
+                    products_or_category[category].append(product)
+                except Exception as product_error:
+                    print(f"Error procesando producto {product.id}: {str(product_error)}")
+                    continue
         
         context = {
             'products_or_category': products_or_category
@@ -54,6 +63,13 @@ def service(request):
         
         return render(request, 'kidsfun_web/service/service.html', context)
         
+    except ImportError as e:
+        print(f"Error de importación en vista service: {str(e)}")
+        context = {
+            'error_message': 'Error de configuración del sistema. Por favor, contacta al administrador.',
+            'products_or_category': {}
+        }
+        return render(request, 'kidsfun_web/service/service.html', context)
     except Exception as e:
         # Log del error para debugging
         print(f"Error en vista service: {str(e)}")
