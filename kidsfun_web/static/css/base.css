@@ -348,3 +348,186 @@
             text-decoration: underline;
             opacity: 1;
         }
+
+        /* Footer Moderno */
+        .footer-modern {
+            position: relative;
+            background: linear-gradient(135deg, var(--color-footer) 0%, #1a2a5e 100%);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .footer-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .footer-waves {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            right: 0;
+            height: 100px;
+        }
+
+        .footer-waves svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem 0 1.5rem 0;
+        }
+
+        .footer-section {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .copyright-section {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+        }
+
+        .copyright-text {
+            font-family: "Varela Round", sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .developer-section {
+            padding: 1rem 0;
+        }
+
+        .developer-credit {
+            font-family: "Varela Round", sans-serif;
+            font-size: 14px;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .developer-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+        }
+
+        .heart-animated {
+            color: var(--color-green) !important;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            font-size: 16px;
+            margin: 0 5px;
+        }
+
+        .developer-link {
+            color: var(--color-green);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .developer-link:hover {
+            color: #fff;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+        .developer-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--color-green);
+            transition: width 0.3s ease;
+        }
+
+        .developer-link:hover::after {
+            width: 100%;
+        }
+
+        .links-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+        }
+
+        .footer-links {
+            margin: 0;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: "Varela Round", sans-serif;
+            font-size: 13px;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-link:hover {
+            color: var(--color-green);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animación del corazón mejorada */
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+            }
+            14% {
+                transform: scale(1.3);
+            }
+            28% {
+                transform: scale(1);
+            }
+            42% {
+                transform: scale(1.3);
+            }
+            70% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive para el footer */
+        @media (max-width: 768px) {
+            .footer-content {
+                padding: 1.5rem 0 1rem 0;
+            }
+
+            .copyright-text {
+                font-size: 14px;
+            }
+
+            .developer-credit {
+                font-size: 13px;
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .footer-link {
+                font-size: 12px;
+                padding: 0.4rem 0.8rem;
+            }
+        }
