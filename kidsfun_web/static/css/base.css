@@ -239,6 +239,7 @@
 
         footer {
             background-color: var(--color-footer);
+            padding: 1.5rem 0;
         }
 
         footer a {
@@ -271,7 +272,7 @@
             color: #fff;
             font-family: "Varela Round", sans-serif;
             margin-bottom: 0;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
         }
 
@@ -280,8 +281,9 @@
             color: #fff;
             font-family: "Varela Round", sans-serif;
             margin-bottom: 0;
-            font-size: 16px;
+            font-size: 14px;
             text-align: center;
+            line-height: 1.4;
         }
 
         .developer-text {
@@ -324,12 +326,13 @@
         .bi-heart-fill {
             display: inline-block;
             margin: 0 5px;
+            font-size: 14px;
         }
 
         /* Estilos para los enlaces del footer */
         .footer-links {
             margin-bottom: 0;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .footer-link {
@@ -337,9 +340,11 @@
             text-decoration: none;
             transition: all 0.3s ease;
             font-family: "Varela Round", sans-serif;
+            opacity: 0.8;
         }
 
         .footer-link:hover {
             color: var(--color-green);
             text-decoration: underline;
+            opacity: 1;
         }
