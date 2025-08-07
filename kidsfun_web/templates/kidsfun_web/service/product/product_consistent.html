@@ -577,14 +577,14 @@
 <section class="product-hero">
     <div class="container">
         <div class="product-hero-content">
-            <div class="category-badge animate-fade-in-up animate-delay-1">
+            <div class="category-badge" data-aos="fade-down">
                 {{ product.get_category_display }}
             </div>
-            <h1 class="product-title animate-fade-in-up animate-delay-2">
+            <h1 class="product-title" data-aos="fade-up">
                 {{ product.title }}
             </h1>
-            <p class="product-subtitle animate-fade-in-up animate-delay-3">
-                {{ product.description|truncatewords:15 }}
+            <p class="product-subtitle" data-aos="fade-up" data-aos-delay="200">
+                {{ product.description|truncatewords:20 }}
             </p>
         </div>
     </div>

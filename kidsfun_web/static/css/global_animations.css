@@ -1,0 +1,266 @@
+/* Global Animations for Kidsfun Website */
+
+/* AOS Animation Enhancements */
+[data-aos] {
+    will-change: transform, opacity;
+}
+
+/* Performance Optimizations */
+* {
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Enhanced AOS Animations */
+[data-aos="fade-up"] {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+[data-aos="fade-up"].aos-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+[data-aos="fade-down"] {
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: all 0.6s ease;
+}
+
+[data-aos="fade-down"].aos-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+[data-aos="fade-left"] {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.6s ease;
+}
+
+[data-aos="fade-left"].aos-animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+[data-aos="fade-right"] {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s ease;
+}
+
+[data-aos="fade-right"].aos-animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+[data-aos="zoom-in"] {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.6s ease;
+}
+
+[data-aos="zoom-in"].aos-animate {
+    opacity: 1;
+    transform: scale(1);
+}
+
+[data-aos="zoom-in-up"] {
+    opacity: 0;
+    transform: scale(0.8) translateY(30px);
+    transition: all 0.6s ease;
+}
+
+[data-aos="zoom-in-up"].aos-animate {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+[data-aos="zoom-in-down"] {
+    opacity: 0;
+    transform: scale(0.8) translateY(-30px);
+    transition: all 0.6s ease;
+}
+
+[data-aos="zoom-in-down"].aos-animate {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+/* Slide Animations */
+[data-aos="slide-up"] {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease;
+}
+
+[data-aos="slide-up"].aos-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+[data-aos="slide-down"] {
+    opacity: 0;
+    transform: translateY(-50px);
+    transition: all 0.8s ease;
+}
+
+[data-aos="slide-down"].aos-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+[data-aos="slide-left"] {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.8s ease;
+}
+
+[data-aos="slide-left"].aos-animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+[data-aos="slide-right"] {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s ease;
+}
+
+[data-aos="slide-right"].aos-animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Flip Animations */
+[data-aos="flip-left"] {
+    opacity: 0;
+    transform: perspective(400px) rotateY(90deg);
+    transition: all 0.8s ease;
+}
+
+[data-aos="flip-left"].aos-animate {
+    opacity: 1;
+    transform: perspective(400px) rotateY(0deg);
+}
+
+[data-aos="flip-right"] {
+    opacity: 0;
+    transform: perspective(400px) rotateY(-90deg);
+    transition: all 0.8s ease;
+}
+
+[data-aos="flip-right"].aos-animate {
+    opacity: 1;
+    transform: perspective(400px) rotateY(0deg);
+}
+
+/* Bounce Animation */
+[data-aos="bounce"] {
+    opacity: 0;
+    transform: scale(0.3);
+    transition: all 0.6s ease;
+}
+
+[data-aos="bounce"].aos-animate {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Pulse Animation */
+[data-aos="pulse"] {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.6s ease;
+}
+
+[data-aos="pulse"].aos-animate {
+    opacity: 1;
+    transform: scale(1);
+    animation: pulse 1s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Staggered Animations */
+[data-aos-delay="100"] {
+    transition-delay: 0.1s;
+}
+
+[data-aos-delay="200"] {
+    transition-delay: 0.2s;
+}
+
+[data-aos-delay="300"] {
+    transition-delay: 0.3s;
+}
+
+[data-aos-delay="400"] {
+    transition-delay: 0.4s;
+}
+
+[data-aos-delay="500"] {
+    transition-delay: 0.5s;
+}
+
+/* Hover Effects for Animated Elements */
+[data-aos]:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+/* Responsive Animations */
+@media (max-width: 768px) {
+    [data-aos] {
+        transition-duration: 0.4s !important;
+    }
+    
+    [data-aos="fade-up"],
+    [data-aos="fade-down"],
+    [data-aos="fade-left"],
+    [data-aos="fade-right"] {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+/* Loading Animation */
+.page-loading {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: pageLoad 0.8s ease-out forwards;
+}
+
+@keyframes pageLoad {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card Hover Effects */
+.card[data-aos]:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* Button Hover Effects */
+.btn[data-aos]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+/* Image Hover Effects */
+img[data-aos]:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+} 
