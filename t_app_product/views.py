@@ -46,12 +46,14 @@ def signin(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('product')  # Asegúrate de que 'product' esté definido en tus URLs
+                # Redirigir al home después del login exitoso
+                return redirect('home')
             else:
-                error_message = 'Username or password is incorrect'
+                error_message = 'Usuario o contraseña incorrectos'
                 return render(request, 'login/signin.html', {'form': form, 'error': error_message})
         else:
-            return render(request, 'login/signin.html', {'form': form})
+            error_message = 'Por favor, verifica tus credenciales'
+            return render(request, 'login/signin.html', {'form': form, 'error': error_message})
 
 
 def signup(request):

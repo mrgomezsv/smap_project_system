@@ -63,6 +63,22 @@
         .centered-content {
             text-align: center;
         }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #f5c6cb;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #c3e6cb;
+        }
         @media (max-width: 768px) {
             .form-side {
                 transform: translateX(0);  /* El formulario se centra al quitar el desplazamiento en móviles */
@@ -78,6 +94,21 @@
             <div class="login-welcome-row">
                 <h1>Accede a tu cuenta en <br>SMAP</h1>
             </div>
+            
+            <!-- Mostrar mensajes de error -->
+            {% if error %}
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                </div>
+            {% endif %}
+            
+            <!-- Mostrar mensajes de éxito -->
+            {% if success %}
+                <div class="success-message">
+                    <i class="fas fa-check-circle"></i> {{ success }}
+                </div>
+            {% endif %}
+            
             <div class="divider">
                 <span class="divider-line"></span>
                 X
@@ -85,24 +116,22 @@
             </div>
             <div class="text-field">
                 <label for="username">Usuario:
-                    <input type="text" id="username" name="username" autocomplete="off" placeholder="Your Username"
+                    <input type="text" id="username" name="username" autocomplete="off" placeholder="Tu nombre de usuario"
                            required>
                 </label>
             </div>
             <div class="text-field">
-                <label for="password">Password:
-                    <input id="password" type="password" name="password" placeholder="Your Password"
-                           title="Minimum 6 characters at least 1 Alphabet and 1 Number"
-                           pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" required>
+                <label for="password">Contraseña:
+                    <input id="password" type="password" name="password" placeholder="Tu contraseña"
+                           required>
                 </label>
             </div>
-            <button class="my-form__button" type="submit">Login</button>
+            <button class="my-form__button" type="submit">Iniciar Sesión</button>
             <div class="welcome-message">
                 <div class="my-form__actions">
                     <div class="my-form__row centered-content">
                         <div>
-                            Volver a <a href="https://kidsfunyfiestasinfantiles.com/" title="Create Account">Kisdfun y
-                            Fiestas Infantiles</a>
+                            Volver a <a href="{% url 'home' %}" title="Volver al inicio">Kidsfun y Fiestas Infantiles</a>
                         </div>
                     </div>
                 </div>
