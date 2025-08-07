@@ -744,6 +744,7 @@
             text-decoration: none;
             transition: all 0.3s ease;
             font-weight: 600;
+            font-size: 0.85rem;
         }
 
         .developer-link:hover {
