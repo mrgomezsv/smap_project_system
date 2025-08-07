@@ -30,6 +30,7 @@
 
 <body style="background-color: #F4F1FF">
     <div class="container mt-5" style="background-color: #F4F1FF !important">
+        {% csrf_token %}
         {% if error_message %}
             <!-- Mensaje de error -->
             <div class="alert alert-danger" role="alert">
@@ -72,7 +73,12 @@
                         <td>{{ user.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</td>
                         <td class="form-check me-3 hide-trash trash-column"
                             id="trash-icon-{{ user.id }}">
-                            <i class="fas fa-trash-alt trash-icon mr-2"></i>
+                            <button type="button" 
+                                    class="btn btn-link text-danger p-0" 
+                                    onclick="confirmDeleteUser('{{ user.id }}', '{{ user.username }}')"
+                                    title="Eliminar usuario">
+                                <i class="fas fa-trash-alt trash-icon mr-2"></i>
+                            </button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -109,5 +115,50 @@
                 toggleTrashIconVisibility(checkbox.value);
             });
         });
+
+        // Función para confirmar eliminación de usuario
+        function confirmDeleteUser(userId, username) {
+            if (confirm(`¿Estás seguro de que quieres eliminar al usuario "${username}"?\n\nEsta acción no se puede deshacer.`)) {
+                deleteUser(userId);
+            }
+        }
+
+        // Función para eliminar usuario
+        function deleteUser(userId) {
+            // Crear un formulario temporal para enviar la solicitud POST
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/sudo_admin/delete/${userId}/`;
+            
+            // Agregar el token CSRF
+            var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (!csrfToken) {
+                csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = 'csrfmiddlewaretoken';
+                csrfToken.value = getCookie('csrftoken');
+            }
+            form.appendChild(csrfToken);
+            
+            // Agregar el formulario al documento y enviarlo
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // Función para obtener el token CSRF de las cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
     </script>
 {% endblock %}

@@ -29,6 +29,7 @@ urlpatterns = [
     path('waiver/', views.waiver, name='waiver'),
     path('waiver/delete/<int:validator_id>/', views.delete_validator, name='delete_validator'),
     path('sudo_admin/', views.sudo_admin, name='sudo_admin'),
+    path('sudo_admin/delete/<int:user_id>/', views.delete_user, name='delete_user'),
     path('ticket_master/', views.ticket_master, name='ticket_master'),
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),

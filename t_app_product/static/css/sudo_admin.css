@@ -13,3 +13,35 @@
     width: 30px; /* Cambia este valor según tus necesidades */
     vertical-align: middle; /* Alinea verticalmente el contenido */
 }
+
+/* Estilos para el botón de eliminar */
+.btn-link.text-danger {
+    color: #dc3545 !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-link.text-danger:hover {
+    color: #c82333 !important;
+    transform: scale(1.1);
+}
+
+.btn-link.text-danger:active {
+    transform: scale(0.95);
+}
+
+/* Estilo para el icono de basura */
+.trash-icon {
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
+/* Animación para mostrar/ocultar el icono */
+.hide-trash {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.trash-column:not(.hide-trash) {
+    opacity: 1;
+}

@@ -556,6 +556,35 @@ def sudo_admin(request):
             'error_message': error_message
         })
 
+
+@login_required
+@user_passes_test(is_mrgomez)
+@require_http_methods(['POST'])
+def delete_user(request, user_id):
+    try:
+        # Obtener el usuario a eliminar
+        user_to_delete = User.objects.get(id=user_id)
+        
+        # No permitir eliminar al usuario actual (mrgomez)
+        if user_to_delete.username == 'mrgomez':
+            messages.error(request, 'No puedes eliminar tu propia cuenta de administrador.')
+            return redirect('sudo_admin')
+        
+        # Obtener el nombre del usuario antes de eliminarlo
+        username = user_to_delete.username
+        
+        # Eliminar el usuario
+        user_to_delete.delete()
+        
+        messages.success(request, f'Usuario "{username}" eliminado exitosamente.')
+        
+    except User.DoesNotExist:
+        messages.error(request, 'Usuario no encontrado.')
+    except Exception as e:
+        messages.error(request, f'Error al eliminar usuario: {str(e)}')
+    
+    return redirect('sudo_admin')
+
 def handler404(request, exception):
     return render(request, 'errors/404.html', status=404)
 
