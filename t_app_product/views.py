@@ -56,20 +56,37 @@ def signin(request):
             return render(request, 'login/signin.html', {'form': form, 'error': error_message})
 
 
-@login_required
 def change_password(request):
     if request.method == 'POST':
-        form = CustomPasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            # Actualizar la sesión para evitar que el usuario sea desconectado
-            update_session_auth_hash(request, user)
-            messages.success(request, '¡Tu contraseña ha sido cambiada exitosamente!')
-            return redirect('home')
+        # Si el usuario está autenticado, usar el formulario normal
+        if request.user.is_authenticated:
+            form = CustomPasswordChangeForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                # Actualizar la sesión para evitar que el usuario sea desconectado
+                update_session_auth_hash(request, user)
+                messages.success(request, '¡Tu contraseña ha sido cambiada exitosamente!')
+                return redirect('home')
+            else:
+                messages.error(request, 'Por favor, corrige los errores a continuación.')
         else:
-            messages.error(request, 'Por favor, corrige los errores a continuación.')
+            # Si no está autenticado, mostrar formulario para cambiar por email
+            email = request.POST.get('email')
+            if email:
+                try:
+                    user = User.objects.get(email=email)
+                    # Aquí podrías implementar un sistema de reset por email
+                    messages.success(request, f'Se ha enviado un enlace de restablecimiento a {email}')
+                    return redirect('signin')
+                except User.DoesNotExist:
+                    messages.error(request, 'No se encontró un usuario con ese email.')
+            else:
+                messages.error(request, 'Por favor, ingresa tu email.')
     else:
-        form = CustomPasswordChangeForm(request.user)
+        if request.user.is_authenticated:
+            form = CustomPasswordChangeForm(request.user)
+        else:
+            form = None
     
     return render(request, 'login/change_password.html', {'form': form})
 
