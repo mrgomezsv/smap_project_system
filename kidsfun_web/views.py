@@ -57,9 +57,11 @@ def service(request):
     except Exception as e:
         # Log del error para debugging
         print(f"Error en vista service: {str(e)}")
+        import traceback
+        traceback.print_exc()
         # Retornar una página de error más amigable
         context = {
-            'error_message': f'Lo sentimos, hubo un problema al cargar los productos: {str(e)}. Por favor, intenta de nuevo más tarde.',
+            'error_message': f'Lo sentimos, hubo un problema al cargar los productos. Por favor, intenta de nuevo más tarde.',
             'products_or_category': {}
         }
         return render(request, 'kidsfun_web/service/service.html', context)

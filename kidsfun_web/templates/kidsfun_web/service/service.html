@@ -100,7 +100,11 @@
                         <div class="col-12">
                             <h3 class="pb-5 text-violet t-sm-center">
                                 {% if products_in_category.0 %}
-                                    {{ products_in_category.0.get_category_display }}
+                                    {% if products_in_category.0.get_category_display %}
+                                        {{ products_in_category.0.get_category_display }}
+                                    {% else %}
+                                        {{ products_in_category.0.category }}
+                                    {% endif %}
                                 {% else %}
                                     {{ category }}
                                 {% endif %}

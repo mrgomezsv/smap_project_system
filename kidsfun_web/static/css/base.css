@@ -239,7 +239,7 @@
 
         footer {
             background-color: var(--color-footer);
-            padding: 2rem 0 1.5rem 0;
+            padding: 1.5rem 0 1rem 0;
             position: relative;
             overflow: hidden;
         }
@@ -284,8 +284,9 @@
             color: #fff;
             font-family: "Varela Round", sans-serif;
             margin-bottom: 0;
-            font-size: 16px;
+            font-size: 13px;
             cursor: pointer;
+            line-height: 1.4;
         }
 
         /* Estilos mejorados para el crédito del desarrollador */
@@ -293,10 +294,10 @@
             color: #fff;
             font-family: "Varela Round", sans-serif;
             margin-bottom: 0;
-            font-size: 14px;
+            font-size: 12px;
             text-align: center;
             line-height: 1.4;
-            padding: 0.5rem 0;
+            padding: 0.3rem 0;
         }
 
         .developer-text {
@@ -307,8 +308,8 @@
         .heart-animated {
             color: var(--color-green) !important;
             animation: heartbeat 1.5s ease-in-out infinite;
-            font-size: 14px;
-            margin: 0 5px;
+            font-size: 12px;
+            margin: 0 3px;
             display: inline-block;
         }
 
@@ -344,8 +345,8 @@
         /* Estilos mejorados para los enlaces del footer */
         .footer-links {
             margin-bottom: 0;
-            font-size: 13px;
-            padding: 0.5rem 0;
+            font-size: 11px;
+            padding: 0.3rem 0;
         }
 
         .footer-link {
@@ -353,8 +354,8 @@
             text-decoration: none;
             transition: all 0.3s ease;
             font-family: "Varela Round", sans-serif;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             display: inline-block;
@@ -373,13 +374,13 @@
                 transform: scale(1);
             }
             14% {
-                transform: scale(1.2);
+                transform: scale(1.1);
             }
             28% {
                 transform: scale(1);
             }
             42% {
-                transform: scale(1.2);
+                transform: scale(1.1);
             }
             70% {
                 transform: scale(1);
@@ -389,20 +390,20 @@
         /* Responsive para el footer */
         @media (max-width: 768px) {
             footer {
-                padding: 1.5rem 0 1rem 0;
+                padding: 1rem 0 0.5rem 0;
             }
 
             footer p,
             footer .power {
-                font-size: 14px;
+                font-size: 12px;
             }
 
             .developer-credit {
-                font-size: 13px;
+                font-size: 11px;
             }
 
             .footer-link {
-                font-size: 12px;
-                padding: 0.25rem 0.6rem;
+                font-size: 10px;
+                padding: 0.15rem 0.5rem;
             }
         }
