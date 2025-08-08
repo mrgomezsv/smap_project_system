@@ -800,16 +800,31 @@ def api_products(request):
         products_data = []
         
         for product in products:
+            # Manejar la URL de la imagen de forma segura
+            image_url = None
+            if product.img and hasattr(product.img, 'url'):
+                try:
+                    image_url = request.build_absolute_uri(product.img.url)
+                except:
+                    image_url = None
+            
+            # Manejar el usuario de forma segura
+            user_name = 'Unknown'
+            if product.user:
+                user_name = product.user.username
+            
             products_data.append({
                 'id': product.id,
                 'title': product.title,
                 'description': product.description,
                 'category': product.get_category_display(),
                 'dimensions': product.dimensions,
+                'price': str(product.price) if product.price else None,
+                'youtube_url': product.youtube_url,
                 'publicated': product.publicated,
-                'user': product.user.username,
-                'image_url': request.build_absolute_uri(product.img.url) if product.img else None,
-                'created_at': product.created_at.isoformat() if product.created_at else None,
+                'user': user_name,
+                'image_url': image_url,
+                'created_at': product.created.isoformat() if product.created else None,
             })
         
         return Response({
@@ -831,16 +846,31 @@ def api_products_by_category(request, category):
         products_data = []
         
         for product in products:
+            # Manejar la URL de la imagen de forma segura
+            image_url = None
+            if product.img and hasattr(product.img, 'url'):
+                try:
+                    image_url = request.build_absolute_uri(product.img.url)
+                except:
+                    image_url = None
+            
+            # Manejar el usuario de forma segura
+            user_name = 'Unknown'
+            if product.user:
+                user_name = product.user.username
+            
             products_data.append({
                 'id': product.id,
                 'title': product.title,
                 'description': product.description,
                 'category': product.get_category_display(),
                 'dimensions': product.dimensions,
+                'price': str(product.price) if product.price else None,
+                'youtube_url': product.youtube_url,
                 'publicated': product.publicated,
-                'user': product.user.username,
-                'image_url': request.build_absolute_uri(product.img.url) if product.img else None,
-                'created_at': product.created_at.isoformat() if product.created_at else None,
+                'user': user_name,
+                'image_url': image_url,
+                'created_at': product.created.isoformat() if product.created else None,
             })
         
         return Response({
