@@ -5,7 +5,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from t_app_product import views
-from t_app_product.views import process_checkbox, redirect_productc
+from t_app_product.views import process_checkbox
+# Nuevo servicio de análisis de CV
+from cv_service import views as cv_views
 # from api.views import ProductListCreate  # Comentado - API eliminada
 
 urlpatterns = [
@@ -42,6 +44,9 @@ urlpatterns = [
     # path('api/', include('api_commentary.urls')),  # Comentado - API eliminada
     # path('api/', include('api_waiver.urls')),  # Comentado - API eliminada
     path('api/v2/', include('waiver_v2.urls')),  # Incluye las URLs de la nueva aplicación waiver_v2
+    # Servicio independiente para análisis de CV (microservicio ligero)
+    path('api/cv/analyze/', cv_views.cv_analyze, name='cv_analyze'),
+    path('api/cv/harvard-pdf/', cv_views.cv_harvard_pdf, name='cv_harvard_pdf'),
     # path('api_waiver_validator/', include('api_waiver_validator.urls')),  # Comentado - API eliminada
 ]
 

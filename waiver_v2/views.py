@@ -2,12 +2,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
-from .models import WaiverQRV2, WaiverDataV2
-from .serializers import WaiverQRV2Serializer, WaiverCreateV2Serializer, WaiverDataV2Serializer
+from .models import WaiverQRV2
+from .serializers import WaiverQRV2Serializer, WaiverCreateV2Serializer
 # from api_waiver.utils import create_waiver_pdf  # Comentado - API eliminada
 from t_app_product.utils import send_waiver_confirmation_email
 import tempfile
 import os
+import io
 
 @api_view(['POST'])
 def api_waiver_v2(request):
@@ -106,6 +107,9 @@ def api_waiver_v2(request):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response({'error': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+# Nota: Los endpoints de CV y su lógica se movieron a la app 'cv_service'.
 
 @api_view(['GET'])
 def get_waiver_data_v2(request, qr_code):
