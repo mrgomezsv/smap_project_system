@@ -21,5 +21,16 @@
 {#    <a href="#">Hashtags</a>#}
 {#    <a href="#">Language</a>#}
 {#    <div style="margin-bottom: 20px;"></div>#}
-    <a>© 2024 SMAP for Kidsfun y Fiestas Infantiles</a>
+    <div class="container text-center">
+        <small class="text-muted" style="font-family: 'Varela Round', sans-serif;">
+            © <span id="smapYear">2024</span> • SMAP para Kidsfun y Fiestas Infantiles — Construido con pasión y dedicación
+        </small>
+    </div>
+    <script>
+        (function(){
+            var y = new Date().getFullYear();
+            var el = document.getElementById('smapYear');
+            if (el) el.textContent = y;
+        })();
+    </script>
 </footer>
