@@ -1,0 +1,143 @@
+/* Dashboard Kidsfun Styles */
+@import url("https://fonts.googleapis.com/css2?family=Titan+One&family=Varela+Round:wght@400;600&display=swap");
+
+:root {
+  --color-yellow-menu: #f5a91b;
+  --color-green: #00d084;
+  --color-yellow: #fcb900;
+  --color-violeta: #c751c0;
+  --color-darkgreen: #305e27;
+  --color-lightblue: #2855e9;
+  --color-gray: #f5f3f3;
+  --color-footer: #0a1844;
+  --kf-surface: #ffffff;
+  --kf-surface-2: #f8f9fc;
+  --kf-text: #1f2937;
+}
+
+body {
+  font-family: "Varela Round", system-ui, -apple-system, Segoe UI, Roboto,
+    Ubuntu, Cantarell, "Helvetica Neue", Arial, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol";
+  color: var(--kf-text);
+  background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
+}
+
+/* Sidebar */
+.sidebar {
+  background: linear-gradient(180deg, var(--color-yellow-menu) 0%, #ef6c00 100%) !important;
+  box-shadow: 0 8px 24px rgba(239, 108, 0, 0.25);
+}
+
+.sidebar-brand {
+  font-family: "Titan One", cursive;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-item {
+  font-weight: 600;
+}
+
+.sidebar-item i {
+  color: #fff;
+}
+
+.sidebar-item:hover {
+  transform: translateX(4px);
+}
+
+.sidebar-item.active {
+  background: rgba(255, 255, 255, 0.22) !important;
+}
+
+/* Top navbar */
+.navbar.shadow-sm {
+  border-bottom: 3px solid rgba(245, 169, 27, 0.25);
+}
+
+/* Badges */
+#webMessagesBadge {
+  background: linear-gradient(135deg, #ef3a2d 0%, #ff6b6b 100%);
+  box-shadow: 0 4px 10px rgba(255, 107, 107, 0.35);
+}
+
+/* Cards / tables */
+.card {
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 10px 26px rgba(10, 24, 68, 0.08);
+}
+
+.card-header {
+  background: linear-gradient(135deg, var(--color-lightblue) 0%, #6a82fb 100%);
+  color: #fff;
+  border-top-left-radius: 16px !important;
+  border-top-right-radius: 16px !important;
+}
+
+.table thead th {
+  background: #f1f5ff;
+  color: #3b4cca;
+  border: 0;
+}
+
+.table tbody tr:hover {
+  background: #fdf6e3;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-lightblue) 0%, #6a82fb 100%);
+  border: 0;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+.btn-violet, .btn-warning {
+  background: linear-gradient(135deg, var(--color-violeta) 0%, #ff6ec7 100%);
+  border: 0;
+}
+
+.btn-violet:hover, .btn-warning:hover {
+  filter: brightness(1.06);
+}
+
+/* Content wrapper spacing */
+.content-wrapper {
+  padding-top: 1.25rem;
+}
+
+/* Ensure main content keeps Varela Round */
+.main-content, .content-wrapper {
+  font-family: "Varela Round", sans-serif;
+}
+
+/* Extender Varela Round a títulos y elementos claves del contenido */
+.main-content h1,
+.main-content h2,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6,
+.content-wrapper h1,
+.content-wrapper h2,
+.content-wrapper h3,
+.content-wrapper h4,
+.content-wrapper h5,
+.content-wrapper h6,
+.card .card-header,
+.card .card-title,
+.table th,
+.badge,
+.btn {
+  font-family: "Varela Round", sans-serif;
+}
+
+/* Toast override to fit Kidsfun */
+.toast.text-bg-primary {
+  background: linear-gradient(135deg, #1f6feb 0%, #3b82f6 100%) !important;
+}
+
+

@@ -2,9 +2,14 @@
 
 {% block content %}
 <div class="container mt-4">
-    <a href="{% url 'web_messages' %}" class="btn btn-link mb-3">
-        <i class="bi bi-arrow-left"></i> Volver a Mensajes
-    </a>
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <a href="{% url 'web_messages' %}" class="btn btn-link">
+            <i class="bi bi-arrow-left"></i> Volver a Mensajes
+        </a>
+        <span class="badge {% if message_obj.is_read %}bg-secondary{% else %}bg-success{% endif %}">
+            {% if message_obj.is_read %}Leído{% else %}Nuevo{% endif %}
+        </span>
+    </div>
 
     <div class="card">
         <div class="card-header">
@@ -12,8 +17,15 @@
             <span class="text-muted"> ({{ message_obj.created_at|date:"d/m/Y H:i" }})</span>
         </div>
         <div class="card-body">
-            <p><strong>Email:</strong> {{ message_obj.email }}</p>
-            <p><strong>Teléfono:</strong> {{ message_obj.contact_number }}</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Email:</strong> {{ message_obj.email }}</p>
+                    <p><strong>Teléfono:</strong> {{ message_obj.contact_number }}</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-muted mb-0">Recibido: {{ message_obj.created_at|date:"d/m/Y H:i" }}</p>
+                </div>
+            </div>
             <hr/>
             <p><strong>Motivo:</strong></p>
             <p>{{ message_obj.reason }}</p>

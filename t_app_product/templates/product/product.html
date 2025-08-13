@@ -4,10 +4,13 @@
 <div class="container-fluid px-4">
     <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-center py-4">
-        <h1 class="h3 mb-0 text-gray-800">
-            <i class="bi bi-box-seam-fill me-2"></i>
-            Gestión de Productos
-        </h1>
+        <div>
+            <h1 class="h3 mb-0">
+                <i class="bi bi-box-seam-fill me-2"></i>
+                Gestión de Productos
+            </h1>
+            <small class="text-muted">Administra tu catálogo de productos y servicios</small>
+        </div>
         <div class="d-flex gap-2">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newProductModal">
                 <i class="bi bi-plus-circle me-2"></i>
@@ -17,7 +20,7 @@
     </div>
 
     <!-- Search and Filter Section -->
-    <div class="card shadow-sm mb-4" style="background-color: #F4F1FF;">
+    <div class="card shadow-sm mb-4">
         <div class="card-body">
             <div class="row g-3 align-items-center">
                 <div class="col-md-6">
@@ -62,7 +65,7 @@
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
         {% for product in products %}
         <div class="col">
-            <div class="card h-100 shadow-sm hover-shadow" style="background-color: #F4F1FF;">
+            <div class="card h-100 shadow-sm hover-shadow">
                 <!-- Product Image -->
                 <div class="position-relative">
                     <img src="{{ product.img.url }}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
@@ -95,7 +98,7 @@
                         {% endif %}
                     </div>
 
-                    <div class="mt-auto">
+                     <div class="mt-auto">
                         <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary w-100">
                             <i class="bi bi-eye me-2"></i>
                             Ver Detalles
@@ -106,7 +109,7 @@
         </div>
         {% empty %}
         <div class="col-12">
-            <div class="alert alert-info" role="alert" style="background-color: #F4F1FF; border-color: #4e73df;">
+            <div class="alert alert-info" role="alert">
                 <i class="bi bi-info-circle me-2"></i>
                 No hay productos disponibles.
             </div>
@@ -147,75 +150,6 @@
 <!-- Include Modal -->
 {% include 'modal/modal_new_product.html' %}
 
-<style>
-:root {
-    --primary-color: #4e73df;
-    --secondary-color: #858796;
-    --success-color: #1cc88a;
-    --info-color: #36b9cc;
-    --warning-color: #f6c23e;
-    --danger-color: #e74a3b;
-    --light-color: #f8f9fc;
-    --dark-color: #5a5c69;
-    --background-color: #F4F1FF;
-}
-
-.hover-shadow {
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.hover-shadow:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
-
-.card-img-top {
-    border-top-left-radius: calc(0.25rem - 1px);
-    border-top-right-radius: calc(0.25rem - 1px);
-}
-
-.btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.btn-primary:hover {
-    background-color: #2e59d9;
-    border-color: #2e59d9;
-}
-
-.btn-outline-primary {
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.btn-outline-primary:hover {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.pagination .page-link {
-    color: var(--primary-color);
-}
-
-.pagination .page-item.active .page-link {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.badge.bg-primary {
-    background-color: var(--primary-color) !important;
-}
-
-.card {
-    border: none;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-}
-
-.alert-info {
-    color: var(--primary-color);
-}
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
