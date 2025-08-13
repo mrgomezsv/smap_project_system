@@ -18,6 +18,7 @@ except ImportError:
     print("Warning: qrcode module not available. QR code functionality will be disabled.")
 
 from t_app_product.models import Product
+from t_app_product.models import ContactMessage
 # from api_like.models import Like  # Comentado - API eliminada
 # from api_commentary.models import Commentary  # Comentado - API eliminada
 
@@ -193,6 +194,28 @@ def web_comment(request, product_id):
 
 
 def contact(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('firstName')
+        last_name = request.POST.get('lastName')
+        contact_number = request.POST.get('contactNumber')
+        email = request.POST.get('email')
+        reason = request.POST.get('reason')
+
+        if first_name and last_name and contact_number and email and reason:
+            ContactMessage.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                contact_number=contact_number,
+                email=email,
+                reason=reason
+            )
+            from django.contrib import messages
+            messages.success(request, '¡Mensaje enviado! Te contactaremos pronto.')
+            from django.shortcuts import redirect
+            return redirect('contact')
+        else:
+            from django.contrib import messages
+            messages.error(request, 'Por favor, completa todos los campos.')
     return render(request, 'kidsfun_web/contact/contact.html')
 
 def mobile_app(request):

@@ -271,6 +271,15 @@
                 <i class="bi bi-chat-dots-fill"></i>
                 Chats
             </a>
+            <a href="{% url 'web_messages' %}" class="sidebar-item" id="opcion8">
+                <i class="bi bi-envelope-fill"></i>
+                Mensajes de la Web
+                {% if unread_count %}
+                    <span class="badge bg-danger ms-2" id="webMessagesBadge">{{ unread_count }}</span>
+                {% else %}
+                    <span class="badge bg-danger ms-2 d-none" id="webMessagesBadge">0</span>
+                {% endif %}
+            </a>
         </div>
 
         <div class="user-profile">
@@ -359,6 +368,53 @@
                     sidebar.classList.remove('show');
                 }
             });
+
+            // Polling de mensajes no leídos y notificación simple
+            function updateUnreadBadge(count) {
+                const badge = document.getElementById('webMessagesBadge');
+                if (!badge) return;
+                if (count && count > 0) {
+                    badge.textContent = count;
+                    badge.classList.remove('d-none');
+                } else {
+                    badge.textContent = '0';
+                    badge.classList.add('d-none');
+                }
+            }
+
+            let lastUnread = parseInt((document.getElementById('webMessagesBadge')?.textContent || '0'), 10) || 0;
+            function pollUnread() {
+                fetch('/web-messages/unread-count/', { credentials: 'same-origin' })
+                    .then(r => r.json())
+                    .then(data => {
+                        const current = data.unread || 0;
+                        if (current > lastUnread) {
+                            // Notificación visual simple
+                            const toast = document.createElement('div');
+                            toast.className = 'position-fixed bottom-0 end-0 p-3';
+                            toast.style.zIndex = 2000;
+                            toast.innerHTML = `
+                                <div class="toast align-items-center text-bg-primary border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                                  <div class="d-flex">
+                                    <div class="toast-body">
+                                      Tienes ${current - lastUnread} nuevo(s) mensaje(s) sin leer.
+                                    </div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                                  </div>
+                                </div>`;
+                            document.body.appendChild(toast);
+                            setTimeout(() => toast.remove(), 4000);
+                        }
+                        lastUnread = current;
+                        updateUnreadBadge(current);
+                    })
+                    .catch(() => {});
+            }
+
+            // Iniciar polling cada 20s si el usuario está autenticado
+            {% if user.is_authenticated %}
+            setInterval(pollUnread, 20000);
+            {% endif %}
         });
     </script>
 </body>

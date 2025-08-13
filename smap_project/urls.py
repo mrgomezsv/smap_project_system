@@ -35,6 +35,9 @@ urlpatterns = [
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
     path('productc/', views.productc, name='productc'),
     path('chats/', views.redirect_chats, name='chats'),
+    path('web-messages/', views.web_messages, name='web_messages'),
+    path('web-messages/<int:message_id>/', views.web_message_detail, name='web_message_detail'),
+    path('web-messages/unread-count/', views.unread_contact_count, name='web_messages_unread_count'),
     # APIs del Sistema
     path('api/products/', views.api_products, name='api_products'),
     path('api/products/category/<str:category>/', views.api_products_by_category, name='api_products_by_category'),

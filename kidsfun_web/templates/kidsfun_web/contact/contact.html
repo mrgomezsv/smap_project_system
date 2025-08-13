@@ -186,7 +186,8 @@
             </div>
             
             <div class="col-12 col-sm-12 col-md-6" data-aos="fade-left">
-                <form class="row g-3 contact-form anim_4" action="./form/form.php" method="post">
+                <form class="row g-3 contact-form anim_4" action="{% url 'contact' %}" method="post">
+                    {% csrf_token %}
                     <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
                         <label for="firstName" class="form-label">First name</label>
                         <input type="text" class="form-control" id="firstName" name="firstName" required>

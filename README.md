@@ -491,3 +491,7 @@ Para probar el sistema de correos en desarrollo:
 
 
 mario revisar commit 391b551307157dfc3758463c469624b863f5378a
+
+
+PARA DESPLEGAR FACIL Y RAPIDO
+git push &&  ./deploy.sh deploy

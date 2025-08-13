@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 def image_path(instance, filename):
     return f'product_images/{filename}'
@@ -132,4 +133,21 @@ class ChatMessage(models.Model):
 
     class Meta:
         db_table = 't_app_chat_message'
+
+
+class ContactMessage(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    contact_number = models.CharField(max_length=32)
+    email = models.EmailField()
+    reason = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        db_table = 't_app_contact_message'
+        ordering = ['-created_at']
+
+    def __str__(self) -> str:
+        return f"{self.first_name} {self.last_name} - {self.email}"
         ordering = ['timestamp']

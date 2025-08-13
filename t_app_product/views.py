@@ -26,7 +26,7 @@ from django.http import JsonResponse
 from firebase_admin import messaging
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from .models import ChatAdministrator, ChatRoom, ChatMessage
+from .models import ChatAdministrator, ChatRoom, ChatMessage, ContactMessage
 import firebase_admin
 
 
@@ -148,7 +148,10 @@ def product(request):
     else:
         products = Product.objects.all()  # Muestra todos los productos si no hay consulta
 
-    return render(request, 'product/product.html', {'products': products})
+    return render(request, 'product/product.html', {
+        'products': products,
+        'unread_count': ContactMessage.objects.filter(is_read=False).count()
+    })
 
 
 @login_required
@@ -488,7 +491,29 @@ def redirect_chats(request):
     
     return render(request, 'chats/chats.html', {
         'user_chats': user_chats,
-        'current_chat': current_chat
+        'current_chat': current_chat,
+        'unread_count': ContactMessage.objects.filter(is_read=False).count(),
+    })
+
+
+@login_required
+def web_messages(request):
+    unread_count = ContactMessage.objects.filter(is_read=False).count()
+    messages_qs = ContactMessage.objects.all()
+    return render(request, 'messages/web_messages.html', {
+        'messages_list': messages_qs,
+        'unread_count': unread_count,
+    })
+
+
+@login_required
+def web_message_detail(request, message_id):
+    msg = get_object_or_404(ContactMessage, id=message_id)
+    if not msg.is_read:
+        msg.is_read = True
+        msg.save()
+    return render(request, 'messages/web_message_detail.html', {
+        'message_obj': msg
     })
 
 
@@ -539,7 +564,10 @@ def productc(request):
             categorized_products[product.category] = []
         categorized_products[product.category].append(product)
 
-    return render(request, 'product/productc.html', {'products': categorized_products})
+    return render(request, 'product/productc.html', {
+        'products': categorized_products,
+        'unread_count': ContactMessage.objects.filter(is_read=False).count()
+    })
 
 
 def is_mrgomez(user):
@@ -790,6 +818,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.serializers import serialize
+from django.http import JsonResponse
 import json
 
 @api_view(['GET'])
@@ -883,3 +912,8 @@ def api_products_by_category(request, category):
         return Response({
             'error': f'Error al obtener productos por categoría: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@login_required
+def unread_contact_count(request):
+    return JsonResponse({'unread': ContactMessage.objects.filter(is_read=False).count()})
