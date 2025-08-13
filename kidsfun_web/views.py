@@ -215,6 +215,11 @@ def terms_conditions(request):
     """Vista para la página de términos y condiciones"""
     return render(request, 'kidsfun_web/terms_conditions.html')
 
+
+def payment_methods(request):
+    """Vista para la página de métodos de pago (Zelle)."""
+    return render(request, 'kidsfun_web/payment_methods.html')
+
 def generate_app_qr(request):
     """Genera un QR code para descargar la app de Kidsfun"""
     if not QRCODE_AVAILABLE:

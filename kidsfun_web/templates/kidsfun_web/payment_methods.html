@@ -1,0 +1,57 @@
+{% extends 'kidsfun_web/base.html' %}
+{% load static %}
+
+{% block title %}Métodos de Pago | Kidsfun{% endblock %}
+
+{% block content %}
+<section class="padding-section background-white" style="padding-top: 180px; padding-bottom: 140px;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h1 class="text-center mb-4" data-aos="fade-up">
+          Métodos de Pago
+        </h1>
+        <p class="text-center fs-5 mb-5" data-aos="fade-up" data-aos-delay="100">
+          Actualmente aceptamos pagos de forma segura a través de <strong>Zelle</strong>.
+        </p>
+
+        <div class="card shadow border-0" data-aos="fade-up" data-aos-delay="200">
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <span class="badge bg-success" style="font-size:1rem"><i class="bi bi-credit-card"></i></span>
+              <h2 class="h4 m-0">Pago con Zelle</h2>
+            </div>
+            <p class="mb-3">
+              Para completar tu pago mediante Zelle, contáctanos y te brindaremos los datos necesarios.
+            </p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                1. Escríbenos por WhatsApp desde el botón flotante o en la página de <a href="{% url 'contact' %}">Contacto</a>.
+              </li>
+              <li class="list-group-item">
+                2. Te compartiremos los datos de Zelle y el monto a cancelar.
+              </li>
+              <li class="list-group-item">
+                3. Envía el comprobante para confirmar tu reserva.
+              </li>
+            </ul>
+
+            <div class="alert alert-info mt-4 mb-0">
+              <i class="bi bi-info-circle me-2"></i>
+              Si prefieres, también podemos guiarte paso a paso durante el proceso de pago.
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="250">
+          <a href="{% url 'contact' %}" class="btn btn-primary">
+            <i class="bi bi-whatsapp me-2"></i>Contactar para pagar por Zelle
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+

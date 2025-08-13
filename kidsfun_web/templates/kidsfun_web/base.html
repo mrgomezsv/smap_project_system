@@ -38,10 +38,11 @@
         /* Botón flotante de WhatsApp */
         .whatsapp-float {
             position: fixed;
-            bottom: 30px;
+            bottom: 40px;
             right: 30px;
             z-index: 1000;
             animation: whatsapp-bounce 2s infinite;
+            transition: bottom 0.3s ease;
         }
 
         .whatsapp-float a {
@@ -113,7 +114,7 @@
         /* Responsive para móviles */
         @media (max-width: 768px) {
             .whatsapp-float {
-                bottom: 20px;
+                bottom: 25px;
                 right: 20px;
             }
 
@@ -131,7 +132,7 @@
         /* Ocultar en pantallas muy pequeñas */
         @media (max-width: 480px) {
             .whatsapp-float {
-                bottom: 15px;
+                bottom: 20px;
                 right: 15px;
             }
 
@@ -141,6 +142,11 @@
                 font-size: 22px;
             }
         }
+
+        /* Elevar el botón cuando el footer sea visible */
+        .whatsapp-float.above-footer { bottom: 140px; }
+        @media (max-width: 768px) { .whatsapp-float.above-footer { bottom: 110px; } }
+        @media (max-width: 480px) { .whatsapp-float.above-footer { bottom: 90px; } }
 
         /* Modal de WhatsApp */
         .whatsapp-modal {
@@ -316,6 +322,24 @@
                 justify-content: center;
             }
         }
+
+        /* Estilo para el enlace del desarrollador en el footer */
+        .developer-link {
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit;
+        }
+
+        .developer-link:visited {
+            color: inherit !important;
+        }
+
+        .developer-link:hover,
+        .developer-link:focus {
+            cursor: pointer;
+            color: inherit;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -331,7 +355,7 @@
                 <i class="bi bi-list"></i>
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavId">
-                <ul class="nav navbar-nav ms-auto mt-2 mt-lg-0">
+                <ul class="nav navbar-nav w-100 mt-2 mt-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'home' %}" aria-current="page">Home <span
                                 class="visually-hidden"></span></a>
@@ -343,10 +367,13 @@
                         <a class="nav-link" href="{% url 'mobile_app' %}">Mobile App</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'payment_methods' %}">Métodos de Pago</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'contact' %}">Contact</a>
                     </li>
                     <!-- Botón de Login -->
-                    <li class="nav-item">
+                    <li class="nav-item ms-auto">
                         {% if user.is_authenticated %}
                             <a href="{% url 'product' %}" class="nav-link admin-btn">
                                 <i class="bi bi-person"></i> Panel Admin
@@ -481,7 +508,7 @@
                 </div>
                 <div class="col-md-6 text-md-end">
                     <p class="made-with">
-                        Desarrollado con <i class="bi bi-heart-fill heart-animated"></i> por 
+                        Desarrollado con pasión y dedicación <i class="bi bi-heart-fill heart-animated"></i> por&nbsp;<a href="https://www.linkedin.com/in/mrgomez-dev/" target="_blank" rel="noopener noreferrer" class="developer-link">Mario&nbsp;Roberto</a>
                     </p>
                 </div>
             </div>
@@ -550,6 +577,22 @@
         
         // Call the function to update the year
         updateCopyrightYear();
+        
+        // Evitar que el botón de WhatsApp tape el footer
+        const whatsappFloat = document.querySelector('.whatsapp-float');
+        const footer = document.querySelector('.vg-footer');
+        if (whatsappFloat && footer && 'IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        whatsappFloat.classList.add('above-footer');
+                    } else {
+                        whatsappFloat.classList.remove('above-footer');
+                    }
+                });
+            }, { threshold: 0 });
+            observer.observe(footer);
+        }
         
         // Add smooth scrolling to all footer links
         const footerLinks = document.querySelectorAll('.vg-footer a[href^="#"]');
