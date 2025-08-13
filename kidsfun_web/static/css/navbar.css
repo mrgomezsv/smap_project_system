@@ -111,7 +111,7 @@ body {
 .navbar-nav .nav-item .login-btn {
   background: linear-gradient(135deg, var(--color-violeta) 0%, var(--color-lightblue) 100%);
   color: white !important;
-  padding: 12px 24px !important;
+  padding: 8px 18px !important;
   border-radius: 25px !important;
   text-decoration: none !important;
   margin-left: 15px !important;
@@ -119,7 +119,7 @@ body {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   font-weight: 600 !important;
-  font-size: 1rem !important;
+  font-size: 0.9rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
   position: relative !important;
@@ -167,7 +167,7 @@ body {
 .navbar-nav .nav-item .admin-btn {
   background: linear-gradient(135deg, var(--color-green) 0%, var(--color-darkgreen) 100%);
   color: white !important;
-  padding: 12px 24px !important;
+  padding: 8px 18px !important;
   border-radius: 25px !important;
   text-decoration: none !important;
   margin-left: 15px !important;
@@ -175,7 +175,7 @@ body {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   font-weight: 600 !important;
-  font-size: 1rem !important;
+  font-size: 0.9rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
   position: relative !important;
