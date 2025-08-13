@@ -41,6 +41,35 @@ class Product(models.Model):
     def __str__(self):
         return self.title + ' - by ' + self.user.username
 
+
+class ProductLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    is_favorite = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'product')
+        db_table = 't_app_product_like'
+
+    def __str__(self):
+        return f"{self.user_id}:{self.product_id}:{self.is_favorite}"
+
+
+class ProductComment(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
+    user_id = models.CharField(max_length=128, null=True, blank=True)
+    user_display_name = models.CharField(max_length=255, null=True, blank=True)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 't_app_product_comment'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.product_id}:{self.user_id}:{self.comment[:20]}"
+
 class WaiverData(models.Model):
     user_id = models.IntegerField()
     user_name = models.CharField(max_length=100)

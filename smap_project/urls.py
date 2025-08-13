@@ -41,6 +41,13 @@ urlpatterns = [
     # APIs del Sistema
     path('api/products/', views.api_products, name='api_products'),
     path('api/products/category/<str:category>/', views.api_products_by_category, name='api_products_by_category'),
+    # Likes API (nueva)
+    path('api/likes/product/<int:product_id>/', views.likes_count, name='likes_count'),
+    path('api/likes/user/<str:user_id>/product/<str:product_id>/', views.user_product_favorite, name='user_product_favorite'),
+    path('api/likes/toggle/', views.toggle_like, name='toggle_like'),
+    # Comments API (nueva)
+    path('api/comments/', views.create_comment, name='create_comment'),
+    path('api/comments/product/<int:product_id>/', views.comments_for_product, name='comments_for_product'),
     # path('api/products/', ProductListCreate.as_view(), name='product-list')  # Comentado - API eliminada
     path('', include('kidsfun_web.urls')),  # URLs principales en la raíz
     # path('api/', include('api_like.urls')),  # Comentado - API eliminada

@@ -26,7 +26,7 @@ from django.http import JsonResponse
 from firebase_admin import messaging
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from .models import ChatAdministrator, ChatRoom, ChatMessage, ContactMessage
+from .models import ChatAdministrator, ChatRoom, ChatMessage, ContactMessage, Product, ProductLike, ProductComment
 import firebase_admin
 
 
@@ -912,6 +912,80 @@ def api_products_by_category(request, category):
         return Response({
             'error': f'Error al obtener productos por categoría: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+def likes_count(request, product_id):
+    try:
+        total = ProductLike.objects.filter(product_id=product_id, is_favorite=True).count()
+        return Response({'total_likes': total}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+def user_product_favorite(request, user_id, product_id):
+    try:
+        like = ProductLike.objects.filter(user_id=user_id, product_id=product_id).first()
+        return Response({'user': user_id, 'product': product_id, 'is_favorite': bool(like and like.is_favorite)}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+def toggle_like(request):
+    try:
+        user = request.data.get('user')
+        product = request.data.get('product')
+        is_favorite = request.data.get('is_favorite', True)
+        if not user or not product:
+            return Response({'error': 'user y product son requeridos'}, status=status.HTTP_400_BAD_REQUEST)
+
+        like, _ = ProductLike.objects.get_or_create(user_id=user, product_id=product)
+        like.is_favorite = bool(is_favorite)
+        like.save()
+        total = ProductLike.objects.filter(product_id=product, is_favorite=True).count()
+        return Response({'success': True, 'is_favorite': like.is_favorite, 'total_likes': total}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+def create_comment(request):
+    try:
+        product_id = request.data.get('product_id')
+        user_id = request.data.get('user_id')
+        user_display_name = request.data.get('user_display_name')
+        comment_text = request.data.get('comment')
+        if not product_id or not comment_text:
+            return Response({'error': 'product_id y comment son requeridos'}, status=status.HTTP_400_BAD_REQUEST)
+        ProductComment.objects.create(
+            product_id=product_id,
+            user_id=user_id,
+            user_display_name=user_display_name,
+            comment=comment_text
+        )
+        return Response({'success': True}, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+def comments_for_product(request, product_id):
+    try:
+        items = ProductComment.objects.filter(product_id=product_id).order_by('-created_at')
+        data = [
+            {
+                'comment': it.comment,
+                'user_id': it.user_id,
+                'user_display_name': it.user_display_name,
+                'product_id': it.product_id,
+                'created_at': it.created_at.isoformat(),
+            } for it in items
+        ]
+        return Response(data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @login_required
