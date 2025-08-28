@@ -123,7 +123,6 @@ DATABASES = {
         'HOST': os.getenv('DB_HOST', '82.165.210.146'),
         'PORT': os.getenv('DB_PORT', '5432'),
         'OPTIONS': {
-            'charset': 'utf8',
             'client_encoding': 'UTF8',
         },
     }
