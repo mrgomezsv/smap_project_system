@@ -957,8 +957,23 @@ def create_comment(request):
         user_id = request.data.get('user_id')
         user_display_name = request.data.get('user_display_name')
         comment_text = request.data.get('comment')
+        
         if not product_id or not comment_text:
             return Response({'error': 'product_id y comment son requeridos'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Limpiar y validar el comentario antes de guardarlo
+        if isinstance(comment_text, str):
+            import re
+            # Eliminar caracteres de control excepto saltos de línea
+            comment_text = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', comment_text)
+            
+            # Limpiar caracteres no válidos de Unicode
+            comment_text = re.sub(r'[^\x00-\x7F\u00A0-\uFFFF]', '', comment_text)
+            
+            # Verificar que el comentario no esté vacío después de la limpieza
+            if not comment_text.strip():
+                return Response({'error': 'El comentario no puede estar vacío después de la validación'}, status=status.HTTP_400_BAD_REQUEST)
+        
         ProductComment.objects.create(
             product_id=product_id,
             user_id=user_id,
@@ -974,15 +989,37 @@ def create_comment(request):
 def comments_for_product(request, product_id):
     try:
         items = ProductComment.objects.filter(product_id=product_id).order_by('-created_at')
-        data = [
-            {
-                'comment': it.comment,
+        data = []
+        
+        for it in items:
+            # Limpiar y validar el comentario
+            comment_text = it.comment
+            if comment_text:
+                # Decodificar y recodificar para limpiar caracteres corruptos
+                try:
+                    # Si el comentario está en bytes, decodificarlo
+                    if isinstance(comment_text, bytes):
+                        comment_text = comment_text.decode('utf-8', errors='ignore')
+                    
+                    # Limpiar caracteres no válidos
+                    import re
+                    comment_text = re.sub(r'[^\x00-\x7F\u00A0-\uFFFF]', '', comment_text)
+                    
+                    # Eliminar caracteres de control excepto saltos de línea
+                    comment_text = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', comment_text)
+                    
+                except Exception as e:
+                    print(f"Error procesando comentario {it.id}: {e}")
+                    comment_text = "Comentario no disponible"
+            
+            data.append({
+                'comment': comment_text,
                 'user_id': it.user_id,
                 'user_display_name': it.user_display_name,
                 'product_id': it.product_id,
                 'created_at': it.created_at.isoformat(),
-            } for it in items
-        ]
+            })
+        
         return Response(data, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

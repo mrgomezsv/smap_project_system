@@ -67,6 +67,27 @@ class ProductComment(models.Model):
         db_table = 't_app_product_comment'
         ordering = ['-created_at']
 
+    def clean_comment(self):
+        """Limpia y valida el comentario para evitar caracteres corruptos"""
+        if self.comment:
+            import re
+            comment_text = str(self.comment)
+            
+            # Eliminar caracteres de control excepto saltos de línea
+            comment_text = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', comment_text)
+            
+            # Limpiar caracteres no válidos de Unicode
+            comment_text = re.sub(r'[^\x00-\x7F\u00A0-\uFFFF]', '', comment_text)
+            
+            return comment_text.strip()
+        return ""
+
+    def save(self, *args, **kwargs):
+        """Sobrescribir save para limpiar el comentario antes de guardar"""
+        if self.comment:
+            self.comment = self.clean_comment()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.product_id}:{self.user_id}:{self.comment[:20]}"
 

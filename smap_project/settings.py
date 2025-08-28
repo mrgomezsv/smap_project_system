@@ -122,8 +122,16 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD', 'Karin2100'),
         'HOST': os.getenv('DB_HOST', '82.165.210.146'),
         'PORT': os.getenv('DB_PORT', '5432'),
+        'OPTIONS': {
+            'charset': 'utf8',
+            'client_encoding': 'UTF8',
+        },
     }
 }
+
+# Configuración de codificación de caracteres
+DEFAULT_CHARSET = 'utf-8'
+FILE_CHARSET = 'utf-8'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
