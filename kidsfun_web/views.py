@@ -90,20 +90,33 @@ def service_product(request, product_id):
     # Obtener el producto correspondiente al product_id o mostrar una página 404 si no existe
     product = get_object_or_404(Product, pk=product_id)
 
-    # Comentado: Obtener el conteo de likes para este producto
-    # likes_count = Like.objects.filter(product=str(product.id), is_favorite=True).count()
-    likes_count = 0  # Valor por defecto
-    
-    # Comentado: Obtener todos los comentarios para este producto
-    # comments = Commentary.objects.filter(product_id=product.id).order_by('-id')
-    comments = []  # Lista vacía por defecto
+    # Cargar likes y comentarios reales desde t_app_product
+    try:
+        from t_app_product.models import ProductLike, ProductComment
+        likes_count = ProductLike.objects.filter(product_id=product.id, is_favorite=True).count()
+        comments_qs = ProductComment.objects.filter(product_id=product.id).order_by('-created_at')
+        comments = [
+            {
+                'comment': c.comment,
+                'user_id': c.user_id,
+                'user_display_name': c.user_display_name,
+                'created_at': c.created_at,
+            }
+            for c in comments_qs
+        ]
+        comments_count = len(comments)
+    except Exception:
+        # Fallback seguro si el modelo no está disponible o hay error
+        likes_count = 0
+        comments = []
+        comments_count = 0
     
     # Agregar los datos al contexto
     context = {
         'product': product,
         'likes_count': likes_count,
         'comments': comments,
-        'comments_count': len(comments)
+        'comments_count': comments_count,
     }
 
     # Devolver la renderización de la plantilla con el producto
