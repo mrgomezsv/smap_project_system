@@ -37,6 +37,7 @@ urlpatterns = [
     path('chats/', views.redirect_chats, name='chats'),
     path('web-messages/', views.web_messages, name='web_messages'),
     path('web-messages/<int:message_id>/', views.web_message_detail, name='web_message_detail'),
+    path('web-messages/delete-multiple/', views.delete_multiple_messages, name='delete_multiple_messages'),
     path('web-messages/unread-count/', views.unread_contact_count, name='web_messages_unread_count'),
     # APIs del Sistema
     path('api/products/', views.api_products, name='api_products'),

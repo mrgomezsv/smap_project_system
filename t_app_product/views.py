@@ -518,6 +518,42 @@ def web_message_detail(request, message_id):
 
 
 @login_required
+@require_http_methods(['POST'])
+def delete_multiple_messages(request):
+    """Vista para eliminar múltiples mensajes seleccionados"""
+    try:
+        message_ids = request.POST.getlist('message_ids')
+        
+        if not message_ids:
+            return JsonResponse({
+                'success': False,
+                'error': 'No se seleccionaron mensajes para eliminar'
+            }, status=400)
+        
+        # Convertir IDs a enteros y eliminar mensajes
+        deleted_count = 0
+        for msg_id in message_ids:
+            try:
+                message = ContactMessage.objects.get(id=int(msg_id))
+                message.delete()
+                deleted_count += 1
+            except (ValueError, ContactMessage.DoesNotExist):
+                continue
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'Se eliminaron {deleted_count} mensajes exitosamente',
+            'deleted_count': deleted_count
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error al eliminar mensajes: {str(e)}'
+        }, status=500)
+
+
+@login_required
 def process_checkbox(request):
     if request.method == 'POST':
         checkbox_state = request.POST.get('checkbox_state')
