@@ -94,19 +94,70 @@
             padding-top: 160px; /* Menos padding en móviles */
         }
     }
+
+    /* Estilos para la barra de búsqueda */
+    .search-container {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .search-container .input-group {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .search-container .form-control {
+        border: none;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    .search-container .form-control:focus {
+        box-shadow: none;
+        border-color: var(--color-violeta);
+    }
+
+    .search-container .input-group-text {
+        border: none;
+        background: var(--color-violeta);
+        color: white;
+        padding: 1rem 1.5rem;
+    }
+
+    .search-container .input-group-text i {
+        font-size: 1.2rem;
+    }
+
+    /* Animación para productos que aparecen/desaparecen */
+    .product-card {
+        transition: all 0.3s ease;
+    }
+
+    .product-card[style*="display: none"] {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    .product-card:not([style*="display: none"]) {
+        opacity: 1;
+        transform: scale(1);
+    }
 </style>
 
 <section class="section-products padding-section">
     <!-- Contenido de los productos -->
     <div class="container">
         <!-- Barra de búsqueda -->
-        <div class="row mb-4" data-aos="fade-up">
+        <div class="row mb-4 search-container" data-aos="fade-up">
             <div class="col-12 col-md-8 mx-auto">
                 <div class="input-group input-group-lg shadow-sm">
                     <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                    <input id="productSearchInput" type="text" class="form-control" placeholder="Buscar por nombre o categoría...">
+                    <input id="productSearchInput" type="text" class="form-control" placeholder="Buscar por nombre del producto...">
                 </div>
-                <small class="text-muted d-block mt-2">Escribe para filtrar en tiempo real por nombre del producto o por su categoría.</small>
+                <small class="text-muted d-block mt-2">Escribe para filtrar en tiempo real por nombre del producto.</small>
             </div>
         </div>
 
@@ -172,48 +223,92 @@
 </section>
 
 <script>
-// Filtrado en tiempo real por nombre o categoría
-(function() {
-    const input = document.getElementById('productSearchInput');
-    if (!input) return;
+// Filtrado en tiempo real por nombre del producto
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('productSearchInput');
+    if (!searchInput) return;
 
-    function normalize(text) {
-        return (text || '').toString().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
-    }
-
-    function applyFilter(termRaw) {
-        const term = normalize(termRaw.trim());
-        const cards = document.querySelectorAll('.product-card');
+    function filterProducts(searchTerm) {
+        const productCards = document.querySelectorAll('.product-card');
         const categoryBlocks = document.querySelectorAll('.category-block');
         const categoryGrids = document.querySelectorAll('.category-grid');
-
-        // Mostrar todo si no hay término
-        if (!term) {
-            cards.forEach(c => c.style.display = '');
-            categoryBlocks.forEach(b => b.style.display = '');
-            categoryGrids.forEach(g => g.style.display = '');
+        
+        // Si no hay término de búsqueda, mostrar todo
+        if (!searchTerm.trim()) {
+            productCards.forEach(card => card.style.display = '');
+            categoryBlocks.forEach(block => block.style.display = '');
+            categoryGrids.forEach(grid => grid.style.display = '');
             return;
         }
 
-        // Filtrar tarjetas
-        cards.forEach(card => {
-            const title = normalize(card.getAttribute('data-title'));
-            const category = normalize(card.getAttribute('data-category'));
-            const matches = title.includes(term) || category.includes(term);
-            card.style.display = matches ? '' : 'none';
+        const term = searchTerm.toLowerCase().trim();
+        let hasVisibleProducts = false;
+
+        // Filtrar cada tarjeta de producto
+        productCards.forEach(card => {
+            const productTitle = card.querySelector('.card-title').textContent.toLowerCase();
+            const isVisible = productTitle.includes(term);
+            card.style.display = isVisible ? '' : 'none';
+            
+            if (isVisible) {
+                hasVisibleProducts = true;
+            }
         });
 
-        // Ocultar encabezados de categorías que no tengan resultados visibles
-        document.querySelectorAll('.category-block').forEach((block, index) => {
-            const grid = document.querySelectorAll('.category-grid')[index];
-            const visibleCards = grid ? Array.from(grid.querySelectorAll('.product-card')).some(c => c.style.display !== 'none') : false;
-            block.style.display = visibleCards ? '' : 'none';
-            grid.style.display = visibleCards ? '' : 'none';
+        // Mostrar/ocultar categorías según si tienen productos visibles
+        categoryBlocks.forEach((block, index) => {
+            const grid = categoryGrids[index];
+            if (grid) {
+                const visibleCardsInGrid = Array.from(grid.querySelectorAll('.product-card'))
+                    .some(card => card.style.display !== 'none');
+                
+                block.style.display = visibleCardsInGrid ? '' : 'none';
+                grid.style.display = visibleCardsInGrid ? '' : 'none';
+            }
         });
+
+        // Mostrar mensaje si no hay resultados
+        const noResultsMessage = document.getElementById('noResultsMessage');
+        if (!hasVisibleProducts) {
+            if (!noResultsMessage) {
+                const message = document.createElement('div');
+                message.id = 'noResultsMessage';
+                message.className = 'no-products';
+                message.innerHTML = `
+                    <i class="bi bi-search" style="font-size: 3rem; color: #6c757d; margin-bottom: 1rem;"></i>
+                    <h3 class="text-muted">No se encontraron productos</h3>
+                    <p class="text-muted">No hay productos que coincidan con "${searchTerm}"</p>
+                `;
+                document.querySelector('.container').appendChild(message);
+            }
+        } else {
+            if (noResultsMessage) {
+                noResultsMessage.remove();
+            }
+        }
     }
 
-    input.addEventListener('input', () => applyFilter(input.value));
-})();
+    // Event listener para la búsqueda en tiempo real
+    searchInput.addEventListener('input', function() {
+        filterProducts(this.value);
+    });
+
+    // Limpiar búsqueda al hacer clic en el input
+    searchInput.addEventListener('click', function() {
+        if (this.value) {
+            this.select();
+        }
+    });
+
+    // Limpiar búsqueda con Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && searchInput === document.activeElement) {
+            searchInput.value = '';
+            filterProducts('');
+            searchInput.blur();
+        }
+    });
+});
 </script>
 
 <div class="divisor-2"></div>
