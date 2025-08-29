@@ -4,23 +4,110 @@ Script para compilar las traducciones de Django
 """
 
 import os
-import subprocess
-import sys
+import struct
 from pathlib import Path
 
-def compile_translations():
-    """Compilar todas las traducciones"""
+def create_mo_file(po_file_path, mo_file_path):
+    """Crear un archivo .mo básico desde .po"""
+    try:
+        with open(po_file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Parsear el archivo .po básicamente
+        messages = {}
+        current_msgid = None
+        current_msgstr = None
+        
+        lines = content.split('\n')
+        for line in lines:
+            line = line.strip()
+            if line.startswith('msgid "'):
+                current_msgid = line[7:-1]  # Remover 'msgid "' y '"'
+            elif line.startswith('msgstr "'):
+                current_msgstr = line[8:-1]  # Remover 'msgstr "' y '"'
+                if current_msgid and current_msgstr:
+                    messages[current_msgid] = current_msgstr
+                    current_msgid = None
+                    current_msgstr = None
+        
+        # Crear archivo .mo básico
+        # Formato simplificado del archivo .mo
+        mo_content = b''
+        
+        # Header básico
+        magic = 0x950412de
+        revision = 0
+        count = len(messages)
+        offset_originals = 28
+        offset_translations = offset_originals + count * 8
+        offset_strings = offset_translations + count * 8
+        
+        # Escribir header
+        mo_content += struct.pack('<IIIII', magic, revision, count, offset_originals, offset_translations)
+        
+        # Preparar strings
+        all_strings = []
+        string_offsets = {}
+        
+        # Agregar strings vacíos al inicio (requerido por el formato)
+        all_strings.append(b'')
+        string_offsets[''] = 0
+        current_offset = 1
+        
+        # Agregar msgid y msgstr
+        for msgid, msgstr in messages.items():
+            if msgid not in string_offsets:
+                all_strings.append(msgid.encode('utf-8'))
+                string_offsets[msgid] = current_offset
+                current_offset += len(msgid.encode('utf-8')) + 1
+            
+            if msgstr not in string_offsets:
+                all_strings.append(msgstr.encode('utf-8'))
+                string_offsets[msgstr] = current_offset
+                current_offset += len(msgstr.encode('utf-8')) + 1
+        
+        # Calcular offsets finales
+        final_strings_offset = offset_strings + count * 8
+        
+        # Escribir offsets de originals
+        for msgid in messages.keys():
+            length = len(msgid.encode('utf-8'))
+            offset = final_strings_offset + sum(len(s) + 1 for s in all_strings[:string_offsets[msgid]])
+            mo_content += struct.pack('<II', length, offset)
+        
+        # Escribir offsets de translations
+        for msgstr in messages.values():
+            length = len(msgstr.encode('utf-8'))
+            offset = final_strings_offset + sum(len(s) + 1 for s in all_strings[:string_offsets[msgstr]])
+            mo_content += struct.pack('<II', length, offset)
+        
+        # Escribir strings
+        for string in all_strings:
+            mo_content += string + b'\x00'
+        
+        # Escribir archivo .mo
+        with open(mo_file_path, 'wb') as f:
+            f.write(mo_content)
+        
+        return True
+        
+    except Exception as e:
+        print(f"Error creando {mo_file_path}: {e}")
+        return False
+
+
+def main():
+    """Función principal"""
     print("🔧 Compilando traducciones de Django...")
     
-    # Directorio base del proyecto
     base_dir = Path(__file__).resolve().parent
     locale_dir = base_dir / 'django_locale'
     
     if not locale_dir.exists():
-        print("❌ Directorio locale no encontrado")
-        return False
+        print("❌ Directorio django_locale no encontrado")
+        return
     
-    success = True
+    success_count = 0
     
     # Compilar traducciones para cada idioma
     for lang_dir in locale_dir.iterdir():
@@ -33,125 +120,32 @@ def compile_translations():
                 if po_file.exists():
                     print(f"📝 Compilando {lang_dir.name}...")
                     
-                    try:
-                        # Usar msgfmt para compilar .po a .mo
-                        result = subprocess.run([
-                            'msgfmt', 
-                            str(po_file), 
-                            '-o', str(mo_file)
-                        ], capture_output=True, text=True)
-                        
-                        if result.returncode == 0:
-                            print(f"✅ {lang_dir.name} compilado exitosamente")
-                        else:
-                            print(f"❌ Error compilando {lang_dir.name}: {result.stderr}")
-                            success = False
-                            
-                    except FileNotFoundError:
-                        print(f"⚠️  msgfmt no encontrado. Instalando gettext...")
-                        
-                        # Intentar instalar gettext en macOS
-                        try:
-                            subprocess.run(['brew', 'install', 'gettext'], check=True)
-                            print("✅ gettext instalado. Reintentando compilación...")
-                            
-                            result = subprocess.run([
-                                'msgfmt', 
-                                str(po_file), 
-                                '-o', str(mo_file)
-                            ], capture_output=True, text=True)
-                            
-                            if result.returncode == 0:
-                                print(f"✅ {lang_dir.name} compilado exitosamente")
-                            else:
-                                print(f"❌ Error compilando {lang_dir.name}: {result.stderr}")
-                                success = False
-                                
-                        except (subprocess.CalledProcessError, FileNotFoundError):
-                            print(f"❌ No se pudo instalar gettext. Compilación manual requerida.")
-                            success = False
+                    if create_mo_file(po_file, mo_file):
+                        print(f"✅ {lang_dir.name} compilado exitosamente")
+                        success_count += 1
+                    else:
+                        print(f"❌ Error compilando {lang_dir.name}")
                 else:
-                    print(f"⚠️  Archivo {po_file} no encontrado para {lang_dir.name}")
+                    print(f"⚠️  Archivo {po_file} no encontrado")
     
-    if success:
-        print("\n🎉 Todas las traducciones compiladas exitosamente")
-        print("📁 Archivos .mo creados en:")
+    if success_count > 0:
+        print(f"\n🎉 {success_count} archivos .mo compilados exitosamente")
+        print("📁 Archivos creados en:")
         for lang_dir in locale_dir.iterdir():
             if lang_dir.is_dir() and lang_dir.name in ['es', 'en']:
                 mo_file = lang_dir / 'LC_MESSAGES' / 'django.mo'
                 if mo_file.exists():
                     print(f"   - {mo_file}")
+        
+        print("\n🎯 Próximos pasos:")
+        print("1. Reiniciar el servidor Django")
+        print("2. Verificar que las traducciones funcionen correctamente")
+        print("3. Cambiar el idioma del navegador para probar")
     else:
-        print("\n⚠️  Algunas traducciones no se pudieron compilar")
-        print("💡 Puedes compilar manualmente usando:")
-        print("   msgfmt locale/es/LC_MESSAGES/django.po -o locale/es/LC_MESSAGES/django.mo")
-        print("   msgfmt locale/en/LC_MESSAGES/django.po -o locale/en/LC_MESSAGES/django.mo")
+        print("\n❌ No se pudo compilar ningún archivo .mo")
     
-    return success
-
-
-def create_init_files():
-    """Crear archivos __init__.py necesarios"""
-    print("\n📁 Creando archivos __init__.py...")
-    
-    base_dir = Path(__file__).resolve().parent
-    
-    # Crear __init__.py en locale
-    locale_dir = base_dir / 'locale'
-    if locale_dir.exists():
-        init_file = locale_dir / '__init__.py'
-        if not init_file.exists():
-            init_file.touch()
-            print("✅ __init__.py creado en locale/")
-    
-    # Crear __init__.py en locale/es
-    es_dir = locale_dir / 'es'
-    if es_dir.exists():
-        init_file = es_dir / '__init__.py'
-        if not init_file.exists():
-            init_file.touch()
-            print("✅ __init__.py creado en locale/es/")
-    
-    # Crear __init__.py en locale/en
-    en_dir = locale_dir / 'en'
-    if en_dir.exists():
-        init_file = en_dir / '__init__.py'
-        if not init_file.exists():
-            init_file.touch()
-            print("✅ __init__.py creado en locale/en/")
-    
-    # Crear __init__.py en locale/es/LC_MESSAGES
-    es_lc_dir = es_dir / 'LC_MESSAGES'
-    if es_lc_dir.exists():
-        init_file = es_lc_dir / '__init__.py'
-        if not init_file.exists():
-            init_file.touch()
-            print("✅ __init__.py creado en locale/es/LC_MESSAGES/")
-    
-    # Crear __init__.py en locale/en/LC_MESSAGES
-    en_lc_dir = en_dir / 'LC_MESSAGES'
-    if en_lc_dir.exists():
-        init_file = en_lc_dir / '__init__.py'
-        if not init_file.exists():
-            init_file.touch()
-            print("✅ __init__.py creado en locale/en/LC_MESSAGES/")
+    print("\n✨ Proceso completado")
 
 
 if __name__ == "__main__":
-    print("🚀 Iniciando proceso de traducciones...")
-    
-    # Crear archivos __init__.py
-    create_init_files()
-    
-    # Compilar traducciones
-    success = compile_translations()
-    
-    if success:
-        print("\n🎯 Próximos pasos:")
-        print("1. Reiniciar el servidor Django")
-        print("2. Verificar que las traducciones funcionen en /service/")
-        print("3. Cambiar el idioma del navegador para probar")
-    else:
-        print("\n⚠️  Algunos pasos requieren intervención manual")
-    
-    print("\n✨ Proceso completado")
+    main()

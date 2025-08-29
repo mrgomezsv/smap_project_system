@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
 <head>
     <title>{% block title %}Kidsfun y Fiestas Infantiles{% endblock %}</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     {% load static %}
+    {% load i18n %}
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
@@ -357,30 +358,30 @@
             <div class="collapse navbar-collapse" id="collapsibleNavId">
                 <ul class="nav navbar-nav w-100 mt-2 mt-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}" aria-current="page">Home <span
+                        <a class="nav-link active" href="{% url 'home' %}" aria-current="page">{% trans "Home" %} <span
                                 class="visually-hidden"></span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'service' %}">Products and services</a>
+                        <a class="nav-link" href="{% url 'service' %}">{% trans "Products and services" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'mobile_app' %}">Mobile App</a>
+                        <a class="nav-link" href="{% url 'mobile_app' %}">{% trans "Mobile App" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'payment_methods' %}">Métodos de Pago</a>
+                        <a class="nav-link" href="{% url 'payment_methods' %}">{% trans "Métodos de Pago" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                        <a class="nav-link" href="{% url 'contact' %}">{% trans "Contact" %}</a>
                     </li>
                     <!-- Botón de Login -->
                     <li class="nav-item ms-auto">
                         {% if user.is_authenticated %}
                             <a href="{% url 'product' %}" class="nav-link admin-btn">
-                                <i class="bi bi-person"></i> Panel Admin
+                                <i class="bi bi-person"></i> {% trans "Panel Admin" %}
                             </a>
                         {% else %}
                             <a href="{% url 'signin' %}" class="nav-link login-btn">
-                                <i class="bi bi-box-arrow-in-right"></i> Login
+                                <i class="bi bi-box-arrow-in-right"></i> {% trans "Login" %}
                             </a>
                         {% endif %}
                     </li>
@@ -398,7 +399,7 @@
 <div class="whatsapp-float">
     <a href="#" onclick="openWhatsAppModal(); return false;">
         <i class="bi bi-whatsapp"></i>
-        <div class="tooltip">¡Chatea con nosotros!</div>
+        <div class="tooltip">{% trans "¡Chatea con nosotros!" %}</div>
     </a>
 </div>
 
@@ -406,21 +407,21 @@
 <div id="whatsappModal" class="whatsapp-modal">
     <div class="whatsapp-modal-content">
         <div class="whatsapp-modal-header">
-            <h3><i class="bi bi-whatsapp"></i> ¡Conecta con nosotros!</h3>
+            <h3><i class="bi bi-whatsapp"></i> {% trans "¡Conecta con nosotros!" %}</h3>
             <button class="close" onclick="closeWhatsAppModal()">&times;</button>
         </div>
         <div class="whatsapp-modal-body">
             <div class="whatsapp-icon">
                 <i class="bi bi-whatsapp"></i>
             </div>
-            <h4>¿Te interesan nuestros servicios?</h4>
-            <p>¡Estamos aquí para ayudarte a crear la fiesta perfecta para tu pequeño! Chatea con nosotros y te responderemos en minutos.</p>
+            <h4>{% trans "¿Te interesan nuestros servicios?" %}</h4>
+            <p>{% trans "¡Estamos aquí para ayudarte a crear la fiesta perfecta para tu pequeño! Chatea con nosotros y te responderemos en minutos." %}</p>
             <div class="whatsapp-modal-actions">
-                <a href="https://wa.me/19293926596?text=Hola! Vi su sitio web Kidsfun y me interesa conocer más sobre sus servicios de fiestas infantiles. ¿Podrían ayudarme?" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                <a href="https://wa.me/19293926596?text={% trans 'Hola! Vi su sitio web Kidsfun y me interesa conocer más sobre sus servicios de fiestas infantiles. ¿Podrían ayudarme?' %}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
                     <i class="bi bi-whatsapp"></i>
-                    ¡Chatear ahora!
+                    {% trans "¡Chatear ahora!" %}
                 </a>
-                <button class="btn-cancel" onclick="closeWhatsAppModal()">Cancelar</button>
+                <button class="btn-cancel" onclick="closeWhatsAppModal()">{% trans "Cancelar" %}</button>
             </div>
         </div>
     </div>
@@ -430,7 +431,7 @@
 <footer class="vg-footer">
     <div class="container">
         <div class="row">
-            <!-- Sección de Contacto -->
+            <!-- {% trans "Sección de Contacto" %} -->
             <div class="col-lg-4 py-3">
                 <div class="footer-info">
                     <div class="footer-section-header">
@@ -466,7 +467,7 @@
                             <i class="bi bi-instagram"></i>
                             <span>Instagram</span>
                         </a>
-                        <a href="https://wa.me/77563510?text=Hola! Vi su sitio web Kidsfun y me interesa conocer más sobre sus servicios de fiestas infantiles. ¿Podrían ayudarme?" class="social-link whatsapp" target="_blank" rel="noopener">
+                        <a href="https://wa.me/77563510?text={% trans 'Hola! Vi su sitio web Kidsfun y me interesa conocer más sobre sus servicios de fiestas infantiles. ¿Podrían ayudarme?' %}" class="social-link whatsapp" target="_blank" rel="noopener">
                             <i class="bi bi-whatsapp"></i>
                             <span>WhatsApp</span>
                         </a>

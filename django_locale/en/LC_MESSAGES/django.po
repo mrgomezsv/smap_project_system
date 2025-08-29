@@ -42,3 +42,267 @@ msgstr "No products found"
 #: kidsfun_web/templates/kidsfun_web/service/service.html:251
 msgid "No hay productos que coincidan con"
 msgstr "No products match"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:360
+msgid "Home"
+msgstr "Home"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:363
+msgid "Products and services"
+msgstr "Products and services"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:366
+msgid "Mobile App"
+msgstr "Mobile App"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:369
+msgid "Métodos de Pago"
+msgstr "Payment Methods"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:372
+msgid "Contact"
+msgstr "Contact"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:377
+msgid "Panel Admin"
+msgstr "Admin Panel"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:381
+msgid "Login"
+msgstr "Login"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:395
+msgid "¡Chatea con nosotros!"
+msgstr "Chat with us!"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:398
+msgid "¡Conecta con nosotros!"
+msgstr "Connect with us!"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:415
+msgid "¿Te interesan nuestros servicios?"
+msgstr "Are you interested in our services?"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:418
+msgid "Hola! Vi su sitio web Kidsfun y me interesa conocer más sobre sus servicios de fiestas infantiles. ¿Podrían ayudarme?"
+msgstr "Hello! I saw your Kidsfun website and I'm interested in learning more about your children's party services. Could you help me?"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:422
+msgid "¡Estamos aquí para ayudarte a crear la fiesta perfecta para tu pequeño! Chatea con nosotros y te responderemos en minutos."
+msgstr "We're here to help you create the perfect party for your little one! Chat with us and we'll respond in minutes."
+
+#: kidsfun_web/templates/kidsfun_web/base.html:425
+msgid "¡Chatear ahora!"
+msgstr "Chat now!"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:427
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:432
+msgid "Sección de Contacto"
+msgstr "Contact Section"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:468
+msgid "Hola! Vi su sitio web Kidsfun y me interesa conocer más sobre sus servicios de fiestas infantiles. ¿Podrían ayudarme?"
+msgstr "Hello! I saw your Kidsfun website and I'm interested in learning more about your children's party services. Could you help me?"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:495
+msgid "Servicios de Calidad"
+msgstr "Quality Services"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:500
+msgid "Fiestas Inolvidables"
+msgstr "Unforgettable Parties"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:505
+msgid "Experiencia Garantizada"
+msgstr "Guaranteed Experience"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:510
+msgid "Atención Personalizada"
+msgstr "Personalized Attention"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:515
+msgid "Precios Competitivos"
+msgstr "Competitive Prices"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:520
+msgid "Equipo Profesional"
+msgstr "Professional Team"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:525
+msgid "Materiales de Calidad"
+msgstr "Quality Materials"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:530
+msgid "Seguridad Garantizada"
+msgstr "Guaranteed Safety"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:535
+msgid "Diversión Asegurada"
+msgstr "Fun Guaranteed"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:540
+msgid "Satisfacción Total"
+msgstr "Total Satisfaction"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:545
+msgid "Innovación Constante"
+msgstr "Constant Innovation"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:550
+msgid "Compromiso con la Excelencia"
+msgstr "Commitment to Excellence"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:555
+msgid "Tecnología Avanzada"
+msgstr "Advanced Technology"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:560
+msgid "Creatividad Sin Límites"
+msgstr "Unlimited Creativity"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:565
+msgid "Responsabilidad Social"
+msgstr "Social Responsibility"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:570
+msgid "Cumplimiento de Normas"
+msgstr "Compliance with Standards"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:575
+msgid "Mejora Continua"
+msgstr "Continuous Improvement"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:580
+msgid "Transparencia Total"
+msgstr "Total Transparency"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:585
+msgid "Confianza Mutua"
+msgstr "Mutual Trust"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:590
+msgid "Resultados Excepcionales"
+msgstr "Exceptional Results"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:595
+msgid "Valor Agregado"
+msgstr "Added Value"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:600
+msgid "Experiencia Única"
+msgstr "Unique Experience"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:605
+msgid "Calidad Premium"
+msgstr "Premium Quality"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:610
+msgid "Servicio Exclusivo"
+msgstr "Exclusive Service"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:615
+msgid "Atención VIP"
+msgstr "VIP Attention"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:620
+msgid "Lujo Accesible"
+msgstr "Accessible Luxury"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:625
+msgid "Elegancia Moderna"
+msgstr "Modern Elegance"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:630
+msgid "Estilo Único"
+msgstr "Unique Style"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:635
+msgid "Diseño Personalizado"
+msgstr "Custom Design"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:640
+msgid "Creatividad Excepcional"
+msgstr "Exceptional Creativity"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:645
+msgid "Innovación Creativa"
+msgstr "Creative Innovation"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:650
+msgid "Tecnología de Vanguardia"
+msgstr "Cutting-edge Technology"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:655
+msgid "Soluciones Avanzadas"
+msgstr "Advanced Solutions"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:660
+msgid "Eficiencia Máxima"
+msgstr "Maximum Efficiency"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:665
+msgid "Optimización Continua"
+msgstr "Continuous Optimization"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:670
+msgid "Rendimiento Superior"
+msgstr "Superior Performance"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:675
+msgid "Calidad Excepcional"
+msgstr "Exceptional Quality"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:680
+msgid "Servicio Premium"
+msgstr "Premium Service"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:685
+msgid "Experiencia Inolvidable"
+msgstr "Unforgettable Experience"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:690
+msgid "Satisfacción Garantizada"
+msgstr "Guaranteed Satisfaction"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:695
+msgid "Compromiso Total"
+msgstr "Total Commitment"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:700
+msgid "Profesionalismo"
+msgstr "Professionalism"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:705
+msgid "Puntualidad"
+msgstr "Punctuality"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:710
+msgid "Responsabilidad"
+msgstr "Responsibility"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:715
+msgid "Honestidad"
+msgstr "Honesty"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:720
+msgid "Transparencia"
+msgstr "Transparency"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:725
+msgid "Confianza"
+msgstr "Trust"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:730
+msgid "Respeto"
+msgstr "Respect"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:735
+msgid "Integridad"
+msgstr "Integrity"
+
+#: kidsfun_web/templates/kidsfun_web/base.html:740
+msgid "Excelencia"
+msgstr "Excellence"
