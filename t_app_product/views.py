@@ -184,9 +184,59 @@ def product_detail(request, product_id):
         # Obtiene las imágenes adicionales del producto
         additional_images = [getattr(product, f'img{i}') for i in range(1, 6)]
 
+        # Cargar likes y comentarios reales
+        try:
+            from .models import ProductLike, ProductComment, CommentReply
+            likes_count = ProductLike.objects.filter(product_id=product.id, is_favorite=True).count()
+            comments_qs = ProductComment.objects.filter(product_id=product.id).order_by('-created_at')
+            
+            # Estructura mejorada de comentarios con respuestas
+            comments = []
+            for c in comments_qs:
+                # Obtener respuestas para este comentario
+                replies = CommentReply.objects.filter(comment=c).order_by('created_at')
+                replies_data = [
+                    {
+                        'id': r.id,
+                        'reply_text': r.reply_text,
+                        'user_id': r.user_id,
+                        'user_display_name': r.user_display_name or f'Usuario {r.user_id}',
+                        'created_at': r.created_at,
+                        'formatted_date': r.created_at.strftime('%d/%m/%Y %H:%M')
+                    }
+                    for r in replies
+                ]
+                
+                comment_data = {
+                    'id': c.id,
+                    'comment': c.comment,
+                    'user_id': c.user_id,
+                    'user_display_name': c.user_display_name or f'Usuario {c.user_id}',
+                    'created_at': c.created_at,
+                    'formatted_date': c.created_at.strftime('%d/%m/%Y %H:%M'),
+                    'replies': replies_data,
+                    'replies_count': len(replies_data)
+                }
+                comments.append(comment_data)
+            
+            comments_count = len(comments)
+        except Exception as e:
+            print(f"Error loading comments: {e}")
+            # Fallback seguro si el modelo no está disponible o hay error
+            likes_count = 0
+            comments = []
+            comments_count = 0
+
         # Renderiza la página de detalle del producto
         return render(request, 'product/product_detail.html',
-                      {'product': product, 'form': form, 'additional_images': additional_images})
+                      {
+                          'product': product, 
+                          'form': form, 
+                          'additional_images': additional_images,
+                          'comments': comments,
+                          'comments_count': comments_count,
+                          'likes_count': likes_count
+                      })
     else:
         try:
             # Obtiene el producto con el ID dado

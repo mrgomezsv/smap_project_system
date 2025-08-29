@@ -225,6 +225,7 @@ def web_comment(request, product_id):
         from t_app_product.models import ProductComment
         
         comment = ProductComment.objects.create(
+            product_id=product_id,  # Asociar al producto correcto
             comment=comment_text,
             user_id=user_id,
             user_display_name=f'Usuario {user_id}'

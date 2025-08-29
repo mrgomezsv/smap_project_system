@@ -3,6 +3,66 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/product_detail.css' %}">
+<style>
+    .stat-item {
+        padding: 20px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-item:hover {
+        transform: translateY(-5px);
+    }
+    
+    .comment-item {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6 !important;
+        transition: all 0.3s ease;
+    }
+    
+    .comment-item:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border-color: #007bff !important;
+    }
+    
+    .reply-form-container {
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 15px;
+    }
+    
+    .replies-container {
+        border-left: 3px solid #007bff;
+        padding-left: 20px;
+    }
+    
+    .reply-item {
+        background: #ffffff !important;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+    
+    .reply-item:hover {
+        border-color: #007bff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .reply-btn {
+        transition: all 0.3s ease;
+    }
+    
+    .reply-btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .comment-actions {
+        border-top: 1px solid #dee2e6;
+        padding-top: 15px;
+    }
+</style>
 <main class="mt-5">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -79,40 +139,138 @@
             </div>
 
             <div class="col-md-12">
-                <!-- Modal para comentarios -->
-                <div class="modal-dialog modal-dialog-centered custom-modal-width" id="commentModal"
-                     style="display: block;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="commentModalLabel">Comentar sobre {{ product.title }}</h5>
-                        </div>
-                        <div style="margin-bottom: 20px;"></div>
-                        <div class="modal-body">
-                            <textarea class="form-control mb-3" id="commentText" rows="3"
-                                      placeholder="Postea un comentario sobre este producto"
-                                      oninput="checkInput()"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="submitButton"
-                                    onclick="submitComment()" disabled>Publicar
-                            </button>
+                <!-- Sección de estadísticas -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-graph-up me-2"></i>
+                            Estadísticas del Producto
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-6">
+                                <div class="stat-item">
+                                    <i class="bi bi-heart-fill text-danger" style="font-size: 2rem;"></i>
+                                    <h4 class="mt-2">{{ likes_count }}</h4>
+                                    <p class="text-muted">Likes</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="stat-item">
+                                    <i class="bi bi-chat-fill text-primary" style="font-size: 2rem;"></i>
+                                    <h4 class="mt-2">{{ comments_count }}</h4>
+                                    <p class="text-muted">Comentarios</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal para comentarios -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-chat-dots me-2"></i>
+                            Comentar sobre {{ product.title }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control mb-3" id="commentText" rows="3"
+                                  placeholder="Escribe un comentario sobre este producto"
+                                  oninput="checkInput()"></textarea>
+                        <button type="button" class="btn btn-primary" id="submitButton"
+                                onclick="submitComment()" disabled>
+                            <i class="bi bi-send me-2"></i>Publicar
+                        </button>
+                    </div>
+                </div>
             </div>
+
             <!-- Sección para mostrar comentarios -->
             <div class="col-md-12">
-                <h5 class="mt-5">Comentarios sobre {{ product.title }}</h5>
-                <ul class="list-group">
-                    {% for comment in comments %}
-                    <li class="list-group-item">
-                        <strong>Usuario:</strong> {{ comment.user_id }}<br>
-                        <strong>Comentario:</strong> {{ comment.comment }}
-                    </li>
-                    {% empty %}
-                    <li class="list-group-item">No hay comentarios para este producto.</li>
-                    {% endfor %}
-                </ul>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-chat-square-text me-2"></i>
+                            Comentarios sobre {{ product.title }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if comments %}
+                            {% for comment in comments %}
+                            <div class="comment-item mb-4 p-3 border rounded">
+                                <div class="comment-header d-flex justify-content-between align-items-center mb-2">
+                                    <div class="comment-user">
+                                        <i class="bi bi-person-circle me-2"></i>
+                                        <strong>{{ comment.user_display_name }}</strong>
+                                    </div>
+                                    <div class="comment-date text-muted">
+                                        <i class="bi bi-clock me-1"></i>
+                                        {{ comment.formatted_date }}
+                                    </div>
+                                </div>
+                                <div class="comment-text mb-3">
+                                    {{ comment.comment }}
+                                </div>
+                                
+                                <!-- Botón para responder -->
+                                <div class="comment-actions mb-3">
+                                    <button class="btn btn-sm btn-outline-primary reply-btn" 
+                                            onclick="toggleReplyForm({{ comment.id }})">
+                                        <i class="bi bi-reply me-1"></i>Responder
+                                        {% if comment.replies_count > 0 %}
+                                            <span class="badge bg-secondary ms-1">{{ comment.replies_count }}</span>
+                                        {% endif %}
+                                    </button>
+                                </div>
+                                
+                                <!-- Formulario de respuesta (oculto por defecto) -->
+                                <div class="reply-form-container" id="reply-form-{{ comment.id }}" style="display: none;">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control reply-input" 
+                                               id="reply-input-{{ comment.id }}" 
+                                               placeholder="Escribe una respuesta...">
+                                        <button class="btn btn-primary btn-sm" type="button" 
+                                                onclick="submitReply({{ comment.id }})">
+                                            <i class="bi bi-send me-1"></i>Enviar
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Lista de respuestas -->
+                                {% if comment.replies %}
+                                <div class="replies-container mt-3 ms-4">
+                                    {% for reply in comment.replies %}
+                                    <div class="reply-item p-2 bg-light rounded mb-2">
+                                        <div class="reply-header d-flex justify-content-between align-items-center mb-1">
+                                            <div class="reply-user">
+                                                <i class="bi bi-person me-2"></i>
+                                                <strong>{{ reply.user_display_name }}</strong>
+                                            </div>
+                                            <div class="reply-date text-muted small">
+                                                <i class="bi bi-clock me-1"></i>
+                                                {{ reply.formatted_date }}
+                                            </div>
+                                        </div>
+                                        <div class="reply-text">
+                                            {{ reply.reply_text }}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="bi bi-chat-dots display-4 text-muted"></i>
+                                <h5 class="text-muted mt-3">No hay comentarios para este producto</h5>
+                                <p class="text-muted">¡Sé el primero en comentar!</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -153,8 +311,105 @@
     }
 
     function submitComment() {
-        alert("Comentario enviado: " + document.getElementById('commentText').value);
+        const commentText = document.getElementById('commentText').value.trim();
+        
+        if (!commentText) {
+            alert('¡Por favor escribe un comentario primero!');
+            return;
+        }
+        
+        const productId = {{ product.id }};
+        
+        fetch(`/web-comment/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                comment: commentText,
+                user_id: 'admin_user'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Limpiar el input
+                document.getElementById('commentText').value = '';
+                document.getElementById('submitButton').disabled = true;
+                
+                // Recargar la página para mostrar el nuevo comentario
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al agregar comentario. Por favor intenta de nuevo.');
+        });
     }
+
+    // Funcionalidad para respuestas a comentarios
+    function toggleReplyForm(commentId) {
+        const replyForm = document.getElementById(`reply-form-${commentId}`);
+        if (replyForm.style.display === 'none') {
+            replyForm.style.display = 'block';
+            // Enfocar el input
+            document.getElementById(`reply-input-${commentId}`).focus();
+        } else {
+            replyForm.style.display = 'none';
+        }
+    }
+
+    function submitReply(commentId) {
+        const replyInput = document.getElementById(`reply-input-${commentId}`);
+        const replyText = replyInput.value.trim();
+        
+        if (!replyText) {
+            alert('¡Por favor escribe una respuesta primero!');
+            return;
+        }
+        
+        fetch(`/web-reply/${commentId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                reply_text: replyText,
+                user_id: 'admin_user'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Limpiar el input
+                replyInput.value = '';
+                
+                // Ocultar el formulario
+                document.getElementById(`reply-form-${commentId}`).style.display = 'none';
+                
+                // Recargar la página para mostrar la nueva respuesta
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al agregar respuesta. Por favor intenta de nuevo.');
+        });
+    }
+
+    // Permitir enviar comentarios y respuestas con Enter
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && e.target.id === 'commentText') {
+            submitComment();
+        } else if (e.key === 'Enter' && e.target.classList.contains('reply-input')) {
+            const commentId = e.target.id.replace('reply-input-', '');
+            submitReply(commentId);
+        }
+    });
 
     // Ocultar el campo "price"
     document.addEventListener('DOMContentLoaded', function() {
