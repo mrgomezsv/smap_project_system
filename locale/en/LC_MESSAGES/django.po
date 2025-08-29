@@ -1,0 +1,44 @@
+# English translations for Django package.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the Django package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Django 4.2.11\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 12:00+0000\n"
+"PO-Revision-Date: 2024-01-01 12:00+0000\n"
+"Last-Translator: \n"
+"Language: en\n"
+"Language-Team: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: kidsfun_web/templates/kidsfun_web/service/service.html:197
+msgid "Get it now"
+msgstr "Get it now"
+
+#: kidsfun_web/templates/kidsfun_web/service/service.html:200
+msgid "like"
+msgstr "like"
+
+#: kidsfun_web/templates/kidsfun_web/service/service.html:204
+msgid "comentarios"
+msgstr "comments"
+
+#: kidsfun_web/templates/kidsfun_web/service/service.html:213
+msgid "No hay productos disponibles"
+msgstr "No products available"
+
+#: kidsfun_web/templates/kidsfun_web/service/service.html:214
+msgid "En este momento no tenemos productos publicados. ¡Vuelve pronto!"
+msgstr "We don't have any products published at the moment. Come back soon!"
+
+#: kidsfun_web/templates/kidsfun_web/service/service.html:250
+msgid "No se encontraron productos"
+msgstr "No products found"
+
+#: kidsfun_web/templates/kidsfun_web/service/service.html:251
+msgid "No hay productos que coincidan con"
+msgstr "No products match"

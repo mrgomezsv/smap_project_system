@@ -159,7 +159,34 @@ TIME_ZONE = 'America/Mexico_City'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
+
+# Configuración de idiomas soportados
+LANGUAGES = [
+    ('es', 'Español'),
+    ('en', 'English'),
+]
+
+# Directorio donde se almacenan los archivos de traducción
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
+# Middleware para detectar idioma del navegador
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # Middleware estándar de Django
+    'kidsfun_web.middleware.LanguageDetectionMiddleware',  # Middleware personalizado
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
