@@ -1,6 +1,7 @@
 from django.utils.deprecation import MiddlewareMixin
 from django.utils import translation
 from django.conf import settings
+import locale as system_locale  # Renombrar para evitar conflicto
 
 
 class LanguageDetectionMiddleware(MiddlewareMixin):

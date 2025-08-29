@@ -171,7 +171,7 @@ LANGUAGES = [
 
 # Directorio donde se almacenan los archivos de traducción
 LOCALE_PATHS = [
-    BASE_DIR / 'locale',
+    BASE_DIR / 'django_locale',
 ]
 
 # Middleware para detectar idioma del navegador

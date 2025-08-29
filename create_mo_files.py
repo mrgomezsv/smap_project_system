@@ -101,7 +101,7 @@ def main():
     print("🔧 Creando archivos .mo alternativos...")
     
     base_dir = Path(__file__).resolve().parent
-    locale_dir = base_dir / 'locale'
+    locale_dir = base_dir / 'django_locale'
     
     if not locale_dir.exists():
         print("❌ Directorio locale no encontrado")
