@@ -113,20 +113,42 @@ def service_product(request, product_id):
 
     # Cargar likes y comentarios reales desde t_app_product
     try:
-        from t_app_product.models import ProductLike, ProductComment
+        from t_app_product.models import ProductLike, ProductComment, CommentReply
         likes_count = ProductLike.objects.filter(product_id=product.id, is_favorite=True).count()
         comments_qs = ProductComment.objects.filter(product_id=product.id).order_by('-created_at')
-        comments = [
-            {
+        
+        # Estructura mejorada de comentarios con respuestas
+        comments = []
+        for c in comments_qs:
+            # Obtener respuestas para este comentario
+            replies = CommentReply.objects.filter(comment=c).order_by('created_at')
+            replies_data = [
+                {
+                    'id': r.id,
+                    'reply_text': r.reply_text,
+                    'user_id': r.user_id,
+                    'user_display_name': r.user_display_name or f'Usuario {r.user_id}',
+                    'created_at': r.created_at,
+                    'formatted_date': r.created_at.strftime('%d/%m/%Y %H:%M')
+                }
+                for r in replies
+            ]
+            
+            comment_data = {
+                'id': c.id,
                 'comment': c.comment,
                 'user_id': c.user_id,
-                'user_display_name': c.user_display_name,
+                'user_display_name': c.user_display_name or f'Usuario {c.user_id}',
                 'created_at': c.created_at,
+                'formatted_date': c.created_at.strftime('%d/%m/%Y %H:%M'),
+                'replies': replies_data,
+                'replies_count': len(replies_data)
             }
-            for c in comments_qs
-        ]
+            comments.append(comment_data)
+        
         comments_count = len(comments)
-    except Exception:
+    except Exception as e:
+        print(f"Error loading comments: {e}")
         # Fallback seguro si el modelo no está disponible o hay error
         likes_count = 0
         comments = []
@@ -147,31 +169,32 @@ def service_product(request, product_id):
 @csrf_exempt
 @require_POST
 def web_like(request, product_id):
-    """Vista para manejar likes desde la web (versión local sin base de datos)"""
+    """Vista para manejar likes desde la web"""
     try:
         # Obtener datos del request
         data = json.loads(request.body)
         user_id = data.get('user_id', 'web_user')  # Usuario por defecto para web
         
-        # Comentado: Verificar si ya existe un like para este usuario y producto
-        # like, created = Like.objects.get_or_create(
-        #     user=user_id,
-        #     product=str(product_id),
-        #     defaults={'is_favorite': True}
-        # )
+        # Verificar si ya existe un like para este usuario y producto
+        from t_app_product.models import ProductLike
         
-        # if not created:
-        #     # Si ya existe, cambiar el estado
-        #     like.is_favorite = not like.is_favorite
-        #     like.save()
+        like, created = ProductLike.objects.get_or_create(
+            user_id=user_id,
+            product_id=product_id,
+            defaults={'is_favorite': True}
+        )
         
-        # Comentado: Obtener el conteo total de likes
-        # total_likes = Like.objects.filter(product=str(product_id), is_favorite=True).count()
-        total_likes = 0  # Valor por defecto
+        if not created:
+            # Si ya existe, cambiar el estado
+            like.is_favorite = not like.is_favorite
+            like.save()
+        
+        # Obtener el conteo total de likes
+        total_likes = ProductLike.objects.filter(product_id=product_id, is_favorite=True).count()
         
         return JsonResponse({
             'success': True,
-            'is_favorite': True,  # Valor por defecto
+            'is_favorite': like.is_favorite,
             'total_likes': total_likes
         })
         
@@ -185,7 +208,7 @@ def web_like(request, product_id):
 @csrf_exempt
 @require_POST
 def web_comment(request, product_id):
-    """Vista para manejar comentarios desde la web (versión local sin base de datos)"""
+    """Vista para manejar comentarios desde la web"""
     try:
         # Obtener datos del request
         data = json.loads(request.body)
@@ -198,26 +221,85 @@ def web_comment(request, product_id):
                 'error': 'Comment text is required'
             }, status=400)
         
-        # Comentado: Crear el comentario
-        # comment = Commentary.objects.create(
-        #     comment=comment_text,
-        #     user_id=user_id,
-        #     product_id=product_id
-        # )
+        # Crear el comentario
+        from t_app_product.models import ProductComment
         
-        # Comentado: Obtener el conteo total de comentarios
-        # total_comments = Commentary.objects.filter(product_id=product_id).count()
-        total_comments = 0  # Valor por defecto
+        comment = ProductComment.objects.create(
+            comment=comment_text,
+            user_id=user_id,
+            user_display_name=f'Usuario {user_id}'
+        )
+        
+        # Obtener el conteo total de comentarios
+        total_comments = ProductComment.objects.filter(product_id=product_id).count()
         
         return JsonResponse({
             'success': True,
             'comment': {
-                'id': 1,  # Valor por defecto
-                'comment': comment_text,
-                'user_id': user_id,
-                'product_id': product_id
+                'id': comment.id,
+                'comment': comment.comment,
+                'user_id': comment.user_id,
+                'user_display_name': comment.user_display_name,
+                'created_at': comment.created_at.strftime('%d/%m/%Y %H:%M'),
             },
             'total_comments': total_comments
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=400)
+
+
+@csrf_exempt
+@require_POST
+def web_reply(request, comment_id):
+    """Vista para manejar respuestas a comentarios desde la web"""
+    try:
+        # Obtener datos del request
+        data = json.loads(request.body)
+        reply_text = data.get('reply_text')
+        user_id = data.get('user_id', 'web_user')  # Usuario por defecto para web
+        
+        if not reply_text:
+            return JsonResponse({
+                'success': False,
+                'error': 'Reply text is required'
+            }, status=400)
+        
+        # Crear la respuesta al comentario
+        from t_app_product.models import ProductComment, CommentReply
+        
+        try:
+            comment = ProductComment.objects.get(id=comment_id)
+        except ProductComment.DoesNotExist:
+            return JsonResponse({
+                'success': False,
+                'error': 'Comment not found'
+            }, status=404)
+        
+        # Crear la respuesta
+        reply = CommentReply.objects.create(
+            comment=comment,
+            reply_text=reply_text,
+            user_id=user_id,
+            user_display_name=f'Usuario {user_id}'
+        )
+        
+        # Obtener el conteo total de respuestas para este comentario
+        total_replies = CommentReply.objects.filter(comment=comment).count()
+        
+        return JsonResponse({
+            'success': True,
+            'reply': {
+                'id': reply.id,
+                'reply_text': reply.reply_text,
+                'user_id': reply.user_id,
+                'user_display_name': reply.user_display_name,
+                'created_at': reply.created_at.strftime('%d/%m/%Y %H:%M'),
+            },
+            'total_replies': total_replies
         })
         
     except Exception as e:

@@ -11,5 +11,6 @@ urlpatterns = [
     path('metodos-de-pago/', views.payment_methods, name='payment_methods'),
     path('web-like/<str:product_id>/', views.web_like, name='web_like'),
     path('web-comment/<int:product_id>/', views.web_comment, name='web_comment'),
+    path('web-reply/<int:comment_id>/', views.web_reply, name='web_reply'),
     path('terminos-y-condiciones/', views.terms_conditions, name='terms_conditions'),
 ]

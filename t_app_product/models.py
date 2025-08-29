@@ -201,3 +201,38 @@ class ContactMessage(models.Model):
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name} - {self.email}"
         ordering = ['timestamp']
+
+class CommentReply(models.Model):
+    comment = models.ForeignKey(ProductComment, on_delete=models.CASCADE, related_name='replies')
+    user_id = models.CharField(max_length=128, null=True, blank=True)
+    user_display_name = models.CharField(max_length=255, null=True, blank=True)
+    reply_text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 't_app_product_comment_reply'
+        ordering = ['created_at']
+
+    def clean_reply_text(self):
+        """Limpia y valida la respuesta para evitar caracteres corruptos"""
+        if self.reply_text:
+            import re
+            reply_text = str(self.reply_text)
+            
+            # Eliminar caracteres de control excepto saltos de línea
+            reply_text = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', reply_text)
+            
+            # Limpiar caracteres no válidos de Unicode
+            reply_text = re.sub(r'[^\x00-\x7F\u00A0-\uFFFF]', '', reply_text)
+            
+            return reply_text.strip()
+        return ""
+
+    def save(self, *args, **kwargs):
+        """Sobrescribir save para limpiar la respuesta antes de guardar"""
+        if self.reply_text:
+            self.reply_text = self.clean_reply_text()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Reply to {self.comment_id}:{self.user_id}:{self.reply_text[:20]}"
