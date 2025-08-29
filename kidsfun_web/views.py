@@ -37,9 +37,34 @@ def service(request):
         if not apps.is_installed('t_app_product'):
             raise Exception("La aplicación t_app_product no está instalada")
         
-        # Obtener todos los products que están publicados
-        products = Product.objects.filter(publicated=True).order_by('category', 'title')
-        print(f"Productos encontrados: {products.count()}")
+        # Obtener todos los products que están publicados con contadores optimizados
+        try:
+            from t_app_product.models import ProductLike, ProductComment
+            from django.db.models import Count, Q
+            
+            # Usar annotate para obtener contadores de manera eficiente
+            products = Product.objects.filter(publicated=True).annotate(
+                likes_count=Count('productlike', filter=Q(productlike__is_favorite=True)),
+                comments_count=Count('comments')
+            ).order_by('category', 'title')
+            
+            print(f"Productos encontrados: {products.count()}")
+            
+        except Exception:
+            # Fallback si hay error al obtener contadores optimizados
+            products = Product.objects.filter(publicated=True).order_by('category', 'title')
+            print(f"Productos encontrados (fallback): {products.count()}")
+            
+            # Agregar contadores manualmente como fallback
+            for product in products:
+                try:
+                    likes_count = ProductLike.objects.filter(product_id=product.id, is_favorite=True).count()
+                    comments_count = ProductComment.objects.filter(product_id=product.id).count()
+                    product.likes_count = likes_count
+                    product.comments_count = comments_count
+                except Exception:
+                    product.likes_count = 0
+                    product.comments_count = 0
         
         # Crear un diccionario para almacenar los products agrupados por categoría
         products_or_category = {}
@@ -47,10 +72,6 @@ def service(request):
         if products.exists():
             for product in products:
                 try:
-                    # Agregar los conteos al producto
-                    product.likes_count = 0  # Valor por defecto
-                    product.comments_count = 0  # Valor por defecto
-                    
                     category = product.category
                     if category not in products_or_category:
                         products_or_category[category] = []
