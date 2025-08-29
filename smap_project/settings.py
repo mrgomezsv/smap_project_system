@@ -153,34 +153,22 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'es-es'
+LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/Mexico_City'
+TIME_ZONE = 'America/New_York'
 
-USE_I18N = True
+USE_I18N = False
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
-
-# Configuración de idiomas soportados
-LANGUAGES = [
-    ('es', 'Español'),
-    ('en', 'English'),
-]
-
-# Directorio donde se almacenan los archivos de traducción
-LOCALE_PATHS = [
-    BASE_DIR / 'django_locale',
-]
 
 # Middleware para detectar idioma del navegador
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  # Middleware estándar de Django
-    'kidsfun_web.middleware.LanguageDetectionMiddleware',  # Middleware personalizado
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
