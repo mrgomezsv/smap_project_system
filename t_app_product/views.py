@@ -126,6 +126,7 @@ def signup(request):
 def product(request):
     query = request.GET.get('q')
     category = request.GET.get('category')
+    show_categories = request.session.get('show_categories', False)
 
     # Filtrar productos por nombre, categoría y/o estado de publicación si hay consultas de búsqueda
     if query or category:
@@ -137,21 +138,37 @@ def product(request):
                 products = products.filter(publicated=True)
             elif "creado" in query.lower():
                 products = products.filter(publicated=False)
-
             # Continuar con la búsqueda por título y descripción si no se encontraron coincidencias de estado
             else:
                 products = products.filter(Q(title__icontains=query) | Q(description__icontains=query))
 
         if category:
             products = products.filter(category=category)  # Filtra por categoría
-
     else:
         products = Product.objects.all()  # Muestra todos los productos si no hay consulta
 
-    return render(request, 'product/product.html', {
-        'products': products,
-        'unread_count': ContactMessage.objects.filter(is_read=False).count()
-    })
+    # Si show_categories está activado, agrupar productos por categoría
+    if show_categories:
+        categorized_products = {}
+        for product in products:
+            if product.category not in categorized_products:
+                categorized_products[product.category] = []
+            categorized_products[product.category].append(product)
+        
+        context = {
+            'products': products,
+            'categorized_products': categorized_products,
+            'show_categories': True,
+            'unread_count': ContactMessage.objects.filter(is_read=False).count()
+        }
+    else:
+        context = {
+            'products': products,
+            'show_categories': False,
+            'unread_count': ContactMessage.objects.filter(is_read=False).count()
+        }
+
+    return render(request, 'product/product.html', context)
 
 
 @login_required
@@ -612,14 +629,14 @@ def process_checkbox(request):
         if checkbox_state == 'true':
             # Guardar el estado en la sesión
             request.session['show_categories'] = True
-            # Redirige a la página con categorías
-            return redirect('productc')
+            print("Activando vista de categorías")
         else:
             # Guardar el estado en la sesión
             request.session['show_categories'] = False
-            # Redirige a la página sin categorías
-            print("Redirigiendo a product.html")
-            return redirect('product')
+            print("Desactivando vista de categorías")
+        
+        # Redirigir de vuelta a la página de productos
+        return redirect('product')
     else:
         return HttpResponse("Método de solicitud no válido.")
 

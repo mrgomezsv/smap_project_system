@@ -38,11 +38,11 @@
                     <div class="d-flex justify-content-md-end gap-2">
                         <form id="category-toggle-form" method="post" action="{% url 'process_checkbox' %}" class="d-flex align-items-center">
                             {% csrf_token %}
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="checkbox_state" 
-                                       {% if request.session.show_categories %}checked{% endif %}>
-                                <label class="form-check-label" for="flexCheckDefault">Mostrar Categorías</label>
-                            </div>
+                                                    <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="checkbox_state" 
+                                   {% if show_categories %}checked{% endif %}>
+                            <label class="form-check-label" for="flexCheckDefault">Mostrar Categorías</label>
+                        </div>
                         </form>
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -62,60 +62,120 @@
     </div>
 
     <!-- Products Grid -->
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-        {% for product in products %}
-        <div class="col">
-            <div class="card h-100 shadow-sm hover-shadow">
-                <!-- Product Image -->
-                <div class="position-relative">
-                    <img src="{{ product.img.url }}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
-                    <div class="position-absolute top-0 end-0 p-2">
-                        <span class="badge {% if product.publicated %}bg-success{% else %}bg-warning{% endif %}">
-                            {% if product.publicated %}Publicado{% else %}Creado{% endif %}
-                        </span>
-                    </div>
-                </div>
+    {% if show_categories and categorized_products %}
+        <!-- Vista agrupada por categorías -->
+        {% for category, products_in_category in categorized_products.items %}
+            <div class="mb-4">
+                <h3 class="h4 mb-3 text-primary">
+                    <i class="bi bi-tags me-2"></i>
+                    {{ products_in_category.0.get_category_display }}
+                </h3>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                    {% for product in products_in_category %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm hover-shadow">
+                            <!-- Product Image -->
+                            <div class="position-relative">
+                                <img src="{{ product.img.url }}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
+                                <div class="position-absolute top-0 end-0 p-2">
+                                    <span class="badge {% if product.publicated %}bg-success{% else %}bg-warning{% endif %}">
+                                        {% if product.publicated %}Publicado{% else %}Creado{% endif %}
+                                    </span>
+                                </div>
+                            </div>
 
-                <!-- Product Info -->
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title text-truncate">{{ product.title }}</h5>
-                    <p class="card-text small text-muted mb-2">{{ product.description|truncatechars:100 }}</p>
-                    
-                    <div class="mb-2">
-                        <span class="badge bg-primary">{{ product.get_category_display }}</span>
-                    </div>
+                            <!-- Product Info -->
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-truncate">{{ product.title }}</h5>
+                                <p class="card-text small text-muted mb-2">{{ product.description|truncatechars:100 }}</p>
+                                
+                                <div class="mb-2">
+                                    <span class="badge bg-primary">{{ product.get_category_display }}</span>
+                                </div>
 
-                    <div class="small text-muted mb-3">
-                        <div class="d-flex align-items-center mb-1">
-                            <i class="bi bi-rulers me-2"></i>
-                            <span>{{ product.dimensions|default:'Sin dimensiones' }}</span>
+                                <div class="small text-muted mb-3">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <i class="bi bi-rulers me-2"></i>
+                                        <span>{{ product.dimensions|default:'Sin dimensiones' }}</span>
+                                    </div>
+                                    {% if user.username == 'mrgomez' %}
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-person me-2"></i>
+                                        <span>{{ product.user.username }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                 <div class="mt-auto">
+                                    <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary w-100">
+                                        <i class="bi bi-eye me-2"></i>
+                                        Ver Detalles
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        {% if user.username == 'mrgomez' %}
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-person me-2"></i>
-                            <span>{{ product.user.username }}</span>
-                        </div>
-                        {% endif %}
                     </div>
-
-                     <div class="mt-auto">
-                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary w-100">
-                            <i class="bi bi-eye me-2"></i>
-                            Ver Detalles
-                        </a>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
-        </div>
-        {% empty %}
-        <div class="col-12">
-            <div class="alert alert-info" role="alert">
-                <i class="bi bi-info-circle me-2"></i>
-                No hay productos disponibles.
-            </div>
-        </div>
         {% endfor %}
-    </div>
+    {% else %}
+        <!-- Vista normal sin agrupar -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            {% for product in products %}
+            <div class="col">
+                <div class="card h-100 shadow-sm hover-shadow">
+                    <!-- Product Image -->
+                    <div class="position-relative">
+                        <img src="{{ product.img.url }}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-0 end-0 p-2">
+                            <span class="badge {% if product.publicated %}bg-success{% else %}bg-warning{% endif %}">
+                                {% if product.publicated %}Publicado{% else %}Creado{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-truncate">{{ product.title }}</h5>
+                        <p class="card-text small text-muted mb-2">{{ product.description|truncatechars:100 }}</p>
+                        
+                        <div class="mb-2">
+                            <span class="badge bg-primary">{{ product.get_category_display }}</span>
+                        </div>
+
+                        <div class="small text-muted mb-3">
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-rulers me-2"></i>
+                                <span>{{ product.dimensions|default:'Sin dimensiones' }}</span>
+                            </div>
+                            {% if user.username == 'mrgomez' %}
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person me-2"></i>
+                                <span>{{ product.user.username }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                         <div class="mt-auto">
+                            <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-eye me-2"></i>
+                                Ver Detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No hay productos disponibles.
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <!-- Pagination -->
     {% if products.has_other_pages %}

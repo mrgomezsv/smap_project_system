@@ -257,17 +257,7 @@
             </div>
         </div>
 
-        <!-- Toggle de categorías -->
-        <div class="row mb-4 toggle-container" data-aos="fade-up">
-            <div class="col-12">
-                <label class="toggle-switch">
-                    <input type="checkbox" id="categoryToggle">
-                    <span class="slider"></span>
-                </label>
-                <p class="toggle-label">Mostrar Categorías</p>
-                <small class="text-muted d-block mt-2">Activa para ver productos agrupados por categorías</small>
-            </div>
-        </div>
+        <!-- Toggle de categorías eliminado -->
 
         {% if error_message %}
             <div class="error-message">
@@ -333,48 +323,19 @@
 </section>
 
 <script>
-// Filtrado en tiempo real por nombre del producto y toggle de categorías
+// Filtrado en tiempo real por nombre del producto
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('productSearchInput');
-    const categoryToggle = document.getElementById('categoryToggle');
     const container = document.querySelector('.container');
     
-    if (!searchInput || !categoryToggle) return;
-
-    // Estado del toggle (guardado en localStorage)
-    const savedToggleState = localStorage.getItem('showCategories');
-    if (savedToggleState !== null) {
-        categoryToggle.checked = savedToggleState === 'true';
-        updateCategoryDisplay();
-    }
-
-    function updateCategoryDisplay() {
-        const isCategoriesVisible = categoryToggle.checked;
-        
-        // Guardar estado en localStorage
-        localStorage.setItem('showCategories', isCategoriesVisible);
-        
-        if (isCategoriesVisible) {
-            // Mostrar categorías
-            container.classList.remove('category-hidden');
-        } else {
-            // Ocultar categorías y mostrar productos en grid simple
-            container.classList.add('category-hidden');
-        }
-    }
+    if (!searchInput) return;
 
     function filterProducts(searchTerm) {
         const productCards = document.querySelectorAll('.product-card');
-        const categoryBlocks = document.querySelectorAll('.category-block');
-        const categoryGrids = document.querySelectorAll('.category-grid');
         
         // Si no hay término de búsqueda, mostrar todo
         if (!searchTerm.trim()) {
             productCards.forEach(card => card.style.display = '');
-            if (categoryToggle.checked) {
-                categoryBlocks.forEach(block => block.style.display = '');
-                categoryGrids.forEach(grid => grid.style.display = '');
-            }
             return;
         }
 
@@ -391,20 +352,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 hasVisibleProducts = true;
             }
         });
-
-        // Si las categorías están visibles, mostrar/ocultar según productos visibles
-        if (categoryToggle.checked) {
-            categoryBlocks.forEach((block, index) => {
-                const grid = categoryGrids[index];
-                if (grid) {
-                    const visibleCardsInGrid = Array.from(grid.querySelectorAll('.product-card'))
-                        .some(card => card.style.display !== 'none');
-                    
-                    block.style.display = visibleCardsInGrid ? '' : 'none';
-                    grid.style.display = visibleCardsInGrid ? '' : 'none';
-                }
-            });
-        }
 
         // Mostrar mensaje si no hay resultados
         const noResultsMessage = document.getElementById('noResultsMessage');
@@ -426,15 +373,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-
-    // Event listener para el toggle de categorías
-    categoryToggle.addEventListener('change', function() {
-        updateCategoryDisplay();
-        // Re-aplicar filtro de búsqueda si hay uno activo
-        if (searchInput.value.trim()) {
-            filterProducts(searchInput.value);
-        }
-    });
 
     // Event listener para la búsqueda en tiempo real
     searchInput.addEventListener('input', function() {
