@@ -54,7 +54,7 @@ body {
 }
 
 .menu .navbar-brand {
-  height: 150px;
+  height: 110px;
   transition: all 0.3s ease;
 }
 
@@ -94,6 +94,7 @@ body {
   transition: all 0.3s ease;
   text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   padding: 0.5rem 1rem !important;
+  white-space: nowrap;
 }
 
 .navbar-nav .nav-link:hover {
@@ -487,11 +488,11 @@ footer p, footer .power {
 /* ====================== */
 @media (max-width: 1200px) {
   .menu .navbar-brand {
-    height: 130px;
+    height: 90px;
   }
 
   .navbar-nav .nav-link {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .navbar-nav .nav-item {
@@ -501,11 +502,11 @@ footer p, footer .power {
 
 @media (max-width: 992px) {
   .menu .navbar-brand {
-    height: 110px;
+    height: 80px;
   }
 
   .navbar-nav .nav-link {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .navbar-nav .nav-item {
@@ -513,13 +514,13 @@ footer p, footer .power {
   }
 
   .home {
-    padding-top: 140px;
+    padding-top: 120px;
   }
 }
 
 @media (max-width: 768px) {
   .menu .navbar-brand {
-    height: 90px;
+    height: 70px;
   }
 
   .navbar-nav {
@@ -552,13 +553,13 @@ footer p, footer .power {
   }
 
   .home {
-    padding-top: 110px;
+    padding-top: 95px;
   }
 }
 
 @media (max-width: 576px) {
   .menu .navbar-brand {
-    height: 70px;
+    height: 60px;
   }
 
   .navbar-collapse {
@@ -585,7 +586,7 @@ footer p, footer .power {
   }
 
   .home {
-    padding-top: 90px;
+    padding-top: 80px;
   }
 
   .divisor-2, .divisor {
