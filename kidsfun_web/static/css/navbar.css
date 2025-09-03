@@ -53,8 +53,14 @@ body {
   padding: 0 1rem;
 }
 
+/* Evitar que los elementos del menú hagan salto de línea */
+.menu .navbar .navbar-collapse,
+.menu .navbar .navbar-nav {
+  flex-wrap: nowrap;
+}
+
 .menu .navbar-brand {
-  height: 110px;
+  height: 95px;
   transition: all 0.3s ease;
 }
 
@@ -488,20 +494,6 @@ footer p, footer .power {
 /* ====================== */
 @media (max-width: 1200px) {
   .menu .navbar-brand {
-    height: 90px;
-  }
-
-  .navbar-nav .nav-link {
-    font-size: 1rem;
-  }
-
-  .navbar-nav .nav-item {
-    margin: 0 0.3rem;
-  }
-}
-
-@media (max-width: 992px) {
-  .menu .navbar-brand {
     height: 80px;
   }
 
@@ -510,11 +502,26 @@ footer p, footer .power {
   }
 
   .navbar-nav .nav-item {
+    margin: 0 0.3rem;
+  }
+  .menu .navbar .navbar-nav { gap: 0.25rem; }
+}
+
+@media (max-width: 992px) {
+  .menu .navbar-brand {
+    height: 70px;
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 0.9rem;
+  }
+
+  .navbar-nav .nav-item {
     margin: 0 0.2rem;
   }
 
   .home {
-    padding-top: 120px;
+    padding-top: 110px;
   }
 }
 
