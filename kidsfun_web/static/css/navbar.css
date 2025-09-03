@@ -111,19 +111,20 @@ body {
 .navbar-nav .nav-item .login-btn {
   background: linear-gradient(135deg, var(--color-violeta) 0%, var(--color-lightblue) 100%);
   color: white !important;
-  padding: 8px 18px !important;
-  border-radius: 25px !important;
+  padding: 6px 16px !important;
+  border-radius: 20px !important;
   text-decoration: none !important;
-  margin-left: 15px !important;
+  margin-left: 10px !important;
   border: 2px solid rgba(255, 255, 255, 0.3) !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   font-weight: 600 !important;
-  font-size: 0.9rem !important;
+  font-size: 0.85rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
   position: relative !important;
   overflow: hidden !important;
+  white-space: nowrap !important;
 }
 
 .navbar-nav .nav-item .login-btn::before {
@@ -142,44 +143,45 @@ body {
 }
 
 .navbar-nav .nav-item .login-btn:hover {
-  transform: translateY(-3px) scale(1.05) !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
   border-color: rgba(255, 255, 255, 0.5) !important;
   background: linear-gradient(135deg, var(--color-lightblue) 0%, var(--color-violeta) 100%) !important;
 }
 
 .navbar-nav .nav-item .login-btn:active {
-  transform: translateY(-1px) scale(1.02) !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-1px) scale(1.01) !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2) !important;
 }
 
 .navbar-nav .nav-item .login-btn i {
-  margin-right: 8px;
-  font-size: 1.1em;
+  margin-right: 6px;
+  font-size: 1em;
   transition: transform 0.3s ease;
 }
 
 .navbar-nav .nav-item .login-btn:hover i {
-  transform: translateX(3px);
+  transform: translateX(2px);
 }
 
 /* Botón para usuario autenticado */
 .navbar-nav .nav-item .admin-btn {
   background: linear-gradient(135deg, var(--color-green) 0%, var(--color-darkgreen) 100%);
   color: white !important;
-  padding: 8px 18px !important;
-  border-radius: 25px !important;
+  padding: 6px 16px !important;
+  border-radius: 20px !important;
   text-decoration: none !important;
-  margin-left: 15px !important;
+  margin-left: 10px !important;
   border: 2px solid rgba(255, 255, 255, 0.3) !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   font-weight: 600 !important;
-  font-size: 0.9rem !important;
+  font-size: 0.85rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
   position: relative !important;
   overflow: hidden !important;
+  white-space: nowrap !important;
 }
 
 .navbar-nav .nav-item .admin-btn::before {
@@ -198,35 +200,45 @@ body {
 }
 
 .navbar-nav .nav-item .admin-btn:hover {
-  transform: translateY(-3px) scale(1.05) !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
   border-color: rgba(255, 255, 255, 0.5) !important;
   background: linear-gradient(135deg, var(--color-darkgreen) 0%, var(--color-green) 100%) !important;
 }
 
 .navbar-nav .nav-item .admin-btn:active {
-  transform: translateY(-1px) scale(1.02) !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-1px) scale(1.01) !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2) !important;
 }
 
 .navbar-nav .nav-item .admin-btn i {
-  margin-right: 8px;
-  font-size: 1.1em;
+  margin-right: 6px;
+  font-size: 1em;
   transition: transform 0.3s ease;
 }
 
 .navbar-nav .nav-item .admin-btn:hover i {
-  transform: translateX(3px);
+  transform: translateX(2px);
 }
 
 /* Responsive para botones */
 @media (max-width: 768px) {
   .navbar-nav .nav-item .login-btn,
   .navbar-nav .nav-item .admin-btn {
-    margin: 10px 0 !important;
+    margin: 8px 0 !important;
     width: 100% !important;
     text-align: center !important;
-    padding: 15px 24px !important;
+    padding: 12px 20px !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar-nav .nav-item .login-btn,
+  .navbar-nav .nav-item .admin-btn {
+    margin: 6px 0 !important;
+    padding: 10px 16px !important;
+    font-size: 0.85rem !important;
   }
 }
 
@@ -472,19 +484,62 @@ footer p, footer .power {
 /* ====================== */
 /* MEDIA QUERIES - RESPONSIVE */
 /* ====================== */
+@media (max-width: 1200px) {
+  .menu .navbar-brand {
+    height: 130px;
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 1.1rem;
+  }
+
+  .navbar-nav .nav-item {
+    margin: 0 0.3rem;
+  }
+}
+
 @media (max-width: 992px) {
   .menu .navbar-brand {
-    height: 120px;
+    height: 110px;
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 1rem;
+  }
+
+  .navbar-nav .nav-item {
+    margin: 0 0.2rem;
   }
 
   .home {
-    padding-top: 150px;
+    padding-top: 140px;
   }
 }
 
 @media (max-width: 768px) {
   .menu .navbar-brand {
-    height: 100px;
+    height: 90px;
+  }
+
+  .navbar-nav {
+    align-items: flex-start;
+  }
+
+  .navbar-nav .nav-item {
+    margin: 0;
+    width: 100%;
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 1rem !important;
+    padding: 0.75rem 0 !important;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin: 0;
+  }
+
+  .navbar-nav .nav-link:hover {
+    transform: translateX(5px) !important;
   }
 
   .section-title {
@@ -494,11 +549,15 @@ footer p, footer .power {
   .section-about .img {
     margin-top: 2rem;
   }
+
+  .home {
+    padding-top: 110px;
+  }
 }
 
 @media (max-width: 576px) {
   .menu .navbar-brand {
-    height: 80px;
+    height: 70px;
   }
 
   .navbar-collapse {
@@ -510,8 +569,8 @@ footer p, footer .power {
   }
 
   .navbar-nav .nav-link {
-    font-size: 1.1rem !important;
-    padding: 0.75rem 0 !important;
+    font-size: 0.95rem !important;
+    padding: 0.6rem 0 !important;
     text-align: center;
     border-bottom: 1px solid rgba(255,255,255,0.1);
   }
@@ -525,10 +584,25 @@ footer p, footer .power {
   }
 
   .home {
-    padding-top: 120px;
+    padding-top: 90px;
   }
 
   .divisor-2, .divisor {
     height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu .navbar-brand {
+    height: 60px;
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 0.9rem !important;
+    padding: 0.5rem 0 !important;
+  }
+
+  .home {
+    padding-top: 80px;
   }
 }

@@ -38,11 +38,11 @@
                     <div class="d-flex justify-content-md-end gap-2">
                         <form id="category-toggle-form" method="post" action="{% url 'process_checkbox' %}" class="d-flex align-items-center">
                             {% csrf_token %}
-                                                    <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="checkbox_state" 
-                                   {% if show_categories %}checked{% endif %}>
-                            <label class="form-check-label" for="flexCheckDefault">Mostrar Categorías</label>
-                        </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="checkbox_state" 
+                                       {% if show_categories %}checked{% endif %}>
+                                <label class="form-check-label" for="flexCheckDefault">Mostrar Categorías</label>
+                            </div>
                         </form>
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
