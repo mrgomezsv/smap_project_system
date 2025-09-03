@@ -162,6 +162,85 @@
         opacity: 1;
         transform: scale(1);
     }
+
+    /* Estilos para el toggle de categorías */
+    .toggle-container {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+        margin: 0 15px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: var(--color-violeta);
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    .toggle-label {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #495057;
+        margin: 0;
+    }
+
+    /* Estilos para cuando las categorías están ocultas */
+    .category-hidden .category-block {
+        display: none !important;
+    }
+
+    .category-hidden .category-grid {
+        display: flex !important;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .category-hidden .product-card {
+        margin: 0 10px 20px 10px;
+        max-width: 300px;
+    }
 </style>
 
 <section class="section-products padding-section">
@@ -175,6 +254,18 @@
                     <input id="productSearchInput" type="text" class="form-control" placeholder="Buscar por nombre del producto...">
                 </div>
                 <small class="text-muted d-block mt-2">Escribe para filtrar en tiempo real por nombre del producto.</small>
+            </div>
+        </div>
+
+        <!-- Toggle de categorías -->
+        <div class="row mb-4 toggle-container" data-aos="fade-up">
+            <div class="col-12">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="categoryToggle">
+                    <span class="slider"></span>
+                </label>
+                <p class="toggle-label">Mostrar Categorías</p>
+                <small class="text-muted d-block mt-2">Activa para ver productos agrupados por categorías</small>
             </div>
         </div>
 
@@ -242,10 +333,35 @@
 </section>
 
 <script>
-// Filtrado en tiempo real por nombre del producto
+// Filtrado en tiempo real por nombre del producto y toggle de categorías
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('productSearchInput');
-    if (!searchInput) return;
+    const categoryToggle = document.getElementById('categoryToggle');
+    const container = document.querySelector('.container');
+    
+    if (!searchInput || !categoryToggle) return;
+
+    // Estado del toggle (guardado en localStorage)
+    const savedToggleState = localStorage.getItem('showCategories');
+    if (savedToggleState !== null) {
+        categoryToggle.checked = savedToggleState === 'true';
+        updateCategoryDisplay();
+    }
+
+    function updateCategoryDisplay() {
+        const isCategoriesVisible = categoryToggle.checked;
+        
+        // Guardar estado en localStorage
+        localStorage.setItem('showCategories', isCategoriesVisible);
+        
+        if (isCategoriesVisible) {
+            // Mostrar categorías
+            container.classList.remove('category-hidden');
+        } else {
+            // Ocultar categorías y mostrar productos en grid simple
+            container.classList.add('category-hidden');
+        }
+    }
 
     function filterProducts(searchTerm) {
         const productCards = document.querySelectorAll('.product-card');
@@ -255,8 +371,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Si no hay término de búsqueda, mostrar todo
         if (!searchTerm.trim()) {
             productCards.forEach(card => card.style.display = '');
-            categoryBlocks.forEach(block => block.style.display = '');
-            categoryGrids.forEach(grid => grid.style.display = '');
+            if (categoryToggle.checked) {
+                categoryBlocks.forEach(block => block.style.display = '');
+                categoryGrids.forEach(grid => grid.style.display = '');
+            }
             return;
         }
 
@@ -274,17 +392,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Mostrar/ocultar categorías según si tienen productos visibles
-        categoryBlocks.forEach((block, index) => {
-            const grid = categoryGrids[index];
-            if (grid) {
-                const visibleCardsInGrid = Array.from(grid.querySelectorAll('.product-card'))
-                    .some(card => card.style.display !== 'none');
-                
-                block.style.display = visibleCardsInGrid ? '' : 'none';
-                grid.style.display = visibleCardsInGrid ? '' : 'none';
-            }
-        });
+        // Si las categorías están visibles, mostrar/ocultar según productos visibles
+        if (categoryToggle.checked) {
+            categoryBlocks.forEach((block, index) => {
+                const grid = categoryGrids[index];
+                if (grid) {
+                    const visibleCardsInGrid = Array.from(grid.querySelectorAll('.product-card'))
+                        .some(card => card.style.display !== 'none');
+                    
+                    block.style.display = visibleCardsInGrid ? '' : 'none';
+                    grid.style.display = visibleCardsInGrid ? '' : 'none';
+                }
+            });
+        }
 
         // Mostrar mensaje si no hay resultados
         const noResultsMessage = document.getElementById('noResultsMessage');
@@ -306,6 +426,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+
+    // Event listener para el toggle de categorías
+    categoryToggle.addEventListener('change', function() {
+        updateCategoryDisplay();
+        // Re-aplicar filtro de búsqueda si hay uno activo
+        if (searchInput.value.trim()) {
+            filterProducts(searchInput.value);
+        }
+    });
 
     // Event listener para la búsqueda en tiempo real
     searchInput.addEventListener('input', function() {
