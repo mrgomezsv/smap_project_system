@@ -1,0 +1,121 @@
+{% extends 'kidsfun_web/base.html' %}
+{% load static %}
+
+{% block title %}Login con Firebase - Kidsfun{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="bi bi-fire me-2"></i>
+                        Iniciar Sesión
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <p class="text-muted">
+                            Para comentar y dar like a los productos, necesitas iniciar sesión con tu cuenta de Google.
+                        </p>
+                    </div>
+                    
+                    <!-- Botón de login con Google -->
+                    <div class="d-grid gap-2">
+                        <button id="google-login-btn" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-google me-2"></i>
+                            Continuar con Google
+                        </button>
+                    </div>
+                    
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-check me-1"></i>
+                            Solo se solicita acceso básico a tu perfil
+                        </small>
+                    </div>
+                    
+                    <!-- Estado de autenticación -->
+                    <div id="auth-status" class="mt-3" style="display: none;">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <span id="status-message">Verificando autenticación...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+
+<script>
+// Configuración de Firebase (debe coincidir con tu app Flutter)
+const firebaseConfig = {
+    apiKey: "AIzaSyA0f6Kx-Ixq77JzDAKMbxwvZFBXYaoRK4M",
+    authDomain: "smap-kf.firebaseapp.com",
+    databaseURL: "https://smap-kf-default-rtdb.firebaseio.com",
+    projectId: "smap-kf",
+    storageBucket: "smap-kf.firebasestorage.app",
+    messagingSenderId: "270487164933",
+    appId: "1:270487164933:web:6575488d5a733fe878a46c",
+    measurementId: "G-VVXW4TWCP6"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Referencia al proveedor de Google
+const provider = new firebase.auth.GoogleAuthProvider();
+
+// Función para login con Google
+document.getElementById('google-login-btn').addEventListener('click', function() {
+    const statusDiv = document.getElementById('auth-status');
+    const statusMessage = document.getElementById('status-message');
+    
+    statusDiv.style.display = 'block';
+    statusMessage.textContent = 'Iniciando sesión con Google...';
+    
+    firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+            // Usuario autenticado exitosamente
+            const user = result.user;
+            statusMessage.textContent = `¡Bienvenido, ${user.displayName}!`;
+            
+            // Obtener el token de ID
+            return user.getIdToken();
+        })
+        .then((idToken) => {
+            // Guardar el token en localStorage
+            localStorage.setItem('firebase_token', idToken);
+            
+            // Redirigir a la página anterior o a la página principal
+            const nextUrl = new URLSearchParams(window.location.search).get('next') || '/';
+            setTimeout(() => {
+                window.location.href = nextUrl;
+            }, 1500);
+        })
+        .catch((error) => {
+            console.error('Error de autenticación:', error);
+            statusMessage.textContent = `Error: ${error.message}`;
+            
+            // Cambiar el estilo del alert a error
+            const alertDiv = statusDiv.querySelector('.alert');
+            alertDiv.className = 'alert alert-danger';
+        });
+});
+
+// Verificar si el usuario ya está autenticado
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+        // Usuario ya está autenticado, redirigir
+        const nextUrl = new URLSearchParams(window.location.search).get('next') || '/';
+        window.location.href = nextUrl;
+    }
+});
+</script>
+{% endblock %}

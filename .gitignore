@@ -131,3 +131,9 @@ setup_db_tunnel.sh
 close_db_tunnel.sh
 test_db_connection.py
 SSH_TUNNEL_SETUP.md
+
+# Google OAuth2 Configuration
+google_oauth_config.py
+
+# Firebase Configuration
+firebase_web_config.js

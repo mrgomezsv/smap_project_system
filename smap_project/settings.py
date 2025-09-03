@@ -62,17 +62,18 @@ INSTALLED_APPS = [
     'kidsfun_web',
     'rest_framework',
     'cv_service',  # Nuevo microservicio para análisis de CV
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -131,6 +132,9 @@ DATABASES = {
 # Configuración de codificación de caracteres
 DEFAULT_CHARSET = 'utf-8'
 FILE_CHARSET = 'utf-8'
+
+# Firebase Configuration (ya configurado en el proyecto)
+# Los usuarios de Firebase ya están siendo manejados por el sistema existente
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

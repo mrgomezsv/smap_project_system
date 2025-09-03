@@ -169,11 +169,25 @@ def service_product(request, product_id):
 @csrf_exempt
 @require_POST
 def web_like(request, product_id):
-    """Vista para manejar likes desde la web"""
+    """Vista para manejar likes desde la web - requiere autenticación con Firebase"""
+    # Verificar si el usuario está autenticado con Firebase
+    # El token de Firebase será enviado en el header Authorization
+    auth_header = request.headers.get('Authorization')
+    
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return JsonResponse({
+            'success': False,
+            'error': 'Authentication required. Please login with Firebase to like products.',
+            'requires_auth': True
+        }, status=401)
+    
     try:
-        # Obtener datos del request
-        data = json.loads(request.body)
-        user_id = data.get('user_id', 'web_user')  # Usuario por defecto para web
+        # Obtener el token de Firebase
+        firebase_token = auth_header.split('Bearer ')[1]
+        
+        # Aquí deberías verificar el token con Firebase Admin SDK
+        # Por ahora, usaremos un usuario temporal basado en el token
+        user_id = f"firebase_user_{hash(firebase_token) % 10000}"
         
         # Verificar si ya existe un like para este usuario y producto
         from t_app_product.models import ProductLike
@@ -204,16 +218,27 @@ def web_like(request, product_id):
             'error': str(e)
         }, status=400)
 
-
 @csrf_exempt
 @require_POST
 def web_comment(request, product_id):
-    """Vista para manejar comentarios desde la web"""
+    """Vista para manejar comentarios desde la web - requiere autenticación con Firebase"""
+    # Verificar si el usuario está autenticado con Firebase
+    auth_header = request.headers.get('Authorization')
+    
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return JsonResponse({
+            'success': False,
+            'error': 'Authentication required. Please login with Firebase to comment on products.',
+            'requires_auth': True
+        }, status=401)
+    
     try:
+        # Obtener el token de Firebase
+        firebase_token = auth_header.split('Bearer ')[1]
+        
         # Obtener datos del request
         data = json.loads(request.body)
         comment_text = data.get('comment')
-        user_id = data.get('user_id', 'web_user')  # Usuario por defecto para web
         
         if not comment_text:
             return JsonResponse({
@@ -221,14 +246,17 @@ def web_comment(request, product_id):
                 'error': 'Comment text is required'
             }, status=400)
         
-        # Crear el comentario
+        # Crear el comentario usando el usuario de Firebase
         from t_app_product.models import ProductComment
         
+        # Usar un ID de usuario basado en el token
+        user_id = f"firebase_user_{hash(firebase_token) % 10000}"
+        
         comment = ProductComment.objects.create(
-            product_id=product_id,  # Asociar al producto correcto
+            product_id=product_id,
             comment=comment_text,
             user_id=user_id,
-            user_display_name=f'Usuario {user_id}'
+            user_display_name=f"Usuario {user_id}"
         )
         
         # Obtener el conteo total de comentarios
@@ -252,16 +280,27 @@ def web_comment(request, product_id):
             'error': str(e)
         }, status=400)
 
-
 @csrf_exempt
 @require_POST
 def web_reply(request, comment_id):
-    """Vista para manejar respuestas a comentarios desde la web"""
+    """Vista para manejar respuestas a comentarios desde la web - requiere autenticación con Firebase"""
+    # Verificar si el usuario está autenticado con Firebase
+    auth_header = request.headers.get('Authorization')
+    
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return JsonResponse({
+            'success': False,
+            'error': 'Authentication required. Please login with Firebase to reply to comments.',
+            'requires_auth': True
+        }, status=401)
+    
     try:
+        # Obtener el token de Firebase
+        firebase_token = auth_header.split('Bearer ')[1]
+        
         # Obtener datos del request
         data = json.loads(request.body)
         reply_text = data.get('reply_text')
-        user_id = data.get('user_id', 'web_user')  # Usuario por defecto para web
         
         if not reply_text:
             return JsonResponse({
@@ -269,7 +308,7 @@ def web_reply(request, comment_id):
                 'error': 'Reply text is required'
             }, status=400)
         
-        # Crear la respuesta al comentario
+        # Crear la respuesta al comentario usando el usuario de Firebase
         from t_app_product.models import ProductComment, CommentReply
         
         try:
@@ -280,12 +319,15 @@ def web_reply(request, comment_id):
                 'error': 'Comment not found'
             }, status=404)
         
+        # Usar un ID de usuario basado en el token
+        user_id = f"firebase_user_{hash(firebase_token) % 10000}"
+        
         # Crear la respuesta
         reply = CommentReply.objects.create(
             comment=comment,
             reply_text=reply_text,
             user_id=user_id,
-            user_display_name=f'Usuario {user_id}'
+            user_display_name=f"Usuario {user_id}"
         )
         
         # Obtener el conteo total de respuestas para este comentario

@@ -845,16 +845,66 @@
         
         <!-- Formulario para agregar comentarios -->
         <div class="comment-form-container text-center mb-4" data-aos="fade-up">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="comment-input" placeholder="Escribe un comentario...">
-                        <button class="btn btn-violet" type="button" id="submit-comment">
-                            <i class="bi bi-send"></i>
-                        </button>
+            {% if user.is_authenticated %}
+                <!-- Usuario autenticado - mostrar formulario de comentario -->
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-person-check me-2"></i>
+                                    Comentar como {{ user.get_full_name|default:user.username }}
+                                </h5>
+                                <a href="{% url 'google_logout' %}?next={{ request.path }}" class="btn btn-outline-light btn-sm">
+                                    <i class="bi bi-box-arrow-right me-1"></i>
+                                    Cerrar Sesión
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="comment-input" placeholder="Escribe un comentario...">
+                                    <button class="btn btn-violet" type="button" id="submit-comment">
+                                        <i class="bi bi-send"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Estás comentando como usuario autenticado con Google
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% else %}
+                <!-- Usuario no autenticado - mostrar botón de login -->
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card border-warning">
+                            <div class="card-header bg-warning text-dark">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    Login Requerido
+                                </h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <p class="mb-3">Para comentar y dar like a los productos, necesitas iniciar sesión con Google.</p>
+                                <a href="{% url 'google_login' %}?next={{ request.path }}" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-google me-2"></i>
+                                    Iniciar Sesión con Google
+                                </a>
+                                <div class="mt-3">
+                                    <small class="text-muted">
+                                        <i class="bi bi-shield-check me-1"></i>
+                                        Solo se solicita acceso básico a tu perfil de Google
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
         
         <div class="comments-section" data-aos="fade-up">
@@ -1112,8 +1162,8 @@
                 newComment.className = 'comment-item';
                 newComment.innerHTML = `
                     <div class="comment-header">
-                        <div class="comment-user">Usuario ${data.comment.user_id}</div>
-                        <div class="comment-date">${data.comment.id}</div>
+                        <div class="comment-user">${data.comment.user_display_name}</div>
+                        <div class="comment-date">${data.comment.created_at}</div>
                     </div>
                     <div class="comment-text">${data.comment.comment}</div>
                 `;
@@ -1123,7 +1173,13 @@
                 // Mostrar mensaje de éxito
                 alert('¡Comentario agregado exitosamente!');
             } else {
-                alert('Error: ' + data.error);
+                if (data.requires_auth) {
+                    // Usuario no autenticado
+                    alert('Necesitas iniciar sesión con Google para comentar. Redirigiendo al login...');
+                    window.location.href = '/auth/google/login/?next=' + window.location.pathname;
+                } else {
+                    alert('Error: ' + data.error);
+                }
             }
         })
         .catch(error => {
@@ -1240,5 +1296,101 @@
             submitReply(commentId);
         }
     });
+</script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+
+<script>
+// Configuración de Firebase (debe coincidir con tu app Flutter)
+const firebaseConfig = {
+    apiKey: "AIzaSyA0f6Kx-Ixq77JzDAKMbxwvZFBXYaoRK4M",
+    authDomain: "smap-kf.firebaseapp.com",
+    databaseURL: "https://smap-kf-default-rtdb.firebaseio.com",
+    projectId: "smap-kf",
+    storageBucket: "smap-kf.firebasestorage.app",
+    messagingSenderId: "270487164933",
+    appId: "1:270487164933:web:6575488d5a733fe878a46c",
+    measurementId: "G-VVXW4TWCP6"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Variables globales
+let currentUser = null;
+let firebaseToken = null;
+
+// Función para verificar estado de autenticación
+function checkAuthState() {
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            // Usuario autenticado
+            currentUser = user;
+            showCommentForm();
+            updateUserDisplay();
+            
+            // Obtener token
+            user.getIdToken().then(function(token) {
+                firebaseToken = token;
+            });
+        } else {
+            // Usuario no autenticado
+            currentUser = null;
+            firebaseToken = null;
+            showAuthRequired();
+        }
+    });
+}
+
+// Función para mostrar formulario de comentario
+function showCommentForm() {
+    document.getElementById('auth-required-section').style.display = 'none';
+    document.getElementById('comment-form-section').style.display = 'block';
+}
+
+// Función para mostrar sección de login requerido
+function showAuthRequired() {
+    document.getElementById('auth-required-section').style.display = 'block';
+    document.getElementById('comment-form-section').style.display = 'none';
+}
+
+// Función para actualizar nombre de usuario
+function updateUserDisplay() {
+    if (currentUser) {
+        const displayName = currentUser.displayName || currentUser.email || 'Usuario';
+        document.getElementById('user-display-name').textContent = displayName;
+    }
+}
+
+// Función para logout
+function firebaseLogout() {
+    firebase.auth().signOut().then(function() {
+        // Limpiar localStorage
+        localStorage.removeItem('firebase_token');
+        
+        // Redirigir a la página actual
+        window.location.reload();
+    }).catch(function(error) {
+        console.error('Error al cerrar sesión:', error);
+    });
+}
+
+// Función para obtener headers de autenticación
+function getAuthHeaders() {
+    if (firebaseToken) {
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${firebaseToken}`
+        };
+    }
+    return {
+        'Content-Type': 'application/json'
+    };
+}
+
+// Inicializar verificación de autenticación
+checkAuthState();
 </script>
 {% endblock %} 

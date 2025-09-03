@@ -13,4 +13,8 @@ urlpatterns = [
     path('web-comment/<int:product_id>/', views.web_comment, name='web_comment'),
     path('web-reply/<int:comment_id>/', views.web_reply, name='web_reply'),
     path('terminos-y-condiciones/', views.terms_conditions, name='terms_conditions'),
+    
+    # Firebase Auth URLs
+    path('auth/firebase/login/', views.firebase_login, name='firebase_login'),
+    path('auth/firebase/callback/', views.firebase_auth_callback, name='firebase_auth_callback'),
 ]
