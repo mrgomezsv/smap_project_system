@@ -53,6 +53,11 @@ body {
   padding: 0 1rem;
 }
 
+/* La navbar debe usar todo el ancho para no forzar saltos */
+.menu .navbar .container {
+  max-width: 100%;
+}
+
 /* Evitar que los elementos del menú hagan salto de línea */
 .menu .navbar .navbar-collapse,
 .menu .navbar .navbar-nav {
@@ -505,6 +510,16 @@ footer p, footer .power {
     margin: 0 0.3rem;
   }
   .menu .navbar .navbar-nav { gap: 0.25rem; }
+}
+
+/* Ajuste específico para 1366-1400px (común en 1368x768) */
+@media (max-width: 1400px) and (min-width: 1201px) {
+  .menu .navbar-brand { height: 78px; }
+  .menu .navbar .navbar-nav { gap: 0.25rem; }
+  .navbar-nav .nav-link {
+    font-size: 0.95rem;
+    padding: 0.45rem 0.8rem !important;
+  }
 }
 
 @media (max-width: 992px) {
