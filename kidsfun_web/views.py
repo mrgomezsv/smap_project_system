@@ -434,3 +434,13 @@ def generate_app_qr(request):
     except Exception as e:
         print(f"Error generating QR code: {str(e)}")
         return None
+
+
+def firebase_login(request):
+    """Vista para la página de login de Firebase"""
+    return render(request, 'kidsfun_web/firebase_login.html')
+
+
+def firebase_auth_callback(request):
+    """Vista para el callback de autenticación de Firebase"""
+    return JsonResponse({'success': True, 'message': 'Firebase Auth callback'})
