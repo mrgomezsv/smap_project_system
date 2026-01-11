@@ -61,7 +61,6 @@ INSTALLED_APPS = [
     'waiver_v2',  # Nueva aplicación para waivers v2
     'kidsfun_web',
     'rest_framework',
-    'cv_service',  # Nuevo microservicio para análisis de CV
 
 ]
 

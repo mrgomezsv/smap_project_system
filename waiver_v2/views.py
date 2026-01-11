@@ -109,8 +109,6 @@ def api_waiver_v2(request):
     return Response({'error': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-# Nota: Los endpoints de CV y su lógica se movieron a la app 'cv_service'.
-
 @api_view(['GET'])
 def get_waiver_data_v2(request, qr_code):
     """Obtener datos de waiver por código QR"""
