@@ -366,17 +366,27 @@ Revisa el estado de Gunicorn y Nginx para asegurarte de que todo esté funcionan
 
 
 
+### Despliegue con Docker y Kubernetes (K8s)
+
+#### 1. Construir y Subir Imagen (Multi-plataforma para Linux)
+Usa este comando para asegurar que la imagen funcione correctamente en tus VPS de IONOS (Ubuntu):
+
+```bash
+# Crear o usar el builder multiplatform (solo la primera vez)
+docker buildx create --name multiplatform-builder --use || docker buildx use multiplatform-builder
+
+# Construir, versionar y subir a Docker Hub
+docker buildx build --platform linux/amd64 \
+  -t mrgomezdev/kidsfun-django:1.0.0 \
+  -t mrgomezdev/kidsfun-django:latest \
+  --push .
+```
+
+#### 2. Desplegar en Kubernetes
+Consulta la carpeta `k8s/` y el archivo `walkthrough.md` para los pasos detallados de despliegue.
+
 ### Actualizar para ver CAMBIOS en PRODUCCION
-
-Limpiar la caché del navegador: Prueba recargando la página con Ctrl + F5 (Windows) o Cmd + Shift + R (Mac) para forzar una recarga completa.
-
-Reiniciar el servidor de Gunicorn: Si tienes habilitado el modo producción, reinicia Gunicorn para asegurarte de que los cambios se carguen correctamente:
-
-    sudo systemctl restart gunicorn
-
-Verificar la caché de Nginx: Nginx podría estar sirviendo una versión en caché. Intenta limpiar la caché de Nginx reiniciándolo:
-
-    sudo systemctl restart nginx
+... (resto del archivo)
 
 ## Configuración del Sistema de Correos Electrónicos para Waiver
 
