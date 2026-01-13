@@ -17,10 +17,7 @@ except ImportError:
     QRCODE_AVAILABLE = False
     print("Warning: qrcode module not available. QR code functionality will be disabled.")
 
-from t_app_product.models import Product
-from t_app_product.models import ContactMessage
-# from api_like.models import Like  # Comentado - API eliminada
-# from api_commentary.models import Commentary  # Comentado - API eliminada
+from t_app_product.models import Product, ContactMessage, ProductLike, ProductComment, CommentReply
 
 
 def home(request):
@@ -37,11 +34,6 @@ def service(request):
         if not apps.is_installed('t_app_product'):
             raise Exception("La aplicación t_app_product no está instalada")
         
-        # Obtener todos los products que están publicados con contadores optimizados
-        try:
-            from t_app_product.models import ProductLike, ProductComment
-            from django.db.models import Count, Q
-            
             # Usar annotate para obtener contadores de manera eficiente
             products = Product.objects.filter(publicated=True).annotate(
                 likes_count=Count('productlike', filter=Q(productlike__is_favorite=True)),
@@ -49,22 +41,6 @@ def service(request):
             ).order_by('category', 'title')
             
             print(f"Productos encontrados: {products.count()}")
-            
-        except Exception:
-            # Fallback si hay error al obtener contadores optimizados
-            products = Product.objects.filter(publicated=True).order_by('category', 'title')
-            print(f"Productos encontrados (fallback): {products.count()}")
-            
-            # Agregar contadores manualmente como fallback
-            for product in products:
-                try:
-                    likes_count = ProductLike.objects.filter(product_id=product.id, is_favorite=True).count()
-                    comments_count = ProductComment.objects.filter(product_id=product.id).count()
-                    product.likes_count = likes_count
-                    product.comments_count = comments_count
-                except Exception:
-                    product.likes_count = 0
-                    product.comments_count = 0
         
         # Crear un diccionario para almacenar los products agrupados por categoría
         products_or_category = {}
@@ -112,47 +88,39 @@ def service_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
 
     # Cargar likes y comentarios reales desde t_app_product
-    try:
-        from t_app_product.models import ProductLike, ProductComment, CommentReply
-        likes_count = ProductLike.objects.filter(product_id=product.id, is_favorite=True).count()
-        comments_qs = ProductComment.objects.filter(product_id=product.id).order_by('-created_at')
-        
-        # Estructura mejorada de comentarios con respuestas
-        comments = []
-        for c in comments_qs:
-            # Obtener respuestas para este comentario
-            replies = CommentReply.objects.filter(comment=c).order_by('created_at')
-            replies_data = [
-                {
-                    'id': r.id,
-                    'reply_text': r.reply_text,
-                    'user_id': r.user_id,
-                    'user_display_name': r.user_display_name or f'Usuario {r.user_id}',
-                    'created_at': r.created_at,
-                    'formatted_date': r.created_at.strftime('%d/%m/%Y %H:%M')
-                }
-                for r in replies
-            ]
-            
-            comment_data = {
-                'id': c.id,
-                'comment': c.comment,
-                'user_id': c.user_id,
-                'user_display_name': c.user_display_name or f'Usuario {c.user_id}',
-                'created_at': c.created_at,
-                'formatted_date': c.created_at.strftime('%d/%m/%Y %H:%M'),
-                'replies': replies_data,
-                'replies_count': len(replies_data)
+    likes_count = ProductLike.objects.filter(product_id=product.id, is_favorite=True).count()
+    comments_qs = ProductComment.objects.filter(product_id=product.id).order_by('-created_at')
+    
+    # Estructura mejorada de comentarios con respuestas
+    comments = []
+    for c in comments_qs:
+        # Obtener respuestas para este comentario
+        replies = CommentReply.objects.filter(comment=c).order_by('created_at')
+        replies_data = [
+            {
+                'id': r.id,
+                'reply_text': r.reply_text,
+                'user_id': r.user_id,
+                'user_display_name': r.user_display_name or f'Usuario {r.user_id}',
+                'created_at': r.created_at,
+                'formatted_date': r.created_at.strftime('%d/%m/%Y %H:%M')
             }
-            comments.append(comment_data)
+            for r in replies
+        ]
         
-        comments_count = len(comments)
-    except Exception as e:
-        print(f"Error loading comments: {e}")
-        # Fallback seguro si el modelo no está disponible o hay error
-        likes_count = 0
-        comments = []
-        comments_count = 0
+        comment_data = {
+            'id': c.id,
+            'comment': c.comment,
+            'user_id': c.user_id,
+            'user_display_name': c.user_display_name or f'Usuario {c.user_id}',
+            'created_at': c.created_at,
+            'formatted_date': c.created_at.strftime('%d/%m/%Y %H:%M'),
+            'replies': replies_data,
+            'replies_count': len(replies_data)
+        }
+        comments.append(comment_data)
+    
+    comments_count = len(comments)
     
     # Agregar los datos al contexto
     context = {

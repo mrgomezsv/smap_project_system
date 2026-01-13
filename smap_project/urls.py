@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 
 from t_app_product import views
 from t_app_product.views import process_checkbox
-# from api.views import ProductListCreate  # Comentado - API eliminada
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -47,13 +47,8 @@ urlpatterns = [
     # Comments API (nueva)
     path('api/comments/', views.create_comment, name='create_comment'),
     path('api/comments/product/<int:product_id>/', views.comments_for_product, name='comments_for_product'),
-    # path('api/products/', ProductListCreate.as_view(), name='product-list')  # Comentado - API eliminada
-    path('', include('kidsfun_web.urls')),  # URLs principales en la raíz
-    # path('api/', include('api_like.urls')),  # Comentado - API eliminada
-    # path('api/', include('api_commentary.urls')),  # Comentado - API eliminada
-    # path('api/', include('api_waiver.urls')),  # Comentado - API eliminada
-    path('api/v2/', include('waiver_v2.urls')),  # Incluye las URLs de la nueva aplicación waiver_v2
-    # path('api_waiver_validator/', include('api_waiver_validator.urls')),  # Comentado - API eliminada
+    path('', include('kidsfun_web.urls')),
+    path('api/v2/', include('waiver_v2.urls')),
 ]
 
 # Sirve las imágenes desde la carpeta media
