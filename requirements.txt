@@ -4,7 +4,7 @@ djangorestframework==3.14.0
 django-cors-headers==4.3.1
 
 # Base de datos
-psycopg2-binary==2.9.9
+# psycopg2-binary se removió porque el proyecto usa MariaDB/mysqlclient. militar
 
 # Variables de entorno
 python-dotenv==1.0.0
