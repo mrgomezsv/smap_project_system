@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kidsfun-django
+  namespace: default
+  labels:
+    app: kidsfun-django
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kidsfun-django
+  template:
+    metadata:
+      labels:
+        app: kidsfun-django
+    spec:
+      containers:
+        - name: django
+          image: mrgomezdev/kidsfun-django:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: kidsfun-django-config
+            - secretRef:
+                name: kidsfun-django-secret
+          volumeMounts:
+            - name: media-storage
+              mountPath: /app/media
+            - name: firebase-creds
+              mountPath: /app/credentials
+              readOnly: true
+      volumes:
+        - name: media-storage
+          persistentVolumeClaim:
+            claimName: kidsfun-media-pvc
+        - name: firebase-creds
+          secret:
+            secretName: firebase-credentials-secret # Debes crear este secret con el JSON

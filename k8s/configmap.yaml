@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kidsfun-django-config
+  namespace: default
+data:
+  DEBUG: "False"
+  DB_CONNECTION: "mysql"
+  DB_HOST: "mariadb"
+  DB_PORT: "3306"
+  DB_DATABASE: "smap_kf"
+  DB_USERNAME: "root"
+  ALLOWED_HOSTS: "*"
+  EMAIL_HOST: "smtp.gmail.com"
+  EMAIL_PORT: "587"
+  EMAIL_USE_TLS: "True"
+  FIREBASE_CREDENTIALS_PATH: "/app/credentials/firebase-credentials.json"

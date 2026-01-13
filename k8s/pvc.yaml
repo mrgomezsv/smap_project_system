@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kidsfun-media-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi # Ajustar según necesidad
+  # storageClassName: "ionos-cloud-block" # Descomentar si tu cluster tiene este StorageClass
