@@ -25,6 +25,9 @@ RUN pip install --no-cache-dir mysqlclient
 # Copiar el proyecto
 COPY . /app/
 
+# Asegurar que el directorio de logs exista (necesario para el sistema de logging de Django)
+RUN mkdir -p /app/logs && touch /app/logs/django.log
+
 # Recolectar archivos estáticos
 # Nota: DEBUG=False para collectstatic en producción
 RUN DJANGO_SECRET_KEY=dummy-key python manage.py collectstatic --noinput
