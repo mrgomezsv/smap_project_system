@@ -113,17 +113,16 @@ WSGI_APPLICATION = 'smap_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Configuración de base de datos para producción
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
         'NAME': os.getenv('DB_NAME', 'smap_kf'),
         'USER': os.getenv('DB_USER', 'mrgomez'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'Karin2100'),
-        'HOST': os.getenv('DB_HOST', '82.165.210.146'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'HOST': os.getenv('DB_HOST', 'mariadb'),
+        'PORT': os.getenv('DB_PORT', '3306'),
         'OPTIONS': {
-            'client_encoding': 'UTF8',
+            'charset': 'utf8mb4',
         },
     }
 }
