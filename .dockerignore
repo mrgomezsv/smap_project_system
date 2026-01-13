@@ -1,0 +1,14 @@
+.git
+.gitignore
+__pycache__
+*.pyc
+venv
+.env
+.DS_Store
+media
+staticfiles
+db.sqlite3
+Dockerfile
+k8s
+deploy.sh
+*.md
