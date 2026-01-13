@@ -28,3 +28,6 @@ reportlab==4.2.2
 
 # Firebase Authentication (ya configurado en el proyecto)
 # Los usuarios de Firebase ya están siendo manejados por el sistema existente
+
+# Servidor de producción
+gunicorn==21.2.0
