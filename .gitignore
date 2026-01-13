@@ -107,33 +107,30 @@ media/
 #credentials/
 credentials/
 
-# Ignorar archivos .DS_Store generados por macOS
+# MacOS
 .DS_Store
 
-# Añadir .DS_Store al .gitignore
-echo ".DS_Store" >> .gitignore
-
-# Eliminar todos los .DS_Store del repositorio
-find . -name .DS_Store -print0 | xargs -0 git rm --cachedgit
-
-
-# Ignorar archivos de configuración de IDEA
+# IDEs
 .idea/
+.vscode/
+*.swp
+*.swo
 
-# Credenciales
+# Credentials
 .env
+credentials/
 
-# Archivo de configuración de Django
+# Django
 smap_project/settings.py
-# Archivos de desarrollo local y túnel SSH
 smap_project/local_settings.py
+local_settings.py
+
+# Scripts de desarrollo local legados (mantener si es necesario, o ignorar si se borraron)
 setup_db_tunnel.sh
 close_db_tunnel.sh
 test_db_connection.py
 SSH_TUNNEL_SETUP.md
 
-# Google OAuth2 Configuration
+# Configuración OAuth/Firebase
 google_oauth_config.py
-
-# Firebase Configuration
 firebase_web_config.js
