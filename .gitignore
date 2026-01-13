@@ -121,7 +121,7 @@ credentials/
 credentials/
 
 # Django
-smap_project/settings.py
+# smap_project/settings.py
 smap_project/local_settings.py
 local_settings.py
 
