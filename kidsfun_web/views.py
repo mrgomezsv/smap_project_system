@@ -1,6 +1,6 @@
 # kidsfun_web/views.py
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -34,13 +34,13 @@ def service(request):
         if not apps.is_installed('t_app_product'):
             raise Exception("La aplicación t_app_product no está instalada")
         
-            # Usar annotate para obtener contadores de manera eficiente
-            products = Product.objects.filter(publicated=True).annotate(
-                likes_count=Count('productlike', filter=Q(productlike__is_favorite=True)),
-                comments_count=Count('comments')
-            ).order_by('category', 'title')
-            
-            print(f"Productos encontrados: {products.count()}")
+        # Usar annotate para obtener contadores de manera eficiente
+        products = Product.objects.filter(publicated=True).annotate(
+            likes_count=Count('productlike', filter=Q(productlike__is_favorite=True)),
+            comments_count=Count('comments')
+        ).order_by('category', 'title')
+        
+        print(f"Productos encontrados: {products.count()}")
         
         # Crear un diccionario para almacenar los products agrupados por categoría
         products_or_category = {}
