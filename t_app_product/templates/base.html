@@ -1,422 +1,154 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     <title>SMAP - Sistema de Manejo de la Aplicación Móvil</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'img/favicon/favicon.ico' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon/favicon.ico' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon/favicon-16x16.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'img/favicon/favicon-96x96.png' %}">
-    <link rel="icon" type="image/png" sizes="256x256" href="{% static 'img/favicon/favicon-256x256.png' %}">
-    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/favicon/apple-icon-57x57.png' %}">
-    <link rel="apple-touch-icon" sizes="60x60" href="{% static 'img/favicon/apple-icon-60x60.png' %}">
-    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/favicon/apple-icon-72x72.png' %}">
-    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/favicon/apple-icon-76x76.png' %}">
-    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/favicon/apple-icon-114x114.png' %}">
-    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'img/favicon/apple-icon-120x120.png' %}">
-    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'img/favicon/apple-icon-144x144.png' %}">
-    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'img/favicon/apple-icon-152x152.png' %}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-icon-180x180.png' %}">
-    <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
-    
+
+    <!-- Google Fonts: Work Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-    <style>
-        :root {
-            --sidebar-width: 280px;
-            --header-height: 60px;
-            --primary-color: #4e73df;
-            --secondary-color: #858796;
-            --success-color: #1cc88a;
-            --info-color: #36b9cc;
-            --warning-color: #f6c23e;
-            --danger-color: #e74a3b;
-            --light-color: #f8f9fc;
-            --dark-color: #5a5c69;
-        }
 
-        body {
-            background-color: var(--light-color);
-            min-height: 100vh;
-            display: flex;
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: linear-gradient(180deg, var(--primary-color) 0%, #224abe 100%);
-            color: white;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            transition: all 0.3s;
-            z-index: 1000;
-        }
-
-        .sidebar-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-brand {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: white;
-            text-decoration: none;
-        }
-
-        .sidebar-menu {
-            padding: 1rem 0;
-        }
-
-        .sidebar-item {
-            padding: 0.75rem 1.5rem;
-            display: flex;
-            align-items: center;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .sidebar-item:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-item.active {
-            color: white;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .sidebar-item i {
-            margin-right: 0.75rem;
-            width: 1.25rem;
-            text-align: center;
-        }
-
-        /* Main Content Styles */
-        .main-content {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .content-wrapper {
-            flex: 1;
-            padding: 2rem;
-        }
-
-        /* User Profile Styles */
-        .user-profile {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-info {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .profile-info img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 0.75rem;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .profile-info span {
-            flex: 1;
-            color: white;
-            font-weight: 500;
-        }
-
-        .profile-menu-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .profile-menu-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .profile-menu-toggle i {
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .dropdown-menu {
-            background: white;
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            padding: 0.5rem 0;
-            min-width: 200px;
-        }
-
-        .dropdown-item {
-            padding: 0.75rem 1rem;
-            color: #333;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            transition: all 0.2s ease;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f8f9fa;
-            color: #007bff;
-        }
-
-        .dropdown-item i {
-            margin-right: 0.5rem;
-            width: 16px;
-            text-align: center;
-        }
-
-        /* Footer Styles */
-        .footer {
-            background-color: white;
-            padding: 1rem 0;
-            border-top: 1px solid #e3e6f0;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.show {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .navbar-toggler {
-                display: block;
-            }
-        }
-    </style>
+    <!-- Custom CSS (Consultora Style) -->
+    <link rel="stylesheet" href="{% static 'css/dashboard_premium.css' %}">
 </head>
+
 <body>
     <!-- Sidebar -->
     <nav class="sidebar">
-        <div class="sidebar-header">
-            <a href="{% url 'home' %}" class="sidebar-brand">
-                <i class="bi bi-grid-1x2-fill me-2"></i>
-                SMAP
-            </a>
+        <!-- Sidebar Top Header (Fixed) -->
+        <div class="sidebar-top-wrapper">
+            <div class="logo__wrapper">
+                <i class="bi bi-grid-1x2-fill text-white h4 mb-0"></i>
+                <span class="company-name">KIDSFUN SMAP</span>
+            </div>
+            <button class="btn btn-link text-white p-0 d-md-none" id="sidebarClose">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
 
         {% if user.is_authenticated %}
-        <div class="sidebar-menu">
-            <a href="{% url 'home' %}" class="sidebar-item" id="opcion0">
-                <i class="bi bi-house-fill"></i>
-                Sitio Web
-            </a>
-            <a href="/product" class="sidebar-item" id="opcion1">
-                <i class="bi bi-box-seam-fill"></i>
-                Productos
-            </a>
-            <a href="{% url 'event' %}" class="sidebar-item" id="opcion2">
-                <i class="bi bi-calendar-event-fill"></i>
-                Eventos
-            </a>
-            <a href="{% url 'ticket_master' %}" class="sidebar-item" id="opcion3">
-                <i class="bi bi-ticket-perforated-fill"></i>
-                Ticket Master
-            </a>
-            <a href="{% url 'firebase_auth' %}" class="sidebar-item" id="opcion4">
-                <i class="bi bi-people-fill"></i>
-                Usuarios en la App
-            </a>
-            <a href="{% url 'waiver' %}" class="sidebar-item" id="opcion5">
-                <i class="bi bi-file-earmark-text-fill"></i>
-                Waiver Administration
-            </a>
-            <a href="{% url 'push_notification' %}" class="sidebar-item" id="opcion6">
-                <i class="bi bi-bell-fill"></i>
-                Notificaciones Push
-            </a>
-            <a href="{% url 'chats' %}" class="sidebar-item" id="opcion7">
-                <i class="bi bi-chat-dots-fill"></i>
-                Chats
-            </a>
-            <a href="{% url 'web_messages' %}" class="sidebar-item" id="opcion8">
-                <i class="bi bi-envelope-fill"></i>
-                Mensajes de la Web
-                {% if unread_count %}
-                    <span class="badge bg-danger ms-2" id="webMessagesBadge">{{ unread_count }}</span>
-                {% else %}
-                    <span class="badge bg-danger ms-2 d-none" id="webMessagesBadge">0</span>
-                {% endif %}
-            </a>
+        <!-- Sidebar Scrollable Content -->
+        <div class="sidebar-content flex-grow-1 overflow-auto">
+            <div class="sidebar-menu py-3">
+                <a href="{% url 'home' %}" class="sidebar-item" id="opcion0">
+                    <i class="bi bi-house-door"></i>
+                    <span>Sitio Web</span>
+                </a>
+                <a href="/product" class="sidebar-item" id="opcion1">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Productos</span>
+                </a>
+                <a href="{% url 'event' %}" class="sidebar-item" id="opcion2">
+                    <i class="bi bi-calendar-event"></i>
+                    <span>Eventos</span>
+                </a>
+                <a href="{% url 'ticket_master' %}" class="sidebar-item" id="opcion3">
+                    <i class="bi bi-ticket-perforated"></i>
+                    <span>Ticket Master</span>
+                </a>
+                <a href="{% url 'firebase_auth' %}" class="sidebar-item" id="opcion4">
+                    <i class="bi bi-people"></i>
+                    <span>Usuarios App</span>
+                </a>
+                <a href="{% url 'waiver' %}" class="sidebar-item" id="opcion5">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <span>Waivers</span>
+                </a>
+                <a href="{% url 'push_notification' %}" class="sidebar-item" id="opcion6">
+                    <i class="bi bi-bell"></i>
+                    <span>Notificaciones</span>
+                </a>
+                <a href="{% url 'chats' %}" class="sidebar-item" id="opcion7">
+                    <i class="bi bi-chat-dots"></i>
+                    <span>Chats</span>
+                </a>
+                <a href="{% url 'web_messages' %}" class="sidebar-item" id="opcion8">
+                    <i class="bi bi-envelope"></i>
+                    <span>Mensajes Web</span>
+                    {% if unread_count %}
+                    <span class="badge bg-danger rounded-circle ms-auto" style="font-size: 0.65rem;">{{ unread_count
+                        }}</span>
+                    {% endif %}
+                </a>
+            </div>
         </div>
 
-        <div class="user-profile">
-            <div class="profile-info" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="{% static 'assets/user_profile.png' %}" alt="Profile">
-                <span>{{ user.username }}</span>
-                <div class="profile-menu-toggle">
-                    <i class="bi bi-three-dots-vertical"></i>
-                </div>
+        <!-- Sidebar Profile (Fixed at bottom) -->
+        <div class="sidebar__profile dropup">
+            <div class="avatar__wrapper cursor-pointer" data-bs-toggle="dropdown">
+                <img src="{% static 'assets/user_profile.png' %}" alt="Profile" class="avatar">
             </div>
-            <ul class="dropdown-menu">
-                {% if user.username == 'mrgomez' %}
-                <li>
-                    <a class="dropdown-item" href="/sudo_admin">
-                        <i class="bi bi-shield-lock-fill me-2"></i>
-                        Sudo Admin
-                    </a>
-                </li>
-                {% endif %}
-                <li>
-                    <a class="dropdown-item" href="/logout">
-                        <i class="bi bi-box-arrow-right me-2"></i>
-                        Cerrar Sesión
-                    </a>
-                </li>
-            </ul>
+            <div class="avatar__name">
+                <div class="user-name">{{ user.username }}</div>
+                <div class="email">KidsFun Administrator</div>
+            </div>
+            <div class="profile-menu-wrapper">
+                <button class="btn btn-link text-white p-0 opacity-50" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark shadow-lg border-0 mb-2">
+                    {% if user.username == 'mrgomez' %}
+                    <li><a class="dropdown-item py-2" href="/sudo_admin"><i class="bi bi-shield-lock me-2"></i>Sudo
+                            Admin</a></li>
+                    <li>
+                        <hr class="dropdown-divider opacity-10">
+                    </li>
+                    {% endif %}
+                    <li><a class="dropdown-item py-2 text-danger-emphasis" href="/logout"><i
+                                class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</a></li>
+                </ul>
+            </div>
         </div>
         {% endif %}
     </nav>
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Top Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-            <div class="container-fluid">
-                <button class="navbar-toggler d-lg-none" type="button" id="sidebarToggle">
-                    <i class="bi bi-list"></i>
-                </button>
-            </div>
-        </nav>
-
         <!-- Content Wrapper -->
         <div class="content-wrapper">
             {% block content %}
             {% endblock %}
         </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            {% include 'footer/footer.html' %}
-        </footer>
     </div>
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom Scripts -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar Toggle
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebar = document.querySelector('.sidebar');
-            
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('show');
-                });
-            }
 
-            // Active Menu Item
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
             const currentPath = window.location.pathname;
-            const menuItems = document.querySelectorAll('.sidebar-item');
-            
-            menuItems.forEach(item => {
-                if (item.getAttribute('href') === currentPath) {
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                if (item.getAttribute('href') === currentPath || (currentPath.startsWith('/product') && item.getAttribute('href') === '/product')) {
                     item.classList.add('active');
                 }
             });
 
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(event) {
-                const isClickInside = sidebar.contains(event.target) || 
-                                    sidebarToggle.contains(event.target);
-                
-                if (!isClickInside && window.innerWidth < 768) {
-                    sidebar.classList.remove('show');
-                }
-            });
-
-            // Polling de mensajes no leídos y notificación simple
-            function updateUnreadBadge(count) {
-                const badge = document.getElementById('webMessagesBadge');
-                if (!badge) return;
-                if (count && count > 0) {
-                    badge.textContent = count;
-                    badge.classList.remove('d-none');
-                } else {
-                    badge.textContent = '0';
-                    badge.classList.add('d-none');
-                }
+            // Mobile menu toggle logic if needed
+            const sidebarClose = document.getElementById('sidebarClose');
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', () => {
+                    document.querySelector('.sidebar').classList.remove('show');
+                });
             }
-
-            let lastUnread = parseInt((document.getElementById('webMessagesBadge')?.textContent || '0'), 10) || 0;
-            function pollUnread() {
-                fetch('/web-messages/unread-count/', { credentials: 'same-origin' })
-                    .then(r => r.json())
-                    .then(data => {
-                        const current = data.unread || 0;
-                        if (current > lastUnread) {
-                            // Notificación visual simple
-                            const toast = document.createElement('div');
-                            toast.className = 'position-fixed bottom-0 end-0 p-3';
-                            toast.style.zIndex = 2000;
-                            toast.innerHTML = `
-                                <div class="toast align-items-center text-bg-primary border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
-                                  <div class="d-flex">
-                                    <div class="toast-body">
-                                      Tienes ${current - lastUnread} nuevo(s) mensaje(s) sin leer.
-                                    </div>
-                                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                                  </div>
-                                </div>`;
-                            document.body.appendChild(toast);
-                            setTimeout(() => toast.remove(), 4000);
-                        }
-                        lastUnread = current;
-                        updateUnreadBadge(current);
-                    })
-                    .catch(() => {});
-            }
-
-            // Iniciar polling cada 20s si el usuario está autenticado
-            {% if user.is_authenticated %}
-            setInterval(pollUnread, 20000);
-            {% endif %}
         });
     </script>
 </body>
+
 </html>

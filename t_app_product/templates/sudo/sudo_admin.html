@@ -1,172 +1,114 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <head>
-        {% load static %}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/sudo_admin.css' %}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    </head>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #F4F1FF !important; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-    <div class="container d-flex align-items-center">
-        <h2 class="h2">Usuarios Registrados</h2>
-        <div class="d-flex ml-auto">
-            <div class="dropdown mx-2">
-              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Acciones
-              </a>
-              <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{% url 'product' %}">Gestión de Productos</a></li>
-                  <li><a class="dropdown-item" href="{% url 'waiver' %}">Gestión de Waivers</a></li>
-                  <li><a class="dropdown-item" href="{% url 'firebase_auth' %}">Usuarios de Firebase</a></li>
-                  <li><a class="dropdown-item" href="{% url 'event' %}">Gestión de Eventos</a></li>
-                  <li><a class="dropdown-item" href="{% url 'chats' %}">Chats</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><h6 class="dropdown-header">APIs del Sistema</h6></li>
-                  <li><a class="dropdown-item" href="/api/products/" target="_blank">Productos API</a></li>
-                  <li><a class="dropdown-item" href="/api/products/category/JUGUETES/" target="_blank">Productos por Categoría API</a></li>
-                  <li><a class="dropdown-item" href="/api/v2/waiver/" target="_blank">Waiver API v2</a></li>
-                  <li><a class="dropdown-item" href="/api/v2/waiver/validate-waiver-status/" target="_blank">Validar Waiver API</a></li>
-                  <li><a class="dropdown-item" href="/api/v2/waiver/user/test/" target="_blank">Usuarios Waiver API</a></li>
-                  <li><a class="dropdown-item" href="/api/v2/waiver/QR123/" target="_blank">QR Waiver API</a></li>
-              </ul>
+<div class="dashboard-container px-4">
+    <!-- Header -->
+    <div class="dashboard-header mb-4 px-0">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="welcome-section">
+                <h1>Usuarios Registrados</h1>
+                <p class="welcome-text">Gestión avanzada de accesos y perfiles administrativos.</p>
             </div>
-            <a id="createUserButtom" href="{% url 'signup' %}" class="btn btn-primary ml-2">Nuevo Usuario</a>
+            <div class="header-actions d-flex gap-2">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle py-2 px-3 border-0 bg-white shadow-sm"
+                        type="button" data-bs-toggle="dropdown" style="border-radius: 0.75rem;">
+                        Acciones Masivas
+                    </button>
+                    <ul class="dropdown-menu shadow-lg border-0 mt-2">
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-download me-2"></i>Exportar CSV</a>
+                        </li>
+                        <li><a class="dropdown-item py-2 text-danger" href="#"><i class="bi bi-trash me-2"></i>Eliminar
+                                Seleccionados</a></li>
+                    </ul>
+                </div>
+                <a href="{% url 'signup' %}" class="btn btn-primary shadow-sm">
+                    <i class="bi bi-person-plus me-2"></i>
+                    Crear Usuario
+                </a>
+            </div>
         </div>
     </div>
-</nav>
 
-<body style="background-color: #F4F1FF">
-    <div class="container mt-5" style="background-color: #F4F1FF !important">
+    <!-- Main Table Section -->
+    <div class="table-container mb-5">
         {% csrf_token %}
-        {% if error_message %}
-            <!-- Mensaje de error -->
-            <div class="alert alert-danger" role="alert">
-                <h4 class="alert-heading">
-                    <i class="fas fa-exclamation-circle"></i>
-                    Error al cargar usuarios
-                </h4>
-                <p>{{ error_message }}</p>
-            </div>
-        {% elif users %}
-            <table class="table" style="background-color: #F4F1FF !important">
+        {% if users %}
+        <div class="table-responsive">
+            <table class="table mb-0 align-middle">
                 <thead>
-                <tr style="background-color: #F4F1FF !important">
-                    <th><input type="checkbox" id="select-all"></th> <!-- Checkbox para seleccionar todos -->
-                    <th>ID</th>
-                    <th>Nombre de Usuario</th>
-                    <th>Correo Electrónico</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Fecha de Registro</th>
-                    <th>Ultimo Inicio de Sesion</th>
-                    <th class="trash-column"></th> <!-- Columna para el icono del bote de basura -->
-                </tr>
-                </thead>
-                <tbody style="background-color: #F4F1FF !important">
-                {% for user in users %}
                     <tr>
-                        <td class="checkbox-container">
-                            <input type="checkbox" name="selected_users" value="{{ user.id }}"
-                                   id="user-checkbox-{{ user.id }}"
-                                   onchange="toggleTrashIconVisibility('{{ user.id }}')">
-                            <label for="user-checkbox-{{ user.id }}" class="checkbox-label"></label>
-                        </td> <!-- Checkbox de usuario -->
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email|default:"N/A" }}</td>
-                        <td>{{ user.first_name|default:"N/A" }}</td>
-                        <td>{{ user.last_name|default:"N/A" }}</td>
-                        <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
-                        <td>{{ user.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</td>
-                        <td class="form-check me-3 hide-trash trash-column"
-                            id="trash-icon-{{ user.id }}">
-                            <button type="button" 
-                                    class="btn btn-link text-danger p-0" 
-                                    onclick="confirmDeleteUser('{{ user.id }}', '{{ user.username }}')"
-                                    title="Eliminar usuario">
-                                <i class="fas fa-trash-alt trash-icon mr-2"></i>
+                        <th class="ps-4" style="width: 50px;">
+                            <input type="checkbox" class="form-check-input" id="select-all">
+                        </th>
+                        <th>Usuario</th>
+                        <th>Información de Contacto</th>
+                        <th>Nombre Completo</th>
+                        <th>Último Acceso</th>
+                        <th class="text-end pe-4">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr class="cursor-pointer">
+                        <td class="ps-4">
+                            <input type="checkbox" name="selected_users" value="{{ user.id }}" class="form-check-input">
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                    style="width: 40px; height: 40px; font-weight: 700;">
+                                    {{ user.username|slice:":1"|upper }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">{{ user.username }}</div>
+                                    <div class="small text-muted">ID: #{{ user.id }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="small fw-medium text-dark">{{ user.email|default:"Sin correo" }}</div>
+                            <div class="small text-muted">Suscrito: {{ user.date_joined|date:"d/m/Y" }}</div>
+                        </td>
+                        <td><span class="fw-semibold">{{ user.first_name }} {{ user.last_name }}</span></td>
+                        <td>
+                            {% if user.last_login %}
+                            <span
+                                class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2">
+                                {{ user.last_login|date:"d M, H:i" }}
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2">Nunca</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-link text-muted p-2" onclick="confirmDelete('{{ user.username }}')">
+                                <i class="bi bi-trash3 h5 mb-0"></i>
                             </button>
                         </td>
                     </tr>
-                {% endfor %}
+                    {% endfor %}
                 </tbody>
             </table>
+        </div>
         {% else %}
-            <div class="alert alert-info" role="alert">
-                <h4 class="alert-heading">
-                    <i class="fas fa-info-circle"></i>
-                    No hay usuarios registrados
-                </h4>
-                <p>No se encontraron usuarios en el sistema.</p>
-            </div>
+        <div class="p-5 text-center">
+            <i class="bi bi-people h1 text-muted opacity-25"></i>
+            <h5 class="text-muted mt-3">No hay registros que mostrar</h5>
+        </div>
         {% endif %}
     </div>
-</body>
+</div>
 
-    <script>
-        function toggleTrashIconVisibility(userId) {
-            var checkbox = document.getElementById('user-checkbox-' + userId);
-            var trashIcon = document.getElementById('trash-icon-' + userId);
-            if (checkbox.checked) {
-                trashIcon.classList.remove('hide-trash');
-            } else {
-                trashIcon.classList.add('hide-trash');
-            }
+<script>
+    function confirmDelete(username) {
+        if (confirm(`¿Estás seguro de eliminar al usuario ${username}? esta acción no se puede deshacer.`)) {
+            // Logic for deletion
         }
+    }
 
-        // Función para seleccionar/deseleccionar todos
-        document.getElementById('select-all').addEventListener('change', function() {
-            var checkboxes = document.querySelectorAll('input[name="selected_users"]');
-            checkboxes.forEach(function(checkbox) {
-                checkbox.checked = this.checked;
-                toggleTrashIconVisibility(checkbox.value);
-            });
-        });
-
-        // Función para confirmar eliminación de usuario
-        function confirmDeleteUser(userId, username) {
-            if (confirm(`¿Estás seguro de que quieres eliminar al usuario "${username}"?\n\nEsta acción no se puede deshacer.`)) {
-                deleteUser(userId);
-            }
-        }
-
-        // Función para eliminar usuario
-        function deleteUser(userId) {
-            // Crear un formulario temporal para enviar la solicitud POST
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = `/sudo_admin/delete/${userId}/`;
-            
-            // Agregar el token CSRF
-            var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-            if (!csrfToken) {
-                csrfToken = document.createElement('input');
-                csrfToken.type = 'hidden';
-                csrfToken.name = 'csrfmiddlewaretoken';
-                csrfToken.value = getCookie('csrftoken');
-            }
-            form.appendChild(csrfToken);
-            
-            // Agregar el formulario al documento y enviarlo
-            document.body.appendChild(form);
-            form.submit();
-        }
-
-        // Función para obtener el token CSRF de las cookies
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-    </script>
+    document.getElementById('select-all').addEventListener('change', function () {
+        document.querySelectorAll('input[name="selected_users"]').forEach(cb => cb.checked = this.checked);
+    });
+</script>
 {% endblock %}

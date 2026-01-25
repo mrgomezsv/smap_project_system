@@ -1,165 +1,148 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container-fluid px-4">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center py-4">
-        <div>
-            <h1 class="h3 mb-0">
-                <i class="bi bi-box-seam-fill me-2"></i>
-                Gestión de Productos
-            </h1>
-            <small class="text-muted">Administra tu catálogo de productos y servicios</small>
-        </div>
-        <div class="d-flex gap-2">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newProductModal">
-                <i class="bi bi-plus-circle me-2"></i>
-                Nuevo Producto
-            </button>
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header mb-4">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="welcome-section">
+                <h1>Catálogo de Productos</h1>
+                <p class="welcome-text">Bienvenido de vuelta, <strong>{{ user.username }}</strong>. Aquí tienes el
+                    resumen de tu inventario.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#newProductModal">
+                    <i class="bi bi-plus-lg me-2"></i>
+                    Nuevo Producto
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Search and Filter Section -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <div class="row g-3 align-items-center">
-                <div class="col-md-6">
-                    <form class="d-flex gap-2" method="get">
-                        <div class="input-group">
-                            <span class="input-group-text" style="background-color: white;">
-                                <i class="bi bi-search"></i>
-                            </span>
-                            <input type="search" class="form-control" name="q" placeholder="Buscar productos..." aria-label="Search">
-                        </div>
-                        <button class="btn btn-primary" type="submit">Buscar</button>
-                    </form>
-                </div>
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-md-end gap-2">
-                        <form id="category-toggle-form" method="post" action="{% url 'process_checkbox' %}" class="d-flex align-items-center">
-                            {% csrf_token %}
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="checkbox_state" 
-                                       {% if show_categories %}checked{% endif %}>
-                                <label class="form-check-label" for="flexCheckDefault">Mostrar Categorías</label>
-                            </div>
-                        </form>
-                        <div class="dropdown">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-funnel-fill me-2"></i>
-                                Filtrar
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Todos</a></li>
-                                <li><a class="dropdown-item" href="#">Publicados</a></li>
-                                <li><a class="dropdown-item" href="#">No Publicados</a></li>
-                            </ul>
-                        </div>
+    <!-- Stats Section (Consultora Style Grid) -->
+    <div class="px-4 mb-5">
+        <h2 class="h5 fw-bold text-dark mb-4">Resumen del Sistema</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-box-seam h4 mb-0"></i>
                     </div>
+                    <div class="stat-value">{{ products|length }}</div>
+                    <div class="stat-label">Productos Totales</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card accent-gold">
+                    <div class="stat-icon" style="color: var(--secondary-color);">
+                        <i class="bi bi-check-circle h4 mb-0"></i>
+                    </div>
+                    <div class="stat-value">{% if publicated_count %}{{ publicated_count }}{% else %}- -{% endif %}
+                    </div>
+                    <div class="stat-label">Publicados</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card accent-green">
+                    <div class="stat-icon" style="color: #10b981;">
+                        <i class="bi bi-calendar-event h4 mb-0"></i>
+                    </div>
+                    <div class="stat-value">Analytics</div>
+                    <div class="stat-label">Monitor de Eventos</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card accent-blue">
+                    <div class="stat-icon" style="color: #3b82f6;">
+                        <i class="bi bi-activity h4 mb-0"></i>
+                    </div>
+                    <div class="stat-value">Status</div>
+                    <div class="stat-label">Servidor Operativo</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Products Grid -->
-    {% if show_categories and categorized_products %}
-        <!-- Vista agrupada por categorías -->
+    <!-- Product Management Section -->
+    <div class="px-4 pb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h5 fw-bold text-dark mb-0">Listado de Inventario</h2>
+            <div class="d-flex gap-2">
+                <form id="category-toggle-form" method="post" action="{% url 'process_checkbox' %}"
+                    class="d-flex align-items-center">
+                    {% csrf_token %}
+                    <div class="form-check form-switch me-2">
+                        <input class="form-check-input" type="checkbox" id="flexCheckDefault" name="checkbox_state" {% if show_categories %}checked{% endif %}>
+                        <label class="form-check-label small fw-medium text-secondary" for="flexCheckDefault">Agrupar
+                            por Categoría</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if show_categories and categorized_products %}
         {% for category, products_in_category in categorized_products.items %}
-            <div class="mb-4">
-                <h3 class="h4 mb-3 text-primary">
-                    <i class="bi bi-tags me-2"></i>
-                    {{ products_in_category.0.get_category_display }}
-                </h3>
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-                    {% for product in products_in_category %}
-                    <div class="col">
-                        <div class="card h-100 shadow-sm hover-shadow">
-                            <!-- Product Image -->
-                            <div class="position-relative">
-                                <img src="{{ product.img.url }}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
-                                <div class="position-absolute top-0 end-0 p-2">
-                                    <span class="badge {% if product.publicated %}bg-success{% else %}bg-warning{% endif %}">
-                                        {% if product.publicated %}Publicado{% else %}Creado{% endif %}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <!-- Product Info -->
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title text-truncate">{{ product.title }}</h5>
-                                <p class="card-text small text-muted mb-2">{{ product.description|truncatechars:100 }}</p>
-                                
-                                <div class="mb-2">
-                                    <span class="badge bg-primary">{{ product.get_category_display }}</span>
-                                </div>
-
-                                <div class="small text-muted mb-3">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="bi bi-rulers me-2"></i>
-                                        <span>{{ product.dimensions|default:'Sin dimensiones' }}</span>
-                                    </div>
-                                    {% if user.username == 'mrgomez' %}
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-person me-2"></i>
-                                        <span>{{ product.user.username }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-
-                                 <div class="mt-auto">
-                                    <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary w-100">
-                                        <i class="bi bi-eye me-2"></i>
-                                        Ver Detalles
-                                    </a>
-                                </div>
+        <div class="mb-5">
+            <h3 class="h6 mb-4 fw-bold text-primary border-bottom pb-3">
+                <i class="bi bi-tag-fill me-2 text-secondary"></i>
+                {{ products_in_category.0.get_category_display }}
+                <span class="badge bg-light text-primary border ms-2">{{ products_in_category|length }}</span>
+            </h3>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                {% for product in products_in_category %}
+                <div class="col">
+                    <div class="stat-card p-0 border-0 h-100 overflow-hidden">
+                        <div class="position-relative">
+                            <img src="{{ product.img.url }}" class="card-img-top" alt="{{ product.title }}"
+                                style="height: 180px; object-fit: cover;">
+                            <div class="position-absolute top-0 end-0 p-3">
+                                <span
+                                    class="badge {% if product.publicated %}bg-success{% else %}bg-warning text-dark{% endif %} shadow-sm">
+                                    {% if product.publicated %}Publicado{% else %}Borrador{% endif %}
+                                </span>
                             </div>
                         </div>
+                        <div class="p-4">
+                            <h6 class="fw-bold mb-2 text-primary">{{ product.title }}</h6>
+                            <div class="d-flex justify-content-between align-items-center small text-muted mb-4">
+                                <span><i class="bi bi-rulers me-1 text-secondary"></i> {{
+                                    product.dimensions|default:'- -' }}</span>
+                            </div>
+                            <a href="{% url 'product_detail' product.id %}"
+                                class="btn btn-outline-primary w-100 fw-bold py-2" style="border-radius: 0.5rem;">
+                                Gestionar Producto
+                            </a>
+                        </div>
                     </div>
-                    {% endfor %}
                 </div>
+                {% endfor %}
             </div>
+        </div>
         {% endfor %}
-    {% else %}
-        <!-- Vista normal sin agrupar -->
+        {% else %}
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
             {% for product in products %}
             <div class="col">
-                <div class="card h-100 shadow-sm hover-shadow">
-                    <!-- Product Image -->
+                <div class="stat-card p-0 border-0 h-100 overflow-hidden">
                     <div class="position-relative">
-                        <img src="{{ product.img.url }}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
-                        <div class="position-absolute top-0 end-0 p-2">
-                            <span class="badge {% if product.publicated %}bg-success{% else %}bg-warning{% endif %}">
-                                {% if product.publicated %}Publicado{% else %}Creado{% endif %}
+                        <img src="{{ product.img.url }}" class="card-img-top" alt="{{ product.title }}"
+                            style="height: 200px; object-fit: cover;">
+                        <div class="position-absolute top-0 end-0 p-3">
+                            <span
+                                class="badge {% if product.publicated %}bg-success{% else %}bg-warning text-dark{% endif %} shadow-sm">
+                                {% if product.publicated %}Publicado{% else %}Borrador{% endif %}
                             </span>
                         </div>
                     </div>
-
-                    <!-- Product Info -->
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title text-truncate">{{ product.title }}</h5>
-                        <p class="card-text small text-muted mb-2">{{ product.description|truncatechars:100 }}</p>
-                        
-                        <div class="mb-2">
-                            <span class="badge bg-primary">{{ product.get_category_display }}</span>
-                        </div>
-
-                        <div class="small text-muted mb-3">
-                            <div class="d-flex align-items-center mb-1">
-                                <i class="bi bi-rulers me-2"></i>
-                                <span>{{ product.dimensions|default:'Sin dimensiones' }}</span>
-                            </div>
-                            {% if user.username == 'mrgomez' %}
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-person me-2"></i>
-                                <span>{{ product.user.username }}</span>
-                            </div>
-                            {% endif %}
-                        </div>
-
-                         <div class="mt-auto">
-                            <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary w-100">
-                                <i class="bi bi-eye me-2"></i>
+                    <div class="p-4">
+                        <h6 class="fw-bold mb-2 text-primary">{{ product.title }}</h6>
+                        <p class="small text-muted mb-4"
+                            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            {{ product.description|default:'Sin descripción' }}
+                        </p>
+                        <div class="mt-auto">
+                            <a href="{% url 'product_detail' product.id %}"
+                                class="btn btn-outline-primary w-100 fw-bold py-2" style="border-radius: 0.5rem;">
                                 Ver Detalles
                             </a>
                         </div>
@@ -168,67 +151,28 @@
             </div>
             {% empty %}
             <div class="col-12">
-                <div class="alert alert-info" role="alert">
-                    <i class="bi bi-info-circle me-2"></i>
-                    No hay productos disponibles.
+                <div class="card p-5 text-center border-0 shadow-sm" style="border-radius: 1.25rem;">
+                    <i class="bi bi-box-seam h1 text-muted mb-3 opacity-25"></i>
+                    <h5 class="text-muted">No hay productos disponibles</h5>
+                    <p class="text-muted small">Crea tu primer producto para comenzar</p>
                 </div>
             </div>
             {% endfor %}
         </div>
-    {% endif %}
-
-    <!-- Pagination -->
-    {% if products.has_other_pages %}
-    <nav class="mt-4" aria-label="Product pagination">
-        <ul class="pagination justify-content-center">
-            {% if products.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ products.previous_page_number }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            {% endif %}
-
-            {% for num in products.paginator.page_range %}
-            <li class="page-item {% if products.number == num %}active{% endif %}">
-                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-            </li>
-            {% endfor %}
-
-            {% if products.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ products.next_page_number }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
-    {% endif %}
+        {% endif %}
+    </div>
 </div>
 
 <!-- Include Modal -->
 {% include 'modal/modal_new_product.html' %}
 
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Category Toggle
-    const categoryToggle = document.querySelector('#flexCheckDefault');
-    const categoryForm = document.querySelector('#category-toggle-form');
-    
-    if (categoryToggle) {
-        categoryToggle.addEventListener('change', function() {
-            // Envía automáticamente el formulario cuando el estado del checkbox cambia
-            categoryForm.submit();
-        });
-    }
-
-    // Initialize tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
+    document.addEventListener('DOMContentLoaded', function () {
+        const categoryToggle = document.querySelector('#flexCheckDefault');
+        const categoryForm = document.querySelector('#category-toggle-form');
+        if (categoryToggle) {
+            categoryToggle.addEventListener('change', () => categoryForm.submit());
+        }
     });
-});
 </script>
 {% endblock %}
