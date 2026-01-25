@@ -4,8 +4,34 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-def image_path(instance, filename):
-    return f'product_images/{filename}'
+import os
+from django.utils.text import slugify
+
+def get_product_image_path(instance, filename, prefix):
+    product_slug = slugify(instance.title).replace('-', '_')
+    ext = filename.split('.')[-1].lower()
+    # Mapeo de prefijos a números para el nombre del archivo
+    prefix_map = {
+        'main': '01',
+        'img1': '02',
+        'img2': '03',
+        'img3': '04',
+        'img4': '05',
+        'img5': '06',
+    }
+    number = prefix_map.get(prefix, '00')
+    new_filename = f"{product_slug}_{number}.{ext}"
+    return os.path.join('product_images', product_slug, new_filename)
+
+def image_path_main(instance, filename): return get_product_image_path(instance, filename, 'main')
+def image_path_1(instance, filename): return get_product_image_path(instance, filename, 'img1')
+def image_path_2(instance, filename): return get_product_image_path(instance, filename, 'img2')
+def image_path_3(instance, filename): return get_product_image_path(instance, filename, 'img3')
+def image_path_4(instance, filename): return get_product_image_path(instance, filename, 'img4')
+def image_path_5(instance, filename): return get_product_image_path(instance, filename, 'img5')
+
+# Alias para compatibilidad con migraciones antiguas
+image_path = image_path_main
 
 CATEGORY_CHOICES = [
     ('option1', 'Bounce House'),
@@ -18,7 +44,7 @@ CATEGORY_CHOICES = [
 ]
 
 class Product(models.Model):
-    img = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
+    img = models.ImageField(upload_to=image_path_main, default='default_product_image.jpg')
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -32,14 +58,67 @@ class Product(models.Model):
 
     youtube_url = models.CharField(max_length=255, blank=True, null=True, default='')
 
-    img1 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
-    img2 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
-    img3 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
-    img4 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
-    img5 = models.ImageField(upload_to=image_path, default='default_product_image.jpg')
+    img1 = models.ImageField(upload_to=image_path_1, default='default_product_image.jpg')
+    img2 = models.ImageField(upload_to=image_path_2, default='default_product_image.jpg')
+    img3 = models.ImageField(upload_to=image_path_3, default='default_product_image.jpg')
+    img4 = models.ImageField(upload_to=image_path_4, default='default_product_image.jpg')
+    img5 = models.ImageField(upload_to=image_path_5, default='default_product_image.jpg')
 
     def __str__(self):
         return self.title + ' - by ' + self.user.username
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            # Es una edición, verificar si el título cambió
+            old_instance = Product.objects.get(pk=self.pk)
+            if old_instance.title != self.title:
+                import os
+                from django.utils.text import slugify
+                from django.conf import settings
+                from shutil import move
+
+                old_slug = slugify(old_instance.title).replace('-', '_')
+                new_slug = slugify(self.title).replace('-', '_')
+                
+                old_dir = os.path.join(settings.MEDIA_ROOT, 'product_images', old_slug)
+                new_dir = os.path.join(settings.MEDIA_ROOT, 'product_images', new_slug)
+
+                if os.path.exists(old_dir) and old_slug != new_slug:
+                    # 1. Crear el nuevo directorio si no existe
+                    os.makedirs(new_dir, exist_ok=True)
+                    
+                    # 2. Mover archivos y renombrarlos
+                    image_fields = ['img', 'img1', 'img2', 'img3', 'img4', 'img5']
+                    for field_name in image_fields:
+                        field = getattr(self, field_name)
+                        if field and 'default_product_image.jpg' not in field.name:
+                            # Obtener nombre de archivo actual y extensión
+                            file_basename = os.path.basename(field.name)
+                            ext = file_basename.split('.')[-1]
+                            
+                            # Mapeo de sufijo según el campo
+                            suffix_map = {'img': '01', 'img1': '02', 'img2': '03', 'img3': '04', 'img4': '05', 'img5': '06'}
+                            suffix = suffix_map[field_name]
+                            
+                            new_file_relative = f'product_images/{new_slug}/{new_slug}_{suffix}.{ext}'
+                            old_file_path = os.path.join(settings.MEDIA_ROOT, field.name)
+                            new_file_path = os.path.join(settings.MEDIA_ROOT, new_file_relative)
+
+                            if os.path.exists(old_file_path):
+                                try:
+                                    move(old_file_path, new_file_path)
+                                    setattr(self, field_name, new_file_relative)
+                                except Exception as e:
+                                    print(f"Error renombrando archivo: {e}")
+                    
+                    # 3. Borrar directorio viejo si quedó vacío
+                    try:
+                        if not os.listdir(old_dir):
+                            os.rmdir(old_dir)
+                    except:
+                        pass
+        
+        super().save(*args, **kwargs)
 
 
 class ProductLike(models.Model):
