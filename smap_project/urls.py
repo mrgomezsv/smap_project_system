@@ -31,7 +31,6 @@ urlpatterns = [
     path('sudo_admin/delete/<int:user_id>/', views.delete_user, name='delete_user'),
     path('ticket_master/', views.ticket_master, name='ticket_master'),
     path('process-checkbox/', process_checkbox, name='process_checkbox'),
-    path('productc/', views.productc, name='productc'),
     path('chats/', views.redirect_chats, name='chats'),
     path('web-messages/', views.web_messages, name='web_messages'),
     path('web-messages/<int:message_id>/', views.web_message_detail, name='web_message_detail'),

@@ -147,26 +147,30 @@ def product(request):
     else:
         products = Product.objects.all()  # Muestra todos los productos si no hay consulta
 
+    # Calcular estadísticas dinámicas
+    publicated_count = products.filter(publicated=True).count()
+    total_count = products.count()
+
+    # Preparar el contexto base
+    context = {
+        'products': products,
+        'publicated_count': publicated_count,
+        'total_count': total_count,
+        'show_categories': show_categories,
+        'unread_count': ContactMessage.objects.filter(is_read=False).count(),
+        'query': query,
+        'category': category
+    }
+
     # Si show_categories está activado, agrupar productos por categoría
     if show_categories:
         categorized_products = {}
-        for product in products:
-            if product.category not in categorized_products:
-                categorized_products[product.category] = []
-            categorized_products[product.category].append(product)
-        
-        context = {
-            'products': products,
-            'categorized_products': categorized_products,
-            'show_categories': True,
-            'unread_count': ContactMessage.objects.filter(is_read=False).count()
-        }
-    else:
-        context = {
-            'products': products,
-            'show_categories': False,
-            'unread_count': ContactMessage.objects.filter(is_read=False).count()
-        }
+        for p in products:
+            cat_name = p.get_category_display()
+            if cat_name not in categorized_products:
+                categorized_products[cat_name] = []
+            categorized_products[cat_name].append(p)
+        context['categorized_products'] = categorized_products
 
     return render(request, 'product/product.html', context)
 
@@ -513,9 +517,6 @@ def delete_validator(request, validator_id):
     return render(request, 'delete_validator_confirm.html', {'validator': validator})
 
 
-@login_required
-def redirect_productc(request):
-    return render(request, 'product/productc.html')
 
 @login_required
 def redirect_chats(request):
@@ -641,36 +642,6 @@ def process_checkbox(request):
         return HttpResponse("Método de solicitud no válido.")
 
 
-@login_required
-def productc(request):
-    query = request.GET.get('q')
-    category = request.GET.get('category')
-
-    # Filtrar productos por nombre y/o categoría si hay consultas de búsqueda
-    if query or category:
-        # products = Product.objects.filter(user=request.user)  # Comentario: Se elimina la filtración por usuario
-        products = Product.objects.all()  # Comentario: Se seleccionan todos los productos
-
-        if query:
-            products = products.filter(Q(title__icontains=query) | Q(description__icontains=query))
-        if category:
-            products = products.filter(category=category)
-    else:
-        # Si no hay consulta, mostrar todos los productos del usuario
-        # products = Product.objects.filter(user=request.user)  # Comentario: Se elimina la filtración por usuario
-        products = Product.objects.all()  # Comentario: Se seleccionan todos los productos
-
-    # Agrupar productos por categoría
-    categorized_products = {}
-    for product in products:
-        if product.category not in categorized_products:
-            categorized_products[product.category] = []
-        categorized_products[product.category].append(product)
-
-    return render(request, 'product/productc.html', {
-        'products': categorized_products,
-        'unread_count': ContactMessage.objects.filter(is_read=False).count()
-    })
 
 
 def is_mrgomez(user):
