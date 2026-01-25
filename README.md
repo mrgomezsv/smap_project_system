@@ -366,24 +366,59 @@ Revisa el estado de Gunicorn y Nginx para asegurarte de que todo esté funcionan
 
 
 
-### Despliegue con Docker y Kubernetes (K8s)
+## 🐳 Ejecución con Docker (Local)
 
-#### 1. Construir y Subir Imagen (Multi-plataforma para Linux)
-Usa este comando para asegurar que la imagen funcione correctamente en tus VPS de IONOS (Ubuntu):
+Para correr el proyecto rápidamente en tu máquina local sin configurar dependencias manualmente.
+
+### 1. Usando Docker Compose (Recomendado)
+
+Este método levanta la base de datos (MariaDB) y la aplicación Django automáticamente.
 
 ```bash
-# Crear o usar el builder multiplatform (solo la primera vez)
-docker buildx create --name multiplatform-builder --use || docker buildx use multiplatform-builder
+# Construir y levantar los contenedores en segundo plano
+docker compose up --build -d
 
-# Construir, versionar y subir a Docker Hub
+# Ver logs en tiempo real
+docker compose logs -f web
+
+# Detener los contenedores
+docker compose down
+```
+
+### 2. Comandos Manuales de Docker (Imagen Individual)
+
+Si deseas construir y probar la imagen de la aplicación de forma aislada:
+
+```bash
+# Construir la imagen localmente
+docker build -t kidsfun-app .
+
+# Correr la imagen (requiere base de datos externa o configurada)
+docker run -d -p 8000:8000 --env-file .env.local kidsfun-app
+```
+
+---
+
+### 🚀 Despliegue Avanzado (CI/CD & K8s)
+
+#### 1. Construir para Producción (Multi-plataforma)
+Si despliegas en un VPS (ej: IONOS Ubuntu), usa `buildx` para asegurar compatibilidad de arquitectura (amd64):
+
+```bash
+# Seleccionar el builder
+docker buildx use multiplatform-builder || docker buildx create --name multiplatform-builder --use
+
+# Construir y subir a Docker Hub
 docker buildx build --platform linux/amd64 \
-  -t mrgomezdev/kidsfun-django:1.0.0 \
   -t mrgomezdev/kidsfun-django:latest \
   --push .
 ```
 
-#### 2. Desplegar en Kubernetes
-Consulta la carpeta `k8s/` y el archivo `walkthrough.md` para los pasos detallados de despliegue.
+#### 2. Despliegue en Kubernetes
+El sistema está preparado para K8s. Revisa la carpeta `k8s/` para los manifiestos de:
+- `deployment.yaml`: Gestión de Pods y réplicas.
+- `service.yaml`: Balanceador de carga interno.
+- `ingress.yaml`: Configuración de dominio y SSL Managed.
 
 ### Actualizar para ver CAMBIOS en PRODUCCION
 ... (resto del archivo)
