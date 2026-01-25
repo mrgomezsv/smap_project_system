@@ -1,0 +1,43 @@
+{% extends 'kidsfun_web/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5" style="margin-top: 150px !important;">
+
+    <div class="row g-5">
+        <!-- Sidebar: Event Info -->
+        <div class="col-lg-4 order-lg-2">
+            <div class="card border-0 shadow-sm p-4" style="border-radius: 1.5rem;">
+                <h2 class="fw-bold mb-4">{{ event.title }}</h2>
+                <p><strong>Fecha:</strong> {{ event.start_datetime|date:'l, d F Y' }} - {{ event.start_datetime|date:'H:i' }}</p>
+                <p><strong>Ubicación:</strong> {{ event.location }}</p>
+                <p><strong>Precio:</strong> ${{ event.ticket_price }}</p>
+                <hr>
+                <div class="d-grid gap-2">
+                    <a href="https://wa.me/19293926596?text=Me interesa el evento: {{ event.title }}" target="_blank"
+                        class="btn btn-success">WhatsApp</a>
+                    <button class="btn btn-outline-primary" onclick="copyEventLink()">Compartir Enlace</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-8 order-lg-1">
+            <div class="rounded-4 overflow-hidden mb-4">
+                <img src="{{ event.image.url }}" class="img-fluid w-100" style="max-height: 500px; object-fit: cover;">
+            </div>
+            <div class="description-section">
+                <h3>Acerca del Evento</h3>
+                <div style="white-space: pre-wrap;">{{ event.description }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyEventLink() {
+        navigator.clipboard.writeText(window.location.href);
+        alert("¡Enlace copiado!");
+    }
+</script>
+{% endblock %}

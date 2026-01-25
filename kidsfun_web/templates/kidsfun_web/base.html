@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>{% block title %}Kidsfun y Fiestas Infantiles{% endblock %}</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     {% load static %}
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/navbar.css' %}"/>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
     <link rel="stylesheet" href="{% static 'css/animation.css' %}">
     <link rel="stylesheet" href="{% static 'css/global_animations.css' %}">
     <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css"/>
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css" />
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'img/favicon/favicon.ico' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon/favicon.ico' %}">
@@ -33,7 +34,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="{% static 'img/favicon/apple-icon-152x152.png' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-icon-180x180.png' %}">
     <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
-    
+
     <style>
         /* Botón flotante de WhatsApp */
         .whatsapp-float {
@@ -100,12 +101,19 @@
         }
 
         @keyframes whatsapp-bounce {
-            0%, 20%, 50%, 80%, 100% {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
                 transform: translateY(0);
             }
+
             40% {
                 transform: translateY(-10px);
             }
+
             60% {
                 transform: translateY(-5px);
             }
@@ -144,9 +152,21 @@
         }
 
         /* Elevar el botón cuando el footer sea visible */
-        .whatsapp-float.above-footer { bottom: 140px; }
-        @media (max-width: 768px) { .whatsapp-float.above-footer { bottom: 110px; } }
-        @media (max-width: 480px) { .whatsapp-float.above-footer { bottom: 90px; } }
+        .whatsapp-float.above-footer {
+            bottom: 140px;
+        }
+
+        @media (max-width: 768px) {
+            .whatsapp-float.above-footer {
+                bottom: 110px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .whatsapp-float.above-footer {
+                bottom: 90px;
+            }
+        }
 
         /* Modal de WhatsApp */
         .whatsapp-modal {
@@ -283,16 +303,22 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes slideIn {
-            from { 
+            from {
                 opacity: 0;
                 transform: translateY(-50px);
             }
-            to { 
+
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
@@ -317,7 +343,8 @@
                 flex-direction: column;
             }
 
-            .btn-whatsapp, .btn-cancel {
+            .btn-whatsapp,
+            .btn-cancel {
                 width: 100%;
                 justify-content: center;
             }
@@ -342,346 +369,360 @@
         }
     </style>
 </head>
+
 <body>
-<header class="menu">    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">
-                <img src="{% static 'img/logo.png' %}" alt="logo"/>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+    <header class="menu">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <img src="{% static 'img/logo.png' %}" alt="logo" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false"
                     aria-label="Toggle navigation">
-                <i class="bi bi-list"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavId">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}" aria-current="page">Home <span
-                                class="visually-hidden"></span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'service' %}">Products & Services</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'mobile_app' %}">Mobile App</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'payment_methods' %}">Payment Methods</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
-                    </li>
-                </ul>
-                <!-- Botón de Login -->
-                <div class="navbar-nav">
-                    {% if user.is_authenticated %}
+                    <i class="bi bi-list"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="collapsibleNavId">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'home' %}" aria-current="page">Home <span
+                                    class="visually-hidden"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'service' %}">Products & Services</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'mobile_app' %}">Mobile App</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'payment_methods' %}">Payment Methods</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'public_events' %}">Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                        </li>
+                    </ul>
+                    <!-- Botón de Login -->
+                    <div class="navbar-nav">
+                        {% if user.is_authenticated %}
                         <a href="{% url 'product' %}" class="nav-link admin-btn">
                             <i class="bi bi-person"></i> Admin Panel
                         </a>
-                    {% else %}
+                        {% else %}
                         <a href="{% url 'signin' %}" class="nav-link login-btn">
                             <i class="bi bi-box-arrow-in-right"></i> Login
                         </a>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
-</header>
+        </nav>
+    </header>
 
-<!-- Content block -->
-{% block content %}
-{% endblock %}
+    <!-- Content block -->
+    {% block content %}
+    {% endblock %}
 
-<!-- Botón flotante de WhatsApp -->
-<div class="whatsapp-float">
-    <a href="#" onclick="openWhatsAppModal(); return false;">
-        <i class="bi bi-whatsapp"></i>
-        <div class="tooltip">Chat with us!</div>
-    </a>
-</div>
+    <!-- Botón flotante de WhatsApp -->
+    <div class="whatsapp-float">
+        <a href="#" onclick="openWhatsAppModal(); return false;">
+            <i class="bi bi-whatsapp"></i>
+            <div class="tooltip">Chat with us!</div>
+        </a>
+    </div>
 
-<!-- Modal de WhatsApp -->
-<div id="whatsappModal" class="whatsapp-modal">
-    <div class="whatsapp-modal-content">
-        <div class="whatsapp-modal-header">
-            <h3><i class="bi bi-whatsapp"></i> Connect with us!</h3>
-            <button class="close" onclick="closeWhatsAppModal()">&times;</button>
-        </div>
-        <div class="whatsapp-modal-body">
-            <div class="whatsapp-icon">
-                <i class="bi bi-whatsapp"></i>
+    <!-- Modal de WhatsApp -->
+    <div id="whatsappModal" class="whatsapp-modal">
+        <div class="whatsapp-modal-content">
+            <div class="whatsapp-modal-header">
+                <h3><i class="bi bi-whatsapp"></i> Connect with us!</h3>
+                <button class="close" onclick="closeWhatsAppModal()">&times;</button>
             </div>
-            <h4>Are you interested in our services?</h4>
-            <p>We're here to help you create the perfect party for your little one! Chat with us and we'll respond in minutes.</p>
-            <div class="whatsapp-modal-actions">
-                <a href="https://wa.me/19293926596?text=Hello! I saw your Kidsfun website and I'm interested in learning more about your children's party services. Could you help me?" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+            <div class="whatsapp-modal-body">
+                <div class="whatsapp-icon">
                     <i class="bi bi-whatsapp"></i>
-                    Chat now!
-                </a>
-                <button class="btn-cancel" onclick="closeWhatsAppModal()">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Footer -->
-<footer class="vg-footer">
-    <div class="container">
-        <div class="row">
-            <!-- Contact Section -->
-            <div class="col-lg-4 py-3">
-                <div class="footer-info">
-                    <div class="footer-section-header">
-                        <i class="bi bi-envelope"></i>
-                        <h4>Contáctanos</h4>
-                    </div>
-                    <p class="footer-description">¿Listo para crear la fiesta perfecta? ¡Hablemos de tus ideas!</p>
-                    {% comment %} <div class="contact-item">
-                        <i class="bi bi-envelope"></i>
-                        <a href="mailto:info@kidsfunyfiestasinfantiles.com" class="contact-link">info@kidsfunyfiestasinfantiles.com</a>
-                    </div> {% endcomment %}
-                    {% comment %} <div class="contact-item">
-                        <i class="bi bi-telephone"></i>
-                        <a href="tel:+50377563510" class="contact-link">+503 7756-3510</a>
-                    </div> {% endcomment %}
                 </div>
-            </div>
-            
-            <!-- Sección de Redes Sociales -->
-            {% comment %} <div class="col-md-6 col-lg-4 py-3">
-                <div class="float-lg-right">
-                    <div class="footer-section-header">
-                        <i class="bi bi-share"></i>
-                        <h4>Síguenos</h4>
-                    </div>
-                    <p class="footer-description">Conéctate con nosotros en redes sociales</p>
-                    <div class="social-links">
-                        <a href="https://www.facebook.com/kidsfunyfiestasinfantiles" class="social-link facebook" target="_blank" rel="noopener">
-                            <i class="bi bi-facebook"></i>
-                            <span>Facebook</span>
-                        </a>
-                        <a href="https://www.instagram.com/kidsfunyfiestasinfantiles" class="social-link instagram" target="_blank" rel="noopener">
-                            <i class="bi bi-instagram"></i>
-                            <span>Instagram</span>
-                        </a>
-                        <a href="https://wa.me/77563510?text=Hello! I saw your Kidsfun website and I'm interested in learning more about your children's party services. Could you help me?" class="social-link whatsapp" target="_blank" rel="noopener">
-                            <i class="bi bi-whatsapp"></i>
-                            <span>WhatsApp</span>
-                        </a>
-                    </div>
-                </div>
-            </div> {% endcomment %}
-            
-            <!-- Sección de Información -->
-            {% comment %} <div class="col-md-6 col-lg-4 py-3">
-                <div class="float-lg-right">
-                    <div class="footer-section-header">
-                        <i class="bi bi-info-circle"></i>
-                        <h4>Información</h4>
-                    </div>
-                    <p class="footer-description">Todo lo que necesitas saber sobre nosotros</p>
-                    <div class="info-list">
-                        <div class="info-item">
-                            <i class="bi bi-geo-alt"></i>
-                            <span>El Salvador</span>
-                        </div>
-                        <div class="info-item">
-                            <i class="bi bi-clock"></i>
-                            <span>Lun - Dom: 8:00 AM - 8:00 PM</span>
-                        </div>
-                        <div class="info-item">
-                            <i class="bi bi-star"></i>
-                            <span>Servicios de Calidad</span>
-                        </div>
-                    </div>
-                </div>
-            </div> {% endcomment %}
-        </div>
-        
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="copyright">© <span id="copyrightYear">2025</span> - Kidsfun y Fiestas Infantiles. Todos los derechos reservados.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="made-with">
-                        Desarrollado con pasión y dedicación <i class="bi bi-heart-fill heart-animated"></i> por&nbsp;<a href="https://www.linkedin.com/in/mrgomez-dev/" target="_blank" rel="noopener noreferrer" class="developer-link">Mario&nbsp;Roberto</a>
-                    </p>
+                <h4>Are you interested in our services?</h4>
+                <p>We're here to help you create the perfect party for your little one! Chat with us and we'll respond
+                    in minutes.</p>
+                <div class="whatsapp-modal-actions">
+                    <a href="https://wa.me/19293926596?text=Hello! I saw your Kidsfun website and I'm interested in learning more about your children's party services. Could you help me?"
+                        target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                        <i class="bi bi-whatsapp"></i>
+                        Chat now!
+                    </a>
+                    <button class="btn-cancel" onclick="closeWhatsAppModal()">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
-</footer>
-<script>
-    // Obtiene el elemento span donde se mostrará el año actual
-    var copyrightYearSpan = document.getElementById("copyrightYear");
 
-    // Obtiene el año actual
-    var currentYear = new Date().getFullYear();
+    <!-- Footer -->
+    <footer class="vg-footer">
+        <div class="container">
+            <div class="row">
+                <!-- Contact Section -->
+                <div class="col-lg-4 py-3">
+                    <div class="footer-info">
+                        <div class="footer-section-header">
+                            <i class="bi bi-envelope"></i>
+                            <h4>Contáctanos</h4>
+                        </div>
+                        <p class="footer-description">¿Listo para crear la fiesta perfecta? ¡Hablemos de tus ideas!</p>
+                        {% comment %} <div class="contact-item">
+                            <i class="bi bi-envelope"></i>
+                            <a href="mailto:info@kidsfunyfiestasinfantiles.com"
+                                class="contact-link">info@kidsfunyfiestasinfantiles.com</a>
+                        </div> {% endcomment %}
+                        {% comment %} <div class="contact-item">
+                            <i class="bi bi-telephone"></i>
+                            <a href="tel:+50377563510" class="contact-link">+503 7756-3510</a>
+                        </div> {% endcomment %}
+                    </div>
+                </div>
 
-    // Actualiza el contenido del span con el año actual
-    copyrightYearSpan.textContent = currentYear;
-</script>
+                <!-- Sección de Redes Sociales -->
+                {% comment %} <div class="col-md-6 col-lg-4 py-3">
+                    <div class="float-lg-right">
+                        <div class="footer-section-header">
+                            <i class="bi bi-share"></i>
+                            <h4>Síguenos</h4>
+                        </div>
+                        <p class="footer-description">Conéctate con nosotros en redes sociales</p>
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/kidsfunyfiestasinfantiles" class="social-link facebook"
+                                target="_blank" rel="noopener">
+                                <i class="bi bi-facebook"></i>
+                                <span>Facebook</span>
+                            </a>
+                            <a href="https://www.instagram.com/kidsfunyfiestasinfantiles" class="social-link instagram"
+                                target="_blank" rel="noopener">
+                                <i class="bi bi-instagram"></i>
+                                <span>Instagram</span>
+                            </a>
+                            <a href="https://wa.me/77563510?text=Hello! I saw your Kidsfun website and I'm interested in learning more about your children's party services. Could you help me?"
+                                class="social-link whatsapp" target="_blank" rel="noopener">
+                                <i class="bi bi-whatsapp"></i>
+                                <span>WhatsApp</span>
+                            </a>
+                        </div>
+                    </div>
+                </div> {% endcomment %}
 
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<script src="{% static 'js/owl.carousel.min.js' %}"></script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-    AOS.init();
+                <!-- Sección de Información -->
+                {% comment %} <div class="col-md-6 col-lg-4 py-3">
+                    <div class="float-lg-right">
+                        <div class="footer-section-header">
+                            <i class="bi bi-info-circle"></i>
+                            <h4>Información</h4>
+                        </div>
+                        <p class="footer-description">Todo lo que necesitas saber sobre nosotros</p>
+                        <div class="info-list">
+                            <div class="info-item">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>El Salvador</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="bi bi-clock"></i>
+                                <span>Lun - Dom: 8:00 AM - 8:00 PM</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="bi bi-star"></i>
+                                <span>Servicios de Calidad</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> {% endcomment %}
+            </div>
 
-    // Funciones para el modal de WhatsApp
-    function openWhatsAppModal() {
-        document.getElementById('whatsappModal').style.display = 'block';
-        document.body.style.overflow = 'hidden'; // Prevenir scroll
-    }
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="copyright">© <span id="copyrightYear">2025</span> - Kidsfun y Fiestas Infantiles.
+                            Todos los derechos reservados.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p class="made-with">
+                            Desarrollado con pasión y dedicación <i class="bi bi-heart-fill heart-animated"></i>
+                            por&nbsp;<a href="https://www.linkedin.com/in/mrgomez-dev/" target="_blank"
+                                rel="noopener noreferrer" class="developer-link">Mario&nbsp;Roberto</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Obtiene el elemento span donde se mostrará el año actual
+        var copyrightYearSpan = document.getElementById("copyrightYear");
 
-    function closeWhatsAppModal() {
-        document.getElementById('whatsappModal').style.display = 'none';
-        document.body.style.overflow = 'auto'; // Restaurar scroll
-    }
+        // Obtiene el año actual
+        var currentYear = new Date().getFullYear();
 
-    // Cerrar modal al hacer clic fuera de él
-    window.onclick = function(event) {
-        const modal = document.getElementById('whatsappModal');
-        if (event.target === modal) {
-            closeWhatsAppModal();
+        // Actualiza el contenido del span con el año actual
+        copyrightYearSpan.textContent = currentYear;
+    </script>
+
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+
+        // Funciones para el modal de WhatsApp
+        function openWhatsAppModal() {
+            document.getElementById('whatsappModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevenir scroll
         }
-    }
 
-    // Cerrar modal con la tecla Escape
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            closeWhatsAppModal();
+        function closeWhatsAppModal() {
+            document.getElementById('whatsappModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaurar scroll
         }
-    });
 
-    // Footer Interactions - Enhanced User Experience
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        // Update copyright year automatically
-        function updateCopyrightYear() {
-            const currentYear = new Date().getFullYear();
-            const copyrightElement = document.querySelector('.copyright');
-            
-            if (copyrightElement) {
-                const yearSpan = copyrightElement.querySelector('#copyrightYear');
-                if (yearSpan) {
-                    yearSpan.textContent = currentYear;
-                }
+        // Cerrar modal al hacer clic fuera de él
+        window.onclick = function (event) {
+            const modal = document.getElementById('whatsappModal');
+            if (event.target === modal) {
+                closeWhatsAppModal();
             }
         }
-        
-        // Call the function to update the year
-        updateCopyrightYear();
-        
-        // Evitar que el botón de WhatsApp tape el footer
-        const whatsappFloat = document.querySelector('.whatsapp-float');
-        const footer = document.querySelector('.vg-footer');
-        if (whatsappFloat && footer && 'IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        whatsappFloat.classList.add('above-footer');
-                    } else {
-                        whatsappFloat.classList.remove('above-footer');
+
+        // Cerrar modal con la tecla Escape
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeWhatsAppModal();
+            }
+        });
+
+        // Footer Interactions - Enhanced User Experience
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Update copyright year automatically
+            function updateCopyrightYear() {
+                const currentYear = new Date().getFullYear();
+                const copyrightElement = document.querySelector('.copyright');
+
+                if (copyrightElement) {
+                    const yearSpan = copyrightElement.querySelector('#copyrightYear');
+                    if (yearSpan) {
+                        yearSpan.textContent = currentYear;
+                    }
+                }
+            }
+
+            // Call the function to update the year
+            updateCopyrightYear();
+
+            // Evitar que el botón de WhatsApp tape el footer
+            const whatsappFloat = document.querySelector('.whatsapp-float');
+            const footer = document.querySelector('.vg-footer');
+            if (whatsappFloat && footer && 'IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            whatsappFloat.classList.add('above-footer');
+                        } else {
+                            whatsappFloat.classList.remove('above-footer');
+                        }
+                    });
+                }, { threshold: 0 });
+                observer.observe(footer);
+            }
+
+            // Add smooth scrolling to all footer links
+            const footerLinks = document.querySelectorAll('.vg-footer a[href^="#"]');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
                     }
                 });
-            }, { threshold: 0 });
-            observer.observe(footer);
-        }
-        
-        // Add smooth scrolling to all footer links
-        const footerLinks = document.querySelectorAll('.vg-footer a[href^="#"]');
-        footerLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
             });
-        });
 
-        // Add hover sound effect (optional - for better UX)
-        const interactiveElements = document.querySelectorAll('.contact-item, .social-link, .info-item');
-        
-        interactiveElements.forEach(element => {
-            element.addEventListener('mouseenter', function() {
-                // Add a subtle scale effect
-                this.style.transform = 'translateX(5px) scale(1.02)';
-            });
-            
-            element.addEventListener('mouseleave', function() {
-                // Reset transform
-                this.style.transform = 'translateX(0) scale(1)';
-            });
-        });
+            // Add hover sound effect (optional - for better UX)
+            const interactiveElements = document.querySelectorAll('.contact-item, .social-link, .info-item');
 
-        // Add click feedback for social links
-        const socialLinks = document.querySelectorAll('.social-link');
-        socialLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                // Add a ripple effect
-                const ripple = document.createElement('span');
-                ripple.style.position = 'absolute';
-                ripple.style.borderRadius = '50%';
-                ripple.style.background = 'rgba(239, 55, 36, 0.3)';
-                ripple.style.transform = 'scale(0)';
-                ripple.style.animation = 'ripple 0.6s linear';
-                ripple.style.left = '50%';
-                ripple.style.top = '50%';
-                ripple.style.width = '20px';
-                ripple.style.height = '20px';
-                ripple.style.marginLeft = '-10px';
-                ripple.style.marginTop = '-10px';
-                
-                this.style.position = 'relative';
-                this.appendChild(ripple);
-                
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            });
-        });
+            interactiveElements.forEach(element => {
+                element.addEventListener('mouseenter', function () {
+                    // Add a subtle scale effect
+                    this.style.transform = 'translateX(5px) scale(1.02)';
+                });
 
-        // Add copy email functionality
-        const emailLink = document.querySelector('.contact-link[href^="mailto:"]');
-        if (emailLink) {
-            emailLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                const email = this.textContent;
-                
-                // Copy to clipboard
-                navigator.clipboard.writeText(email).then(() => {
-                    // Show success message
-                    showNotification('Email copiado al portapapeles!', 'success');
-                }).catch(() => {
-                    // Fallback for older browsers
-                    const textArea = document.createElement('textarea');
-                    textArea.value = email;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    showNotification('Email copiado al portapapeles!', 'success');
+                element.addEventListener('mouseleave', function () {
+                    // Reset transform
+                    this.style.transform = 'translateX(0) scale(1)';
                 });
             });
-        }
 
-        // Notification system
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `footer-notification ${type}`;
-            notification.textContent = message;
-            notification.style.cssText = `
+            // Add click feedback for social links
+            const socialLinks = document.querySelectorAll('.social-link');
+            socialLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    // Add a ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.style.position = 'absolute';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.background = 'rgba(239, 55, 36, 0.3)';
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'ripple 0.6s linear';
+                    ripple.style.left = '50%';
+                    ripple.style.top = '50%';
+                    ripple.style.width = '20px';
+                    ripple.style.height = '20px';
+                    ripple.style.marginLeft = '-10px';
+                    ripple.style.marginTop = '-10px';
+
+                    this.style.position = 'relative';
+                    this.appendChild(ripple);
+
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // Add copy email functionality
+            const emailLink = document.querySelector('.contact-link[href^="mailto:"]');
+            if (emailLink) {
+                emailLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const email = this.textContent;
+
+                    // Copy to clipboard
+                    navigator.clipboard.writeText(email).then(() => {
+                        // Show success message
+                        showNotification('Email copiado al portapapeles!', 'success');
+                    }).catch(() => {
+                        // Fallback for older browsers
+                        const textArea = document.createElement('textarea');
+                        textArea.value = email;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        showNotification('Email copiado al portapapeles!', 'success');
+                    });
+                });
+            }
+
+            // Notification system
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `footer-notification ${type}`;
+                notification.textContent = message;
+                notification.style.cssText = `
                 position: fixed;
                 bottom: 20px;
                 right: 20px;
@@ -696,28 +737,28 @@
                 font-size: 14px;
                 font-weight: 500;
             `;
-            
-            document.body.appendChild(notification);
-            
-            // Animate in
-            setTimeout(() => {
-                notification.style.transform = 'translateX(0)';
-            }, 100);
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                notification.style.transform = 'translateX(100%)';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            }, 3000);
-        }
 
-        // Add CSS for ripple animation
-        const style = document.createElement('style');
-        style.textContent = `
+                document.body.appendChild(notification);
+
+                // Animate in
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+
+            // Add CSS for ripple animation
+            const style = document.createElement('style');
+            style.textContent = `
             @keyframes ripple {
                 to {
                     transform: scale(4);
@@ -729,11 +770,12 @@
                 font-family: 'Varela Round', sans-serif;
             }
         `;
-        document.head.appendChild(style);
+            document.head.appendChild(style);
 
-        console.log('Footer interactions loaded successfully!');
-        console.log(`Copyright year updated to: ${new Date().getFullYear()}`);
-    });
-</script>
+            console.log('Footer interactions loaded successfully!');
+            console.log(`Copyright year updated to: ${new Date().getFullYear()}`);
+        });
+    </script>
 </body>
+
 </html>
