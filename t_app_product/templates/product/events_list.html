@@ -137,7 +137,8 @@
                                             <i class="bi bi-trash3"></i>
                                         </a>
                                         <a href="#" class="btn btn-sm btn-icon bg-light text-secondary border"
-                                            title="Compartir" onclick="shareFromRow('{{ event.title|escapejs }}')">
+                                            title="Compartir"
+                                            onclick="shareFromRow('{{ event.title|escapejs }}', '{{ event.id }}')">
                                             <i class="bi bi-share"></i>
                                         </a>
                                     </div>
@@ -327,20 +328,18 @@
         modal.show();
     }
 
-    function shareFromRow(title) {
-        shareEvent('wa', title);
+    function shareFromRow(title, eventId) {
+        const publicUrl = window.location.origin + '/eventos/detalle/' + eventId + '/';
+        openShareModal(title, publicUrl);
     }
 
     function shareEvent(platform, customTitle = null) {
-        const title = customTitle || document.getElementById('modalTitle').innerText;
-        const url = window.location.origin + '/eventos/';
-        const text = `¡Mira este evento: ${title}!`;
-
-        if (platform === 'wa') window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`);
-        if (platform === 'fb') window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
-
-        if (window.showToast) {
-            showToast(`¡Enlace de "${title}" compartido!`, 'info');
+        // Redirigir a la nueva lógica del modal global si es posible
+        if (platform === 'wa' || platform === 'fb') {
+            const title = customTitle || document.getElementById('modalTitle').innerText;
+            const eventId = document.getElementById('modalEditBtn').href.split('/').filter(Boolean).pop();
+            const publicUrl = window.location.origin + '/eventos/detalle/' + eventId + '/';
+            openShareModal(title, publicUrl);
         }
     }
 </script>

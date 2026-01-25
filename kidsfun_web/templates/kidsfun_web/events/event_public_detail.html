@@ -37,8 +37,9 @@
 
 <script>
     function copyEventLink() {
-        navigator.clipboard.writeText(window.location.href);
-        showAlert('¡Copiado!', 'El enlace del evento ha sido copiado al portapapeles.', 'bi-link-45deg', 'success');
+        const eventTitle = "{{ event.title|escapejs }}";
+        const eventUrl = window.location.href;
+        openShareModal(eventTitle, eventUrl);
     }
 </script>
 {% endblock %}
