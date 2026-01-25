@@ -143,3 +143,4 @@ media_backup/
 militar
 *.code-workspace
 test_db.py
+ruff_report.txt
