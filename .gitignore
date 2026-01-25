@@ -134,3 +134,12 @@ SSH_TUNNEL_SETUP.md
 # Configuración OAuth/Firebase
 google_oauth_config.py
 firebase_web_config.js
+
+# Local Development & Backups
+.env.local
+*.sql
+*.sql.gz
+media_backup/
+militar
+*.code-workspace
+test_db.py

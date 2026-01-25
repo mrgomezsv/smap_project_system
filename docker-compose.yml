@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mariadb:10.6
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: smap_kf
+      MYSQL_USER: mrgomez
+      MYSQL_PASSWORD: Karin2100
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - kidsfun_network
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.local
+    depends_on:
+      - db
+    networks:
+      - kidsfun_network
+
+networks:
+  kidsfun_network:
+    driver: bridge
+
+volumes:
+  db_data:

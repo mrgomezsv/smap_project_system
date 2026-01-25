@@ -1,33 +1,51 @@
-# Django y componentes principales
+asgiref==3.11.0
+CacheControl==0.14.3
+certifi==2026.1.4
+cffi==2.0.0
+chardet==5.2.0
+charset-normalizer==3.4.4
+cryptography==46.0.3
 Django==4.2.11
-djangorestframework==3.14.0
 django-cors-headers==4.3.1
-
-# Base de datos
-# psycopg2-binary se removió porque el proyecto usa MariaDB/mysqlclient. militar
-
-# Variables de entorno
-python-dotenv==1.0.0
-
-# Manejo de imágenes
-Pillow==10.1.0
-
-# Firebase
+djangorestframework==3.14.0
 firebase-admin==6.4.0
-
-# Utilidades adicionales
-requests==2.31.0
-
-# QR Code generation
-qrcode[pil]==7.4.2
-
-# Analizador de CVs (PDF/DOCX) y generación de PDF
-pdfminer.six==20231228
-python-docx==1.1.2
-reportlab==4.2.2
-
-# Firebase Authentication (ya configurado en el proyecto)
-# Los usuarios de Firebase ya están siendo manejados por el sistema existente
-
-# Servidor de producción
+google-api-core==2.29.0
+google-api-python-client==2.187.0
+google-auth==2.47.0
+google-auth-httplib2==0.3.0
+google-cloud-core==2.5.0
+google-cloud-firestore==2.22.0
+google-cloud-storage==3.7.0
+google-crc32c==1.8.0
+google-resumable-media==2.8.0
+googleapis-common-protos==1.72.0
+grpcio==1.76.0
+grpcio-status==1.76.0
 gunicorn==21.2.0
+httplib2==0.31.1
+idna==3.11
+lxml==6.0.2
+msgpack==1.1.2
+mysqlclient==2.2.7
+packaging==25.0
+pdfminer.six==20231228
+Pillow==10.1.0
+proto-plus==1.27.0
+protobuf==6.33.4
+pyasn1==0.6.1
+pyasn1_modules==0.4.2
+pycparser==2.23
+PyJWT==2.10.1
+pyparsing==3.3.1
+pypng==0.20220715.0
+python-docx==1.1.2
+python-dotenv==1.0.0
+pytz==2025.2
+qrcode==7.4.2
+reportlab==4.2.2
+requests==2.31.0
+rsa==4.9.1
+sqlparse==0.5.5
+typing_extensions==4.15.0
+uritemplate==4.2.0
+urllib3==2.6.3
