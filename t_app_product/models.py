@@ -188,19 +188,28 @@ PARTNERS_CHOICES = [
 
 class Event(models.Model):
     title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=250, unique=True, null=True, blank=True)
     description = models.TextField()
+    image = models.ImageField(upload_to='event_images/', default='default_event.jpg', null=True, blank=True)
     location = models.CharField(max_length=200)
     start_datetime = models.DateTimeField()
     organizer = models.ForeignKey(User, on_delete=models.CASCADE)
     ticket_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     published = models.BooleanField(default=False)
     partners = models.CharField(max_length=50, choices=PARTNERS_CHOICES)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
     class Meta:
         db_table = 't_app_event'
+        ordering = ['-start_datetime']
 
 
 class WaiverValidator(models.Model):

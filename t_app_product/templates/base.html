@@ -55,9 +55,9 @@
                     <i class="bi bi-box-seam"></i>
                     <span>Productos</span>
                 </a>
-                <a href="{% url 'event' %}" class="sidebar-item" id="opcion2">
+                <a href="{% url 'events_list' %}" class="sidebar-item" id="opcion2">
                     <i class="bi bi-calendar-event"></i>
-                    <span>Eventos</span>
+                    <span>Events</span>
                 </a>
                 <a href="{% url 'ticket_master' %}" class="sidebar-item" id="opcion3">
                     <i class="bi bi-ticket-perforated"></i>
@@ -134,11 +134,18 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const currentPath = window.location.pathname;
+            let bestMatch = null;
+            let maxLen = -1;
             document.querySelectorAll('.sidebar-item').forEach(item => {
-                if (item.getAttribute('href') === currentPath || (currentPath.startsWith('/product') && item.getAttribute('href') === '/product')) {
-                    item.classList.add('active');
+                const href = item.getAttribute('href');
+                if (href !== '/' && currentPath.startsWith(href) && href.length > maxLen) {
+                    maxLen = href.length;
+                    bestMatch = item;
+                } else if (href === '/' && currentPath === '/') {
+                    bestMatch = item;
                 }
             });
+            if (bestMatch) bestMatch.classList.add('active');
 
             // Mobile menu toggle logic if needed
             const sidebarClose = document.getElementById('sidebarClose');

@@ -42,13 +42,15 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card accent-green">
-                    <div class="stat-icon" style="color: #10b981;">
-                        <i class="bi bi-calendar-event h4 mb-0"></i>
+                <a href="{% url 'events_list' %}" class="text-decoration-none">
+                    <div class="stat-card accent-green">
+                        <div class="stat-icon" style="color: #10b981;">
+                            <i class="bi bi-calendar-event h4 mb-0"></i>
+                        </div>
+                        <div class="stat-value">{{ events_count }}</div>
+                        <div class="stat-label">Eventos Registrados</div>
                     </div>
-                    <div class="stat-value">Analytics</div>
-                    <div class="stat-label">Monitor de Eventos</div>
-                </div>
+                </a>
             </div>
             <div class="col-md-3">
                 <div class="stat-card accent-blue">

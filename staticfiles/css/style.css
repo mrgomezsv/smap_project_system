@@ -1,0 +1,119 @@
+.sidebar {
+    position: fixed; /* Fija la barra lateral en su posición */
+    top: 0; /* Alinea la barra lateral en la parte superior */
+    left: 0; /* Alinea la barra lateral en el lado izquierdo */
+    width: 250px; /* Ancho de la barra lateral */
+    height: 100%; /* Altura de la barra lateral para que ocupe todo el alto de la pantalla */
+    background-color: #42444e; /* Color de fondo */
+    color: #fff; /* Color del texto */
+    padding: 20px; /* Espacio interior */
+    box-sizing: border-box; /* Incluye el padding en el ancho y alto */
+    font-family: 'whitney ssm a', 'whitney ssm b', 'lucida grande', 'lucida sans', 'Verdana', 'Helvetica', 'Arial', sans-serif; /* Tipo de letra */
+    overflow: auto;
+}
+
+/* Estilos para los elementos de la barra lateral */
+.sidebar ul {
+    list-style-type: none; /* Elimina los puntos de la lista */
+    padding: 0; /* Elimina el espacio interno */
+}
+
+.sidebar ul li a {
+    color: #fff; /* Color del texto */
+    text-decoration: none; /* Elimina el subrayado de los enlaces */
+}
+
+.sidebar ul li a:hover {
+    color: #2db34a; /* Cambia el color del texto al pasar el mouse */
+}
+
+.sidebar ul .li-title {
+    text-align: center; /* Centra el contenido horizontalmente */
+    margin-bottom: 50px;
+}
+
+.sidebar ul .li-title p {
+    color: #9799a7; /* Cambia el color del texto de la etiqueta p a naranja */
+}
+
+.sidebar ul .li-title a {
+    color: #fff; /* Cambia el color del texto de la etiqueta a a azul */
+}
+
+/* Estilos para el contenido a la derecha de la barra lateral */
+.content {
+    margin-left: 270px; /* Ajusta el margen izquierdo para dejar espacio para la barra lateral */
+    padding: 20px; /* Espacio interior */
+}
+
+.content-container {
+    margin-left: 270px; /* Ajusta el margen izquierdo para dejar espacio para la barra lateral */
+    padding: 20px; /* Espacio interior */
+}
+
+.section-title {
+    color: #9799a7;
+    margin: 0;
+}
+
+.sidebar ul .li-item {
+    margin-bottom: 35px; /* Agrega un margen inferior de 10px entre cada elemento li con la clase "li-item" */
+}
+
+.sidebar ul .li-title a {
+    font-size: 45px; /* Cambia el tamaño del texto del h1 a 24px */
+    font-weight: bold;
+}
+
+.user-profile {
+    display: flex;
+
+    .dropdown-menu {
+        .dropdown-item {
+            background-color: #545560;
+        }
+
+        .dropdown-item:hover {
+            color: #2db34a;
+        }
+    }
+}
+
+.user-profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profile-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    cursor: pointer; /* Añadir esta línea para mostrar el puntero del ratón */
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Ocultar la barra de desplazamiento */
+.sidebar {
+    /* Para navegadores basados en WebKit (Chrome, Safari) */
+
+    -webkit-scrollbar {
+        display: none;
+    }
+
+    /* Para Firefox */
+    scrollbar-width: none;
+
+    /* Para Internet Explorer y Edge */
+    -ms-overflow-style: none;
+}

@@ -67,7 +67,11 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['title', 'description', 'location', 'start_datetime', 'ticket_price', 'published', 'partners']
+        fields = ['title', 'slug', 'description', 'image', 'location', 'start_datetime', 'ticket_price', 'published', 'partners']
+        widgets = {
+            'start_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'rows': 4}),
+        }
 
 
 

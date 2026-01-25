@@ -17,7 +17,7 @@ except ImportError:
     QRCODE_AVAILABLE = False
     print("Warning: qrcode module not available. QR code functionality will be disabled.")
 
-from t_app_product.models import Product, ContactMessage, ProductLike, ProductComment, CommentReply
+from t_app_product.models import Product, ContactMessage, ProductLike, ProductComment, CommentReply, Event
 
 
 def home(request):
@@ -369,6 +369,18 @@ def terms_conditions(request):
 def payment_methods(request):
     """Vista para la página de métodos de pago (Zelle)."""
     return render(request, 'kidsfun_web/payment_methods.html')
+
+def public_events(request):
+    """Vista pública para la cartelera de eventos"""
+    events = Event.objects.filter(published=True).order_by('-start_datetime')
+    return render(request, 'kidsfun_web/events/events_cartelera.html', {'events': events})
+
+def public_event_detail(request, event_id):
+    """Vista pública para el detalle de un evento específico"""
+    from django.shortcuts import get_object_or_404
+    from t_app_product.models import Event
+    event = get_object_or_404(Event, pk=event_id, published=True)
+    return render(request, 'kidsfun_web/events/event_public_detail.html', {'event': event})
 
 def generate_app_qr(request):
     """Genera un QR code para descargar la app de Kidsfun"""

@@ -150,12 +150,14 @@ def product(request):
     # Calcular estadísticas dinámicas
     publicated_count = products.filter(publicated=True).count()
     total_count = products.count()
-
+    events_count = Event.objects.all().count() # Datos para "Analytics"
+    
     # Preparar el contexto base
     context = {
         'products': products,
         'publicated_count': publicated_count,
         'total_count': total_count,
+        'events_count': events_count,
         'show_categories': show_categories,
         'unread_count': ContactMessage.objects.filter(is_read=False).count(),
         'query': query,
@@ -173,6 +175,49 @@ def product(request):
         context['categorized_products'] = categorized_products
 
     return render(request, 'product/product.html', context)
+
+
+@login_required
+def events_list(request):
+    events = Event.objects.all().order_by('-created_at')
+    return render(request, 'product/events_list.html', {
+        'events': events,
+        'total_events': events.count(),
+        'published_events': events.filter(published=True).count(),
+        'draft_events': events.filter(published=False).count(),
+    })
+
+
+@login_required
+def event_detail(request, event_id=None):
+    event = None
+    if event_id:
+        event = get_object_or_404(Event, pk=event_id)
+    
+    if request.method == 'POST':
+        form = EventForm(request.POST, request.FILES, instance=event)
+        if form.is_valid():
+            new_event = form.save(commit=False)
+            if not event:
+                new_event.organizer = request.user
+            new_event.save()
+            messages.success(request, 'Evento guardado exitosamente.')
+            return redirect('events_list')
+    else:
+        form = EventForm(instance=event)
+    
+    return render(request, 'product/event_detail.html', {
+        'form': form,
+        'event': event
+    })
+
+
+@login_required
+def delete_event(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    event.delete()
+    messages.success(request, 'Evento eliminado correctamente.')
+    return redirect('events_list')
 
 
 @login_required
@@ -365,21 +410,11 @@ def send_push_notification(request):
 
 @login_required
 def event(request):
-    events = Event.objects.all()
-    return render(request, 'event.html', {'events': events})
+    return redirect('events_list')
 
 @login_required
 def create_event(request):
-    if request.method == 'POST':
-        form = EventForm(request.POST)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.organizer = request.user
-            event.save()
-            return redirect('event')
-    else:
-        form = EventForm()
-    return render(request, 'event.html', {'form': form})
+    return redirect('create_event_new')
 
 
 @login_required

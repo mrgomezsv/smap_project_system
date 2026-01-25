@@ -1,0 +1,347 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="welcome-section">
+                <h1>Gestión de Eventos y Blog</h1>
+                <p class="text-muted">Crea noticias y eventos para publicar en la web</p>
+            </div>
+            <div class="header-actions">
+                <a href="{% url 'create_event_new' %}"
+                    class="btn btn-primary d-flex align-items-center gap-2 shadow-lg px-4 py-2">
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Nuevo Evento</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="px-4 mb-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-check h4 mb-0"></i>
+                    </div>
+                    <div class="stat-value">{{ total_events }}</div>
+                    <div class="stat-label">Total de Eventos</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card accent-gold">
+                    <div class="stat-icon" style="color: var(--secondary-color);">
+                        <i class="bi bi-globe h4 mb-0"></i>
+                    </div>
+                    <div class="stat-value">{{ published_events }}</div>
+                    <div class="stat-label">Publicados en la Web</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card accent-blue">
+                    <div class="stat-icon" style="color: #3b82f6;">
+                        <i class="bi bi-eye h4 mb-0"></i>
+                    </div>
+                    <div class="stat-value">{{ draft_events }}</div>
+                    <div class="stat-label">Borradores</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events List Section -->
+    <div class="px-4 pb-5">
+        <div class="detail-card">
+            <div class="detail-card-header d-flex justify-content-between align-items-center bg-white border-bottom-0">
+                <h5 class="mb-0 fw-bold text-primary">Listado de Publicaciones</h5>
+                <div class="input-group w-auto">
+                    <span class="input-group-text bg-white border-end-0" style="border-radius: 0.75rem 0 0 0.75rem;">
+                        <i class="bi bi-search text-muted"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" placeholder="Buscar evento..."
+                        style="border-radius: 0 0.75rem 0.75rem 0; width: 250px;">
+                </div>
+            </div>
+            <div class="detail-card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4 py-3 text-muted fw-semibold" style="font-size: 0.85rem;">EVENTO</th>
+                                <th class="py-3 text-muted fw-semibold" style="font-size: 0.85rem;">FECHA EVENTO</th>
+                                <th class="py-3 text-muted fw-semibold" style="font-size: 0.85rem;">ESTADO</th>
+                                <th class="py-3 text-muted fw-semibold" style="font-size: 0.85rem;">UBICACIÓN</th>
+                                <th class="pe-4 py-3 text-end text-muted fw-semibold" style="font-size: 0.85rem;">
+                                    ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in events %}
+                            <tr class="event-row" data-title="{{ event.title }}"
+                                data-description="{{ event.description }}" data-location="{{ event.location }}"
+                                data-price="${{ event.ticket_price }}"
+                                data-date="{{ event.start_datetime|date:'d M, Y' }}"
+                                data-time="{{ event.start_datetime|date:'H:i' }}"
+                                data-partner="{{ event.get_partners_display }}"
+                                data-organizer="{{ event.organizer.username }}" data-img="{{ event.image.url }}"
+                                data-published="{{ event.published|lower }}"
+                                data-edit-url="{% url 'event_detail_edit' event.id %}"
+                                onclick="handleModalTrigger(this)">
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div
+                                            style="width: 50px; height: 50px; border-radius: 10px; overflow: hidden; background: #f1f5f9; border: 1px solid #e2e8f0;">
+                                            <img src="{{ event.image.url }}" class="w-100 h-100 object-fit-cover"
+                                                onerror="this.src='https://placehold.co/100x100?text=No+Img'">
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">{{ event.title }}</div>
+                                            <small class="text-muted">{{ event.get_partners_display }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-dark">{{ event.start_datetime|date:"d M, Y" }}</div>
+                                    <small class="text-muted">{{ event.start_datetime|date:"H:i" }}</small>
+                                </td>
+                                <td>
+                                    {% if event.published %}
+                                    <span class="badge bg-success bg-opacity-10 text-success px-3 py-2"
+                                        style="border-radius: 2rem;">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Publicado
+                                    </span>
+                                    {% else %}
+                                    <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2"
+                                        style="border-radius: 2rem;">
+                                        <i class="bi bi-pencil-fill me-1"></i> Borrador
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="text-dark"><i class="bi bi-geo-alt me-1 text-muted"></i> {{
+                                        event.location }}</div>
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <div class="d-flex justify-content-end gap-2" onclick="event.stopPropagation()">
+                                        <a href="{% url 'event_detail_edit' event.id %}"
+                                            class="btn btn-sm btn-icon bg-light text-primary border" title="Editar">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-sm btn-icon bg-light text-danger border"
+                                            onclick="showConfirm('¿Eliminar evento?', '¿Seguro que quieres eliminar este evento? Esta acción no se puede deshacer.', () => { window.location.href='{% url 'delete_event_new' event.id %}' })"
+                                            title="Eliminar">
+                                            <i class="bi bi-trash3"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-sm btn-icon bg-light text-secondary border"
+                                            title="Compartir" onclick="shareFromRow('{{ event.title|escapejs }}')">
+                                            <i class="bi bi-share"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="py-5 text-center">
+                                    <div class="p-5">
+                                        <i class="bi bi-calendar-x h1 text-muted opacity-25"></i>
+                                        <p class="text-muted mt-3">No hay eventos registrados actualmente.</p>
+                                        <a href="{% url 'create_event_new' %}"
+                                            class="btn btn-outline-primary mt-2">Crear mi primer evento</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Detail Modal -->
+    <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 1.5rem; overflow: hidden;">
+                <div class="position-relative">
+                    <img id="modalImage" src="" class="w-100" style="height: 400px; object-fit: cover;">
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <button type="button" class="btn bg-white border-0 shadow-sm rounded-circle p-2 lh-1"
+                            data-bs-dismiss="modal">
+                            <i class="bi bi-x-lg text-dark"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body p-4 p-md-5">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h2 id="modalTitle" class="fw-bold text-dark mb-2" style="letter-spacing: -0.5px;"></h2>
+                            <div class="d-flex gap-3 text-muted small fw-medium">
+                                <span id="modalDate"><i class="bi bi-calendar3 me-2 text-primary"></i></span>
+                                <span id="modalPartner"><i class="bi bi-people me-2 text-primary"></i></span>
+                            </div>
+                        </div>
+                        <span id="modalStatus" class="badge px-4 py-2"
+                            style="border-radius: 2rem; font-size: 0.85rem;"></span>
+                    </div>
+
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-4 h-100 border border-white shadow-sm">
+                                <h6 class="text-muted small fw-bold text-uppercase mb-2" style="letter-spacing: 1px;">
+                                    Ubicación</h6>
+                                <p id="modalLocation" class="text-dark fw-bold mb-0" style="font-size: 1.1rem;"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-4 h-100 border border-white shadow-sm">
+                                <h6 class="text-muted small fw-bold text-uppercase mb-2" style="letter-spacing: 1px;">
+                                    Precio del Ticket</h6>
+                                <p id="modalPrice" class="text-primary fw-bold mb-0" style="font-size: 1.1rem;"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-muted small fw-bold text-uppercase mb-3" style="letter-spacing: 1px;">
+                            Información Completa</h6>
+                        <p id="modalDescription" class="text-secondary fs-5" style="line-height: 1.8;"></p>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3 pt-4 border-top">
+                        <span class="text-muted small fw-bold text-uppercase">Organizado por:</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 32px; height: 32px;">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <span id="modalOrganizer" class="fw-bold text-dark"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0 p-4 d-flex justify-content-between align-items-center">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-white border shadow-sm rounded-pill px-3" onclick="shareEvent('wa')">
+                            <i class="bi bi-whatsapp text-success me-1"></i> WhatsApp
+                        </button>
+                        <button class="btn btn-white border shadow-sm rounded-pill px-3" onclick="shareEvent('fb')">
+                            <i class="bi bi-facebook text-primary me-1"></i> Facebook
+                        </button>
+                        <button class="btn btn-white border shadow-sm rounded-pill px-3"
+                            onclick="window.open('https://www.instagram.com/')">
+                            <i class="bi bi-instagram text-danger me-1"></i> Instagram
+                        </button>
+                    </div>
+                    <div class="d-flex gap-3 align-items-center">
+                        <a id="modalEditBtn" href="#" class="btn btn-primary px-5 py-2 fw-bold"
+                            style="border-radius: 0.75rem;">
+                            <i class="bi bi-pencil-square me-2"></i> Editar Registro
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-icon:hover {
+        background: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(248, 250, 252, 0.8) !important;
+        cursor: pointer;
+    }
+
+    .event-row:hover .fw-bold.text-dark {
+        color: var(--primary-color) !important;
+    }
+
+    .btn-white {
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .btn-white:hover {
+        background: #f8fafc;
+        transform: translateY(-2px);
+    }
+</style>
+
+<script>
+    function handleModalTrigger(row) {
+        const data = {
+            title: row.dataset.title,
+            description: row.dataset.description,
+            location: row.dataset.location,
+            price: row.dataset.price,
+            date: row.dataset.date,
+            time: row.dataset.time,
+            partner: row.dataset.partner,
+            organizer: row.dataset.organizer,
+            img: row.dataset.img,
+            published: row.dataset.published,
+            editUrl: row.dataset.editUrl
+        };
+        showEventDetail(data);
+    }
+
+    function showEventDetail(data) {
+        document.getElementById('modalTitle').innerText = data.title;
+        document.getElementById('modalDescription').innerText = data.description;
+        document.getElementById('modalLocation').innerText = data.location;
+        document.getElementById('modalPrice').innerText = data.price;
+        document.getElementById('modalDate').innerHTML = `<i class="bi bi-calendar3 me-2 text-primary"></i>${data.date} - ${data.time}`;
+        document.getElementById('modalPartner').innerHTML = `<i class="bi bi-people me-2 text-primary"></i>Socio: ${data.partner}`;
+        document.getElementById('modalOrganizer').innerText = data.organizer;
+        document.getElementById('modalImage').src = data.img;
+        document.getElementById('modalEditBtn').href = data.editUrl;
+
+        const statusBadge = document.getElementById('modalStatus');
+        if (data.published === 'true') {
+            statusBadge.innerText = 'Publicado';
+            statusBadge.className = 'badge bg-success bg-opacity-10 text-success px-4 py-2';
+        } else {
+            statusBadge.innerText = 'Borrador';
+            statusBadge.className = 'badge bg-warning bg-opacity-10 text-warning px-4 py-2';
+        }
+
+        const modalElement = document.getElementById('eventDetailModal');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    }
+
+    function shareFromRow(title) {
+        shareEvent('wa', title);
+    }
+
+    function shareEvent(platform, customTitle = null) {
+        const title = customTitle || document.getElementById('modalTitle').innerText;
+        const url = window.location.origin + '/eventos/';
+        const text = `¡Mira este evento: ${title}!`;
+
+        if (platform === 'wa') window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`);
+        if (platform === 'fb') window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+
+        if (window.showToast) {
+            showToast(`¡Enlace de "${title}" compartido!`, 'info');
+        }
+    }
+</script>
+{% endblock %}

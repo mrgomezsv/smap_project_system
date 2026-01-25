@@ -155,7 +155,7 @@
                             style="border-radius: 0 0 1.25rem 1.25rem;">
                             <button type="submit" formaction="{% url 'delete_product' product.id %}"
                                 class="btn-danger-outline"
-                                onclick="return confirm('¿Estás seguro de eliminar este producto?')">
+                                onclick="showConfirm('¿Eliminar producto?', '¿Estás seguro de que quieres eliminar este producto? Esta acción no se puede deshacer.', () => { window.location.href='{% url 'delete_product' product.id %}' })">
                                 <i class="bi bi-trash3 me-2"></i> Eliminar
                             </button>
                             <button type="submit" class="btn btn-primary shadow-lg px-5">
