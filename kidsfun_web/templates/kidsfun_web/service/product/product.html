@@ -2,653 +2,658 @@
 
 {% block content %}
 {% load static %}
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
-<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
-<link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+<link rel="stylesheet" href="{% static 'css/base.css' %}" />
 <link rel="stylesheet" href="{% static 'css/animation.css' %}">
 <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css"/>
-<link rel="icon" type="image/x-icon" href="{% static '../static/img/favicon/favicon-16x16.png' %}"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css" />
+<link rel="icon" type="image/x-icon" href="{% static '../static/img/favicon/favicon-16x16.png' %}" />
 
 <style>
-    /*--------------------------------------------
+  /*--------------------------------------------
     font
     ----------------------------------------------*/
-    @import url("https://fonts.googleapis.com/css2?family=Titan+One&display=swap");
-    @import url("https://fonts.googleapis.com/css2?family=Titan+One&family=Varela+Round&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Titan+One&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Titan+One&family=Varela+Round&display=swap");
 
-    body {
-      font-family: "Titan One", cursive;
-    }
+  body {
+    font-family: "Titan One", cursive;
+  }
 
-    :root {
-      --color-green: #00d084;
-      --color-blue: #2855e9;
-      --color-violet: #c751c0;
-    }
+  :root {
+    --color-green: #00d084;
+    --color-blue: #2855e9;
+    --color-violet: #c751c0;
+  }
 
-    .padding-section {
-      padding: 150px 0 100px; /* Ajuste de separación superior */
-    }
+  .padding-section {
+    padding: 150px 0 100px;
+    /* Ajuste de separación superior */
+  }
 
-    .text-green {
-      color: var(--color-green);
-    }
+  .text-green {
+    color: var(--color-green);
+  }
 
-    .text-blue {
-      color: var(--color-blue);
-    }
+  .text-blue {
+    color: var(--color-blue);
+  }
 
-    .text-violet {
-      color: var(--color-violet);
-    }
+  .text-violet {
+    color: var(--color-violet);
+  }
 
-    .btn-violet {
-      background-color: var(--color-violet);
-      color: #fff;
-      border-radius: 15px;
-    }
+  .btn-violet {
+    background-color: var(--color-violet);
+    color: #fff;
+    border-radius: 15px;
+  }
 
-    .btn-violet:hover {
-      background-color: #af4ea9;
-      color: #fff;
-    }
+  .btn-violet:hover {
+    background-color: #af4ea9;
+    color: #fff;
+  }
 
-    .btn-violet:focus {
-      box-shadow: none;
-    }
+  .btn-violet:focus {
+    box-shadow: none;
+  }
 
-    .divisor-2 {
-      width: 100%;
-      height: 100px;
-      background-color: var(--color-#0a1843);
-      clip-path: ellipse(100% 68% at 7% 82%);
-    }
+  .divisor-2 {
+    width: 100%;
+    height: 100px;
+    background-color: var(--color-#0a1843);
+    clip-path: ellipse(100% 68% at 7% 82%);
+  }
 
-    .section-description h1 {
-      font-size: 50px;
-      margin-bottom: 40px;
-    }
+  .section-description h1 {
+    font-size: 50px;
+    margin-bottom: 40px;
+  }
 
-    .section-description .des h3 {
-      font-size: 30px;
-      margin-bottom: 20px;
-    }
+  .section-description .des h3 {
+    font-size: 30px;
+    margin-bottom: 20px;
+  }
 
-    .section-description .des p {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
+  .section-description .des p {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
 
-    .img-description {
-      width: 100%;
-      overflow: hidden;
-    }
+  .img-description {
+    width: 100%;
+    overflow: hidden;
+  }
 
-    .img-description img {
-      width: 100%;
-      height: auto;
-      border-radius: 15px;
-    }
+  .img-description img {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+  }
 
-    .galery-des .img {
-      margin-bottom: 150px; /* Ajuste de separación entre imágenes y elementos superiores */
-    }
+  .galery-des .img {
+    margin-bottom: 150px;
+    /* Ajuste de separación entre imágenes y elementos superiores */
+  }
 
-    .galery-des .img img {
-      width: 100%;
-      height: 100%; /* Establecer la altura al 100% para mantener la relación de aspecto */
-      object-fit: cover; /* Hace que la imagen se ajuste dentro del contenedor sin distorsionarla */
-      border-radius: 15px;
-    }
+  .galery-des .img img {
+    width: 100%;
+    height: 100%;
+    /* Establecer la altura al 100% para mantener la relación de aspecto */
+    object-fit: cover;
+    /* Hace que la imagen se ajuste dentro del contenedor sin distorsionarla */
+    border-radius: 15px;
+  }
 
-    /* Estilos para la sección de likes y comentarios */
-    .interaction-section {
-      background-color: #f8f9fa;
-      padding: 80px 0;
-      margin-top: 50px;
-    }
+  /* Estilos para la sección de likes y comentarios */
+  .interaction-section {
+    background-color: #f8f9fa;
+    padding: 80px 0;
+    margin-top: 50px;
+  }
 
-    .stats-container {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-    }
+  .stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
 
-    .stat-item {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 25px 30px;
-      background-color: white;
-      border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-      min-width: 200px;
-      border-left: 4px solid var(--color-violet);
-      position: relative;
-      overflow: hidden;
-    }
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 25px 30px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    min-width: 200px;
+    border-left: 4px solid var(--color-violet);
+    position: relative;
+    overflow: hidden;
+  }
 
-    .stat-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: linear-gradient(135deg, var(--color-violet), #af4ea9);
-    }
+  .stat-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-violet), #af4ea9);
+  }
 
-    .stat-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-    }
+  .stat-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
 
-    .stat-item i {
-      font-size: 28px;
-      color: var(--color-violet);
-      flex-shrink: 0;
-    }
+  .stat-item i {
+    font-size: 28px;
+    color: var(--color-violet);
+    flex-shrink: 0;
+  }
 
-    .stat-item .stat-content {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+  .stat-item .stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
 
-    .stat-item .stat-label {
-      font-size: 14px;
-      font-weight: 600;
-      color: #6c757d;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+  .stat-item .stat-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
 
-    .stat-item .stat-value {
-      font-size: 18px;
-      font-weight: 700;
-      color: #2c3e50;
-    }
+  .stat-item .stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c3e50;
+  }
 
-    .likes-stat {
-      border-left-color: #dc3545;
-    }
+  .likes-stat {
+    border-left-color: #dc3545;
+  }
 
-    .likes-stat i {
-      color: #dc3545;
-    }
+  .likes-stat i {
+    color: #dc3545;
+  }
 
-    .likes-stat::before {
-      background: linear-gradient(135deg, #dc3545, #c82333);
-    }
+  .likes-stat::before {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+  }
 
-    .comments-stat {
-      border-left-color: #007bff;
-    }
+  .comments-stat {
+    border-left-color: #007bff;
+  }
 
-    .comments-stat i {
-      color: #007bff;
-    }
+  .comments-stat i {
+    color: #007bff;
+  }
 
-    .comments-stat::before {
-      background: linear-gradient(135deg, #007bff, #0056b3);
-    }
+  .comments-stat::before {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+  }
 
-    .comments-section {
-      max-width: 800px;
-      margin: 0 auto;
-    }
+  .comments-section {
+    max-width: 800px;
+    margin: 0 auto;
+  }
 
-    .comment-item {
-      background-color: white;
-      padding: 20px;
-      margin-bottom: 15px;
-      border-radius: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+  .comment-item {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
 
-    .comment-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
 
-    .comment-user {
-      font-weight: bold;
-      color: var(--color-violet);
-    }
+  .comment-user {
+    font-weight: bold;
+    color: var(--color-violet);
+  }
 
-    .comment-date {
-      color: #6c757d;
-      font-size: 14px;
-    }
+  .comment-date {
+    color: #6c757d;
+    font-size: 14px;
+  }
 
-    .comment-text {
-      color: #333;
-      line-height: 1.6;
-    }
+  .comment-text {
+    color: #333;
+    line-height: 1.6;
+  }
 
-    .no-comments {
-      text-align: center;
-      color: #6c757d;
-      font-style: italic;
-      padding: 30px;
-    }
+  .no-comments {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 30px;
+  }
 
-    .comment-form-container {
-      margin-bottom: 30px;
-    }
+  .comment-form-container {
+    margin-bottom: 30px;
+  }
 
-    .comment-form-container .input-group {
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      border-radius: 25px;
-      overflow: hidden;
-    }
+  .comment-form-container .input-group {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 25px;
+    overflow: hidden;
+  }
 
-    .comment-form-container .form-control {
-      border: none;
-      padding: 15px 20px;
-      font-size: 16px;
-    }
+  .comment-form-container .form-control {
+    border: none;
+    padding: 15px 20px;
+    font-size: 16px;
+  }
 
-    .comment-form-container .form-control:focus {
-      box-shadow: none;
-      border-color: var(--color-violet);
-    }
+  .comment-form-container .form-control:focus {
+    box-shadow: none;
+    border-color: var(--color-violet);
+  }
 
-    .comment-form-container .btn {
-      border: none;
-      padding: 15px 20px;
-      border-radius: 0 25px 25px 0;
-    }
+  .comment-form-container .btn {
+    border: none;
+    padding: 15px 20px;
+    border-radius: 0 25px 25px 0;
+  }
 
-    #likes-container {
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
+  #likes-container {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
 
-    #likes-container:hover {
-      transform: scale(1.05);
-    }
+  #likes-container:hover {
+    transform: scale(1.05);
+  }
 
-    /* Animaciones */
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-      }
-
-      100% {
-        opacity: 1;
-      }
-    }
-
-    .anim_1,
-    .anim_2,
-    .anim_3,
-    .anim_4 {
-      animation: fadeIn 1s ease-in-out;
-      animation-fill-mode: both;
+  /* Animaciones */
+  @keyframes fadeIn {
+    0% {
       opacity: 0;
     }
 
-    .anim_1 {
-      animation-delay: 0.5s;
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .anim_1,
+  .anim_2,
+  .anim_3,
+  .anim_4 {
+    animation: fadeIn 1s ease-in-out;
+    animation-fill-mode: both;
+    opacity: 0;
+  }
+
+  .anim_1 {
+    animation-delay: 0.5s;
+  }
+
+  .anim_2 {
+    animation-delay: 1s;
+  }
+
+  .anim_3 {
+    animation-delay: 1.5s;
+  }
+
+  .anim_4 {
+    animation-delay: 2s;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 992px) {
+    .section-description h1 {
+      font-size: 40px;
     }
 
-    .anim_2 {
-      animation-delay: 1s;
+    .section-description .des h3 {
+      font-size: 25px;
     }
 
-    .anim_3 {
-      animation-delay: 1.5s;
+    .section-description .des p {
+      font-size: 16px;
     }
 
-    .anim_4 {
-      animation-delay: 2s;
+    .des .btn-violet {
+      margin-top: 50px;
+      /* Añade un margen superior al botón */
     }
 
-    /* Responsive Design */
-    @media (max-width: 992px) {
-      .section-description h1 {
-        font-size: 40px;
-      }
-
-      .section-description .des h3 {
-        font-size: 25px;
-      }
-
-      .section-description .des p {
-        font-size: 16px;
-      }
-
-      .des .btn-violet {
-        margin-top: 50px; /* Añade un margen superior al botón */
-      }
-
-      .row.justify-content-center.align-items-center {
-        flex-direction: column; /* Cambia la dirección del contenedor en dispositivos móviles */
-      }
-
-      .stats-container {
-        flex-direction: column;
-        gap: 20px;
-      }
+    .row.justify-content-center.align-items-center {
+      flex-direction: column;
+      /* Cambia la dirección del contenedor en dispositivos móviles */
     }
 
+    .stats-container {
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
 </style>
 
 <section class="section-description padding-section">
-    <div class="container">
-        <!--<div class="row" style="margin-top: 50px;">-->
-        <!--    <h1>-->
-        <!--        <span class="text-green anim_1">Description</span>-->
-        <!--        <span class="text-blue anim_2">of</span>-->
-        <!--        <span class="text-violet anim_3">products</span>-->
-        <!--    </h1>-->
-        <!--</div>-->
+  <div class="container">
+    <!--<div class="row" style="margin-top: 50px;">-->
+    <!--    <h1>-->
+    <!--        <span class="text-green anim_1">Description</span>-->
+    <!--        <span class="text-blue anim_2">of</span>-->
+    <!--        <span class="text-violet anim_3">products</span>-->
+    <!--    </h1>-->
+    <!--</div>-->
 
-        <style>
-            /* Estilos personalizados para las palabras */
-            .custom-green {
-                color: green;
-            }
+    <style>
+      /* Estilos personalizados para las palabras */
+      .custom-green {
+        color: green;
+      }
 
-            .custom-blue {
-                color: blue;
-            }
+      .custom-blue {
+        color: blue;
+      }
 
-            .custom-violet {
-                color: violet;
-            }
-        </style>
+      .custom-violet {
+        color: violet;
+      }
+    </style>
 
-        <div class="row" style="margin-top: 100px;">
-            <h1 id="product-title">
-                {{ product.title }}
-            </h1>
-        </div>
-        <div class="row justify-content-center align-items-center">
-            <div class="col-md-6 col-lg-6 des" data-aos="fade-right">
-                <!--                <h3>{{ product.title }}</h3>-->
-                <p>{{ product.description }}</p>
-                <p>Category: {{ product.get_category_display }}</p>
-                <p>Necessary Circuits: {% if product.circuits %}{{ product.circuits }}{% else %}-{% endif %}</p>
-                <p>Item Dimensions: {% if product.dimensions %}{{ product.dimensions }}{% else %}-{% endif %}</p>
-                <p>Space Needed: {% if product.space %}{{ product.space }}{% else %}-{% endif %}</p>
-                <a href="{% url 'service' %}" class="btn btn-violet shadow">Go back</a>
-                <style>
-                    /* Asegúrate de que los párrafos no tengan texto en negrita */
-                    .des p {
-                        font-weight: normal; /* Elimina el estilo de negrita */
-                    }
-
-                    /* Espacio adicional para el botón en dispositivos móviles */
-                    @media (max-width: 576px) {
-                        .btn-violet {
-                            margin-bottom: 50px; /* Agrega un espacio debajo del botón en dispositivos móviles */
-                        }
-                    }
-                </style>
-            </div>
-            <div class="col-md-6 col-lg-6 anim_4">
-                <div class="img-description img">
-                    <img src="{{ product.img.url }}" alt="{{ product.title }}">
-                </div>
-            </div>
-        </div>
-        <div class="row galery-des justify-content-center align-items-center" style="margin-top: 150px;">
-            {% if product.img1 %}
-            <div class="col-md-4 col-lg-4" data-aos="fade-up">
-                <div class="img">
-                    <img src="{{ product.img1.url }}" alt="" class="img-fluid">
-                </div>
-            </div>
-            {% endif %}
-            {% if product.img2 %}
-            <div class="col-md-4 col-lg-4" data-aos="fade-up">
-                <div class="img">
-                    <img src="{{ product.img2.url }}" alt="" class="img-fluid">
-                </div>
-            </div>
-            {% endif %}
-            {% if product.img3 %}
-            <div class="col-md-4 col-lg-4" data-aos="fade-up">
-                <div class="img">
-                    <img src="{{ product.img3.url }}" alt="" class="img-fluid">
-                </div>
-            </div>
-            {% endif %}
-            {% if product.img4 %}
-            <div class="col-md-4 col-lg-4" data-aos="fade-up">
-                <div class="img">
-                    <img src="{{ product.img4.url }}" alt="" class="img-fluid">
-                </div>
-            </div>
-            {% endif %}
-            {% if product.img5 %}
-            <div class="col-md-4 col-lg-4" data-aos="fade-up">
-                <div class="img">
-                    <img src="{{ product.img5.url }}" alt="" class="img-fluid">
-                </div>
-            </div>
-            {% endif %}
-        </div>
+    <div class="row" style="margin-top: 100px;">
+      <h1 id="product-title">
+        {{ product.title }}
+      </h1>
     </div>
+    <div class="row justify-content-center align-items-center">
+      <div class="col-md-6 col-lg-6 des" data-aos="fade-right">
+        <!--                <h3>{{ product.title }}</h3>-->
+        <p>{{ product.description }}</p>
+        <p>Category: {{ product.get_category_display }}</p>
+        <p>Necessary Circuits: {% if product.circuits %}{{ product.circuits }}{% else %}-{% endif %}</p>
+        <p>Item Dimensions: {% if product.dimensions %}{{ product.dimensions }}{% else %}-{% endif %}</p>
+        <p>Space Needed: {% if product.space %}{{ product.space }}{% else %}-{% endif %}</p>
+        <a href="{% url 'service' %}" class="btn btn-violet shadow">Go back</a>
+        <style>
+          /* Asegúrate de que los párrafos no tengan texto en negrita */
+          .des p {
+            font-weight: normal;
+            /* Elimina el estilo de negrita */
+          }
+
+          /* Espacio adicional para el botón en dispositivos móviles */
+          @media (max-width: 576px) {
+            .btn-violet {
+              margin-bottom: 50px;
+              /* Agrega un espacio debajo del botón en dispositivos móviles */
+            }
+          }
+        </style>
+      </div>
+      <div class="col-md-6 col-lg-6 anim_4">
+        <div class="img-description img">
+          <img src="{{ product.img.url }}" alt="{{ product.title }}">
+        </div>
+      </div>
+    </div>
+    <div class="row galery-des justify-content-center align-items-center" style="margin-top: 150px;">
+      {% if product.img1 %}
+      <div class="col-md-4 col-lg-4" data-aos="fade-up">
+        <div class="img">
+          <img src="{{ product.img1.url }}" alt="" class="img-fluid">
+        </div>
+      </div>
+      {% endif %}
+      {% if product.img2 %}
+      <div class="col-md-4 col-lg-4" data-aos="fade-up">
+        <div class="img">
+          <img src="{{ product.img2.url }}" alt="" class="img-fluid">
+        </div>
+      </div>
+      {% endif %}
+      {% if product.img3 %}
+      <div class="col-md-4 col-lg-4" data-aos="fade-up">
+        <div class="img">
+          <img src="{{ product.img3.url }}" alt="" class="img-fluid">
+        </div>
+      </div>
+      {% endif %}
+      {% if product.img4 %}
+      <div class="col-md-4 col-lg-4" data-aos="fade-up">
+        <div class="img">
+          <img src="{{ product.img4.url }}" alt="" class="img-fluid">
+        </div>
+      </div>
+      {% endif %}
+      {% if product.img5 %}
+      <div class="col-md-4 col-lg-4" data-aos="fade-up">
+        <div class="img">
+          <img src="{{ product.img5.url }}" alt="" class="img-fluid">
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
 </section>
 
 <!-- Sección de interacción (likes y comentarios) -->
 <section class="interaction-section">
-    <div class="container">
-        <div class="stats-container" data-aos="fade-up">
-            <div class="stat-item likes-stat" id="likes-container">
-                <i class="bi bi-heart-fill" id="like-icon"></i>
-                <div class="stat-content">
-                    <div class="stat-label">Likes</div>
-                    <div class="stat-value" id="likes-count">{{ likes_count|default:0 }}</div>
-                </div>
-            </div>
-            <div class="stat-item comments-stat">
-                <i class="bi bi-chat-fill"></i>
-                <div class="stat-content">
-                    <div class="stat-label">Comentarios</div>
-                    <div class="stat-value" id="comments-count">{{ comments_count|default:0 }}</div>
-                </div>
-            </div>
+  <div class="container">
+    <div class="stats-container" data-aos="fade-up">
+      <div class="stat-item likes-stat" id="likes-container">
+        <i class="bi bi-heart-fill" id="like-icon"></i>
+        <div class="stat-content">
+          <div class="stat-label">Likes</div>
+          <div class="stat-value" id="likes-count">{{ likes_count|default:0 }}</div>
         </div>
-        
-        <!-- Formulario para agregar comentarios -->
-        <div class="comment-form-container text-center mb-4" data-aos="fade-up">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="comment-input" placeholder="Write a comment...">
-                        <button class="btn btn-violet" type="button" id="submit-comment">
-                            <i class="bi bi-send"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+      </div>
+      <div class="stat-item comments-stat">
+        <i class="bi bi-chat-fill"></i>
+        <div class="stat-content">
+          <div class="stat-label">Comentarios</div>
+          <div class="stat-value" id="comments-count">{{ comments_count|default:0 }}</div>
         </div>
-        
-        <div class="comments-section" data-aos="fade-up">
-            <h3 class="text-center mb-4">Comments</h3>
-            <div id="comments-list">
-                {% if comments %}
-                    {% for comment in comments %}
-                    <div class="comment-item">
-                        <div class="comment-header">
-                            <div class="comment-user">User {{ comment.user_id }}</div>
-                            <div class="comment-date">{{ comment.id }}</div>
-                        </div>
-                        <div class="comment-text">{{ comment.comment }}</div>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="no-comments">
-                        <i class="bi bi-chat-dots"></i>
-                        <p>No comments yet. Be the first to comment!</p>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
+      </div>
     </div>
+
+    <!-- Formulario para agregar comentarios -->
+    <div class="comment-form-container text-center mb-4" data-aos="fade-up">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="input-group">
+            <input type="text" class="form-control" id="comment-input" placeholder="Write a comment...">
+            <button class="btn btn-violet" type="button" id="submit-comment">
+              <i class="bi bi-send"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comments-section" data-aos="fade-up">
+      <h3 class="text-center mb-4">Comments</h3>
+      <div id="comments-list">
+        {% if comments %}
+        {% for comment in comments %}
+        <div class="comment-item">
+          <div class="comment-header">
+            <div class="comment-user">User {{ comment.user_id }}</div>
+            <div class="comment-date">{{ comment.id }}</div>
+          </div>
+          <div class="comment-text">{{ comment.comment }}</div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="no-comments">
+          <i class="bi bi-chat-dots"></i>
+          <p>No comments yet. Be the first to comment!</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </section>
 
 <div class="divisor-2"></div>
 
 <script>
-    // Obtén el elemento del título del producto
-    const productTitle = document.getElementById('product-title');
+  // Obtén el elemento del título del producto
+  const productTitle = document.getElementById('product-title');
 
-    // Divide el título en palabras
-    const words = productTitle.innerText.split(' ');
+  // Divide el título en palabras
+  const words = productTitle.innerText.split(' ');
 
-    // Elimina el contenido actual del elemento
-    productTitle.innerHTML = '';
+  // Elimina el contenido actual del elemento
+  productTitle.innerHTML = '';
 
-    // Aplica colores a cada palabra y agrega al elemento
-    words.forEach((word, index) => {
-        let colorClass;
-        switch (index % 3) {
-            case 0:
-                colorClass = 'custom-green';
-                break;
-            case 1:
-                colorClass = 'custom-blue';
-                break;
-            case 2:
-                colorClass = 'custom-violet';
-                break;
-            default:
-                colorClass = '';
+  // Aplica colores a cada palabra y agrega al elemento
+  words.forEach((word, index) => {
+    let colorClass;
+    switch (index % 3) {
+      case 0:
+        colorClass = 'custom-green';
+        break;
+      case 1:
+        colorClass = 'custom-blue';
+        break;
+      case 2:
+        colorClass = 'custom-violet';
+        break;
+      default:
+        colorClass = '';
+    }
+    const span = document.createElement('span');
+    span.innerText = word;
+    span.classList.add(colorClass, `anim_${index + 1}`);
+    productTitle.appendChild(span);
+    // Agrega un espacio entre las palabras
+    if (index < words.length - 1) {
+      productTitle.appendChild(document.createTextNode(' '));
+    }
+  });
+
+  // Funcionalidad para likes
+  document.getElementById('likes-container').addEventListener('click', function () {
+    const productId = '{{ product.id }}';
+
+    fetch(`/web-like/${productId}/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: 'web_user'
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Actualizar el contador de likes
+          document.getElementById('likes-count').textContent = data.total_likes;
+
+          // Cambiar el icono según el estado
+          const likeIcon = document.getElementById('like-icon');
+          if (data.is_favorite) {
+            likeIcon.className = 'bi bi-heart-fill';
+            likeIcon.style.color = '#dc3545';
+          } else {
+            likeIcon.className = 'bi bi-heart';
+            likeIcon.style.color = '#6c757d';
+          }
+        } else {
+          console.error('Error:', data.error);
         }
-        const span = document.createElement('span');
-        span.innerText = word;
-        span.classList.add(colorClass, `anim_${index + 1}`);
-        productTitle.appendChild(span);
-        // Agrega un espacio entre las palabras
-        if (index < words.length - 1) {
-            productTitle.appendChild(document.createTextNode(' '));
-        }
-    });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  });
 
-    // Funcionalidad para likes
-    document.getElementById('likes-container').addEventListener('click', function() {
-        const productId = '{{ product.id }}';
-        
-        fetch(`/web-like/${productId}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user_id: 'web_user'
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Actualizar el contador de likes
-                document.getElementById('likes-count').textContent = data.total_likes;
-                
-                // Cambiar el icono según el estado
-                const likeIcon = document.getElementById('like-icon');
-                if (data.is_favorite) {
-                    likeIcon.className = 'bi bi-heart-fill';
-                    likeIcon.style.color = '#dc3545';
-                } else {
-                    likeIcon.className = 'bi bi-heart';
-                    likeIcon.style.color = '#6c757d';
-                }
-            } else {
-                console.error('Error:', data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });
+  // Funcionalidad para comentarios
+  document.getElementById('submit-comment').addEventListener('click', function () {
+    const commentInput = document.getElementById('comment-input');
+    const commentText = commentInput.value.trim();
 
-    // Funcionalidad para comentarios
-    document.getElementById('submit-comment').addEventListener('click', function() {
-        const commentInput = document.getElementById('comment-input');
-        const commentText = commentInput.value.trim();
-        
-        if (!commentText) {
-            alert('Please write a comment first!');
-            return;
+    if (!commentText) {
+      showAlert('Atención', 'Por favor, escribe un comentario primero.', 'bi-chat-dots', 'warning');
+      return;
+    }
+
+    const productId = '{{ product.id }}';
+  fetch(`/web-comment/${productId}/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      comment: commentText,
+      user_id: 'web_user'
+    })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Limpiar el input
+        commentInput.value = '';
+
+        // Actualizar el contador de comentarios
+        document.getElementById('comments-count').textContent = data.total_comments;
+
+        // Agregar el nuevo comentario a la lista
+        const commentsList = document.getElementById('comments-list');
+        const noComments = commentsList.querySelector('.no-comments');
+
+        if (noComments) {
+          noComments.remove();
         }
-        
-        const productId = {{ product.id }};
-        
-        fetch(`/web-comment/${productId}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                comment: commentText,
-                user_id: 'web_user'
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Limpiar el input
-                commentInput.value = '';
-                
-                // Actualizar el contador de comentarios
-                document.getElementById('comments-count').textContent = data.total_comments;
-                
-                // Agregar el nuevo comentario a la lista
-                const commentsList = document.getElementById('comments-list');
-                const noComments = commentsList.querySelector('.no-comments');
-                
-                if (noComments) {
-                    noComments.remove();
-                }
-                
-                const newComment = document.createElement('div');
-                newComment.className = 'comment-item';
-                newComment.innerHTML = `
+
+        const newComment = document.createElement('div');
+        newComment.className = 'comment-item';
+        newComment.innerHTML = `
                     <div class="comment-header">
                         <div class="comment-user">User ${data.comment.user_id}</div>
                         <div class="comment-date">${data.comment.id}</div>
                     </div>
                     <div class="comment-text">${data.comment.comment}</div>
                 `;
-                
-                commentsList.insertBefore(newComment, commentsList.firstChild);
-                
-                // Mostrar mensaje de éxito
-                alert('Comment added successfully!');
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error adding comment. Please try again.');
-        });
+
+        commentsList.insertBefore(newComment, commentsList.firstChild);
+
+        // Mostrar mensaje de éxito
+        showAlert('¡Éxito!', 'Comentario agregado con éxito.', 'bi-check-circle', 'success');
+      } else {
+        showAlert('Error', 'Hubo un problema: ' + data.error, 'bi-x-circle', 'danger');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showAlert('Error', 'No se pudo agregar el comentario. Por favor, intenta de nuevo.', 'bi-x-circle', 'danger');
     });
 
-    // Permitir enviar comentario con Enter
-    document.getElementById('comment-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            document.getElementById('submit-comment').click();
-        }
-    });
+  // Permitir enviar comentario con Enter
+  document.getElementById('comment-input').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      document.getElementById('submit-comment').click();
+    }
+  });
 </script>
 
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-    AOS.init();
+  AOS.init();
 </script>
 {% endblock %}

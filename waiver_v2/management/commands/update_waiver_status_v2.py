@@ -68,7 +68,7 @@ class Command(BaseCommand):
         total_inactive = WaiverQRV2.objects.filter(status='INACTIVE').count()
         
         self.stdout.write(
-            f'\n📊 Estadísticas finales:'
+            '\n📊 Estadísticas finales:'
         )
         self.stdout.write(
             f'  ✅ Activos: {total_active}'

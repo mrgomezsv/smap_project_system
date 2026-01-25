@@ -26,8 +26,11 @@ from django.http import JsonResponse
 from firebase_admin import messaging
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from .models import ChatAdministrator, ChatRoom, ChatMessage, ContactMessage, Product, ProductLike, ProductComment
+from .models import ChatAdministrator, ChatRoom, ChatMessage, ContactMessage, ProductLike, ProductComment
 import firebase_admin
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 
 
 @login_required
@@ -440,7 +443,7 @@ def firebase_auth(request):
                 try:
                     creation_timestamp = datetime.fromtimestamp(user.user_metadata.creation_timestamp / 1000)
                     last_sign_in_timestamp = datetime.fromtimestamp(user.user_metadata.last_sign_in_timestamp / 1000)
-                except:
+                except Exception:
                     creation_timestamp = datetime.now()
                     last_sign_in_timestamp = datetime.now()
 
@@ -463,7 +466,7 @@ def firebase_auth(request):
                         try:
                             creation_timestamp = datetime.fromtimestamp(user.user_metadata.creation_timestamp / 1000)
                             last_sign_in_timestamp = datetime.fromtimestamp(user.user_metadata.last_sign_in_timestamp / 1000)
-                        except:
+                        except Exception:
                             creation_timestamp = datetime.now()
                             last_sign_in_timestamp = datetime.now()
 
@@ -907,7 +910,7 @@ def start_new_chat(request):
                 return redirect('chat_dashboard')
 
             # Crear nuevo chat
-            new_chat = ChatRoom.objects.create(
+            ChatRoom.objects.create(
                 user_id=user_id,
                 is_active=True
             )
@@ -922,13 +925,6 @@ def start_new_chat(request):
     return redirect('chat_dashboard')
 
 
-# APIs del Sistema
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from django.core.serializers import serialize
-from django.http import JsonResponse
-import json
 
 @api_view(['GET'])
 def api_products(request):
@@ -943,7 +939,7 @@ def api_products(request):
             if product.img and hasattr(product.img, 'url'):
                 try:
                     image_url = request.build_absolute_uri(product.img.url)
-                except:
+                except (ValueError, AttributeError):
                     image_url = None
             
             # Manejar el usuario de forma segura
@@ -989,7 +985,7 @@ def api_products_by_category(request, category):
             if product.img and hasattr(product.img, 'url'):
                 try:
                     image_url = request.build_absolute_uri(product.img.url)
-                except:
+                except (ValueError, AttributeError):
                     image_url = None
             
             # Manejar el usuario de forma segura

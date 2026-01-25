@@ -11,7 +11,8 @@
     .product-hero {
         background: linear-gradient(135deg, var(--color-yellow-menu) 0%, var(--color-violeta) 100%);
         color: white;
-        padding: 200px 0 100px; /* Ajustado para el navbar fijo */
+        padding: 200px 0 100px;
+        /* Ajustado para el navbar fijo */
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -30,8 +31,15 @@
     }
 
     @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
+
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
     }
 
     .product-hero-content {
@@ -43,7 +51,7 @@
         font-size: 3.5rem;
         font-weight: 700;
         margin-bottom: 1.5rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .product-subtitle {
@@ -61,12 +69,12 @@
         font-size: 1rem;
         font-weight: 600;
         margin-bottom: 1rem;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .product-main-image {
         border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         transition: transform 0.3s ease;
         cursor: pointer;
     }
@@ -79,7 +87,7 @@
         background: white;
         border-radius: 20px;
         padding: 3rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         margin-top: -50px;
         position: relative;
         z-index: 3;
@@ -154,14 +162,14 @@
         position: relative;
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         transition: all 0.3s ease;
         cursor: pointer;
     }
 
     .gallery-item:hover {
         transform: translateY(-10px);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
     }
 
     .gallery-item img {
@@ -181,7 +189,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 100%);
+        background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
         opacity: 0;
         transition: opacity 0.3s ease;
         display: flex;
@@ -196,7 +204,7 @@
     .gallery-zoom-icon {
         color: white;
         font-size: 2rem;
-        background: rgba(0,0,0,0.6);
+        background: rgba(0, 0, 0, 0.6);
     }
 
     /* Styles for interaction section */
@@ -549,6 +557,8 @@
     .top-comments-stat::before {
         background: linear-gradient(135deg, #007bff, #0056b3);
     }
+
+    .stat-icon {
         padding: 1rem;
         border-radius: 50%;
     }
@@ -570,14 +580,14 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .btn-back:hover {
         background: #1a3bb8;
         color: white;
         transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     }
 
     .btn-contact {
@@ -590,14 +600,14 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .btn-contact:hover {
         background: #af4ea9;
         color: white;
         transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     }
 
     /* Animaciones */
@@ -606,6 +616,7 @@
             opacity: 0;
             transform: translateY(30px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -616,35 +627,49 @@
         animation: fadeInUp 0.6s ease-out;
     }
 
-    .animate-delay-1 { animation-delay: 0.1s; }
-    .animate-delay-2 { animation-delay: 0.2s; }
-    .animate-delay-3 { animation-delay: 0.3s; }
-    .animate-delay-4 { animation-delay: 0.4s; }
-    .animate-delay-5 { animation-delay: 0.5s; }
+    .animate-delay-1 {
+        animation-delay: 0.1s;
+    }
+
+    .animate-delay-2 {
+        animation-delay: 0.2s;
+    }
+
+    .animate-delay-3 {
+        animation-delay: 0.3s;
+    }
+
+    .animate-delay-4 {
+        animation-delay: 0.4s;
+    }
+
+    .animate-delay-5 {
+        animation-delay: 0.5s;
+    }
 
     /* Responsive Design */
     @media (max-width: 768px) {
         .product-title {
             font-size: 2.5rem;
         }
-        
+
         .product-subtitle {
             font-size: 1.1rem;
         }
-        
+
         .product-info {
             margin-top: -30px;
             padding: 2rem;
         }
-        
+
         .gallery-grid {
             grid-template-columns: 1fr;
         }
-        
+
         .product-specs {
             grid-template-columns: 1fr;
         }
-        
+
         .product-actions {
             flex-direction: column;
         }
@@ -681,7 +706,7 @@
                 <div class="product-description">
                     {{ product.description }}
                 </div>
-                
+
                 <div class="product-specs">
                     <div class="spec-item">
                         <i class="bi bi-tag spec-icon"></i>
@@ -690,7 +715,7 @@
                             <div class="spec-value">{{ product.get_category_display }}</div>
                         </div>
                     </div>
-                    
+
                     {% if product.circuits %}
                     <div class="spec-item">
                         <i class="bi bi-lightning spec-icon"></i>
@@ -700,7 +725,7 @@
                         </div>
                     </div>
                     {% endif %}
-                    
+
                     {% if product.dimensions %}
                     <div class="spec-item">
                         <i class="bi bi-rulers spec-icon"></i>
@@ -710,7 +735,7 @@
                         </div>
                     </div>
                     {% endif %}
-                    
+
                     {% if product.space %}
                     <div class="spec-item">
                         <i class="bi bi-arrows-expand spec-icon"></i>
@@ -721,7 +746,7 @@
                     </div>
                     {% endif %}
                 </div>
-                
+
                 <!-- Tarjetas de likes y comentarios superiores -->
                 <div class="top-stats-container" data-aos="fade-up">
                     <div class="top-stat-item top-likes-stat" id="top-likes-container">
@@ -739,7 +764,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="product-actions">
                     <a href="{% url 'service' %}" class="btn-back">
                         <i class="bi bi-arrow-left"></i>
@@ -762,7 +787,7 @@
         <h2 class="gallery-title animate-fade-in-up animate-delay-1">
             Galería de Imágenes
         </h2>
-        
+
         <div class="gallery-grid">
             {% if product.img1 %}
             <div class="gallery-item animate-fade-in-up animate-delay-2">
@@ -774,7 +799,7 @@
                 </a>
             </div>
             {% endif %}
-            
+
             {% if product.img2 %}
             <div class="gallery-item animate-fade-in-up animate-delay-3">
                 <a href="{{ product.img2.url }}" data-lightbox="product-gallery" data-title="{{ product.title }}">
@@ -785,7 +810,7 @@
                 </a>
             </div>
             {% endif %}
-            
+
             {% if product.img3 %}
             <div class="gallery-item animate-fade-in-up animate-delay-4">
                 <a href="{{ product.img3.url }}" data-lightbox="product-gallery" data-title="{{ product.title }}">
@@ -796,7 +821,7 @@
                 </a>
             </div>
             {% endif %}
-            
+
             {% if product.img4 %}
             <div class="gallery-item animate-fade-in-up animate-delay-5">
                 <a href="{{ product.img4.url }}" data-lightbox="product-gallery" data-title="{{ product.title }}">
@@ -807,7 +832,7 @@
                 </a>
             </div>
             {% endif %}
-            
+
             {% if product.img5 %}
             <div class="gallery-item animate-fade-in-up animate-delay-1">
                 <a href="{{ product.img5.url }}" data-lightbox="product-gallery" data-title="{{ product.title }}">
@@ -842,141 +867,143 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Formulario para agregar comentarios -->
         <div class="comment-form-container text-center mb-4" data-aos="fade-up">
             {% if user.is_authenticated %}
-                <!-- Usuario autenticado - mostrar formulario de comentario -->
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">
-                                    <i class="bi bi-person-check me-2"></i>
-                                    Comentar como {{ user.get_full_name|default:user.username }}
-                                </h5>
-                                <a href="{% url 'google_logout' %}?next={{ request.path }}" class="btn btn-outline-light btn-sm">
-                                    <i class="bi bi-box-arrow-right me-1"></i>
-                                    Cerrar Sesión
-                                </a>
+            <!-- Usuario autenticado - mostrar formulario de comentario -->
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div
+                            class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-person-check me-2"></i>
+                                Comentar como {{ user.get_full_name|default:user.username }}
+                            </h5>
+                            <a href="{% url 'google_logout' %}?next={{ request.path }}"
+                                class="btn btn-outline-light btn-sm">
+                                <i class="bi bi-box-arrow-right me-1"></i>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="comment-input"
+                                    placeholder="Escribe un comentario...">
+                                <button class="btn btn-violet" type="button" id="submit-comment">
+                                    <i class="bi bi-send"></i>
+                                </button>
                             </div>
-                            <div class="card-body">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="comment-input" placeholder="Escribe un comentario...">
-                                    <button class="btn btn-violet" type="button" id="submit-comment">
-                                        <i class="bi bi-send"></i>
-                                    </button>
-                                </div>
-                                <div class="mt-2">
-                                    <small class="text-muted">
-                                        <i class="bi bi-info-circle me-1"></i>
-                                        Estás comentando como usuario autenticado con Google
-                                    </small>
-                                </div>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Estás comentando como usuario autenticado con Google
+                                </small>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             {% else %}
-                <!-- Usuario no autenticado - mostrar botón de login -->
-                <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <div class="card border-warning">
-                            <div class="card-header bg-warning text-dark">
-                                <h5 class="mb-0">
-                                    <i class="bi bi-exclamation-triangle me-2"></i>
-                                    Login Requerido
-                                </h5>
-                            </div>
-                            <div class="card-body text-center">
-                                <p class="mb-3">Para comentar y dar like a los productos, necesitas iniciar sesión con Google.</p>
-                                <a href="{% url 'google_login' %}?next={{ request.path }}" class="btn btn-primary btn-lg">
-                                    <i class="bi bi-google me-2"></i>
-                                    Iniciar Sesión con Google
-                                </a>
-                                <div class="mt-3">
-                                    <small class="text-muted">
-                                        <i class="bi bi-shield-check me-1"></i>
-                                        Solo se solicita acceso básico a tu perfil de Google
-                                    </small>
-                                </div>
+            <!-- Usuario no autenticado - mostrar botón de login -->
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Login Requerido
+                            </h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="mb-3">Para comentar y dar like a los productos, necesitas iniciar sesión con
+                                Google.</p>
+                            <a href="{% url 'google_login' %}?next={{ request.path }}" class="btn btn-primary btn-lg">
+                                <i class="bi bi-google me-2"></i>
+                                Iniciar Sesión con Google
+                            </a>
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    <i class="bi bi-shield-check me-1"></i>
+                                    Solo se solicita acceso básico a tu perfil de Google
+                                </small>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             {% endif %}
         </div>
-        
+
         <div class="comments-section" data-aos="fade-up">
             <h3 class="text-center mb-4">Comentarios sobre {{ product.title }}</h3>
             <div id="comments-list">
                 {% if comments %}
-                    {% for comment in comments %}
-                    <div class="comment-item" data-comment-id="{{ comment.id }}">
-                        <div class="comment-header">
-                            <div class="comment-user">
-                                <i class="bi bi-person-circle me-2"></i>
-                                {{ comment.user_display_name }}
-                            </div>
-                            <div class="comment-date">
-                                <i class="bi bi-clock me-1"></i>
-                                {{ comment.formatted_date }}
-                            </div>
+                {% for comment in comments %}
+                <div class="comment-item" data-comment-id="{{ comment.id }}">
+                    <div class="comment-header">
+                        <div class="comment-user">
+                            <i class="bi bi-person-circle me-2"></i>
+                            {{ comment.user_display_name }}
                         </div>
-                        <div class="comment-text">{{ comment.comment }}</div>
-                        
-                        <!-- Botón para responder -->
-                        <div class="comment-actions mt-2">
-                            <button class="btn btn-sm btn-outline-violet reply-btn" 
-                                    onclick="toggleReplyForm({{ comment.id }})">
-                                <i class="bi bi-reply"></i> Responder
-                                {% if comment.replies_count > 0 %}
-                                    <span class="badge bg-secondary ms-1">{{ comment.replies_count }}</span>
-                                {% endif %}
+                        <div class="comment-date">
+                            <i class="bi bi-clock me-1"></i>
+                            {{ comment.formatted_date }}
+                        </div>
+                    </div>
+                    <div class="comment-text">{{ comment.comment }}</div>
+
+                    <!-- Botón para responder -->
+                    <div class="comment-actions mt-2">
+                        <button class="btn btn-sm btn-outline-violet reply-btn"
+                            onclick="toggleReplyForm({{ comment.id }})">
+                            <i class="bi bi-reply"></i> Responder
+                            {% if comment.replies_count > 0 %}
+                            <span class="badge bg-secondary ms-1">{{ comment.replies_count }}</span>
+                            {% endif %}
+                        </button>
+                    </div>
+
+                    <!-- Formulario de respuesta (oculto por defecto) -->
+                    <div class="reply-form-container mt-3" id="reply-form-{{ comment.id }}" style="display: none;">
+                        <div class="input-group">
+                            <input type="text" class="form-control reply-input" id="reply-input-{{ comment.id }}"
+                                placeholder="Escribe una respuesta...">
+                            <button class="btn btn-violet btn-sm" type="button" onclick="submitReply({{ comment.id }})">
+                                <i class="bi bi-send"></i> Enviar
                             </button>
                         </div>
-                        
-                        <!-- Formulario de respuesta (oculto por defecto) -->
-                        <div class="reply-form-container mt-3" id="reply-form-{{ comment.id }}" style="display: none;">
-                            <div class="input-group">
-                                <input type="text" class="form-control reply-input" 
-                                       id="reply-input-{{ comment.id }}" 
-                                       placeholder="Escribe una respuesta...">
-                                <button class="btn btn-violet btn-sm" type="button" 
-                                        onclick="submitReply({{ comment.id }})">
-                                    <i class="bi bi-send"></i> Enviar
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Lista de respuestas -->
-                        {% if comment.replies %}
-                        <div class="replies-container mt-3">
-                            {% for reply in comment.replies %}
-                            <div class="reply-item">
-                                <div class="reply-header">
-                                    <div class="reply-user">
-                                        <i class="bi bi-person me-2"></i>
-                                        {{ reply.user_display_name }}
-                                    </div>
-                                    <div class="reply-date">
-                                        <i class="bi bi-clock me-1"></i>
-                                        {{ reply.formatted_date }}
-                                    </div>
+                    </div>
+
+                    <!-- Lista de respuestas -->
+                    {% if comment.replies %}
+                    <div class="replies-container mt-3">
+                        {% for reply in comment.replies %}
+                        <div class="reply-item">
+                            <div class="reply-header">
+                                <div class="reply-user">
+                                    <i class="bi bi-person me-2"></i>
+                                    {{ reply.user_display_name }}
                                 </div>
-                                <div class="reply-text">{{ reply.reply_text }}</div>
+                                <div class="reply-date">
+                                    <i class="bi bi-clock me-1"></i>
+                                    {{ reply.formatted_date }}
+                                </div>
                             </div>
-                            {% endfor %}
+                            <div class="reply-text">{{ reply.reply_text }}</div>
                         </div>
-                        {% endif %}
+                        {% endfor %}
                     </div>
-                    {% endfor %}
+                    {% endif %}
+                </div>
+                {% endfor %}
                 {% else %}
-                    <div class="no-comments text-center">
-                        <i class="bi bi-chat-dots display-1 text-muted"></i>
-                        <h4 class="text-muted">No hay comentarios para este producto</h4>
-                        <p class="text-muted">¡Sé el primero en comentar!</p>
-                    </div>
+                <div class="no-comments text-center">
+                    <i class="bi bi-chat-dots display-1 text-muted"></i>
+                    <h4 class="text-muted">No hay comentarios para este producto</h4>
+                    <p class="text-muted">¡Sé el primero en comentar!</p>
+                </div>
                 {% endif %}
             </div>
         </div>
@@ -1010,14 +1037,14 @@
     });
 
     // Animaciones adicionales
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Agregar animaciones al hacer scroll
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
 
-        const observer = new IntersectionObserver(function(entries) {
+        const observer = new IntersectionObserver(function (entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
@@ -1039,13 +1066,13 @@
             // Calcular la posición de la sección
             const elementPosition = interactionSection.offsetTop;
             const offsetPosition = elementPosition - 100; // 100px de margen superior
-            
+
             // Hacer scroll suave
             window.scrollTo({
                 top: offsetPosition,
                 behavior: 'smooth'
             });
-            
+
             // Agregar efecto visual para destacar la sección
             setTimeout(() => {
                 interactionSection.style.boxShadow = '0 0 20px rgba(199, 81, 192, 0.3)';
@@ -1061,25 +1088,25 @@
         // Actualizar contadores superiores
         document.getElementById('top-likes-count').textContent = likesCount;
         document.getElementById('top-comments-count').textContent = commentsCount;
-        
+
         // Actualizar contadores inferiores
         document.getElementById('likes-count').textContent = likesCount;
         document.getElementById('comments-count').textContent = commentsCount;
     }
 
     // Event listeners para las tarjetas superiores
-    document.getElementById('top-likes-container').addEventListener('click', function() {
+    document.getElementById('top-likes-container').addEventListener('click', function () {
         scrollToInteraction();
     });
 
-    document.getElementById('top-comments-container').addEventListener('click', function() {
+    document.getElementById('top-comments-container').addEventListener('click', function () {
         scrollToInteraction();
     });
 
     // Funcionalidad para likes
-    document.getElementById('likes-container').addEventListener('click', function() {
+    document.getElementById('likes-container').addEventListener('click', function () {
         const productId = '{{ product.id }}';
-        
+
         fetch(`/web-like/${productId}/`, {
             method: 'POST',
             headers: {
@@ -1089,30 +1116,30 @@
                 user_id: 'web_user'
             })
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Actualizar contadores en ambas ubicaciones
-                updateCounters(data.total_likes, {{ comments_count|default:0 }});
-                
-                // Cambiar el icono según el estado (ambas ubicaciones)
-                const likeIcon = document.getElementById('like-icon');
-                const topLikeIcon = document.getElementById('top-like-icon');
-                
-                if (data.is_favorite) {
-                    likeIcon.className = 'bi bi-heart-fill';
-                    likeIcon.style.color = '#dc3545';
-                    topLikeIcon.className = 'bi bi-heart-fill';
-                    topLikeIcon.style.color = '#dc3545';
-                } else {
-                    likeIcon.className = 'bi bi-heart';
-                    likeIcon.style.color = '#6c757d';
-                    topLikeIcon.className = 'bi bi-heart';
-                    topLikeIcon.style.color = '#6c757d';
-                }
-            } else {
-                console.error('Error:', data.error);
-            }
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Actualizar contadores en ambas ubicaciones
+                    updateCounters(data.total_likes, {{ comments_count|default:0 }});
+
+        // Cambiar el icono según el estado (ambas ubicaciones)
+        const likeIcon = document.getElementById('like-icon');
+        const topLikeIcon = document.getElementById('top-like-icon');
+
+        if (data.is_favorite) {
+            likeIcon.className = 'bi bi-heart-fill';
+            likeIcon.style.color = '#dc3545';
+            topLikeIcon.className = 'bi bi-heart-fill';
+            topLikeIcon.style.color = '#dc3545';
+        } else {
+            likeIcon.className = 'bi bi-heart';
+            likeIcon.style.color = '#6c757d';
+            topLikeIcon.className = 'bi bi-heart';
+            topLikeIcon.style.color = '#6c757d';
+        }
+    } else {
+        console.error('Error:', data.error);
+    }
         })
         .catch(error => {
             console.error('Error:', error);
@@ -1120,76 +1147,78 @@
     });
 
     // Funcionalidad para comentarios
-    document.getElementById('submit-comment').addEventListener('click', function() {
+    document.getElementById('submit-comment').addEventListener('click', function () {
         const commentInput = document.getElementById('comment-input');
         const commentText = commentInput.value.trim();
-        
+
         if (!commentText) {
-            alert('¡Por favor escribe un comentario primero!');
+            showAlert('Atención', 'Por favor, escribe un comentario primero.', 'bi-chat-dots', 'warning');
             return;
         }
-        
+
         const productId = {{ product.id }};
-        
-        fetch(`/web-comment/${productId}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                comment: commentText,
-                user_id: 'web_user'
-            })
+
+    fetch(`/web-comment/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            comment: commentText,
+            user_id: 'web_user'
         })
+    })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 // Limpiar el input
                 commentInput.value = '';
-                
+
                 // Actualizar contadores en ambas ubicaciones
                 updateCounters({{ likes_count|default:0 }}, data.total_comments);
-                
-                // Agregar el nuevo comentario a la lista
-                const commentsList = document.getElementById('comments-list');
-                const noComments = commentsList.querySelector('.no-comments');
-                
-                if (noComments) {
-                    noComments.remove();
-                }
-                
-                const newComment = document.createElement('div');
-                newComment.className = 'comment-item';
-                newComment.innerHTML = `
+
+    // Agregar el nuevo comentario a la lista
+    const commentsList = document.getElementById('comments-list');
+    const noComments = commentsList.querySelector('.no-comments');
+
+    if (noComments) {
+        noComments.remove();
+    }
+
+    const newComment = document.createElement('div');
+    newComment.className = 'comment-item';
+    newComment.innerHTML = `
                     <div class="comment-header">
                         <div class="comment-user">${data.comment.user_display_name}</div>
                         <div class="comment-date">${data.comment.created_at}</div>
                     </div>
                     <div class="comment-text">${data.comment.comment}</div>
                 `;
-                
-                commentsList.insertBefore(newComment, commentsList.firstChild);
-                
-                // Mostrar mensaje de éxito
-                alert('¡Comentario agregado exitosamente!');
+
+    commentsList.insertBefore(newComment, commentsList.firstChild);
+
+    // Mostrar mensaje de éxito
+    showAlert('¡Éxito!', 'Comentario agregado exitosamente.', 'bi-check-circle', 'success');
             } else {
-                if (data.requires_auth) {
-                    // Usuario no autenticado
-                    alert('Necesitas iniciar sesión con Google para comentar. Redirigiendo al login...');
-                    window.location.href = '/auth/google/login/?next=' + window.location.pathname;
-                } else {
-                    alert('Error: ' + data.error);
-                }
-            }
+        if (data.requires_auth) {
+            // Usuario no autenticado
+            showAlert('Sesión Requerida', 'Necesitas iniciar sesión con Google para comentar. Redirigiendo al login...', 'bi-person-lock', 'info');
+            setTimeout(() => {
+                window.location.href = '/auth/google/login/?next=' + window.location.pathname;
+            }, 2000);
+        } else {
+            showAlert('Error', 'Hubo un problema: ' + data.error, 'bi-x-circle', 'danger');
+        }
+    }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error al agregar comentario. Por favor intenta de nuevo.');
-        });
+        .catch (error => {
+        console.error('Error:', error);
+        showAlert('Error', 'Error al agregar comentario. Por favor intenta de nuevo.', 'bi-x-circle', 'danger');
+    });
     });
 
     // Permitir enviar comentario con Enter
-    document.getElementById('comment-input').addEventListener('keypress', function(e) {
+    document.getElementById('comment-input').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             document.getElementById('submit-comment').click();
         }
@@ -1210,12 +1239,12 @@
     function submitReply(commentId) {
         const replyInput = document.getElementById(`reply-input-${commentId}`);
         const replyText = replyInput.value.trim();
-        
+
         if (!replyText) {
-            alert('¡Por favor escribe una respuesta primero!');
+            showAlert('Atención', '¡Por favor escribe una respuesta primero!', 'bi-reply', 'warning');
             return;
         }
-        
+
         fetch(`/web-reply/${commentId}/`, {
             method: 'POST',
             headers: {
@@ -1226,42 +1255,42 @@
                 user_id: 'web_user'
             })
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Limpiar el input
-                replyInput.value = '';
-                
-                // Ocultar el formulario
-                document.getElementById(`reply-form-${commentId}`).style.display = 'none';
-                
-                // Actualizar el contador de respuestas
-                const replyBtn = document.querySelector(`[data-comment-id="${commentId}"] .reply-btn .badge`);
-                if (replyBtn) {
-                    replyBtn.textContent = data.total_replies;
-                } else {
-                    // Si no hay badge, crear uno
-                    const replyBtnElement = document.querySelector(`[data-comment-id="${commentId}"] .reply-btn`);
-                    const badge = document.createElement('span');
-                    badge.className = 'badge bg-secondary ms-1';
-                    badge.textContent = data.total_replies;
-                    replyBtnElement.appendChild(badge);
-                }
-                
-                // Agregar la nueva respuesta a la lista
-                const repliesContainer = document.querySelector(`[data-comment-id="${commentId}"] .replies-container`);
-                if (!repliesContainer) {
-                    // Si no existe el contenedor de respuestas, crearlo
-                    const commentItem = document.querySelector(`[data-comment-id="${commentId}"]`);
-                    const newRepliesContainer = document.createElement('div');
-                    newRepliesContainer.className = 'replies-container mt-3';
-                    commentItem.appendChild(newRepliesContainer);
-                }
-                
-                const finalRepliesContainer = document.querySelector(`[data-comment-id="${commentId}"] .replies-container`);
-                const newReply = document.createElement('div');
-                newReply.className = 'reply-item';
-                newReply.innerHTML = `
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Limpiar el input
+                    replyInput.value = '';
+
+                    // Ocultar el formulario
+                    document.getElementById(`reply-form-${commentId}`).style.display = 'none';
+
+                    // Actualizar el contador de respuestas
+                    const replyBtn = document.querySelector(`[data-comment-id="${commentId}"] .reply-btn .badge`);
+                    if (replyBtn) {
+                        replyBtn.textContent = data.total_replies;
+                    } else {
+                        // Si no hay badge, crear uno
+                        const replyBtnElement = document.querySelector(`[data-comment-id="${commentId}"] .reply-btn`);
+                        const badge = document.createElement('span');
+                        badge.className = 'badge bg-secondary ms-1';
+                        badge.textContent = data.total_replies;
+                        replyBtnElement.appendChild(badge);
+                    }
+
+                    // Agregar la nueva respuesta a la lista
+                    const repliesContainer = document.querySelector(`[data-comment-id="${commentId}"] .replies-container`);
+                    if (!repliesContainer) {
+                        // Si no existe el contenedor de respuestas, crearlo
+                        const commentItem = document.querySelector(`[data-comment-id="${commentId}"]`);
+                        const newRepliesContainer = document.createElement('div');
+                        newRepliesContainer.className = 'replies-container mt-3';
+                        commentItem.appendChild(newRepliesContainer);
+                    }
+
+                    const finalRepliesContainer = document.querySelector(`[data-comment-id="${commentId}"] .replies-container`);
+                    const newReply = document.createElement('div');
+                    newReply.className = 'reply-item';
+                    newReply.innerHTML = `
                     <div class="reply-header">
                         <div class="reply-user">
                             <i class="bi bi-person me-2"></i>
@@ -1274,23 +1303,23 @@
                     </div>
                     <div class="reply-text">${data.reply.reply_text}</div>
                 `;
-                
-                finalRepliesContainer.appendChild(newReply);
-                
-                // Mostrar mensaje de éxito
-                alert('¡Respuesta agregada exitosamente!');
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error al agregar respuesta. Por favor intenta de nuevo.');
-        });
+
+                    finalRepliesContainer.appendChild(newReply);
+
+                    // Mostrar mensaje de éxito
+                    showAlert('¡Éxito!', '¡Respuesta agregada exitosamente!', 'bi-check-circle', 'success');
+                } else {
+                    showAlert('Error', 'Hubo un problema: ' + data.error, 'bi-x-circle', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Error', 'Error al agregar respuesta. Por favor intenta de nuevo.', 'bi-x-octagon', 'danger');
+            });
     }
 
     // Permitir enviar respuestas con Enter
-    document.addEventListener('keypress', function(e) {
+    document.addEventListener('keypress', function (e) {
         if (e.key === 'Enter' && e.target.classList.contains('reply-input')) {
             const commentId = e.target.id.replace('reply-input-', '');
             submitReply(commentId);
@@ -1303,94 +1332,94 @@
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 
 <script>
-// Configuración de Firebase (debe coincidir con tu app Flutter)
-const firebaseConfig = {
-    apiKey: "AIzaSyA0f6Kx-Ixq77JzDAKMbxwvZFBXYaoRK4M",
-    authDomain: "smap-kf.firebaseapp.com",
-    databaseURL: "https://smap-kf-default-rtdb.firebaseio.com",
-    projectId: "smap-kf",
-    storageBucket: "smap-kf.firebasestorage.app",
-    messagingSenderId: "270487164933",
-    appId: "1:270487164933:web:6575488d5a733fe878a46c",
-    measurementId: "G-VVXW4TWCP6"
-};
+    // Configuración de Firebase (debe coincidir con tu app Flutter)
+    const firebaseConfig = {
+        apiKey: "AIzaSyA0f6Kx-Ixq77JzDAKMbxwvZFBXYaoRK4M",
+        authDomain: "smap-kf.firebaseapp.com",
+        databaseURL: "https://smap-kf-default-rtdb.firebaseio.com",
+        projectId: "smap-kf",
+        storageBucket: "smap-kf.firebasestorage.app",
+        messagingSenderId: "270487164933",
+        appId: "1:270487164933:web:6575488d5a733fe878a46c",
+        measurementId: "G-VVXW4TWCP6"
+    };
 
-// Inicializar Firebase
-firebase.initializeApp(firebaseConfig);
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
 
-// Variables globales
-let currentUser = null;
-let firebaseToken = null;
+    // Variables globales
+    let currentUser = null;
+    let firebaseToken = null;
 
-// Función para verificar estado de autenticación
-function checkAuthState() {
-    firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-            // Usuario autenticado
-            currentUser = user;
-            showCommentForm();
-            updateUserDisplay();
-            
-            // Obtener token
-            user.getIdToken().then(function(token) {
-                firebaseToken = token;
-            });
-        } else {
-            // Usuario no autenticado
-            currentUser = null;
-            firebaseToken = null;
-            showAuthRequired();
-        }
-    });
-}
+    // Función para verificar estado de autenticación
+    function checkAuthState() {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                // Usuario autenticado
+                currentUser = user;
+                showCommentForm();
+                updateUserDisplay();
 
-// Función para mostrar formulario de comentario
-function showCommentForm() {
-    document.getElementById('auth-required-section').style.display = 'none';
-    document.getElementById('comment-form-section').style.display = 'block';
-}
-
-// Función para mostrar sección de login requerido
-function showAuthRequired() {
-    document.getElementById('auth-required-section').style.display = 'block';
-    document.getElementById('comment-form-section').style.display = 'none';
-}
-
-// Función para actualizar nombre de usuario
-function updateUserDisplay() {
-    if (currentUser) {
-        const displayName = currentUser.displayName || currentUser.email || 'Usuario';
-        document.getElementById('user-display-name').textContent = displayName;
+                // Obtener token
+                user.getIdToken().then(function (token) {
+                    firebaseToken = token;
+                });
+            } else {
+                // Usuario no autenticado
+                currentUser = null;
+                firebaseToken = null;
+                showAuthRequired();
+            }
+        });
     }
-}
 
-// Función para logout
-function firebaseLogout() {
-    firebase.auth().signOut().then(function() {
-        // Limpiar localStorage
-        localStorage.removeItem('firebase_token');
-        
-        // Redirigir a la página actual
-        window.location.reload();
-    }).catch(function(error) {
-        console.error('Error al cerrar sesión:', error);
-    });
-}
+    // Función para mostrar formulario de comentario
+    function showCommentForm() {
+        document.getElementById('auth-required-section').style.display = 'none';
+        document.getElementById('comment-form-section').style.display = 'block';
+    }
 
-// Función para obtener headers de autenticación
-function getAuthHeaders() {
-    if (firebaseToken) {
+    // Función para mostrar sección de login requerido
+    function showAuthRequired() {
+        document.getElementById('auth-required-section').style.display = 'block';
+        document.getElementById('comment-form-section').style.display = 'none';
+    }
+
+    // Función para actualizar nombre de usuario
+    function updateUserDisplay() {
+        if (currentUser) {
+            const displayName = currentUser.displayName || currentUser.email || 'Usuario';
+            document.getElementById('user-display-name').textContent = displayName;
+        }
+    }
+
+    // Función para logout
+    function firebaseLogout() {
+        firebase.auth().signOut().then(function () {
+            // Limpiar localStorage
+            localStorage.removeItem('firebase_token');
+
+            // Redirigir a la página actual
+            window.location.reload();
+        }).catch(function (error) {
+            console.error('Error al cerrar sesión:', error);
+        });
+    }
+
+    // Función para obtener headers de autenticación
+    function getAuthHeaders() {
+        if (firebaseToken) {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${firebaseToken}`
+            };
+        }
         return {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${firebaseToken}`
+            'Content-Type': 'application/json'
         };
     }
-    return {
-        'Content-Type': 'application/json'
-    };
-}
 
-// Inicializar verificación de autenticación
-checkAuthState();
+    // Inicializar verificación de autenticación
+    checkAuthState();
 </script>
-{% endblock %} 
+{% endblock %}

@@ -9,7 +9,8 @@
         <div class="col-lg-4 order-lg-2">
             <div class="card border-0 shadow-sm p-4" style="border-radius: 1.5rem;">
                 <h2 class="fw-bold mb-4">{{ event.title }}</h2>
-                <p><strong>Fecha:</strong> {{ event.start_datetime|date:'l, d F Y' }} - {{ event.start_datetime|date:'H:i' }}</p>
+                <p><strong>Fecha:</strong> {{ event.start_datetime|date:'l, d F Y' }} - {{
+                    event.start_datetime|date:'H:i' }}</p>
                 <p><strong>Ubicación:</strong> {{ event.location }}</p>
                 <p><strong>Precio:</strong> ${{ event.ticket_price }}</p>
                 <hr>
@@ -37,7 +38,7 @@
 <script>
     function copyEventLink() {
         navigator.clipboard.writeText(window.location.href);
-        alert("¡Enlace copiado!");
+        showAlert('¡Copiado!', 'El enlace del evento ha sido copiado al portapapeles.', 'bi-link-45deg', 'success');
     }
 </script>
 {% endblock %}

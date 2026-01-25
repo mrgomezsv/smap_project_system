@@ -1,6 +1,5 @@
 # Configuración de Gunicorn para producción
 import multiprocessing
-import os
 
 # Configuración básica
 bind = "127.0.0.1:8000"

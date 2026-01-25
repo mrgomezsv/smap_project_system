@@ -1,10 +1,9 @@
 # kidsfun_web/views.py
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, Q
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django.conf import settings
 import json
 import io
 import base64
@@ -78,7 +77,7 @@ def service(request):
         traceback.print_exc()
         # Retornar una página de error más amigable
         context = {
-            'error_message': f'Lo sentimos, hubo un problema al cargar los productos. Por favor, intenta de nuevo más tarde.',
+            'error_message': 'Lo sentimos, hubo un problema al cargar los productos. Por favor, intenta de nuevo más tarde.',
             'products_or_category': {}
         }
         return render(request, 'kidsfun_web/service/service.html', context)

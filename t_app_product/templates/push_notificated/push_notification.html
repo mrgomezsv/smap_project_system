@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <head>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/push_notification.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #F4F1FF !important; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+<nav class="navbar navbar-expand-lg navbar-light bg-light"
+    style="background-color: #F4F1FF !important; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
     <div class="container d-flex align-items-center">
         <h2 class="h2">Historial de Notificaciones</h2>
         <div class="d-flex ml-auto">
@@ -52,20 +54,20 @@
 <div class="container mt-5">
     <table class="table">
         <thead>
-        <tr>
-            <th><input type="checkbox" id="select-all"></th>
-            <th>ID</th>
-            <th>Título de la Notificación</th>
-            <th>Texto de la Notificación</th>
-            <th>Imagen de la Notificación</th>
-            <th>Nombre de la Notificación</th>
-            <th>Fecha de Envío</th>
-            <th>Usuario</th>
-            <th class="trash-column"></th>
-        </tr>
+            <tr>
+                <th><input type="checkbox" id="select-all"></th>
+                <th>ID</th>
+                <th>Título de la Notificación</th>
+                <th>Texto de la Notificación</th>
+                <th>Imagen de la Notificación</th>
+                <th>Nombre de la Notificación</th>
+                <th>Fecha de Envío</th>
+                <th>Usuario</th>
+                <th class="trash-column"></th>
+            </tr>
         </thead>
         <tbody>
-        <!-- Aquí se insertarán las filas con el historial de notificaciones -->
+            <!-- Aquí se insertarán las filas con el historial de notificaciones -->
         </tbody>
     </table>
 </div>
@@ -89,7 +91,7 @@
     });
 
     // Enviar el formulario de notificación push
-    document.getElementById('pushNotificationForm').addEventListener('submit', function(event) {
+    document.getElementById('pushNotificationForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Evita el envío estándar del formulario
 
         var formData = new FormData(this);
@@ -99,16 +101,16 @@
             method: 'POST',
             body: formData,
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert("Notificación enviada con éxito");
-                document.getElementById('newPushNotification').style.display = 'none';
-            } else {
-                alert("Error al enviar la notificación: " + data.error);
-            }
-        })
-        .catch(error => console.log('Error:', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('¡Enviada!', 'La notificación push se ha enviado con éxito.', 'bi-send-check', 'success');
+                    document.getElementById('newPushNotification').style.display = 'none';
+                } else {
+                    showAlert('Error', 'Hubo un problema al enviar la notificación: ' + data.error, 'bi-x-octagon', 'danger');
+                }
+            })
+            .catch(error => console.log('Error:', error));
     });
 </script>
 

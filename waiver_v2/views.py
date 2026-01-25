@@ -8,7 +8,6 @@ from .serializers import WaiverQRV2Serializer, WaiverCreateV2Serializer
 from t_app_product.utils import send_waiver_confirmation_email
 import tempfile
 import os
-import io
 
 @api_view(['POST'])
 def api_waiver_v2(request):

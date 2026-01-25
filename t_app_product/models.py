@@ -115,7 +115,7 @@ class Product(models.Model):
                     try:
                         if not os.listdir(old_dir):
                             os.rmdir(old_dir)
-                    except:
+                    except OSError:
                         pass
         
         super().save(*args, **kwargs)
@@ -288,7 +288,6 @@ class ContactMessage(models.Model):
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name} - {self.email}"
-        ordering = ['timestamp']
 
 class CommentReply(models.Model):
     comment = models.ForeignKey(ProductComment, on_delete=models.CASCADE, related_name='replies')
