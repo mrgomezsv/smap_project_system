@@ -332,6 +332,26 @@ body {
     border-color: var(--secondary-color);
 }
 
+.thumbnail-item.is-pending {
+    border-color: #10b981;
+    position: relative;
+    border-style: dashed;
+}
+
+.thumbnail-item.is-pending::after {
+    content: 'NUEVA';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #10b981;
+    color: white;
+    font-size: 0.6rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+
 /* Form Styling Refined */
 .form-label-premium {
     font-weight: 600;

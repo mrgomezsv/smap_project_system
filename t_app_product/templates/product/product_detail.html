@@ -43,14 +43,18 @@
                             </div>
 
                             <!-- Thumbnail Selection -->
-                            <div class="thumbnail-grid mb-4">
-                                <div class="thumbnail-item active"
+                            <div id="thumbnailGrid" class="thumbnail-grid mb-4">
+                                <!-- Original Main Image -->
+                                <div class="thumbnail-item active" id="thumb-main"
                                     onclick="updateMainImage('{{ product.img.url }}', this)">
                                     <img src="{{ product.img.url }}" alt="Principal">
                                 </div>
+
+                                <!-- Existing Additional Images -->
                                 {% for image in additional_images %}
                                 {% if image %}
-                                <div class="thumbnail-item" onclick="updateMainImage('{{ image.url }}', this)">
+                                <div class="thumbnail-item" id="thumb-img{{ forloop.counter }}"
+                                    onclick="updateMainImage('{{ image.url }}', this)">
                                     <img src="{{ image.url }}" alt="Adicional">
                                 </div>
                                 {% endif %}
@@ -61,19 +65,23 @@
 
                             <!-- Image Uploads -->
                             <h6 class="form-label-premium mb-3">Actualizar Imagen Principal</h6>
-                            <input type="file" class="form-control form-control-premium mb-4" name="img"
-                                accept="image/*">
+                            <input type="file" class="form-control form-control-premium mb-4" name="img" id="input-main"
+                                accept="image/*" onchange="previewUpload(this, 'thumb-main')">
 
                             <h6 class="form-label-premium mb-3">Imágenes Adicionales</h6>
                             <div class="row g-2">
                                 <div class="col-6"><input type="file" class="form-control form-control-sm" name="img1"
-                                        title="Imagen 1"></div>
+                                        id="input-img1" accept="image/*" onchange="previewUpload(this, 'thumb-img1')">
+                                </div>
                                 <div class="col-6"><input type="file" class="form-control form-control-sm" name="img2"
-                                        title="Imagen 2"></div>
+                                        id="input-img2" accept="image/*" onchange="previewUpload(this, 'thumb-img2')">
+                                </div>
                                 <div class="col-6"><input type="file" class="form-control form-control-sm" name="img3"
-                                        title="Imagen 3"></div>
+                                        id="input-img3" accept="image/*" onchange="previewUpload(this, 'thumb-img3')">
+                                </div>
                                 <div class="col-6"><input type="file" class="form-control form-control-sm" name="img4"
-                                        title="Imagen 4"></div>
+                                        id="input-img4" accept="image/*" onchange="previewUpload(this, 'thumb-img4')">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -106,7 +114,7 @@
                                     <label class="form-label-premium">Categoría</label>
                                     <select name="category" class="form-control-premium" required>
                                         {% for val, label in form.fields.category.choices %}
-                                        <option value="{{ val }}" {% if product.category == val %}selected{% endif %}>
+                                        <option value="{{ val }}" {% if product.category==val %}selected{% endif %}>
                                             {{ label }}
                                         </option>
                                         {% endfor %}
@@ -138,7 +146,8 @@
                                         <label class="form-check-label fw-bold text-dark m-0"
                                             for="flexSwitchCheckChecked">Estado de Publicación</label>
                                         <input class="form-check-input ms-0 mt-0" type="checkbox" name="publicated"
-                                            role="switch" id="flexSwitchCheckChecked" {% if product.publicated %}checked{% endif %}>
+                                            role="switch" id="flexSwitchCheckChecked" {% if product.publicated
+                                            %}checked{% endif %}>
                                     </div>
                                 </div>
                             </div>
@@ -244,7 +253,40 @@
     function updateMainImage(url, thumb) {
         document.getElementById('mainImageDisplay').src = url;
         document.querySelectorAll('.thumbnail-item').forEach(item => item.classList.remove('active'));
-        thumb.classList.add('active');
+        if (thumb) thumb.classList.add('active');
+    }
+
+    function previewUpload(input, targetThumbId) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imageUrl = e.target.result;
+
+                // Actualizar el visor principal
+                updateMainImage(imageUrl, null);
+
+                // Buscar o crear la miniatura correspondiente
+                let thumb = document.getElementById(targetThumbId);
+                if (!thumb) {
+                    thumb = document.createElement('div');
+                    thumb.id = targetThumbId;
+                    thumb.className = 'thumbnail-item is-pending';
+                    thumb.onclick = function () { updateMainImage(imageUrl, this); };
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    thumb.appendChild(img);
+                    document.getElementById('thumbnailGrid').appendChild(thumb);
+                } else {
+                    thumb.classList.add('is-pending');
+                    thumb.querySelector('img').src = imageUrl;
+                }
+
+                // Resaltar esta miniatura como activa
+                document.querySelectorAll('.thumbnail-item').forEach(item => item.classList.remove('active'));
+                thumb.classList.add('active');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 </script>
 {% endblock %}
