@@ -6,7 +6,8 @@
 <style>
     /* Ajuste para compensar la navbar fija */
     .section-products {
-        padding-top: 180px; /* 150px de altura de navbar + 30px extra */
+        padding-top: 180px;
+        /* 150px de altura de navbar + 30px extra */
         min-height: 100vh;
     }
 
@@ -38,7 +39,7 @@
 
     .card:hover {
         transform: translateY(-10px) scale(1.02);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
     }
 
     .card-stats {
@@ -108,7 +109,8 @@
     /* Responsive para móviles */
     @media (max-width: 768px) {
         .section-products {
-            padding-top: 160px; /* Menos padding en móviles */
+            padding-top: 160px;
+            /* Menos padding en móviles */
         }
     }
 
@@ -118,7 +120,7 @@
         border-radius: 20px;
         padding: 2rem;
         margin-bottom: 2rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
     .search-container .input-group {
@@ -169,7 +171,7 @@
         border-radius: 15px;
         padding: 1.5rem;
         margin-bottom: 2rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         text-align: center;
     }
 
@@ -211,11 +213,11 @@
         border-radius: 50%;
     }
 
-    input:checked + .slider {
+    input:checked+.slider {
         background-color: var(--color-violeta);
     }
 
-    input:checked + .slider:before {
+    input:checked+.slider:before {
         transform: translateX(26px);
     }
 
@@ -241,6 +243,84 @@
         margin: 0 10px 20px 10px;
         max-width: 300px;
     }
+
+    /* Empty State Premium Styling */
+    .empty-state-search {
+        padding: 4rem 2rem;
+        text-align: center;
+        background: white;
+        border-radius: 30px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        margin: 2rem auto;
+        max-width: 600px;
+        border: 1px dashed #dee2e6;
+        animation: fadeInScale 0.5s ease-out;
+    }
+
+    .empty-state-icon {
+        font-size: 5rem;
+        background: linear-gradient(135deg, #6e45e2 0%, #88d3ce 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+        animation: floatIcon 3s ease-in-out infinite;
+    }
+
+    .empty-state-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #344767;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-text {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-clear-search {
+        background: linear-gradient(135deg, #6e45e2 0%, #88d3ce 100%);
+        border: none;
+        color: white;
+        padding: 0.8rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(110, 69, 226, 0.3);
+    }
+
+    .btn-clear-search:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(110, 69, 226, 0.4);
+        color: white;
+    }
+
+    @keyframes fadeInScale {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes floatIcon {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-15px);
+        }
+    }
 </style>
 
 <section class="section-products padding-section">
@@ -251,150 +331,157 @@
             <div class="col-12 col-md-8 mx-auto">
                 <div class="input-group input-group-lg shadow-sm">
                     <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                    <input id="productSearchInput" type="text" class="form-control" placeholder="Buscar por nombre del producto...">
+                    <input id="productSearchInput" type="text" class="form-control"
+                        placeholder="Buscar por nombre del producto...">
                 </div>
-                <small class="text-muted d-block mt-2">Escribe para filtrar en tiempo real por nombre del producto.</small>
+                <small class="text-muted d-block mt-2">Escribe para filtrar en tiempo real por nombre del
+                    producto.</small>
             </div>
         </div>
 
         <!-- Toggle de categorías eliminado -->
 
         {% if error_message %}
-            <div class="error-message">
-                <i class="bi bi-exclamation-triangle me-2"></i>
-                {{ error_message }}
-            </div>
+        <div class="error-message">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ error_message }}
+        </div>
         {% endif %}
 
         {% if products_or_category %}
-            {% for category, products_in_category in products_or_category.items %}
-                {% if products_in_category %}
-                    {% with cat_name=products_in_category.0.get_category_display|default:category %}
-                    <div class="row category-block" data-category-name="{{ cat_name|lower }}" data-aos="fade-up">
-                        <div class="col-12">
-                            <h3 class="pb-5 text-violet t-sm-center category-title">{{ cat_name }}</h3>
-                        </div>
-                    </div>
-                    <div class="row row-cols-1 row-cols-md-3 g-4 text-center category-grid">
-                        {% for product in products_in_category %}
-                        <div class="col mb-4 product-card" data-title="{{ product.title|lower }}" data-category="{{ cat_name|lower }}" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:1 }}">
-                            <div class="card h-100">
-                                <div class="image-container">
-                                    {% if product.img %}
-                                        <img class="card-img-top" src="{{ product.img.url }}" alt="Product Image">
-                                    {% else %}
-                                        <img class="card-img-top" src="{% static 'img/404_image.png' %}" alt="Default Product Image">
-                                    {% endif %}
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title card-title-custom">{{ product.title }}</h5>
-                                    <p class="card-text" style="color: #797777">{{ product.dimensions|default:'-' }}</p>
-                                </div>
-                                <div class="card-footer bg-transparent">
-                                    <a href="{% url 'service_product' product.id %}" class="btn btn-primary mt-auto" style="max-width: 200px;">Get it now</a>
-                                </div>
-                                <div class="card-stats">
-                                    <div class="stat-item likes-count">
-                                        <i class="bi bi-heart-fill"></i>
-                                        <span>{{ product.likes_count|default:0 }}</span>
-                                        <span class="stat-label">like</span>
-                                    </div>
-                                    <div class="stat-item comments-count">
-                                        <i class="bi bi-chat-fill"></i>
-                                        <span>{{ product.comments_count|default:0 }}</span>
-                                        <span class="stat-label">comments</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endwith %}
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            <div class="no-products">
-                <i class="bi bi-box-seam" style="font-size: 3rem; color: #6c757d; margin-bottom: 1rem;"></i>
-                            <h3 class="text-muted">No products available</h3>
-            <p class="text-muted">We don't have any products published at the moment. Come back soon!</p>
+        {% for category, products_in_category in products_or_category.items %}
+        {% if products_in_category %}
+        {% with cat_name=products_in_category.0.get_category_display|default:category %}
+        <div class="row category-block" data-category-name="{{ cat_name|lower }}" data-aos="fade-up">
+            <div class="col-12">
+                <h3 class="pb-5 text-violet t-sm-center category-title">{{ cat_name }}</h3>
             </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4 text-center category-grid">
+            {% for product in products_in_category %}
+            <div class="col mb-4 product-card" data-title="{{ product.title|lower }}"
+                data-category="{{ cat_name|lower }}" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:1 }}">
+                <div class="card h-100">
+                    <div class="image-container">
+                        {% if product.img %}
+                        <img class="card-img-top" src="{{ product.img.url }}" alt="Product Image">
+                        {% else %}
+                        <img class="card-img-top" src="{% static 'img/404_image.png' %}" alt="Default Product Image">
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title card-title-custom">{{ product.title }}</h5>
+                        <p class="card-text" style="color: #797777">{{ product.dimensions|default:'-' }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'service_product' product.id %}" class="btn btn-primary mt-auto"
+                            style="max-width: 200px;">Get it now</a>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat-item likes-count">
+                            <i class="bi bi-heart-fill"></i>
+                            <span>{{ product.likes_count|default:0 }}</span>
+                            <span class="stat-label">like</span>
+                        </div>
+                        <div class="stat-item comments-count">
+                            <i class="bi bi-chat-fill"></i>
+                            <span>{{ product.comments_count|default:0 }}</span>
+                            <span class="stat-label">comments</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endwith %}
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        <div class="no-products">
+            <i class="bi bi-box-seam" style="font-size: 3rem; color: #6c757d; margin-bottom: 1rem;"></i>
+            <h3 class="text-muted">No products available</h3>
+            <p class="text-muted">We don't have any products published at the moment. Come back soon!</p>
+        </div>
         {% endif %}
     </div>
 </section>
 
 <script>
-// Filtrado en tiempo real por nombre del producto
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('productSearchInput');
-    const container = document.querySelector('.container');
-    
-    if (!searchInput) return;
+    // Filtrado en tiempo real por nombre del producto
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('productSearchInput');
+        const container = document.querySelector('.container');
 
-    function filterProducts(searchTerm) {
-        const productCards = document.querySelectorAll('.product-card');
-        
-        // Si no hay término de búsqueda, mostrar todo
-        if (!searchTerm.trim()) {
-            productCards.forEach(card => card.style.display = '');
-            return;
+        if (!searchInput) return;
+
+        function filterProducts(searchTerm) {
+            const productCards = document.querySelectorAll('.product-card');
+
+            // Si no hay término de búsqueda, mostrar todo
+            if (!searchTerm.trim()) {
+                productCards.forEach(card => card.style.display = '');
+                return;
+            }
+
+            const term = searchTerm.toLowerCase().trim();
+            let hasVisibleProducts = false;
+
+            // Filtrar cada tarjeta de producto
+            productCards.forEach(card => {
+                const productTitle = card.querySelector('.card-title').textContent.toLowerCase();
+                const isVisible = productTitle.includes(term);
+                card.style.display = isVisible ? '' : 'none';
+
+                if (isVisible) {
+                    hasVisibleProducts = true;
+                }
+            });
+
+            // Mostrar mensaje si no hay resultados
+            const noResultsMessage = document.getElementById('noResultsMessage');
+            if (!hasVisibleProducts) {
+                if (!noResultsMessage) {
+                    const message = document.createElement('div');
+                    message.id = 'noResultsMessage';
+                    message.className = 'empty-state-search';
+                    message.innerHTML = `
+                    <div class="empty-state-icon">
+                        <i class="bi bi-search-heart"></i>
+                    </div>
+                    <h3 class="empty-state-title">No products found</h3>
+                    <p class="empty-state-text">Sorry! We couldn't find anything matching "<strong>${searchTerm}</strong>". Try again with different keywords.</p>
+                    <button class="btn btn-clear-search" onclick="location.reload()">Clear search</button>
+                `;
+                    document.querySelector('.container').appendChild(message);
+                }
+            } else {
+                if (noResultsMessage) {
+                    noResultsMessage.remove();
+                }
+            }
         }
 
-        const term = searchTerm.toLowerCase().trim();
-        let hasVisibleProducts = false;
+        // Event listener para la búsqueda en tiempo real
+        searchInput.addEventListener('input', function () {
+            filterProducts(this.value);
+        });
 
-        // Filtrar cada tarjeta de producto
-        productCards.forEach(card => {
-            const productTitle = card.querySelector('.card-title').textContent.toLowerCase();
-            const isVisible = productTitle.includes(term);
-            card.style.display = isVisible ? '' : 'none';
-            
-            if (isVisible) {
-                hasVisibleProducts = true;
+        // Limpiar búsqueda al hacer clic en el input
+        searchInput.addEventListener('click', function () {
+            if (this.value) {
+                this.select();
             }
         });
 
-        // Mostrar mensaje si no hay resultados
-        const noResultsMessage = document.getElementById('noResultsMessage');
-        if (!hasVisibleProducts) {
-            if (!noResultsMessage) {
-                const message = document.createElement('div');
-                message.id = 'noResultsMessage';
-                message.className = 'no-products';
-                message.innerHTML = `
-                    <i class="bi bi-search" style="font-size: 3rem; color: #6c757d; margin-bottom: 1rem;"></i>
-                                <h3 class="text-muted">No products found</h3>
-            <p class="text-muted">No products match "${searchTerm}"</p>
-                `;
-                document.querySelector('.container').appendChild(message);
+        // Limpiar búsqueda con Escape
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && searchInput === document.activeElement) {
+                searchInput.value = '';
+                filterProducts('');
+                searchInput.blur();
             }
-        } else {
-            if (noResultsMessage) {
-                noResultsMessage.remove();
-            }
-        }
-    }
-
-    // Event listener para la búsqueda en tiempo real
-    searchInput.addEventListener('input', function() {
-        filterProducts(this.value);
+        });
     });
-
-    // Limpiar búsqueda al hacer clic en el input
-    searchInput.addEventListener('click', function() {
-        if (this.value) {
-            this.select();
-        }
-    });
-
-    // Limpiar búsqueda con Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && searchInput === document.activeElement) {
-            searchInput.value = '';
-            filterProducts('');
-            searchInput.blur();
-        }
-    });
-});
 </script>
 
 <div class="divisor-2"></div>

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuración
-VERSION="1.0.0.6"
+VERSION="1.0.0.7"
 APP_IMAGE="mrgomezdev/kidsfun-django"
 DB_IMAGE="mrgomezdev/kidsfun-db"
 
