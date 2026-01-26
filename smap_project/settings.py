@@ -168,9 +168,9 @@ USE_TZ = True
 # Middleware para detectar idioma del navegador
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -184,10 +184,13 @@ MIDDLEWARE = [
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Definir las rutas adicionales para buscar archivos estáticos
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# Configuración de WhiteNoise para comprimir archivos estáticos (modo resiliente)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# WHITENOISE_MANIFEST_STRICT desactivado al no usar ManifestStorage
 
 LOGIN_URL = '/signin'
 

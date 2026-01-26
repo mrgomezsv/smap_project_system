@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  db:
+    image: mrgomezdev/kidsfun-db:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: smap_kf
+      MYSQL_USER: mrgomez
+      MYSQL_PASSWORD: Karin2100
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - kidsfun_network
+
+  web:
+    image: mrgomezdev/kidsfun-django:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=mysql://mrgomez:Karin2100@db:3306/smap_kf
+      - DB_ENGINE=django.db.backends.mysql
+      - DB_NAME=smap_kf
+      - DB_USER=mrgomez
+      - DB_PASSWORD=Karin2100
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DJANGO_SECRET_KEY=django-insecure-prod-key-change-me
+      - DEBUG=False
+      - militar=True
+    depends_on:
+      - db
+    networks:
+      - kidsfun_network
+
+networks:
+  kidsfun_network:
+    driver: bridge
+
+volumes:
+  db_data:

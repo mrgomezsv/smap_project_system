@@ -26,8 +26,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Mobile Navigation */
@@ -138,14 +143,20 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('../img/hero-pattern.svg') repeat;
   opacity: 0.1;
   animation: float 20s ease-in-out infinite;
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 .hero-content {
@@ -431,21 +442,21 @@
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: var(--space-4);
   }
-  
+
   .form-container {
     margin: var(--space-4);
     padding: var(--space-6);
   }
-  
+
   .modal-content {
     margin: var(--space-4);
     padding: var(--space-6);
   }
-  
+
   .btn-group {
     flex-direction: column;
   }
-  
+
   .btn-group .btn {
     width: 100%;
   }
@@ -455,11 +466,11 @@
   .product-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .hero h1 {
     font-size: var(--text-3xl);
   }
-  
+
   .hero p {
     font-size: var(--text-lg);
   }
@@ -467,20 +478,21 @@
 
 /* Print Styles */
 @media print {
+
   .navbar,
   .footer,
   #back-to-top,
   .btn {
     display: none !important;
   }
-  
+
   body {
     font-size: 12pt;
     line-height: 1.4;
   }
-  
+
   .container {
     max-width: none;
     padding: 0;
   }
-} 
+}

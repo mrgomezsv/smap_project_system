@@ -1,0 +1,8 @@
+FROM mariadb:10.6
+
+# Copiar el volcado de datos a la carpeta de inicialización
+# El archivo dump.sql debe ser generado por el usuario previamente
+COPY dump.sql /docker-entrypoint-initdb.d/
+
+# Mantener el comando original
+CMD ["--default-authentication-plugin=mysql_native_password"]
