@@ -881,8 +881,7 @@
                                 <i class="bi bi-person-check me-2"></i>
                                 Comentar como {{ user.get_full_name|default:user.username }}
                             </h5>
-                            <a href="{% url 'google_logout' %}?next={{ request.path }}"
-                                class="btn btn-outline-light btn-sm">
+                            <a href="{% url 'logout' %}?next={{ request.path }}" class="btn btn-outline-light btn-sm">
                                 <i class="bi bi-box-arrow-right me-1"></i>
                                 Cerrar Sesión
                             </a>
@@ -919,7 +918,7 @@
                         <div class="card-body text-center">
                             <p class="mb-3">Para comentar y dar like a los productos, necesitas iniciar sesión con
                                 Google.</p>
-                            <a href="{% url 'google_login' %}?next={{ request.path }}" class="btn btn-primary btn-lg">
+                            <a href="{% url 'firebase_login' %}?next={{ request.path }}" class="btn btn-primary btn-lg">
                                 <i class="bi bi-google me-2"></i>
                                 Iniciar Sesión con Google
                             </a>
@@ -1120,30 +1119,31 @@
             .then(data => {
                 if (data.success) {
                     // Actualizar contadores en ambas ubicaciones
-                    updateCounters(data.total_likes, {{ comments_count|default:0 }});
+                    const commentsCount = parseInt('{{ comments_count|default:0 }}');
+                    updateCounters(data.total_likes, commentsCount);
 
-        // Cambiar el icono según el estado (ambas ubicaciones)
-        const likeIcon = document.getElementById('like-icon');
-        const topLikeIcon = document.getElementById('top-like-icon');
+                    // Cambiar el icono según el estado (ambas ubicaciones)
+                    const likeIcon = document.getElementById('like-icon');
+                    const topLikeIcon = document.getElementById('top-like-icon');
 
-        if (data.is_favorite) {
-            likeIcon.className = 'bi bi-heart-fill';
-            likeIcon.style.color = '#dc3545';
-            topLikeIcon.className = 'bi bi-heart-fill';
-            topLikeIcon.style.color = '#dc3545';
-        } else {
-            likeIcon.className = 'bi bi-heart';
-            likeIcon.style.color = '#6c757d';
-            topLikeIcon.className = 'bi bi-heart';
-            topLikeIcon.style.color = '#6c757d';
-        }
-    } else {
-        console.error('Error:', data.error);
-    }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+                    if (data.is_favorite) {
+                        likeIcon.className = 'bi bi-heart-fill';
+                        likeIcon.style.color = '#dc3545';
+                        topLikeIcon.className = 'bi bi-heart-fill';
+                        topLikeIcon.style.color = '#dc3545';
+                    } else {
+                        likeIcon.className = 'bi bi-heart';
+                        likeIcon.style.color = '#6c757d';
+                        topLikeIcon.className = 'bi bi-heart';
+                        topLikeIcon.style.color = '#6c757d';
+                    }
+                } else {
+                    console.error('Error:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     });
 
     // Funcionalidad para comentarios
@@ -1156,65 +1156,67 @@
             return;
         }
 
-        const productId = {{ product.id }};
+        const productId = '{{ product.id }}';
 
-    fetch(`/web-comment/${productId}/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            comment: commentText,
-            user_id: 'web_user'
+        fetch(`/web-comment/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                comment: commentText,
+                user_id: 'web_user'
+            })
         })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Limpiar el input
-                commentInput.value = '';
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Limpiar el input
+                    commentInput.value = '';
 
-                // Actualizar contadores en ambas ubicaciones
-                updateCounters({{ likes_count|default:0 }}, data.total_comments);
+                    // Actualizar contadores en ambas ubicaciones
+                    const likesCount = parseInt('{{ likes_count|default:0 }}');
+                    updateCounters(likesCount, data.total_comments);
 
-    // Agregar el nuevo comentario a la lista
-    const commentsList = document.getElementById('comments-list');
-    const noComments = commentsList.querySelector('.no-comments');
+                    // Agregar el nuevo comentario a la lista
+                    const commentsList = document.getElementById('comments-list');
+                    if (commentsList) {
+                        const noComments = commentsList.querySelector('.no-comments');
+                        if (noComments) {
+                            noComments.remove();
+                        }
 
-    if (noComments) {
-        noComments.remove();
-    }
+                        const newComment = document.createElement('div');
+                        newComment.className = 'comment-item';
+                        newComment.innerHTML = `
+                            <div class="comment-header">
+                                <div class="comment-user">${data.comment.user_display_name}</div>
+                                <div class="comment-date text-muted pequeño">${data.comment.created_at}</div>
+                            </div>
+                            <div class="comment-text mt-2">${data.comment.comment}</div>
+                        `;
 
-    const newComment = document.createElement('div');
-    newComment.className = 'comment-item';
-    newComment.innerHTML = `
-                    <div class="comment-header">
-                        <div class="comment-user">${data.comment.user_display_name}</div>
-                        <div class="comment-date">${data.comment.created_at}</div>
-                    </div>
-                    <div class="comment-text">${data.comment.comment}</div>
-                `;
+                        commentsList.insertBefore(newComment, commentsList.firstChild);
+                    }
 
-    commentsList.insertBefore(newComment, commentsList.firstChild);
-
-    // Mostrar mensaje de éxito
-    showAlert('¡Éxito!', 'Comentario agregado exitosamente.', 'bi-check-circle', 'success');
-            } else {
-        if (data.requires_auth) {
-            // Usuario no autenticado
-            showAlert('Sesión Requerida', 'Necesitas iniciar sesión con Google para comentar. Redirigiendo al login...', 'bi-person-lock', 'info');
-            setTimeout(() => {
-                window.location.href = '/auth/google/login/?next=' + window.location.pathname;
-            }, 2000);
-        } else {
-            showAlert('Error', 'Hubo un problema: ' + data.error, 'bi-x-circle', 'danger');
-        }
-    }
-        })
-        .catch (error => {
-        console.error('Error:', error);
-        showAlert('Error', 'Error al agregar comentario. Por favor intenta de nuevo.', 'bi-x-circle', 'danger');
-    });
+                    // Mostrar mensaje de éxito
+                    showAlert('¡Éxito!', 'Comentario agregado exitosamente.', 'bi-check-circle', 'success');
+                } else {
+                    if (data.requires_auth) {
+                        // Usuario no autenticado
+                        showAlert('Sesión Requerida', 'Necesitas iniciar sesión para comentar. Redirigiendo...', 'bi-person-lock', 'info');
+                        setTimeout(() => {
+                            window.location.href = "{% url 'firebase_login' %}?next=" + window.location.pathname;
+                        }, 2000);
+                    } else {
+                        showAlert('Error', 'Hubo un problema: ' + data.error, 'bi-x-circle', 'danger');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Error', 'Error al agregar comentario. Por favor intenta de nuevo.', 'bi-x-circle', 'danger');
+            });
     });
 
     // Permitir enviar comentario con Enter
