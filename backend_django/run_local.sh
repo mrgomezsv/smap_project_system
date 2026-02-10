@@ -4,7 +4,7 @@
 echo "🔧 Configurando proyecto para ejecución local sin APIs..."
 
 # Activar entorno virtual
-source venv/bin/activate
+source ../venv/bin/activate
 
 # Configuración ya está en modo local
 echo "✅ Configuración local activa"
@@ -14,5 +14,5 @@ echo "📦 Ejecutando migraciones..."
 python manage.py migrate
 
 # Ejecutar servidor
-echo "🚀 Iniciando servidor en http://localhost:8000"
-python manage.py runserver 
+echo "🚀 Iniciando servidor en http://0.0.0.0:8000"
+python manage.py runserver 0.0.0.0:8000

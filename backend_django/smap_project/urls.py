@@ -50,6 +50,10 @@ urlpatterns = [
     # Comments API (nueva)
     path('api/comments/', views.create_comment, name='create_comment'),
     path('api/comments/product/<int:product_id>/', views.comments_for_product, name='comments_for_product'),
+    # API v1 (Nueva Arquitectura)
+    path('api/v1/', include([
+        path('', include('t_app_product.urls_api')),
+    ])),
     path('', include('kidsfun_web.urls')),
     path('api/v2/', include('waiver_v2.urls')),
 ]

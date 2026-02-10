@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+
+  /* KidsFun Ultra-Vibrant Palette */
+  --primary: #2563eb;
+  /* Electric Blue */
+  --secondary: #db2777;
+  /* Deep Pink */
+  --accent: #fbbf24;
+  /* Golden Sun */
+  --success: #10b981;
+  /* Emerald Green */
+  --warning: #f59e0b;
+  /* Bright Amber */
+  --card-bg: #f8fafc;
+
+  /* Gradients */
+  --grad-party: linear-gradient(135deg, #2563eb 0%, #db2777 100%);
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-card-bg: var(--card-bg);
+  --color-party: var(--grad-party);
+
+  --font-sans: 'Outfit', 'Inter', system-ui, sans-serif;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2.25rem;
+  --radius-3xl: 3rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Base animations classes */
+.page-transition {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes cloud-drift {
+  from {
+    transform: translateX(-10%);
+  }
+
+  to {
+    transform: translateX(110%);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+.animate-gradient {
+  animation: gradient-shift 6s ease infinite;
+}
+
+.animate-cloud {
+  animation: cloud-drift var(--duration, 20s) linear infinite;
+}

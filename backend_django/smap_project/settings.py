@@ -36,6 +36,9 @@ ALLOWED_HOSTS = [
     'www.kidsfunyfiestasinfantiles.com',
     'localhost',
     '127.0.0.1',
+    '192.168.0.9',
+    'testserver',
+    '*',
 ]
 
 # Firebase Admin SDK initialization
@@ -60,10 +63,11 @@ INSTALLED_APPS = [
     'waiver_v2',  # Nueva aplicación para waivers v2
     'kidsfun_web',
     'rest_framework',
-
+    'django_filters',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -78,7 +82,23 @@ CORS_ALLOWED_ORIGINS = [
     "https://kidsfunyfiestasinfantiles.com",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://192.168.0.9:3000",
 ]
+
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://192.168.0.9:3000",
+]
+
+# Configuración de cookies para permitir auth desde Next.js
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False  # Permitir que el frontend lea el token CSRF si es necesario
 
 ROOT_URLCONF = 'smap_project.urls'
 
@@ -205,12 +225,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
     'https://kidsfunyfiestasinfantiles.com',
     'https://www.kidsfunyfiestasinfantiles.com',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://192.168.0.9:3000',
 ]
 
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
 
 # Asegurarse de que las cookies de sesión solo se envíen a través de HTTPS
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 
 # Evitar que JavaScript acceda a las cookies de sesión
 SESSION_COOKIE_HTTPONLY = True
