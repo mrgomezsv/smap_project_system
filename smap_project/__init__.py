@@ -1,3 +1,2 @@
-import pymysql
-
-pymysql.install_as_MySQLdb()
+# mysqlclient ya provee el driver MySQLdb nativamente
+# No se necesita pymysql con mysqlclient instalado
