@@ -18,9 +18,10 @@ services:
 
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    # El CMD del Dockerfile inicia Gunicorn en producción
     volumes:
-      - .:/app
+      - media_data:/app/media
+      - logs_data:/app/logs
     ports:
       - "8000:8000"
     env_file:
@@ -36,3 +37,5 @@ networks:
 
 volumes:
   db_data:
+  media_data:
+  logs_data:
