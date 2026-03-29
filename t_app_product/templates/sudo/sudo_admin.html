@@ -6,104 +6,252 @@
     <div class="dashboard-header mb-4 px-0">
         <div class="d-flex justify-content-between align-items-center">
             <div class="welcome-section">
-                <h1>Usuarios Registrados</h1>
-                <p class="welcome-text">Gestión avanzada de accesos y perfiles administrativos.</p>
+                <h1>Panel de Administración</h1>
+                <p class="welcome-text">Gestión avanzada de usuarios y documentación técnica del sistema.</p>
             </div>
             <div class="header-actions d-flex gap-2">
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle py-2 px-3 border-0 bg-white shadow-sm"
-                        type="button" data-bs-toggle="dropdown" style="border-radius: 0.75rem;">
-                        Acciones Masivas
-                    </button>
-                    <ul class="dropdown-menu shadow-lg border-0 mt-2">
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-download me-2"></i>Exportar CSV</a>
-                        </li>
-                        <li><a class="dropdown-item py-2 text-danger" href="#"><i class="bi bi-trash me-2"></i>Eliminar
-                                Seleccionados</a></li>
-                    </ul>
-                </div>
-                <a href="{% url 'signup' %}" class="btn btn-primary shadow-sm">
+                <a href="{% url 'signup' %}" class="btn btn-primary shadow-sm rounded-pill px-4">
                     <i class="bi bi-person-plus me-2"></i>
-                    Crear Usuario
+                    Crear Administrador
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Main Table Section -->
-    <div class="table-container mb-5">
-        {% csrf_token %}
-        {% if users %}
-        <div class="table-responsive">
-            <table class="table mb-0 align-middle">
-                <thead>
-                    <tr>
-                        <th class="ps-4" style="width: 50px;">
-                            <input type="checkbox" class="form-check-input" id="select-all">
-                        </th>
-                        <th>Usuario</th>
-                        <th>Información de Contacto</th>
-                        <th>Nombre Completo</th>
-                        <th>Último Acceso</th>
-                        <th class="text-end pe-4">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                    <tr class="cursor-pointer">
-                        <td class="ps-4">
-                            <input type="checkbox" name="selected_users" value="{{ user.id }}" class="form-check-input">
-                        </td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
-                                    style="width: 40px; height: 40px; font-weight: 700;">
-                                    {{ user.username|slice:":1"|upper }}
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-pills mb-4 gap-2" id="sudoTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active px-4 py-2 rounded-pill shadow-sm fw-semibold" id="users-tab"
+                data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users"
+                aria-selected="true">
+                <i class="bi bi-people me-2"></i>Usuarios
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link px-4 py-2 rounded-pill shadow-sm fw-semibold text-dark bg-white border" id="api-tab"
+                data-bs-toggle="tab" data-bs-target="#api" type="button" role="tab" aria-controls="api"
+                aria-selected="false">
+                <i class="bi bi-code-slash me-2 text-primary"></i>API Documentation
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="sudoTabsContent">
+        <!-- Users Tab -->
+        <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
+            <div class="table-container mb-5">
+                {% csrf_token %}
+                {% if users %}
+                <div class="table-responsive">
+                    <table class="table mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th class="ps-4" style="width: 50px;">
+                                    <input type="checkbox" class="form-check-input" id="select-all">
+                                </th>
+                                <th>Usuario</th>
+                                <th>Información de Contacto</th>
+                                <th>Nombre Completo</th>
+                                <th>Último Acceso</th>
+                                <th class="text-end pe-4">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr class="cursor-pointer">
+                                <td class="ps-4">
+                                    <input type="checkbox" name="selected_users" value="{{ user.id }}"
+                                        class="form-check-input">
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px; font-weight: 700;">
+                                            {{ user.username|slice:":1"|upper }}
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">{{ user.username }}</div>
+                                            <div class="small text-muted">ID: #{{ user.id }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="small fw-medium text-dark">{{ user.email|default:"Sin correo" }}</div>
+                                    <div class="small text-muted">Suscrito: {{ user.date_joined|date:"d/m/Y" }}</div>
+                                </td>
+                                <td><span class="fw-semibold">{{ user.first_name }} {{ user.last_name }}</span></td>
+                                <td>
+                                    {% if user.last_login %}
+                                    <span
+                                        class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2">
+                                        {{ user.last_login|date:"d M, H:i" }}
+                                    </span>
+                                    {% else %}
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2">Nunca</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    <button class="btn btn-link text-muted p-2"
+                                        onclick="confirmDelete('{{ user.username }}', '{{ user.id }}')">
+                                        <i class="bi bi-trash3 h5 mb-0"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="p-5 text-center">
+                    <i class="bi bi-people h1 text-muted opacity-25"></i>
+                    <h5 class="text-muted mt-3">No hay registros que mostrar</h5>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- API Tab -->
+        <div class="tab-pane fade" id="api" role="tabpanel" aria-labelledby="api-tab">
+            <!-- Security Alert -->
+            <div class="alert alert-primary border-0 shadow-sm mb-4 d-flex align-items-center gap-3" style="border-radius: 1rem;">
+                <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary">
+                    <i class="bi bi-shield-lock-fill h4 mb-0"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1">Capa de Seguridad Activa: Firebase Auth</h6>
+                    <p class="small mb-0 opacity-75">Todas las peticiones (excepto catálogos públicos) requieren el encabezado: 
+                        <code>Authorization: Bearer &lt;ID_TOKEN&gt;</code>. El servidor valida automáticamente la identidad con el SDK de Firebase.</p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Products API -->
+                <div class="col-lg-12">
+                    <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
+                        <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="bg-success bg-opacity-10 p-2 rounded-circle">
+                                    <i class="bi bi-box-seam text-success h5 mb-0"></i>
                                 </div>
-                                <div>
-                                    <div class="fw-bold text-dark">{{ user.username }}</div>
-                                    <div class="small text-muted">ID: #{{ user.id }}</div>
+                                <h5 class="fw-bold mb-0">Gestión de Productos</h5>
+                            </div>
+                        </div>
+                        <div class="card-body px-4 pb-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="api-endpoint mb-4">
+                                        <span class="badge bg-success mb-2">GET</span>
+                                        <code>/api/products/</code>
+                                        <p class="small text-muted mt-1">Lista completa de productos.</p>
+                                        <div class="usage-examples">
+                                            <label class="small fw-bold text-uppercase opacity-50 mb-1">cURL Example</label>
+                                            <pre class="bg-dark text-light p-3 rounded-3 position-relative overflow-auto" style="font-size: 0.8rem;"><code>curl -X GET http://127.0.0.1:8000/api/products/</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="api-endpoint mb-4">
+                                        <span class="badge bg-success mb-2">GET</span>
+                                        <code>/api/products/category/<span class="text-primary">{id}</span>/</code>
+                                        <p class="small text-muted mt-1">Filtrar por categoría.</p>
+                                        <div class="usage-examples">
+                                            <label class="small fw-bold text-uppercase opacity-50 mb-1">Flutter/Dart Example</label>
+                                            <pre class="bg-dark text-light p-3 rounded-3 position-relative overflow-auto" style="font-size: 0.8rem;"><code>final response = await http.get(\n  Uri.parse('http://127.0.0.1:8000/api/products/')\n);</code></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </td>
-                        <td>
-                            <div class="small fw-medium text-dark">{{ user.email|default:"Sin correo" }}</div>
-                            <div class="small text-muted">Suscrito: {{ user.date_joined|date:"d/m/Y" }}</div>
-                        </td>
-                        <td><span class="fw-semibold">{{ user.first_name }} {{ user.last_name }}</span></td>
-                        <td>
-                            {% if user.last_login %}
-                            <span
-                                class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2">
-                                {{ user.last_login|date:"d M, H:i" }}
-                            </span>
-                            {% else %}
-                            <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2">Nunca</span>
-                            {% endif %}
-                        </td>
-                        <td class="text-end pe-4">
-                            <button class="btn btn-link text-muted p-2" onclick="confirmDelete('{{ user.username }}')">
-                                <i class="bi bi-trash3 h5 mb-0"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Engagement API -->
+                <div class="col-lg-12">
+                    <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
+                        <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="bg-primary bg-opacity-10 p-2 rounded-circle">
+                                    <i class="bi bi-heart text-primary h5 mb-0"></i>
+                                </div>
+                                <h5 class="fw-bold mb-0">Interacción y Social</h5>
+                            </div>
+                        </div>
+                        <div class="card-body px-4 pb-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="api-endpoint mb-4">
+                                        <span class="badge bg-primary mb-2">POST</span>
+                                        <code>/api/likes/toggle/</code>
+                                        <p class="small text-muted mt-1">Alternar estado de favorito.</p>
+                                        <label class="small fw-bold text-uppercase opacity-50 mb-1">Payload JSON</label>
+                                        <pre class="bg-dark text-light p-3 rounded-3 overflow-auto" style="font-size: 0.8rem;"><code>{\n  "user": "firebase_uid",\n  "product": 45,\n  "is_favorite": true\n}</code></pre>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="api-endpoint mb-4">
+                                        <span class="badge bg-primary mb-2">POST</span>
+                                        <code>/api/comments/</code>
+                                        <p class="small text-muted mt-1">Crear comentario.</p>
+                                        <label class="small fw-bold text-uppercase opacity-50 mb-1">cURL Example</label>
+                                        <pre class="bg-dark text-light p-3 rounded-3 overflow-auto" style="font-size: 0.8rem;"><code>curl -X POST http://127.0.0.1:8000/api/comments/ \\\n-H "Content-Type: application/json" \\\n-d '{"product_id": 1, "comment": "Genial!"}'</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Waiver V2 API -->
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm border-start border-primary border-4" style="border-radius: 1rem;">
+                        <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="bg-info bg-opacity-10 p-2 rounded-circle">
+                                    <i class="bi bi-shield-check text-info h5 mb-0"></i>
+                                </div>
+                                <h5 class="fw-bold mb-0">Waiver V2 (QR Avanzado)</h5>
+                            </div>
+                        </div>
+                        <div class="card-body px-4 pb-4">
+                            <p class="text-muted small mb-4">Este sistema genera códigos QR dinámicos con fecha de vencimiento automática.</p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="api-endpoint mb-4">
+                                        <span class="badge bg-primary mb-2">POST</span>
+                                        <code>/api/v2/waiver/</code>
+                                        <p class="small text-muted mt-1">Crear nuevo Waiver con QR.</p>
+                                        <pre class="bg-dark text-light p-3 rounded-3 overflow-auto" style="font-size: 0.75rem;"><code>{\n  "user_id": "8x2...f",\n  "user_name": "Gomez",\n  "relatives": []\n}</code></pre>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="api-endpoint mb-4">
+                                        <span class="badge bg-success mb-2">GET</span>
+                                        <code>/api/v2/waiver/<span class="text-primary">{code}</span>/</code>
+                                        <p class="small text-muted mt-1">Consultar estado del QR.</p>
+                                        <pre class="bg-dark text-light p-3 rounded-3 overflow-auto" style="font-size: 0.75rem;"><code>// Response:\n{\n  "valid": true,\n  "msg": "Activo"\n}</code></pre>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="api-endpoint mb-4">
+                                        <span class="badge bg-info mb-2">GET</span>
+                                        <code>/api/v2/waiver/user/<span class="text-primary">{uid}</span>/</code>
+                                        <p class="small text-muted mt-1">Historial del cliente.</p>
+                                        <pre class="bg-dark text-light p-3 rounded-3 overflow-auto" style="font-size: 0.75rem;"><code>curl -G http://127.0.0.1:8000/api/v2/waiver/user/123/</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% else %}
-        <div class="p-5 text-center">
-            <i class="bi bi-people h1 text-muted opacity-25"></i>
-            <h5 class="text-muted mt-3">No hay registros que mostrar</h5>
-        </div>
-        {% endif %}
     </div>
 </div>
 
 <script>
-    function confirmDelete(username) {
-        if (confirm(`¿Estás seguro de eliminar al usuario ${username}? esta acción no se puede deshacer.`)) {
-            // Logic for deletion
+    function confirmDelete(username, userId) {
+        if (confirm(`¿Estás seguro de eliminar el acceso administrativo de ${username}? Esta acción no se puede deshacer.`)) {
+            window.location.href = `/sudo_admin/delete/${userId}/`;
         }
     }
 
