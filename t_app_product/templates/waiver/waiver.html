@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="container mt-5">
@@ -12,13 +13,21 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="waiverTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="registered-users-tab" data-bs-toggle="tab" href="#registered-users" role="tab" aria-controls="registered-users" aria-selected="true">
+            <a class="nav-link active" id="registered-users-tab" data-bs-toggle="tab" href="#registered-users"
+                role="tab" aria-controls="registered-users" aria-selected="true">
                 Clientes Registrados en el Waiver
             </a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="add-email-tab" data-bs-toggle="tab" href="#add-email" role="tab" aria-controls="add-email" aria-selected="false">
+            <a class="nav-link" id="add-email-tab" data-bs-toggle="tab" href="#add-email" role="tab"
+                aria-controls="add-email" aria-selected="false">
                 Agregar Colaborador
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="documento-waiver-tab" data-bs-toggle="tab" href="#documento-waiver" role="tab"
+                aria-controls="documento-waiver" aria-selected="false">
+                <i class="bi bi-file-earmark-ruled me-1"></i> Documento Waiver
             </a>
         </li>
     </ul>
@@ -26,11 +35,13 @@
     <!-- Tab content -->
     <div class="tab-content mt-3" id="waiverTabsContent">
         <!-- Pestaña de Clientes Registrados en el Waiver -->
-        <div class="tab-pane fade show active" id="registered-users" role="tabpanel" aria-labelledby="registered-users-tab">
+        <div class="tab-pane fade show active" id="registered-users" role="tabpanel"
+            aria-labelledby="registered-users-tab">
             <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                 <div>
                     <h3>Clientes Registrados en el Waiver</h3>
-                    <p>En esta pestaña, están los clientes que ya se han registrado en el waiver en la app, y generado ya su QR.</p>
+                    <p>En esta pestaña, están los clientes que ya se han registrado en el waiver en la app, y generado
+                        ya su QR.</p>
                 </div>
                 <!-- Formulario de Búsqueda Mejorado -->
                 <form class="d-flex ms-3 my-2" role="search" method="get">
@@ -40,55 +51,152 @@
                             <i class="bi bi-search"></i>
                         </span>
                         <!-- Campo de Entrada de Búsqueda -->
-                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar..." aria-label="Buscar" aria-describedby="search-icon">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar..."
+                            aria-label="Buscar" aria-describedby="search-icon">
                     </div>
                 </form>
             </div>
 
             <div class="card">
-            <div class="card-body p-0">
-            <table class="table table-hover mb-0" id="clientesTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Código QR del Cliente</th>
-                        <th>Nombre del Titular</th>
-                        <th>Nombre del Familiar</th>
-                        <th>Edad del Familiar</th>
-                        <th>Fecha de Registro</th>
-                        <th>Correo Electrónico</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cliente in waiver_clientes %}
-                        <tr>
-                            <td>{{ cliente.id }}</td>
-                            <td>{{ cliente.user_id }}</td>
-                            <td>{{ cliente.user_name }}</td>
-                            <td>{{ cliente.relative_name }}</td>
-                            <td>{{ cliente.relative_age }}</td>
-                            <td>{{ cliente.timestamp }}</td>
-                            <td>{{ cliente.user_email }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0" id="clientesTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;"></th>
+                                <th>ID</th>
+                                <th>Código QR</th>
+                                <th>Nombre del Titular</th>
+                                <th>Fecha de Registro</th>
+                                <th>Correo Electrónico</th>
+                                <th>Nº Acompañantes</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for waiver in waiver_clientes %}
+                            <!-- Fila del Titular -->
+                            <tr class="align-middle bg-light bg-opacity-10">
+                                <td>
+                                    <button class="btn btn-sm btn-link text-primary p-0" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#relatives-{{ waiver.id }}">
+                                        <i class="bi bi-plus-circle-fill h5 mb-0"></i>
+                                    </button>
+                                </td>
+                                <td><span class="fw-bold">#{{ waiver.id }}</span></td>
+                                <td><code>{{ waiver.qr_code }}</code></td>
+                                <td><span class="fw-semibold">{{ waiver.user_name }}</span></td>
+                                <td>{{ waiver.created_at|date:"d/m/Y H:i" }}</td>
+                                <td>{{ waiver.user_email }}</td>
+                                <td>
+                                    <span class="badge bg-primary rounded-pill">{{ waiver.relatives.count }}</span>
+                                </td>
+                                <td class="text-end">
+                                    <a href="{% url 'download_waiver_pdf' waiver.qr_code %}"
+                                        class="btn btn-outline-danger btn-sm rounded-pill px-3 shadow-sm">
+                                        <i class="bi bi-file-earmark-pdf me-1"></i> PDF
+                                    </a>
+                                </td>
+                            </tr>
+                            <!-- Fila de Familiares (Oculta por defecto) -->
+                            <tr class="collapse" id="relatives-{{ waiver.id }}">
+                                <td colspan="8" class="p-0 border-0">
+                                    <div class="p-4 bg-white border-bottom shadow-inner">
+                                        <h6 class="fw-bold text-muted mb-3"><i class="bi bi-people me-2"></i>Familiares
+                                            y Acompañantes Registrados</h6>
+                                        <div class="table-responsive rounded-3 border">
+                                            <table class="table table-sm table-borderless mb-0">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th class="ps-3 text-uppercase small fw-bold">Nombre Completo
+                                                        </th>
+                                                        <th class="text-uppercase small fw-bold text-center">Edad</th>
+                                                        <th class="text-uppercase small fw-bold text-center">Parentesco
+                                                        </th>
+                                                        <th class="pe-3 text-uppercase small fw-bold text-end">
+                                                            Registrado en</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for relative in waiver.relatives.all %}
+                                                    <tr class="border-bottom-custom">
+                                                        <td class="ps-3 py-2 fw-medium text-dark">{{
+                                                            relative.relative_name }}</td>
+                                                        <td class="text-center py-2"><span
+                                                                class="badge bg-secondary bg-opacity-10 text-secondary">{{
+                                                                relative.relative_age }} años</span></td>
+                                                        <td class="text-center py-2 text-muted">Acompañante</td>
+                                                        <td class="pe-3 py-2 text-end text-muted small">{{
+                                                            relative.timestamp|date:"d/m/Y H:i" }}</td>
+                                                    </tr>
+                                                    {% empty %}
+                                                    <tr>
+                                                        <td colspan="4" class="text-center py-4 text-muted small">No se
+                                                            registraron acompañantes adicionales.</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Historial de Escaneos -->
+                                        <div class="mt-4 pt-3 border-top">
+                                            <h6 class="fw-bold text-muted mb-3"><i
+                                                    class="bi bi-qr-code-scan me-2"></i>Historial de Escaneos /
+                                                Validaciones</h6>
+                                            <div class="table-responsive rounded-3 border">
+                                                <table class="table table-sm table-borderless mb-0">
+                                                    <thead class="bg-light">
+                                                        <tr>
+                                                            <th class="ps-3 text-uppercase small fw-bold">Colaborador
+                                                            </th>
+                                                            <th class="pe-3 text-uppercase small fw-bold text-end">Fecha
+                                                                y Hora del Escaneo</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for scan in waiver.scans.all %}
+                                                        <tr class="border-bottom-custom">
+                                                            <td class="ps-3 py-2 fw-medium text-dark">
+                                                                <i class="bi bi-person-badge me-2 text-primary"></i>{{
+                                                                scan.scanned_by }}
+                                                            </td>
+                                                            <td class="pe-3 py-2 text-end text-muted">{{
+                                                                scan.scanned_at|date:"d/m/Y H:i" }}</td>
+                                                        </tr>
+                                                        {% empty %}
+                                                        <tr>
+                                                            <td colspan="2" class="text-center py-3 text-muted small">
+                                                                Este waiver aún no ha sido escaneado por ningún
+                                                                colaborador.</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Mensaje si no se encuentran resultados -->
             {% if waiver_clientes.count == 0 %}
-                <p>No se encontraron clientes que coincidan con la búsqueda.</p>
+            <p>No se encontraron clientes que coincidan con la búsqueda.</p>
             {% endif %}
         </div>
 
         <!-- Pestaña de Agregar Correo Electrónico -->
         <div class="tab-pane fade" id="add-email" role="tabpanel" aria-labelledby="add-email-tab">
             <h3>Agregar Colaborador</h3>
-            <p>En este apartado agregaremos los correos electrónicos de los colaboradores que validarán (escanearán) el QR de cada cliente en la APP.</p>
+            <p>En este apartado agregaremos los correos electrónicos de los colaboradores que validarán (escanearán) el
+                QR de cada cliente en la APP.</p>
             <form method="post" novalidate>
                 {% csrf_token %}
-                {{ form.as_p }}  <!-- Renderizamos el formulario -->
+                {{ form.as_p }} <!-- Renderizamos el formulario -->
                 <button type="submit" class="btn btn-primary">Agregar</button>
             </form>
 
@@ -96,46 +204,104 @@
 
             <!-- Tabla de correos electrónicos -->
             <h3>Lista de Correos Electrónicos Autorizados para Validar QR en la APP</h3>
-            <p>Este es el listado de personas que tendrán acceso a Custom Waiver Validator en la APP. Ahora puedes eliminar colaboradores seleccionando el checkbox y haciendo clic en el ícono de basurero.</p>
+            <p>Este es el listado de personas que tendrán acceso a Custom Waiver Validator en la APP. Ahora puedes
+                eliminar colaboradores seleccionando el checkbox y haciendo clic en el ícono de basurero.</p>
             <form method="post" id="delete-form">
                 {% csrf_token %}
                 <div class="card">
-                <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th></th> <!-- Columna para el checkbox -->
-                            <th>Email</th>
-                            <th>Fecha de Creación</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for validator in waiver_validators %}
-                            <tr>
-                                <td>
-                                    <!-- Checkbox -->
-                                    <input type="checkbox" class="item-checkbox">
-                                </td>
-                                <td>{{ validator.email }}</td>
-                                <td>{{ validator.created_at }}</td>
-                                <td>
-                                    <!-- Botón de eliminación -->
-                                    <button type="submit" formaction="{% url 'delete_validator' validator_id=validator.id %}" formmethod="post" class="btn btn-link trash-icon" style="display: none;" onclick="return confirm('¿Estás seguro de que deseas eliminar este colaborador?');">
-                                        {% csrf_token %}
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th></th> <!-- Columna para el checkbox -->
+                                    <th>Email</th>
+                                    <th>Fecha de Creación</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for validator in waiver_validators %}
+                                <tr>
+                                    <td>
+                                        <!-- Checkbox -->
+                                        <input type="checkbox" class="item-checkbox">
+                                    </td>
+                                    <td>{{ validator.email }}</td>
+                                    <td>{{ validator.created_at }}</td>
+                                    <td>
+                                        <!-- Botón de eliminación -->
+                                        <button type="submit"
+                                            formaction="{% url 'delete_validator' validator_id=validator.id %}"
+                                            formmethod="post" class="btn btn-link trash-icon" style="display: none;"
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este colaborador?');">
+                                            {% csrf_token %}
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </form>
         </div>
 
+        <!-- Pestaña de Documento Waiver -->
+        <div class="tab-pane fade" id="documento-waiver" role="tabpanel" aria-labelledby="documento-waiver-tab">
+            <div class="row g-4 mt-2">
+                <!-- Editor -->
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100" style="border-radius: 1.25rem;">
+                        <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+                            <h5 class="fw-bold mb-1">Editor de Texto Legal</h5>
+                            <p class="small text-muted mb-0">Modifica el texto que aparecerá en el documento oficial del
+                                waiver.</p>
+                        </div>
+                        <div class="card-body p-4">
+                            <form method="post" id="waiver-doc-form">
+                                {% csrf_token %}
+                                <textarea name="content" id="waiverContent" class="form-control mb-3"
+                                    style="height: 500px; border-radius: 1rem; border: 1.5px solid #eef2f6; resize: none; font-family: 'Work Sans', sans-serif;">{{ waiver_doc.content }}</textarea>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="small text-muted" id="charCount">0 caracteres</span>
+                                    <button type="submit" name="save_document"
+                                        class="btn btn-primary rounded-pill px-4">
+                                        <i class="bi bi-save me-2"></i> Guardar Cambios
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Previsualizador -->
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100"
+                        style="border-radius: 1.25rem; background-color: #f8f9fa;">
+                        <div
+                            class="card-header bg-transparent d-flex justify-content-between align-items-center border-0 pt-4 px-4 pb-0">
+                            <div>
+                                <h5 class="fw-bold mb-1">Previsualización Real</h5>
+                                <p class="small text-muted mb-0">Vista previa en hojas tamaño carta (Paginación
+                                    automática).</p>
+                            </div>
+                            <div id="pageIndicator" class="badge bg-primary rounded-pill px-3">1 Página</div>
+                        </div>
+                        <div class="card-body p-4 d-flex justify-content-center overflow-auto" style="height: 600px;">
+                            <div id="pagesWrapper" style="transform: scale(0.6); transform-origin: top center;">
+                                <!-- Las páginas se generarán dinámicamente aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
+</div>
 </div>
 
 <!-- Incluir Bootstrap Icons -->
@@ -143,7 +309,7 @@
 
 <!-- Script de Búsqueda y manejo de checkbox -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Script de Búsqueda
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
@@ -151,13 +317,18 @@
             const tbody = table.getElementsByTagName('tbody')[0];
             const rows = tbody.getElementsByTagName('tr');
 
-            searchInput.addEventListener('keyup', function() {
+            searchInput.addEventListener('keyup', function () {
                 const filter = searchInput.value.toLowerCase();
 
                 for (let i = 0; i < rows.length; i++) {
+                    // Solo filtramos las filas de titulares (las que no tienen la clase collapse)
+                    if (rows[i].classList.contains('collapse')) continue;
+
+                    const nextRow = rows[i].nextElementSibling; // La fila de familiares correspondiente
                     const cells = rows[i].getElementsByTagName('td');
                     let match = false;
 
+                    // Buscar en el titular
                     for (let j = 0; j < cells.length; j++) {
                         const cellText = cells[j].textContent.toLowerCase();
                         if (cellText.indexOf(filter) > -1) {
@@ -166,10 +337,23 @@
                         }
                     }
 
+                    // Buscar en los familiares si no hubo match en el titular
+                    if (!match && nextRow && nextRow.classList.contains('collapse')) {
+                        const relativesText = nextRow.textContent.toLowerCase();
+                        if (relativesText.indexOf(filter) > -1) {
+                            match = true;
+                        }
+                    }
+
                     if (match) {
                         rows[i].style.display = '';
+                        // No mostramos automáticamente el collapse, solo lo permitimos
                     } else {
                         rows[i].style.display = 'none';
+                        if (nextRow && nextRow.classList.contains('collapse')) {
+                            nextRow.classList.remove('show');
+                            nextRow.style.display = 'none';
+                        }
                     }
                 }
 
@@ -194,8 +378,8 @@
         // Manejo de checkbox y visibilidad del ícono de basurero
         const checkboxes = document.querySelectorAll('.item-checkbox');
 
-        checkboxes.forEach(function(checkbox) {
-            checkbox.addEventListener('change', function() {
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
                 const row = checkbox.closest('tr');
                 const trashIcon = row.querySelector('.trash-icon');
                 if (checkbox.checked) {
@@ -205,6 +389,142 @@
                 }
             });
         });
+
+        // Script para PREVISUALIZADOR DINÁMICO con PAGINACIÓN (Tamaño Carta)
+        const waiverArea = document.getElementById('waiverContent');
+        const pagesWrapper = document.getElementById('pagesWrapper');
+        const charCount = document.getElementById('charCount');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const logoUrl = "{% static 'icon/logo.png' %}";
+        const currentTimestamp = "{% now 'jS F Y H:i' %}";
+
+        if (waiverArea && pagesWrapper) {
+            function createNewPage(pageNum) {
+                const page = document.createElement('div');
+                page.className = 'bg-white shadow-lg p-5 mb-4';
+                page.style.width = '215.9mm'; // Tamaño Carta
+                page.style.minHeight = '279.4mm';
+                page.style.position = 'relative';
+                page.innerHTML = `
+                    <div class="page-content" style="font-size: 14px; line-height: 1.6; color: #333; text-align: justify; white-space: pre-line;"></div>
+                    <div class="page-footer text-center small text-muted opacity-50" style="position: absolute; bottom: 30px; left: 0; right: 0;">
+                        Página ${pageNum} | KidsFun SMAP
+                    </div>
+                `;
+
+                if (pageNum === 1) {
+                    // Cabecera Exacta (Imagen de Referencia - 3 Columnas)
+                    const header = `
+                        <div class="d-flex align-items-center mb-4 pb-2">
+                            <!-- Logo Izquierda -->
+                            <div style="width: 20%; text-align: left;">
+                                <img src="${logoUrl}" alt="Logo" style="height: 45px;">
+                            </div>
+                            
+                            <!-- Títulos Centro -->
+                            <div style="width: 60%; text-align: center;">
+                                <h1 class="fw-bold text-uppercase mb-0" style="font-size: 18px; letter-spacing: 0.5px; color: #000;">Documento de Exención de Responsabilidad (Waiver)</h1>
+                                <p class="fw-bold mb-0" style="font-size: 12px; margin-top: 2px;">KIDSFUN</p>
+                                <p class="text-muted mb-0" style="font-size: 10px;">Kidsfun y Fiestas Infantiles</p>
+                            </div>
+                            
+                            <!-- QR Derecha -->
+                            <div style="width: 20%; text-align: right;">
+                                <div class="d-inline-block text-center">
+                                    <div style="width: 50px; height: 50px; border: 1.5px solid #000; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: bold;">QR</div>
+                                    <div style="font-size: 8px; font-weight: bold; margin-top: 2px;">9E9E19EF</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sección de Información de Registro (Azul) -->
+                        <div class="mb-4" style="text-align: left;">
+                            <h5 class="fw-bold mb-3" style="font-size: 18px; color: #1e3a8a; text-transform: uppercase;">Información de Registro</h5>
+                            <div style="font-size: 13px; line-height: 1.7;">
+                                <p class="fw-bold mb-1">CONTRATO DE EXENCIÓN DE RESPONSABILIDAD Y REGLAS DE SEGURIDAD – KIDSFUN</p>
+                                <p class="mb-1"><b>FECHA:</b> &nbsp; ${new Date().getDate().toString().padStart(2, '0')} &nbsp; / &nbsp; ${(new Date().getMonth() + 1).toString().padStart(2, '0')} &nbsp; / ${new Date().getFullYear()}</p>
+                                <p class="mb-1"><b>CLIENTE / RESPONSABLE:</b> &nbsp; Mario Roberto &nbsp;</p>
+                                <div class="d-flex mb-1" style="width: 100%;">
+                                    <div style="width: 55%; padding-left: 0;"><b>ID:</b> &nbsp; emt5gVSDIOObqHn7o9FL6sRZR3B2</div>
+                                    <div style="width: 45%;"><b>TELÉFONO:</b> ____________________</div>
+                                </div>
+                                <p class="mb-3"><b>EMAIL:</b> mrgomez.dev@gmail.com</p>
+                            </div>
+                        </div>
+
+                        <!-- Sección de Familiares (Azul) -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold mb-2" style="font-size: 18px; color: #1e3a8a; text-transform: uppercase;">Familiares y Acompañantes Registrados</h5>
+                            <table class="table table-sm table-bordered" style="font-size: 12px;">
+                                <thead style="background-color: #f8fafc;">
+                                    <tr>
+                                        <th>Nombre del Familiar</th>
+                                        <th class="text-center">Edad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Paul Alejandro Martinez</td><td class="text-center">10</td></tr>
+                                    <tr><td>Alejandra Iveth Martinez</td><td class="text-center">8</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h6 class="fw-bold mb-3" style="font-size: 15px; color: #1e3a8a;">TÉRMINOS Y CONDICIONES</h6>
+                    `;
+                    page.querySelector('.page-content').insertAdjacentHTML('afterbegin', header);
+                }
+
+                return page;
+            }
+
+            function updatePreview() {
+                const fullText = waiverArea.value;
+                charCount.textContent = `${fullText.length} caracteres`;
+
+                // Limpiar previsualización
+                pagesWrapper.innerHTML = '';
+
+                let currentPageNum = 1;
+                let currentPage = createNewPage(currentPageNum);
+                pagesWrapper.appendChild(currentPage);
+                let contentContainer = currentPage.querySelector('.page-content');
+
+                // Dividir el texto en párrafos para procesarlo
+                const paragraphs = fullText.split('\n');
+
+                paragraphs.forEach(pText => {
+                    if (!pText.trim()) {
+                        contentContainer.appendChild(document.createElement('br'));
+                        return;
+                    }
+
+                    const p = document.createElement('p');
+                    p.textContent = pText;
+                    p.style.marginBottom = '1rem';
+                    contentContainer.appendChild(p);
+
+                    // Verificar si la página se desbordó (Umbral reducido para el previsualizador)
+                    if (currentPage.scrollHeight > 950) {
+                        // Eliminar el último párrafo que causó el desborde
+                        contentContainer.removeChild(p);
+
+                        // Crear nueva página
+                        currentPageNum++;
+                        currentPage = createNewPage(currentPageNum);
+                        pagesWrapper.appendChild(currentPage);
+                        contentContainer = currentPage.querySelector('.page-content');
+
+                        // Agregar el párrafo a la nueva página
+                        contentContainer.appendChild(p);
+                    }
+                });
+
+                pageIndicator.textContent = `${currentPageNum} ${currentPageNum === 1 ? 'Página' : 'Páginas'}`;
+            }
+
+            waiverArea.addEventListener('input', updatePreview);
+            updatePreview(); // Inicializar
+        }
     });
 </script>
 
