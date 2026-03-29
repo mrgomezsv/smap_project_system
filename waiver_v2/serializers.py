@@ -1,20 +1,26 @@
 from rest_framework import serializers
-from .models import WaiverQRV2, WaiverDataV2
+from .models import WaiverQRV2, WaiverDataV2, WaiverScanV2
 
 class WaiverDataV2Serializer(serializers.ModelSerializer):
     class Meta:
         model = WaiverDataV2
         fields = ['id', 'relative_name', 'relative_age', 'timestamp']
 
+class WaiverScanV2Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = WaiverScanV2
+        fields = ['id', 'scanned_by', 'scanned_at']
+
 class WaiverQRV2Serializer(serializers.ModelSerializer):
     relatives = WaiverDataV2Serializer(many=True, read_only=True)
+    scans = WaiverScanV2Serializer(many=True, read_only=True)
     is_expired = serializers.ReadOnlyField()
     
     class Meta:
         model = WaiverQRV2
         fields = [
             'id', 'qr_code', 'user_id', 'user_name', 'user_email', 
-            'created_at', 'expires_at', 'status', 'relatives', 'is_expired'
+            'created_at', 'expires_at', 'status', 'relatives', 'scans', 'is_expired'
         ]
         read_only_fields = ['qr_code', 'created_at', 'expires_at', 'status']
 

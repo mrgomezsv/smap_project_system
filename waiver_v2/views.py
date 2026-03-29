@@ -1,20 +1,27 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
-from .models import WaiverQRV2
-from .serializers import WaiverQRV2Serializer, WaiverCreateV2Serializer
-# from api_waiver.utils import create_waiver_pdf  # Comentado - API eliminada
+from .models import WaiverQRV2, WaiverScanV2
+from .serializers import WaiverQRV2Serializer, WaiverCreateV2Serializer, WaiverScanV2Serializer
+from .utils import create_waiver_pdf_buffer
 from t_app_product.utils import send_waiver_confirmation_email
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 import tempfile
 import os
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def api_waiver_v2(request):
     """API para crear waivers con QR único y vencimiento automático"""
     if request.method == 'POST':
         data = request.data
-        user_id = data.get('user_id', '')
+        # Para seguridad, usamos el ID del usuario autenticado (UID de Firebase)
+        # Esto previene que un usuario intente crear waivers para otro enviando un user_id manual.
+        user_id = getattr(request.user, 'username', data.get('user_id', ''))
         user_name = data.get('user_name', '')
         user_email = data.get('user_email', '')
         relatives_data = data.get('relatives', [])
@@ -25,26 +32,8 @@ def api_waiver_v2(request):
                 'error': 'Datos de usuario incompletos. Se requiere user_id, user_name y user_email.'
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        # Verificar si ya existe un waiver activo para este usuario hoy
-        today = timezone.now().date()
-        existing_waiver = WaiverQRV2.objects.filter(
-            user_id=user_id,
-            created_at__date=today,
-            status='ACTIVE'
-        ).first()
-
-        if existing_waiver:
-            # Actualizar el estado del waiver existente
-            existing_waiver.update_status()
-            
-            # Si sigue activo, devolver el existente
-            if existing_waiver.status == 'ACTIVE':
-                serializer = WaiverQRV2Serializer(existing_waiver)
-                return Response({
-                    'message': 'Ya existe un waiver activo para hoy.',
-                    'waiver': serializer.data,
-                    'is_new': False
-                }, status=status.HTTP_200_OK)
+        # Eliminamos la restricción de un solo waiver activo por día
+        # El usuario ahora puede generar múltiples waivers si así lo desea.
 
         # Crear nuevo waiver
         try:
@@ -58,9 +47,8 @@ def api_waiver_v2(request):
             if serializer.is_valid():
                 waiver_qr = serializer.save()
                 
-                # Comentado: Generar el PDF
-                # pdf_buffer = create_waiver_pdf(user_name, user_email, relatives_data)
-                pdf_buffer = None  # Valor por defecto
+                # Generar el PDF usando la nueva utilidad
+                pdf_buffer = create_waiver_pdf_buffer(waiver_qr)
                 
                 # Guardar PDF temporalmente para adjuntarlo al correo
                 pdf_path = None
@@ -109,6 +97,7 @@ def api_waiver_v2(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_waiver_data_v2(request, qr_code):
     """Obtener datos de waiver por código QR"""
     try:
@@ -122,10 +111,12 @@ def get_waiver_data_v2(request, qr_code):
         waiver_qr.update_status()
 
         # Serializar los datos
-        serializer = WaiverQRV2Serializer(waiver_qr)
+        data = WaiverQRV2Serializer(waiver_qr).data
+        # Añadir qr_value para compatibilidad con Flutter
+        data['qr_value'] = waiver_qr.qr_code
         
         return Response({
-            'waiver': serializer.data,
+            'waiver': data,
             'is_valid': waiver_qr.status == 'ACTIVE' and not waiver_qr.is_expired()
         }, status=status.HTTP_200_OK)
 
@@ -135,8 +126,13 @@ def get_waiver_data_v2(request, qr_code):
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_user_waivers_v2(request, user_id):
     """Obtener todos los waivers de un usuario"""
+    # Seguridad: Un usuario solo puede ver sus propios waivers
+    if getattr(request.user, 'username', '') != user_id:
+        return Response({'error': 'No tienes permiso para ver los waivers de este usuario.'}, status=status.HTTP_403_FORBIDDEN)
+
     try:
         waivers = WaiverQRV2.objects.filter(user_id=user_id).order_by('-created_at')
         
@@ -157,6 +153,7 @@ def get_user_waivers_v2(request, user_id):
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def validate_waiver_v2(request):
     """Validar un waiver por código QR"""
     if request.method == 'POST':
@@ -182,10 +179,23 @@ def validate_waiver_v2(request):
             # Verificar si es válido
             is_valid = waiver_qr.status == 'ACTIVE' and not waiver_qr.is_expired()
 
+            if is_valid:
+                # REGISTRAR EL ESCANEO
+                # El usuario autenticado es quien realiza el escaneo (Colaborador)
+                scanned_by = getattr(request.user, 'email', 'unknown-collaborator')
+                WaiverScanV2.objects.create(
+                    waiver_qr=waiver_qr,
+                    scanned_by=scanned_by
+                )
+
+            # Serializar y añadir qr_value para compatibilidad
+            data = WaiverQRV2Serializer(waiver_qr).data
+            data['qr_value'] = waiver_qr.qr_code
+
             return Response({
                 'valid': is_valid,
-                'waiver': WaiverQRV2Serializer(waiver_qr).data,
-                'message': 'Waiver válido.' if is_valid else 'Waiver expirado o inactivo.'
+                'waiver': data,
+                'message': 'Waiver validado y escaneo registrado con éxito.' if is_valid else 'Waiver expirado o inactivo.'
             }, status=status.HTTP_200_OK)
 
         except Exception as e:
@@ -194,3 +204,33 @@ def validate_waiver_v2(request):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response({'error': 'Método no permitido'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@login_required
+def download_waiver_pdf(request, qr_code):
+    """Vista para descargar el PDF de un waiver existente (para el admin)"""
+    waiver_qr = get_object_or_404(WaiverQRV2, qr_code=qr_code.upper())
+    
+    pdf_buffer = create_waiver_pdf_buffer(waiver_qr)
+    
+    response = HttpResponse(pdf_buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Waiver_{waiver_qr.qr_code}.pdf"'
+    
+    return response
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_collaborator_scans_v2(request):
+    """Obtener el historial de escaneos realizados por el colaborador actual"""
+    email = getattr(request.user, 'email', None)
+    if not email:
+        return Response({'error': 'No se pudo identificar al colaborador'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        scans = WaiverScanV2.objects.filter(scanned_by=email).order_by('-scanned_at')
+        serializer = WaiverScanV2Serializer(scans, many=True)
+        return Response({
+            'scans': serializer.data,
+            'total_count': len(serializer.data)
+        }, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

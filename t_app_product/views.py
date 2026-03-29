@@ -27,8 +27,10 @@ from firebase_admin import messaging
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .models import ChatAdministrator, ChatRoom, ChatMessage, ContactMessage, ProductLike, ProductComment
+from waiver_v2.models import WaiverQRV2, WaiverDocument
 import firebase_admin
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -524,23 +526,39 @@ def waiver(request):
     # Obtener los colaboradores registrados
     waiver_validators = WaiverValidator.objects.all()
 
-    # Filas específicas para la tabla de clientes registrados en el waiver
-    waiver_clientes = WaiverDataDB.objects.values(
-        'id', 'user_id', 'user_name', 'relative_name', 'relative_age', 'timestamp', 'user_email'
+    # Usar el nuevo modelo relacional WaiverQRV2 pre-cargando los familiares
+    waiver_clientes = WaiverQRV2.objects.all().prefetch_related('relatives').order_by('-created_at')
+
+    # Obtener o crear el documento del waiver (Singleton)
+    waiver_doc, created = WaiverDocument.objects.get_or_create(
+        id=1,
+        defaults={'content': 'Escribe aquí el texto legal del waiver...'}
     )
 
     if request.method == 'POST':
-        form = WaiverValidatorForm(request.POST)
-        if form.is_valid():
-            form.save()  # Guarda el formulario sin asignar 'user'
-            return redirect('waiver')  # Redirigir de nuevo para evitar reenvíos
+        if 'save_document' in request.POST:
+            # Manejar el guardado del documento
+            content = request.POST.get('content')
+            if content:
+                waiver_doc.content = content
+                waiver_doc.save()
+                messages.success(request, 'Documento legal actualizado correctamente.')
+                return redirect('waiver')
+        else:
+            # Manejar el formulario de colaboradores
+            form = WaiverValidatorForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Colaborador agregado exitosamente.')
+                return redirect('waiver')
     else:
         form = WaiverValidatorForm()
 
     context = {
         'waiver_data': waiver_data,
         'waiver_clientes': waiver_clientes,
-        'waiver_validators': waiver_validators,  # Pasamos los validadores al contexto
+        'waiver_validators': waiver_validators,
+        'waiver_doc': waiver_doc,
         'form': form
     }
 
@@ -927,6 +945,7 @@ def start_new_chat(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def api_products(request):
     """API para obtener todos los productos"""
     try:
@@ -973,6 +992,7 @@ def api_products(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def api_products_by_category(request, category):
     """API para obtener productos por categoría"""
     try:
@@ -1020,6 +1040,7 @@ def api_products_by_category(request, category):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def likes_count(request, product_id):
     try:
         total = ProductLike.objects.filter(product_id=product_id, is_favorite=True).count()
@@ -1029,7 +1050,12 @@ def likes_count(request, product_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def user_product_favorite(request, user_id, product_id):
+    # Seguridad: Un usuario solo puede ver sus propios favoritos
+    if getattr(request.user, 'username', '') != user_id:
+        return Response({'error': 'No tienes permiso para ver los favoritos de este usuario.'}, status=status.HTTP_403_FORBIDDEN)
+
     try:
         like = ProductLike.objects.filter(user_id=user_id, product_id=product_id).first()
         return Response({'user': user_id, 'product': product_id, 'is_favorite': bool(like and like.is_favorite)}, status=status.HTTP_200_OK)
@@ -1038,9 +1064,11 @@ def user_product_favorite(request, user_id, product_id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def toggle_like(request):
     try:
-        user = request.data.get('user')
+        # Seguridad: Usamos el ID del usuario autenticado
+        user = getattr(request.user, 'username', request.data.get('user'))
         product = request.data.get('product')
         is_favorite = request.data.get('is_favorite', True)
         if not user or not product:
@@ -1056,11 +1084,13 @@ def toggle_like(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_comment(request):
     try:
         product_id = request.data.get('product_id')
-        user_id = request.data.get('user_id')
-        user_display_name = request.data.get('user_display_name')
+        # Seguridad: Usamos el ID del usuario autenticado
+        user_id = getattr(request.user, 'username', request.data.get('user_id'))
+        user_display_name = request.data.get('user_display_name', request.user.first_name)
         comment_text = request.data.get('comment')
         
         if not product_id or not comment_text:
@@ -1091,6 +1121,7 @@ def create_comment(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def comments_for_product(request, product_id):
     try:
         items = ProductComment.objects.filter(product_id=product_id).order_by('-created_at')
