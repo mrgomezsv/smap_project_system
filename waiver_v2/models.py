@@ -59,3 +59,29 @@ class WaiverDataV2(models.Model):
     class Meta:
         db_table = 'waiver_v2_waiverdata'
         ordering = ['-timestamp']
+
+class WaiverScanV2(models.Model):
+    """Modelo para registrar el historial de escaneos de un QR"""
+    waiver_qr = models.ForeignKey(WaiverQRV2, on_delete=models.CASCADE, related_name='scans')
+    scanned_by = models.CharField(max_length=100, help_text='Email del colaborador que escaneó')
+    scanned_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Escaneo de {self.waiver_qr.qr_code} por {self.scanned_by} el {self.scanned_at}"
+
+    class Meta:
+        db_table = 'waiver_v2_waiverscan'
+        ordering = ['-scanned_at']
+
+class WaiverDocument(models.Model):
+    """Modelo Singleton para almacenar el texto legal del waiver"""
+    title = models.CharField(max_length=200, default='Documento de Exención de Responsabilidad (Waiver)')
+    content = models.TextField(help_text='Texto legal completo del waiver')
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Documento Waiver'
+        verbose_name_plural = 'Documento Waiver'
