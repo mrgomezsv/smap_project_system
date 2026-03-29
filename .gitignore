@@ -72,13 +72,12 @@ target/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# pyenv
-.python-version
-
-# celery beat schedule file
-celerybeat-schedule
-
-# SageMath parsed files
+# Local Development
+.env.dev
+venv/
+*.log
+db.sqlite3
+.DS_Store
 *.sage.py
 
 # Environments
