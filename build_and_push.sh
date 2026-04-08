@@ -1,7 +1,15 @@
 #!/bin/bash
 
-# Configuración
+# Configuración (Versión auto-incrementable)
 VERSION="1.0.0.7"
+BASE_VERSION=$(echo $VERSION | cut -d'.' -f1-3)
+BUILD_NUMBER=$(echo $VERSION | cut -d'.' -f4)
+VERSION="$BASE_VERSION.$((BUILD_NUMBER + 1))"
+
+# Actualizar el archivo para el próximo uso
+sed -i '' "s/VERSION=\"[^\"]*\"/VERSION=\"$VERSION\"/" build_and_push.sh
+
+
 APP_IMAGE="mrgomezdev/kidsfun-django"
 DB_IMAGE="mrgomezdev/kidsfun-db"
 
