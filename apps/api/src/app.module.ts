@@ -10,6 +10,7 @@ import { WaiversModule } from './waivers/waivers.module';
 import { PushModule } from './push/push.module';
 import { ChatModule } from './chat/chat.module';
 import { ContactMessagesModule } from './contact/contact-messages.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ContactMessagesModule } from './contact/contact-messages.module';
     PushModule,
     ChatModule,
     ContactMessagesModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
