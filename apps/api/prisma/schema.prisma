@@ -16,19 +16,20 @@ datasource db {
 // Commit #26: Product + Event
 
 model User {
-  id          Int       @id @default(autoincrement())
-  username    String    @unique @db.VarChar(150)
-  email       String?   @db.VarChar(254)
-  firstName   String?   @db.VarChar(150)
-  lastName    String?   @db.VarChar(150)
-  isActive    Boolean   @default(true)
-  isStaff     Boolean   @default(false)
-  isSuperuser Boolean   @default(false)
-  lastLogin   DateTime?
-  dateJoined  DateTime  @default(now())
+  id           Int       @id @default(autoincrement())
+  password     String    @default("!") @db.VarChar(255)
+  lastLogin    DateTime? @map("last_login") @db.DateTime(6)
+  isSuperuser  Boolean   @default(false) @map("is_superuser")
+  username     String    @unique @db.VarChar(150)
+  firstName    String    @default("") @map("first_name") @db.VarChar(150)
+  lastName     String    @default("") @map("last_name") @db.VarChar(150)
+  email        String    @default("") @unique @db.VarChar(254)
+  isStaff      Boolean   @default(false) @map("is_staff")
+  isActive     Boolean   @default(true) @map("is_active")
+  dateJoined   DateTime  @default(now()) @map("date_joined") @db.DateTime(6)
 
-  productsCreated Product[] @relation("ProductCreatedBy")
-  eventsOrganized  Event[]   @relation("EventOrganizer")
+  productsCreated  Product[]          @relation("ProductCreatedBy")
+  eventsOrganized  Event[]            @relation("EventOrganizer")
   productLikes     ProductLike[]
   chatAdminRoles   ChatAdministrator[]
   chatRooms        ChatRoom[]
