@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { BigIntInterceptor } from './common/interceptors/bigint.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -28,6 +29,9 @@ async function bootstrap() {
 
   // Exception filter global (traduce errores HTTP a JSON consistente)
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  // BigInt interceptor global (convierte BigInt a Number en respuestas JSON)
+  app.useGlobalInterceptors(new BigIntInterceptor());
 
   const port = process.env.PORT ?? 3001;
   await app.listen(port);
