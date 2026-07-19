@@ -33,6 +33,7 @@ model User {
   chatAdminRoles   ChatAdministrator[]
   chatRooms        ChatRoom[]
   sentMessages     ChatMessage[]
+  waiverValidations WaiverValidator[]
 
   @@map("auth_user")
 }
@@ -255,4 +256,20 @@ model ContactMessage {
   createdAt     DateTime @default(now()) @map("created_at") @db.DateTime(6)
 
   @@map("t_app_contact_message")
+}
+
+// ============================================================
+// Commit #31: WaiverValidator (colaboradores que escanean QRs)
+// ============================================================
+
+model WaiverValidator {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("user_id")
+  email     String   @unique @db.VarChar(254)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "t_app_product_waivervalidator_user_id_fk")
+
+  @@index([userId], map: "t_app_product_waivervalidator_user_id_fk")
+  @@map("t_app_product_waivervalidator")
 }
