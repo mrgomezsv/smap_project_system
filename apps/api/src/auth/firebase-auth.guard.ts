@@ -48,15 +48,17 @@ export class FirebaseAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
 
     // Si Firebase no está inicializado (modo dev sin credenciales),
-    // pasamos con un usuario "anónimo" para no bloquear desarrollo
+    // creamos/obtenemos un User "dev-anonymous" en BD para tener userId
+    // real y poder usar endpoints que lo requieren
     if (!this.firebaseService.isInitialized()) {
-      this.logger.debug('Firebase no inicializado - saltando auth (modo dev)');
-      (request as Request & { user?: AuthUser }).user = {
+      this.logger.debug('Firebase no inicializado - usando user dev (modo dev)');
+      const devUser = await this.userMapping.getOrCreateFromFirebase({
         uid: 'dev-anonymous',
         email: 'dev@local',
         name: 'Dev User',
         token: '',
-      };
+      });
+      (request as Request & { user?: AuthUser }).user = devUser;
       return true;
     }
 
