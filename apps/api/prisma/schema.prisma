@@ -9,3 +9,25 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+// ============================================================
+// Modelos - FASE 3 (mínimo viable para Auth)
+// ============================================================
+// FASE 4 añadirá: Product, Event, Like, Comment, WaiverQRV2,
+// WaiverDataV2, WaiverScanV2, WaiverDocument, ChatAdministrator,
+// ChatRoom, ChatMessage, ContactMessage, CommentReply, WaiverValidator.
+
+model User {
+  id          Int       @id @default(autoincrement())
+  username    String    @unique @db.VarChar(150)
+  email       String?   @db.VarChar(254)
+  firstName   String?   @db.VarChar(150)
+  lastName    String?   @db.VarChar(150)
+  isActive    Boolean   @default(true)
+  isStaff     Boolean   @default(false)
+  isSuperuser Boolean   @default(false)
+  lastLogin   DateTime?
+  dateJoined  DateTime  @default(now())
+
+  @@map("auth_user")
+}
