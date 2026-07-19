@@ -7,6 +7,8 @@ Objetivo: mantener un historial claro, conciso y granular. Un commit por cada ca
 - Mensajes cortos y en modo imperativo.
 - Enfocados al qué cambió, no al cómo.
 - Consistencia en el formato: `TIPO: Mensaje`.
+- Mensajes en español.
+- **Sin push al remoto** durante la refactorización (rama `produccion2027` solo local).
 
 ### Formato
 ```
@@ -62,5 +64,18 @@ Agregar al final si corresponde:
 ```
 Co-authored-by: Nombre Apellido <email@dominio.com>
 ```
+
+---
+
+## Contexto: Refactorización Node.js + Next.js (2026)
+
+Este estándar se mantiene durante toda la migración del backend Python/Django a **NestJS + Prisma** y del frontend Django templates a **Next.js 14** (rama `produccion2027`).
+
+- Los archivos Django se preservan en `legacy/django/` como referencia.
+- La nueva estructura es un monorepo pnpm en `apps/api/` y `apps/web/`.
+- No se hace push al remoto durante la migración (todo local).
+- Cada commit sigue siendo atómico y enfocado a un único cambio lógico.
+- El plan completo está en `PLAN_REFACTORIZACION.md`.
+
 
 
