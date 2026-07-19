@@ -2,26 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-primary: #1e3a8a;
+    --color-brand-yellow: #f5a91b;
+    --color-party-pink: #ec4899;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --color-info: #3b82f6;
+    --color-surface: #fafafa;
+    --color-surface-elevated: #ffffff;
+    --color-border: #e2e8f0;
+    --color-text-primary: #0f172a;
+    --color-text-muted: #64748b;
+    --color-footer: #0a1844;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-family: "Inter", system-ui, sans-serif;
+  }
+
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  /* Scroll suave para secciones */
+  section {
+    scroll-margin-top: 80px;
+  }
+
+  /* Focus rings accesibles */
+  *:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-600 active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply bg-brand-yellow text-primary hover:bg-brand-yellow-600 active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-white;
+  }
+  .btn-ghost {
+    @apply text-text-primary hover:bg-gray-100;
+  }
+  .card {
+    @apply bg-white rounded-xl shadow-soft border border-border p-6;
+  }
+  .input {
+    @apply w-full px-4 py-2.5 rounded-lg border border-border bg-white text-text-primary placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.2);
+    border-radius: 3px;
   }
 }
