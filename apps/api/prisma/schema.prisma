@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// This is your Prisma schema file.
+// Modelos equivalentes a los Django models de t_app_product/models.py
 
 generator client {
   provider = "prisma-client-js"
@@ -11,11 +11,9 @@ datasource db {
 }
 
 // ============================================================
-// Modelos - FASE 3 (mínimo viable para Auth)
+// FASE 4 - Modelos de t_app_product
 // ============================================================
-// FASE 4 añadirá: Product, Event, Like, Comment, WaiverQRV2,
-// WaiverDataV2, WaiverScanV2, WaiverDocument, ChatAdministrator,
-// ChatRoom, ChatMessage, ContactMessage, CommentReply, WaiverValidator.
+// Commit #26: Product + Event
 
 model User {
   id          Int       @id @default(autoincrement())
@@ -29,5 +27,58 @@ model User {
   lastLogin   DateTime?
   dateJoined  DateTime  @default(now())
 
+  productsCreated Product[] @relation("ProductCreatedBy")
+  eventsOrganized  Event[]   @relation("EventOrganizer")
+
   @@map("auth_user")
+}
+
+model Product {
+  id          BigInt    @id @default(autoincrement())
+  title       String    @db.VarChar(100)
+  description String?   @db.LongText
+  price       Decimal?  @db.Decimal(10, 2)
+  category    String    @db.VarChar(50)
+  created     DateTime  @default(now()) @db.DateTime(0)
+  publicated  Boolean   @default(false)
+  userId      Int       @map("user_id")
+  // 6 imágenes: principal + 5 adicionales
+  img         String    @default("default_product_image.jpg") @db.VarChar(100)
+  img1        String    @default("default_product_image.jpg") @db.VarChar(100)
+  img2        String    @default("default_product_image.jpg") @db.VarChar(100)
+  img3        String    @default("default_product_image.jpg") @db.VarChar(100)
+  img4        String    @default("default_product_image.jpg") @db.VarChar(100)
+  img5        String    @default("default_product_image.jpg") @db.VarChar(100)
+  dimensions  String?   @db.VarChar(50)
+  youtubeUrl  String?   @map("youtube_url") @db.VarChar(255)
+  circuits    String?   @db.VarChar(50)
+  space       String?   @db.VarChar(50)
+
+  user User @relation("ProductCreatedBy", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "t_app_product_product_user_id_b85feb0c_fk_auth_user_id")
+
+  @@index([category], map: "idx_product_category")
+  @@index([publicated], map: "idx_product_publicated")
+  @@index([title], map: "idx_product_title")
+  @@index([userId], map: "idx_product_user_id")
+  @@map("t_app_product_product")
+}
+
+model Event {
+  id            BigInt   @id @default(autoincrement())
+  title         String   @db.VarChar(200)
+  description   String   @db.LongText
+  location      String   @db.VarChar(200)
+  startDatetime DateTime @map("start_datetime") @db.DateTime(0)
+  ticketPrice   Decimal  @default(0.00) @map("ticket_price") @db.Decimal(10, 2)
+  published     Boolean
+  organizerId   Int      @map("organizer_id")
+  partners      String   @db.VarChar(50)
+  createdAt     DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  image         String?  @db.VarChar(100)
+  slug          String?  @unique(map: "slug") @db.VarChar(250)
+
+  organizer User @relation("EventOrganizer", fields: [organizerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "t_app_event_organizer_id_e88c3f24_fk_auth_user_id")
+
+  @@index([organizerId], map: "t_app_event_organizer_id_e88c3f24")
+  @@map("t_app_event")
 }
