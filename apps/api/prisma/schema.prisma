@@ -134,3 +134,58 @@ model CommentReply {
   @@index([commentId], map: "idx_commentreply_comment")
   @@map("t_app_product_comment_reply")
 }
+
+// ============================================================
+// Commit #28: Waiver V2 - Sistema QR
+// Equivalente a waiver_v2/models.py de Django
+// ============================================================
+
+model WaiverQRV2 {
+  id        BigInt   @id @default(autoincrement())
+  qrCode    String   @unique @map("qr_code") @db.VarChar(8)
+  userId    String   @map("user_id") @db.VarChar(100)
+  userName  String   @map("user_name") @db.VarChar(100)
+  userEmail String   @map("user_email") @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  expiresAt DateTime @map("expires_at") @db.DateTime(0)
+  status    String   @default("ACTIVE") @db.VarChar(10)
+
+  relatives WaiverDataV2[]
+  scans     WaiverScanV2[]
+
+  @@map("waiver_v2_waiverqr")
+}
+
+model WaiverDataV2 {
+  id           BigInt   @id @default(autoincrement())
+  waiverQrId   BigInt   @map("waiver_qr_id")
+  relativeName String   @map("relative_name") @db.VarChar(100)
+  relativeAge  Int      @map("relative_age")
+  timestamp    DateTime @default(now()) @db.DateTime(6)
+
+  waiverQr WaiverQRV2 @relation(fields: [waiverQrId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "waiver_v2_waiverdata_qr_fk")
+
+  @@index([waiverQrId], map: "waiver_v2_waiverdata_waiver_qr_id_fk")
+  @@map("waiver_v2_waiverdata")
+}
+
+model WaiverScanV2 {
+  id         BigInt   @id @default(autoincrement())
+  waiverQrId BigInt   @map("waiver_qr_id")
+  scannedBy  String   @map("scanned_by") @db.VarChar(100)
+  scannedAt  DateTime @default(now()) @map("scanned_at") @db.DateTime(6)
+
+  waiverQr WaiverQRV2 @relation(fields: [waiverQrId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "waiver_v2_waiverscan_qr_fk")
+
+  @@index([waiverQrId], map: "waiver_v2_waiverscan_waiver_qr_id_fk")
+  @@map("waiver_v2_waiverscan")
+}
+
+model WaiverDocument {
+  id        Int      @id @default(autoincrement())
+  title     String   @default("Documento de Exención de Responsabilidad (Waiver)") @db.VarChar(200)
+  content   String   @db.LongText
+  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(6)
+
+  @@map("waiver_v2_waiverdocument")
+}
