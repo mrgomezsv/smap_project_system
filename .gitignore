@@ -89,6 +89,12 @@ ENV/
 env.bak/
 venv.bak/
 
+# Python lib dirs (legacy Django) - no ignorar apps/web/src/lib
+/lib/
+/lib64/
+!/apps/**/lib/
+!/apps/**/lib/**
+
 # Spyder project settings
 .spyderproject
 .spyproject
