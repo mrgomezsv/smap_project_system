@@ -1,10 +1,10 @@
-import { IsString, IsNotEmpty, IsEmail, IsArray, ValidateNested, Min, IsInt, Max } from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, IsArray, ValidateNested, Min, IsInt, Max, MaxLength } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class RelativeDto {
   @IsString()
   @IsNotEmpty()
-  @Max(100)
+  @MaxLength(100)
   name!: string;
 
   @IsInt()
@@ -16,11 +16,11 @@ export class RelativeDto {
 export class CreateWaiverDto {
   @IsString()
   @IsNotEmpty()
-  @Max(100)
+  @MaxLength(100)
   userName!: string;
 
   @IsEmail()
-  @Max(255)
+  @MaxLength(255)
   userEmail!: string;
 
   @IsArray()
