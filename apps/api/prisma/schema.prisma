@@ -30,6 +30,9 @@ model User {
   productsCreated Product[] @relation("ProductCreatedBy")
   eventsOrganized  Event[]   @relation("EventOrganizer")
   productLikes     ProductLike[]
+  chatAdminRoles   ChatAdministrator[]
+  chatRooms        ChatRoom[]
+  sentMessages     ChatMessage[]
 
   @@map("auth_user")
 }
@@ -188,4 +191,51 @@ model WaiverDocument {
   updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(6)
 
   @@map("waiver_v2_waiverdocument")
+}
+
+// ============================================================
+// Commit #29: Chat (3 modelos)
+// ============================================================
+
+model ChatAdministrator {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  email     String   @unique @db.VarChar(254)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_chat_administrator_user_id_fk")
+
+  @@index([userId], map: "t_app_chat_administrator_user_id_fk")
+  @@map("t_app_chat_administrator")
+}
+
+model ChatRoom {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @map("user_id")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+  isActive      Boolean   @default(true) @map("is_active")
+  lastMessageAt DateTime  @default(now()) @map("last_message_at") @db.DateTime(6)
+
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_chat_room_user_id_fk")
+  messages ChatMessage[]
+
+  @@index([userId], map: "t_app_chat_room_user_id_fk")
+  @@map("t_app_chat_room")
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  chatRoomId Int     @map("chat_room_id")
+  senderId  Int      @map("sender_id")
+  content   String   @db.LongText
+  timestamp DateTime @default(now()) @db.DateTime(6)
+  isRead    Boolean  @default(false) @map("is_read")
+
+  chatRoom ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_chat_message_chat_room_id_fk")
+  sender   User     @relation(fields: [senderId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_chat_message_sender_id_fk")
+
+  @@index([chatRoomId], map: "t_app_chat_message_chat_room_id_fk")
+  @@index([senderId], map: "t_app_chat_message_sender_id_fk")
+  @@map("t_app_chat_message")
 }
