@@ -143,3 +143,14 @@ militar
 *.code-workspace
 test_db.py
 ruff_report.txt
+
+# Imágenes y data de desarrollo local (se mantienen en disco, NO en git)
+event_images/
+product_images/
+media/
+
+# Backups descargados del server
+backups/
+
+# Logs runtime
+logs/
