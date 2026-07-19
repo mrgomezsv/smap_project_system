@@ -154,3 +154,53 @@ backups/
 
 # Logs runtime
 logs/
+
+# ====================================================================
+# Node.js / pnpm / NestJS / Next.js (FASE 1 refactorización)
+# ====================================================================
+
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Builds
+dist/
+build/
+.next/
+out/
+.turbo/
+
+# Coverage y tests
+coverage/
+.nyc_output/
+*.lcov
+
+# Logs de Node
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Variables de entorno adicionales de Node
+.env.local
+.env.*.local
+
+# NestJS
+*.tsbuildinfo
+
+# Next.js
+next-env.d.ts
+
+# TypeScript
+*.tsbuildinfo
+
+# Prisma
+apps/api/prisma/migrations/dev.db*
+
+# IDEs Node
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
