@@ -1,18 +1,15 @@
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { api } from '@/lib/api';
 import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
 
-// ISR: revalidar cada 5 minutos
-export const revalidate = 300;
-export const dynamic = 'force-static';
-
-function formatDate(iso: string): { day: string; month: string; full: string } {
+function formatDate(iso: string, locale: string): { day: string; month: string; full: string } {
   const d = new Date(iso);
+  const formattingLocale = locale === 'es' ? 'es-ES' : 'en-US';
   return {
     day: d.getDate().toString().padStart(2, '0'),
-    month: d.toLocaleString('es-ES', { month: 'short' }).toUpperCase().replace('.', ''),
-    full: d.toLocaleString('es-ES', {
+    month: d.toLocaleString(formattingLocale, { month: 'short' }).toUpperCase().replace('.', ''),
+    full: d.toLocaleString(formattingLocale, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
@@ -26,6 +23,7 @@ function formatDate(iso: string): { day: string; month: string; full: string } {
 export default async function EventosPage() {
   const t = await getTranslations('event');
   const tCommon = await getTranslations('common');
+  const locale = await getLocale();
   let events: Event[] = [];
   try {
     const res = await api.get<{ items: Event[] }>('/api/events?take=20');
@@ -63,7 +61,7 @@ export default async function EventosPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((event) => {
-              const date = formatDate(event.startDatetime);
+              const date = formatDate(event.startDatetime, locale);
               const partner = PARTNER_LABELS[event.partners as EventPartner] ?? PARTNER_LABELS.partner3;
               const hasImage = event.image && !event.image.includes('default_event');
               return (
