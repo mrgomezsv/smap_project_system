@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import dynamic from 'next/dynamic';
-import { MobileMenu } from '@/components/public/MobileMenu';
 
 // UserMenu usa Firebase Auth (cliente). Se carga dinámicamente para no
 // inflar el bundle del header en la primera carga (code splitting).
@@ -61,11 +60,9 @@ export async function PublicHeader() {
           </Link>
         </div>
 
-        <MobileMenu
-          links={navLinks.map((link) => ({ href: link.href, label: t(link.key) }))}
-          appLabel={tHeader('app')}
-          bookLabel={tHeader('book')}
-        />
+        <div className="flex md:hidden items-center gap-2">
+          <LanguageSwitcher />
+        </div>
       </div>
     </header>
   );
