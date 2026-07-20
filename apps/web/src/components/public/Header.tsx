@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { UserMenu } from '@/components/auth/UserMenu';
 
 const navLinks = [
   { href: '/', label: 'Inicio' },
@@ -43,6 +44,7 @@ export function PublicHeader() {
           >
             App
           </Link>
+          <UserMenu />
           <Link
             href="/productos"
             className="btn btn-primary shadow-medium hover:shadow-large"
