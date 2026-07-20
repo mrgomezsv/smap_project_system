@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { api, ApiError } from '@/lib/api';
 
 interface FormData {
@@ -20,6 +21,8 @@ const EMPTY: FormData = {
 };
 
 export function ContactForm() {
+  const t = useTranslations('contact');
+  const tCommon = useTranslations('common');
   const [data, setData] = useState<FormData>(EMPTY);
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -32,16 +35,16 @@ export function ContactForm() {
 
   function validate(): boolean {
     const next: Partial<FormData> = {};
-    if (!data.firstName.trim()) next.firstName = 'Requerido';
-    if (!data.lastName.trim()) next.lastName = 'Requerido';
+    if (!data.firstName.trim()) next.firstName = tCommon('error');
+    if (!data.lastName.trim()) next.lastName = tCommon('error');
     if (!data.contactNumber.trim() || data.contactNumber.replace(/\D/g, '').length < 7) {
-      next.contactNumber = 'Teléfono inválido';
+      next.contactNumber = tCommon('error');
     }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) {
-      next.email = 'Email inválido';
+      next.email = tCommon('error');
     }
     if (!data.reason.trim() || data.reason.length < 5) {
-      next.reason = 'Cuéntanos un poco más (mín. 5 caracteres)';
+      next.reason = tCommon('error');
     }
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -58,8 +61,7 @@ export function ContactForm() {
       setSent(true);
       setData(EMPTY);
     } catch (e) {
-      const msg = e instanceof ApiError ? e.message : 'No pudimos enviar tu mensaje. Intenta de nuevo.';
-      setErrorMsg(msg);
+      setErrorMsg(e instanceof ApiError ? e.message : tCommon('error'));
     } finally {
       setSubmitting(false);
     }
@@ -69,16 +71,18 @@ export function ContactForm() {
     return (
       <div className="card text-center py-12">
         <div className="text-6xl mb-3">✅</div>
-        <h2 className="text-2xl font-heading font-extrabold text-text-primary">¡Mensaje enviado!</h2>
+        <h2 className="text-2xl font-heading font-extrabold text-text-primary">
+          {t('success')}
+        </h2>
         <p className="text-text-muted mt-2 max-w-md mx-auto">
-          Gracias por contactarnos. Te responderemos en menos de 24 horas.
+          {t('successSubtitle')}
         </p>
         <button
           type="button"
           onClick={() => setSent(false)}
           className="btn btn-outline mt-6"
         >
-          Enviar otro mensaje
+          {tCommon('back')}
         </button>
       </div>
     );
@@ -89,7 +93,7 @@ export function ContactForm() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-text-primary mb-1.5">
-            Nombre <span className="text-danger">*</span>
+            {t('name')} <span className="text-danger">*</span>
           </label>
           <input
             type="text"
@@ -101,7 +105,7 @@ export function ContactForm() {
         </div>
         <div>
           <label className="block text-sm font-medium text-text-primary mb-1.5">
-            Apellido <span className="text-danger">*</span>
+            {t('lastName')} <span className="text-danger">*</span>
           </label>
           <input
             type="text"
@@ -115,7 +119,7 @@ export function ContactForm() {
 
       <div>
         <label className="block text-sm font-medium text-text-primary mb-1.5">
-          Teléfono <span className="text-danger">*</span>
+          {t('phone')} <span className="text-danger">*</span>
         </label>
         <input
           type="tel"
@@ -129,7 +133,7 @@ export function ContactForm() {
 
       <div>
         <label className="block text-sm font-medium text-text-primary mb-1.5">
-          Email <span className="text-danger">*</span>
+          {t('email')} <span className="text-danger">*</span>
         </label>
         <input
           type="email"
@@ -143,7 +147,7 @@ export function ContactForm() {
 
       <div>
         <label className="block text-sm font-medium text-text-primary mb-1.5">
-          ¿En qué te podemos ayudar? <span className="text-danger">*</span>
+          {t('message')} <span className="text-danger">*</span>
         </label>
         <textarea
           rows={5}
@@ -162,7 +166,7 @@ export function ContactForm() {
       )}
 
       <button type="submit" disabled={submitting} className="btn btn-primary w-full py-3">
-        {submitting ? 'Enviando…' : 'Enviar mensaje'}
+        {submitting ? t('submitting') : t('submit')}
       </button>
     </form>
   );

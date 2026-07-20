@@ -137,11 +137,15 @@
     "emails": "Emails",
     "name": "Nombre",
     "lastname": "Apellido",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
     "message": "¿En qué te podemos ayudar?",
     "submit": "Enviar mensaje",
     "submitting": "Enviando…",
     "success": "¡Mensaje enviado!",
-    "successSubtitle": "Gracias por contactarnos. Te responderemos en menos de 24 horas."
+    "successSubtitle": "Gracias por contactarnos. Te responderemos en menos de 24 horas.",
+    "whatsappCtaTitle": "¿Prefieres WhatsApp?",
+    "whatsappCtaSubtitle": "Respuesta inmediata en horario comercial."
   },
   "footer": {
     "rights": "Todos los derechos reservados.",

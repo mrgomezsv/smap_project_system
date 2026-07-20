@@ -137,11 +137,15 @@
     "emails": "Emails",
     "name": "First name",
     "lastname": "Last name",
+    "firstName": "First name",
+    "lastName": "Last name",
     "message": "How can we help?",
     "submit": "Send message",
     "submitting": "Sending…",
     "success": "Message sent!",
-    "successSubtitle": "Thanks for reaching out. We'll get back in under 24 hours."
+    "successSubtitle": "Thanks for reaching out. We'll get back in under 24 hours.",
+    "whatsappCtaTitle": "Prefer WhatsApp?",
+    "whatsappCtaSubtitle": "Instant reply during business hours."
   },
   "footer": {
     "rights": "All rights reserved.",
