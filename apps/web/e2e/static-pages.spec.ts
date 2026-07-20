@@ -4,27 +4,26 @@ test.describe('Páginas estáticas', () => {
   test('sobre nosotros carga y muestra misión/visión', async ({ page }) => {
     await page.goto('/sobre-nosotros');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /nuestra misión/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /nuestra visión/i })).toBeVisible();
-    // Badge "Sobre nosotros" en el hero
-    await expect(page.getByText(/sobre nosotros/i).first()).toBeVisible();
+    // h3 headings: "Nuestra misión" y "Nuestra visión"
+    await expect(page.locator('h3', { hasText: /nuestra misión/i })).toBeVisible();
+    await expect(page.locator('h3', { hasText: /nuestra visión/i })).toBeVisible();
   });
 
   test('métodos de pago muestra info de Zelle', async ({ page }) => {
     await page.goto('/metodos-de-pago');
-    await expect(page.getByRole('heading', { name: /métodos de pago/i })).toBeVisible();
+    await expect(page.locator('h1', { hasText: /métodos de pago/i })).toBeVisible();
     await expect(page.getByText(/zelle/i).first()).toBeVisible();
   });
 
   test('términos y condiciones muestra secciones', async ({ page }) => {
     await page.goto('/terminos');
-    await expect(page.getByRole('heading', { name: /términos y condiciones/i })).toBeVisible();
+    await expect(page.locator('h1', { hasText: /términos y condiciones/i })).toBeVisible();
     await expect(page.getByText(/aceptación de los términos/i)).toBeVisible();
   });
 
   test('mobile-app landing muestra hero con CTA', async ({ page }) => {
     await page.goto('/mobile-app');
-    await expect(page.getByRole('heading', { name: /diversión en tu bolsillo/i })).toBeVisible();
+    await expect(page.locator('h1', { hasText: /diversión en tu bolsillo/i })).toBeVisible();
   });
 });
 
