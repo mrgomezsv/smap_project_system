@@ -47,12 +47,12 @@ export async function PublicHeader() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <Link
+          {/* <Link
             href="/mobile-app"
             className="text-sm font-medium text-primary/80 hover:text-primary transition"
           >
             {tHeader('app')}
-          </Link>
+          </Link> */}
           <LanguageSwitcher />
           <UserMenuDynamic />
           <Link href="/productos" className="btn btn-primary shadow-medium hover:shadow-large">

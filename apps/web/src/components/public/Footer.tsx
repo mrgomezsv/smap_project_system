@@ -15,7 +15,7 @@ const footerSections = [
     links: [
       { href: '/sobre-nosotros', label: 'Sobre Nosotros' },
       { href: '/eventos', label: 'Eventos' },
-      { href: '/mobile-app', label: 'Nuestra App' },
+      // { href: '/mobile-app', label: 'Nuestra App' },
       { href: '/contacto', label: 'Contacto' },
     ],
   },

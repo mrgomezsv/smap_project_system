@@ -1,15 +1,59 @@
 import { getTranslations } from 'next-intl/server';
-import { MobileAppDownload } from '@/components/mobile-app/MobileAppDownload';
+// import { MobileAppDownload } from '@/components/mobile-app/MobileAppDownload';
 
 export async function generateMetadata() {
   const t = await getTranslations('mobileApp');
   return {
-    title: t('metaTitle'),
+    title: `${t('metaTitle')} - Próximamente`,
     description: t('metaDesc'),
   };
 }
 
 export default async function MobileAppPage() {
+  // NOTA: Esta sección se encuentra comentada temporalmente ya que la aplicación móvil aún no está lista para producción.
+  // Se muestra una pantalla amigable de "Próximamente".
+  
+  return (
+    <div className="bg-surface min-h-[70vh] flex items-center justify-center py-16 px-4">
+      <div className="max-w-md w-full text-center space-y-6 bg-white p-8 md:p-10 rounded-3xl shadow-medium border border-border">
+        <div className="text-7xl animate-bounce">
+          📱
+        </div>
+        <div className="space-y-2">
+          <span className="inline-block bg-brand-yellow/10 border border-brand-yellow/30 text-brand-yellow-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+            Kidsfun App
+          </span>
+          <h1 className="text-3xl font-heading font-extrabold text-text-primary">
+            ¡Muy Pronto!
+          </h1>
+          <p className="text-text-muted text-base">
+            Nuestra aplicación móvil está en desarrollo para ofrecerte una experiencia increíble. Muy pronto podrás descargarla y gestionar todas tus reservas y eventos infantiles desde la palma de tu mano.
+          </p>
+        </div>
+        <div className="pt-4 border-t border-border flex flex-col gap-3">
+          <a
+            href="/productos"
+            className="btn btn-primary w-full py-3 font-bold shadow-soft"
+          >
+            Ver Catálogo de Productos
+          </a>
+          <a
+            href="/"
+            className="text-sm font-bold text-primary hover:underline"
+          >
+            Volver al Inicio
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================
+   CÓDIGO ORIGINAL COMENTADO TEMPORALMENTE:
+   ==========================================
+
+export default async function MobileAppPageOriginal() {
   const t = await getTranslations('mobileApp');
 
   const FEATURES = [
@@ -47,7 +91,7 @@ export default async function MobileAppPage() {
 
   return (
     <div className="bg-surface min-h-screen">
-      {/* Hero */}
+      {/* Hero * /}
       <section className="bg-gradient-to-br from-primary via-primary to-primary-700 text-white py-16 overflow-hidden relative">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
@@ -76,7 +120,7 @@ export default async function MobileAppPage() {
                 />
               </a>
             </div>
-            {/* Mockup */}
+            {/* Mockup * /}
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
                 <div className="w-56 h-[28rem] bg-gray-900 rounded-[2.5rem] p-3 shadow-2xl">
@@ -93,7 +137,7 @@ export default async function MobileAppPage() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* Features * /}
       <section className="container py-16">
         <h2 className="text-3xl font-heading font-extrabold text-text-primary text-center mb-3">
           {t('featuresTitle')}
@@ -112,7 +156,7 @@ export default async function MobileAppPage() {
         </div>
       </section>
 
-      {/* QR Download */}
+      {/* QR Download * /}
       <section className="bg-primary text-white py-16">
         <div className="container max-w-2xl text-center">
           <h2 className="text-3xl font-heading font-extrabold mb-3">
@@ -129,3 +173,4 @@ export default async function MobileAppPage() {
     </div>
   );
 }
+========================================== */
