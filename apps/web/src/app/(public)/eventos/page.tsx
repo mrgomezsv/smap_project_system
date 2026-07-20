@@ -2,6 +2,10 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
 
+// ISR: revalidar cada 5 minutos
+export const revalidate = 300;
+export const dynamic = 'force-static';
+
 function formatDate(iso: string): { day: string; month: string; full: string } {
   const d = new Date(iso);
   return {

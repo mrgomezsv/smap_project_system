@@ -4,6 +4,9 @@ import type { Metadata } from 'next';
 import { api, ApiError } from '@/lib/api';
 import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
 
+// ISR: revalidar cada 5 minutos
+export const revalidate = 300;
+
 interface PageProps {
   params: { id: string };
 }

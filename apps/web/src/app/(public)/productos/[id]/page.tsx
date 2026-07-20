@@ -5,6 +5,9 @@ import { api, ApiError } from '@/lib/api';
 import type { Product } from '@/lib/types';
 import { CATEGORY_LABELS, type Category } from '@/lib/types';
 
+// ISR: revalidar cada 5 minutos
+export const revalidate = 300;
+
 interface PageProps {
   params: { id: string };
 }

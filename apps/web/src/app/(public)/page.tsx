@@ -3,6 +3,10 @@ import { api } from '@/lib/api';
 import type { Product } from '@/lib/types';
 import { CATEGORY_LABELS, type Category } from '@/lib/types';
 
+// ISR: revalidar cada 5 minutos
+export const revalidate = 300;
+export const dynamic = 'force-static';
+
 const HERO_IMG = '/media/product_images/barbie_bounce_house/barbie_bounce_house_01.jpeg';
 
 const featuredCategories: Array<{ key: Category; emoji: string; bg: string }> = [
