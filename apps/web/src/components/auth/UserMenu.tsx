@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
 
 export function UserMenu() {
+  const t = useTranslations('header');
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState(false);
@@ -35,7 +37,7 @@ export function UserMenu() {
         href="/cuenta"
         className="text-sm font-medium text-primary/80 hover:text-primary transition"
       >
-        Iniciar sesión
+        {t('login')}
       </Link>
     );
   }
@@ -87,14 +89,14 @@ export function UserMenu() {
                 className="block px-4 py-2 text-sm text-text-primary hover:bg-surface"
                 onClick={() => setOpen(false)}
               >
-                Mi cuenta
+                {t('account')}
               </Link>
               <Link
                 href="/cuenta#waivers"
                 className="block px-4 py-2 text-sm text-text-primary hover:bg-surface"
                 onClick={() => setOpen(false)}
               >
-                Mis waivers
+                {t('waivers')}
               </Link>
             </div>
             <div className="border-t border-border py-1">
@@ -106,7 +108,7 @@ export function UserMenu() {
                 }}
                 className="block w-full text-left px-4 py-2 text-sm text-danger hover:bg-danger/5"
               >
-                Cerrar sesión
+                {t('logout')}
               </button>
             </div>
           </div>

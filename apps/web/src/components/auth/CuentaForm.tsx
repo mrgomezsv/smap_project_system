@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -14,6 +15,7 @@ import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
 import { PasswordInput } from '@/components/ui/PasswordInput';
 
 export function CuentaForm() {
+  const t = useTranslations('auth');
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next') ?? '/';
@@ -46,7 +48,7 @@ export function CuentaForm() {
     try {
       const auth = getFirebaseAuth();
       if (!auth) {
-        setError('Firebase no está configurado.');
+        setError(t('errors.notConfigured'));
         return;
       }
       if (mode === 'signin') {
@@ -61,11 +63,11 @@ export function CuentaForm() {
     } catch (e) {
       const code = (e as { code?: string }).code ?? '';
       const messages: Record<string, string> = {
-        'auth/invalid-credential': 'Email o contraseña incorrectos.',
-        'auth/email-already-in-use': 'Este email ya está registrado.',
-        'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres.',
+        'auth/invalid-credential': t('errors.invalidCredential'),
+        'auth/email-already-in-use': t('errors.emailInUse'),
+        'auth/weak-password': t('errors.weakPassword'),
       };
-      setError(messages[code] ?? 'No se pudo completar la operación.');
+      setError(messages[code] ?? t('errors.generic'));
     } finally {
       setLoading(false);
     }
@@ -77,7 +79,7 @@ export function CuentaForm() {
     try {
       const auth = getFirebaseAuth();
       if (!auth) {
-        setError('Firebase no está configurado.');
+        setError(t('errors.notConfigured'));
         return;
       }
       const provider = new GoogleAuthProvider();
@@ -85,7 +87,7 @@ export function CuentaForm() {
       router.push(next);
       router.refresh();
     } catch {
-      setError('No se pudo iniciar sesión con Google.');
+      setError(t('errors.googleError'));
     } finally {
       setLoading(false);
     }
@@ -98,7 +100,7 @@ export function CuentaForm() {
           {(user.displayName ?? user.email ?? '?')[0]?.toUpperCase()}
         </div>
         <h2 className="text-xl font-heading font-extrabold text-text-primary mb-1">
-          {user.displayName ?? '¡Hola!'}
+          {user.displayName ?? t('welcome')}
         </h2>
         <p className="text-sm text-text-muted mb-6">{user.email}</p>
         <div className="space-y-2 text-left">
@@ -106,15 +108,15 @@ export function CuentaForm() {
             href="/cuenta#waivers"
             className="block p-3 rounded-lg bg-surface hover:bg-gray-100 transition"
           >
-            <p className="font-semibold text-text-primary text-sm">📋 Mis waivers</p>
-            <p className="text-xs text-text-muted">Ver tus QR generados</p>
+            <p className="font-semibold text-text-primary text-sm">{t('myWaivers')}</p>
+            <p className="text-xs text-text-muted">{t('myWaiversDesc')}</p>
           </Link>
           <Link
             href="/productos"
             className="block p-3 rounded-lg bg-surface hover:bg-gray-100 transition"
           >
-            <p className="font-semibold text-text-primary text-sm">🎪 Explorar productos</p>
-            <p className="text-xs text-text-muted">Ver el catálogo completo</p>
+            <p className="font-semibold text-text-primary text-sm">{t('exploreProducts')}</p>
+            <p className="text-xs text-text-muted">{t('exploreProductsDesc')}</p>
           </Link>
         </div>
       </div>
@@ -125,7 +127,7 @@ export function CuentaForm() {
     <div className="space-y-5">
       {!isFirebaseConfigured() && (
         <div className="bg-warning/10 border border-warning/30 text-warning text-sm rounded-lg p-3">
-          Firebase no está configurado. El login está deshabilitado.
+          {t('firebaseError')}
         </div>
       )}
 
@@ -159,19 +161,19 @@ export function CuentaForm() {
             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
           />
         </svg>
-        Continuar con Google
+        {t('continueGoogle')}
       </button>
 
       <div className="flex items-center gap-3">
         <div className="h-px flex-1 bg-border" />
-        <span className="text-xs uppercase text-text-muted">o con email</span>
+        <span className="text-xs uppercase text-text-muted">{t('orEmail')}</span>
         <div className="h-px flex-1 bg-border" />
       </div>
 
       <form onSubmit={handleEmailAuth} className="space-y-4">
         {mode === 'signup' && (
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">Nombre</label>
+            <label className="block text-sm font-medium text-text-primary mb-1.5">{t('name')}</label>
             <input
               type="text"
               className="input"
@@ -182,7 +184,7 @@ export function CuentaForm() {
           </div>
         )}
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1.5">Email</label>
+          <label className="block text-sm font-medium text-text-primary mb-1.5">{t('email')}</label>
           <input
             type="email"
             className="input"
@@ -193,7 +195,7 @@ export function CuentaForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1.5">Contraseña</label>
+          <label className="block text-sm font-medium text-text-primary mb-1.5">{t('password')}</label>
           <PasswordInput
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -207,31 +209,31 @@ export function CuentaForm() {
           disabled={loading}
           className="btn btn-primary w-full py-3"
         >
-          {loading ? 'Procesando…' : mode === 'signin' ? 'Ingresar' : 'Crear cuenta'}
+          {loading ? t('processing') : mode === 'signin' ? t('signinButton') : t('signupButton')}
         </button>
       </form>
 
       <p className="text-center text-sm text-text-muted">
         {mode === 'signin' ? (
           <>
-            ¿No tienes cuenta?{' '}
+            {t('noAccount')}{' '}
             <button
               type="button"
               onClick={() => setMode('signup')}
               className="text-primary font-semibold hover:underline"
             >
-              Regístrate
+              {t('register')}
             </button>
           </>
         ) : (
           <>
-            ¿Ya tienes cuenta?{' '}
+            {t('hasAccount')}{' '}
             <button
               type="button"
               onClick={() => setMode('signin')}
               className="text-primary font-semibold hover:underline"
             >
-              Ingresa
+              {t('login')}
             </button>
           </>
         )}
