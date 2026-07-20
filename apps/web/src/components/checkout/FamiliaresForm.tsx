@@ -1,25 +1,21 @@
 'use client';
 
+import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useCheckout, type CheckoutFamiliare } from './CheckoutProvider';
 
-const AGE_GROUPS = [
-  { label: '👶 Niño (0-12)', age: 8 },
-  { label: '🧒 Adolescente (13-17)', age: 15 },
-  { label: '🧑 Adulto (18+)', age: 30 },
+const AGE_GROUPS: Array<{ key: 'kid' | 'teen' | 'adult'; age: number }> = [
+  { key: 'kid', age: 8 },
+  { key: 'teen', age: 15 },
+  { key: 'adult', age: 30 },
 ];
 
-interface RowErrors {
-  name?: string;
-  age?: string;
-}
-
-function validateRow(f: CheckoutFamiliare): RowErrors {
-  const errors: RowErrors = {};
-  if (!f.name.trim()) errors.name = 'Requerido';
+function validateRow(f: CheckoutFamiliare, tErr: (k: string) => string) {
+  const errors: { name?: string; age?: string } = {};
+  if (!f.name.trim()) errors.name = tErr('required');
   if (!Number.isFinite(f.age) || f.age < 0 || f.age > 120) {
-    errors.age = 'Edad entre 0 y 120';
+    errors.age = tErr('invalidAge');
   }
   return errors;
 }
@@ -27,11 +23,13 @@ function validateRow(f: CheckoutFamiliare): RowErrors {
 export function FamiliaresForm() {
   const router = useRouter();
   const { data, setFamiliares } = useCheckout();
+  const t = useTranslations('checkout');
+  const tErr = useTranslations('checkout.errors');
   const [touched, setTouched] = useState<boolean[]>([]);
 
   const errors = useMemo(
-    () => data.familiares.map(validateRow),
-    [data.familiares],
+    () => data.familiares.map((f) => validateRow(f, tErr)),
+    [data.familiares, tErr],
   );
 
   const allValid = errors.every((e) => Object.keys(e).length === 0);
@@ -75,27 +73,22 @@ export function FamiliaresForm() {
     <form onSubmit={handleSubmit} className="card space-y-5">
       <header>
         <h1 className="text-2xl font-heading font-extrabold text-text-primary">
-          Familiares y acompañantes
+          {t('familiars')}
         </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Registra a las personas que te acompañan. El titular ya está incluido.
-        </p>
+        <p className="text-sm text-text-muted mt-1">{t('familiarsSubtitle')}</p>
       </header>
 
-      {/* Tabla de familiares */}
       {data.familiares.length > 0 && (
         <div className="border border-border rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-surface border-b border-border">
               <tr>
+                <th className="text-left py-2.5 px-4 font-semibold text-text-muted uppercase text-xs">#</th>
                 <th className="text-left py-2.5 px-4 font-semibold text-text-muted uppercase text-xs">
-                  #
-                </th>
-                <th className="text-left py-2.5 px-4 font-semibold text-text-muted uppercase text-xs">
-                  Nombre completo
+                  {t('name')}
                 </th>
                 <th className="text-left py-2.5 px-4 font-semibold text-text-muted uppercase text-xs w-32">
-                  Edad
+                  {t('age')}
                 </th>
                 <th className="w-12"></th>
               </tr>
@@ -111,7 +104,6 @@ export function FamiliaresForm() {
                       <input
                         type="text"
                         className="input !py-2"
-                        placeholder="Nombre del familiar"
                         value={f.name}
                         onChange={(e) => handleChange(i, 'name', e.target.value)}
                         onBlur={() => handleBlur(i)}
@@ -126,7 +118,6 @@ export function FamiliaresForm() {
                         min={0}
                         max={120}
                         className="input !py-2"
-                        placeholder="0"
                         value={f.age || ''}
                         onChange={(e) => handleChange(i, 'age', e.target.value)}
                         onBlur={() => handleBlur(i)}
@@ -140,7 +131,7 @@ export function FamiliaresForm() {
                         type="button"
                         onClick={() => handleRemove(i)}
                         className="text-text-muted hover:text-danger transition p-1"
-                        aria-label="Quitar"
+                        aria-label={t('remove')}
                       >
                         ✕
                       </button>
@@ -153,21 +144,20 @@ export function FamiliaresForm() {
         </div>
       )}
 
-      {/* Acciones de agregar */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-2">
         <button type="button" onClick={handleAdd} className="btn btn-outline">
-          + Agregar fila
+          {t('addRow')}
         </button>
         <div className="flex items-center gap-2 text-xs text-text-muted">
-          <span>Plantillas:</span>
+          <span>{t('templates')}:</span>
           {AGE_GROUPS.map((g) => (
             <button
-              key={g.age}
+              key={g.key}
               type="button"
               onClick={() => handleAddTemplate(g.age)}
               className="px-2 py-1 rounded-md border border-border hover:border-primary hover:text-primary transition"
             >
-              {g.label}
+              {t(`ageGroup.${g.key}`)}
             </button>
           ))}
         </div>
@@ -176,22 +166,16 @@ export function FamiliaresForm() {
       {data.familiares.length === 0 && (
         <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
           <div className="text-5xl mb-3 opacity-50">👨‍👩‍👧‍👦</div>
-          <p className="text-text-muted text-sm">
-            Aún no has agregado acompañantes. Si vienes solo, puedes continuar.
-          </p>
+          <p className="text-text-muted text-sm">{t('noFamiliars')}</p>
         </div>
       )}
 
       <div className="flex justify-between pt-2">
-        <button
-          type="button"
-          onClick={() => router.push('/checkout')}
-          className="btn btn-ghost"
-        >
-          ← Volver
+        <button type="button" onClick={() => router.push('/checkout')} className="btn btn-ghost">
+          {t('back')}
         </button>
         <button type="submit" className="btn btn-primary px-8 py-3">
-          Continuar →
+          {t('continue')}
         </button>
       </div>
     </form>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { api, API_BASE_URL, ApiError } from '@/lib/api';
 import { useAuth } from '@/components/auth/AuthProvider';
 import type { Waiver } from '@/lib/types';
@@ -12,6 +13,8 @@ interface SuccessViewProps {
 }
 
 export function SuccessView({ qrCode }: SuccessViewProps) {
+  const t = useTranslations('checkout');
+  const tAccount = useTranslations('header');
   const { getToken } = useAuth();
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [waiver, setWaiver] = useState<Waiver | null>(null);
@@ -45,9 +48,9 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
       } catch (e) {
         if (cancelled) return;
         if (e instanceof ApiError && e.status === 404) {
-          setError('No se encontró el waiver. Verifica el código QR.');
+          setError(t('errors.notFound'));
         } else {
-          setError('No se pudo cargar el detalle del waiver.');
+          setError(t('errors.loadFailed'));
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -58,7 +61,7 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
     return () => {
       cancelled = true;
     };
-  }, [qrCode, getToken]);
+  }, [qrCode, getToken, t]);
 
   const pdfUrl = `${API_BASE_URL}/api/v2/waiver/download/${qrCode}`;
 
@@ -66,12 +69,9 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
     <div className="card text-center py-10">
       <div className="text-6xl mb-3">🎉</div>
       <h1 className="text-2xl md:text-3xl font-heading font-extrabold text-text-primary">
-        ¡Waiver generado!
+        {t('success')}
       </h1>
-      <p className="text-text-muted mt-2 max-w-md mx-auto">
-        Guarda este código QR. Lo necesitarás para entrar al evento y será escaneado por
-        nuestro equipo en la puerta.
-      </p>
+      <p className="text-text-muted mt-2 max-w-md mx-auto">{t('successSubtitle')}</p>
 
       {/* QR */}
       <div className="mt-8 flex justify-center">
@@ -81,7 +81,7 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
           </div>
         ) : (
           <div className="w-64 h-64 bg-gray-100 rounded-2xl flex items-center justify-center text-text-muted text-sm">
-            Generando QR…
+            {t('generatingQr')}
           </div>
         )}
       </div>
@@ -92,21 +92,21 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
       {waiver && (
         <div className="mt-6 max-w-md mx-auto text-left bg-surface rounded-xl p-4 text-sm">
           <div className="flex justify-between py-1">
-            <span className="text-text-muted">Titular</span>
+            <span className="text-text-muted">{t('titular')}</span>
             <span className="font-semibold text-text-primary">{waiver.userName}</span>
           </div>
           <div className="flex justify-between py-1">
-            <span className="text-text-muted">Email</span>
+            <span className="text-text-muted">{t('email')}</span>
             <span className="font-semibold text-text-primary">{waiver.userEmail}</span>
           </div>
           {waiver.relatives && waiver.relatives.length > 0 && (
             <div className="flex justify-between py-1">
-              <span className="text-text-muted">Acompañantes</span>
+              <span className="text-text-muted">{t('companions')}</span>
               <span className="font-semibold text-text-primary">{waiver.relatives.length}</span>
             </div>
           )}
           <div className="flex justify-between py-1">
-            <span className="text-text-muted">Estado</span>
+            <span className="text-text-muted">{t('status')}</span>
             <span
               className={[
                 'inline-flex items-center gap-1 font-semibold',
@@ -119,7 +119,7 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
                   waiver.status === 'ACTIVE' ? 'bg-success' : 'bg-gray-400',
                 ].join(' ')}
               />
-              {waiver.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}
+              {waiver.status === 'ACTIVE' ? t('active') : t('inactive')}
             </span>
           </div>
         </div>
@@ -137,26 +137,24 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
           rel="noreferrer"
           className="btn bg-primary text-white hover:bg-primary-600 px-6 py-3"
         >
-          📄 Descargar PDF
+          📄 {t('downloadPdf')}
         </a>
         <a
           href={qrDataUrl ?? '#'}
           download={`waiver-${qrCode}.png`}
           className="btn btn-outline px-6 py-3"
         >
-          ⬇ Descargar QR
+          ⬇ {t('downloadQr')}
         </a>
       </div>
 
       <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
         <Link href="/cuenta#waivers" className="text-sm text-primary hover:underline">
-          Ver mis waivers en Mi cuenta →
+          {t('myWaiversCta')} →
         </Link>
       </div>
 
-      <p className="text-xs text-text-muted mt-6">
-        También te enviamos una copia a tu email.
-      </p>
+      <p className="text-xs text-text-muted mt-6">{t('emailCopySent')}</p>
     </div>
   );
 }

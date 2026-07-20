@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useCheckout } from './CheckoutProvider';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
@@ -12,6 +13,7 @@ export function ConfirmForm() {
   const router = useRouter();
   const { data, reset } = useCheckout();
   const { getToken, user, ready } = useAuth();
+  const t = useTranslations('checkout');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const pathname = usePathname();
@@ -21,7 +23,6 @@ export function ConfirmForm() {
 
   useEffect(() => {
     if (needsAuth && !isEmpty) {
-      // guardar intent y redirigir a login
       sessionStorage.setItem('checkout_intent', '1');
     }
   }, [needsAuth, isEmpty]);
@@ -41,7 +42,7 @@ export function ConfirmForm() {
     try {
       const token = await getToken();
       if (!token) {
-        setError('No se pudo obtener tu sesión. Inicia sesión nuevamente.');
+        setError(t('authRequired'));
         setSubmitting(false);
         return;
       }
@@ -59,8 +60,7 @@ export function ConfirmForm() {
       reset();
       router.push(`/checkout/success?qr=${result.qrCode}`);
     } catch (e) {
-      const msg = e instanceof ApiError ? e.message : 'Error al generar el waiver';
-      setError(msg);
+      setError(e instanceof ApiError ? e.message : t('errorGeneric'));
     } finally {
       setSubmitting(false);
     }
@@ -70,34 +70,32 @@ export function ConfirmForm() {
     <form onSubmit={handleSubmit} className="card space-y-6">
       <header>
         <h1 className="text-2xl font-heading font-extrabold text-text-primary">
-          Confirma tu información
+          {t('confirm')}
         </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Revisa que todo esté correcto antes de generar tu waiver.
-        </p>
+        <p className="text-sm text-text-muted mt-1">{t('confirmSubtitle')}</p>
       </header>
 
       {isEmpty && (
         <div className="bg-warning/10 border border-warning/30 text-warning text-sm rounded-lg p-4">
-          ⚠ No has completado el paso de datos.{' '}
+          ⚠ {t('emptyData')}{' '}
           <Link href="/checkout" className="underline font-medium">
-            Volver a completar
+            {t('back')}
           </Link>
         </div>
       )}
 
       {needsAuth && !isEmpty && (
         <div className="bg-info/10 border border-info/30 text-info text-sm rounded-lg p-4">
-          <p className="font-semibold mb-1">🔐 Necesitas iniciar sesión</p>
+          <p className="font-semibold mb-1">🔐 {t('authRequired')}</p>
           <p>
-            Para generar tu waiver necesitas una cuenta.{' '}
+            {t('authRequiredHint')}{' '}
             <Link
               href={`/cuenta?next=${encodeURIComponent(pathname)}`}
               className="underline font-semibold"
             >
-              Inicia sesión o regístrate
+              {t('loginCta')}
             </Link>{' '}
-            para continuar.
+            {t('toContinue')}.
           </p>
         </div>
       )}
@@ -111,23 +109,23 @@ export function ConfirmForm() {
       {/* Titular */}
       <section>
         <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wide mb-3">
-          Titular
+          {t('titular')}
         </h2>
         <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
           <div>
-            <dt className="text-text-muted">Nombre</dt>
+            <dt className="text-text-muted">{t('name')}</dt>
             <dd className="font-semibold text-text-primary mt-0.5">
               {data.titular.name || '—'}
             </dd>
           </div>
           <div>
-            <dt className="text-text-muted">Email</dt>
+            <dt className="text-text-muted">{t('email')}</dt>
             <dd className="font-semibold text-text-primary mt-0.5">
               {data.titular.email || '—'}
             </dd>
           </div>
           <div>
-            <dt className="text-text-muted">Teléfono</dt>
+            <dt className="text-text-muted">{t('phone')}</dt>
             <dd className="font-semibold text-text-primary mt-0.5">
               {data.titular.phone || '—'}
             </dd>
@@ -138,18 +136,20 @@ export function ConfirmForm() {
       {/* Familiares */}
       <section>
         <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wide mb-3">
-          Acompañantes ({data.familiares.length})
+          {t('companions')} ({data.familiares.length})
         </h2>
         {data.familiares.length === 0 ? (
-          <p className="text-sm text-text-muted">Sin acompañantes registrados.</p>
+          <p className="text-sm text-text-muted">{t('noCompanions')}</p>
         ) : (
           <ul className="divide-y divide-border border border-border rounded-xl">
             {data.familiares.map((f, i) => (
               <li key={i} className="flex items-center justify-between p-3 text-sm">
                 <span className="font-medium text-text-primary">
-                  {f.name || <span className="text-text-muted italic">Sin nombre</span>}
+                  {f.name || <span className="text-text-muted italic">—</span>}
                 </span>
-                <span className="text-text-muted">{f.age} años</span>
+                <span className="text-text-muted">
+                  {f.age} {t('yearsOld')}
+                </span>
               </li>
             ))}
           </ul>
@@ -163,7 +163,7 @@ export function ConfirmForm() {
           className="btn btn-ghost"
           disabled={submitting}
         >
-          ← Volver
+          {t('back')}
         </button>
         <button
           type="submit"
@@ -171,10 +171,10 @@ export function ConfirmForm() {
           disabled={isEmpty || submitting}
         >
           {submitting
-            ? 'Generando…'
+            ? t('generating')
             : needsAuth
-              ? '🔐 Iniciar sesión para continuar'
-              : 'Generar waiver'}
+              ? t('loginToContinue')
+              : t('generate')}
         </button>
       </div>
     </form>
