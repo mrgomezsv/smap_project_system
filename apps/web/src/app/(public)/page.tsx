@@ -194,12 +194,7 @@ export default async function HomePage() {
                     <h3 className="font-heading font-bold text-text-primary line-clamp-1 group-hover:text-primary transition-colors">
                       {product.title}
                     </h3>
-                    {product.price && (
-                      <p className="mt-2 text-2xl font-extrabold text-primary">
-                        ${product.price.toFixed(2)}
-                        <span className="text-sm font-normal text-text-muted">{tProduct('perEvent')}</span>
-                      </p>
-                    )}
+
                     <div className="mt-3 flex items-center gap-4 text-xs text-text-muted">
                       <span className="flex items-center gap-1">
                         <span className="text-party-pink">♥</span> {product._count?.likes ?? 0}

@@ -51,16 +51,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.description}
           </p>
         )}
-        <div className="mt-4 flex items-end justify-between">
-          {product.price ? (
-            <p className="text-2xl font-extrabold text-primary">
-              ${product.price.toFixed(2)}
-              <span className="text-sm font-normal text-text-muted">{tProduct('perEvent')}</span>
-            </p>
-          ) : (
-            <span className="text-sm text-text-muted">{tProduct('priceUponRequest')}</span>
-          )}
-        </div>
+
         <div className="mt-3 flex items-center gap-4 text-xs text-text-muted pt-3 border-t border-border">
           <span className="flex items-center gap-1">
             <span className="text-party-pink">♥</span> {product._count?.likes ?? 0}

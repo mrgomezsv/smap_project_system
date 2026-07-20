@@ -117,15 +117,7 @@ export default async function ProductoDetallePage({ params }: PageProps) {
               {product.title}
             </h1>
 
-            <div className="mt-4 flex items-baseline gap-4">
-              {product.price ? (
-                <p className="text-4xl font-extrabold text-primary">
-                  ${product.price.toFixed(2)}
-                  <span className="text-base font-normal text-text-muted">{tProduct('perEvent')}</span>
-                </p>
-              ) : (
-                <span className="text-text-muted">{tProduct('priceUponRequest')}</span>
-              )}
+            <div className="mt-4">
               {product.publicated && (
                 <span className="inline-flex items-center gap-1.5 text-success text-sm font-medium">
                   <span className="w-2 h-2 bg-success rounded-full animate-pulse" />
