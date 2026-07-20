@@ -55,13 +55,21 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     finalHeaders.Authorization = `Bearer ${finalToken}`;
   }
 
-  const res = await fetch(`${API_BASE_URL}${path}`, {
-    method,
-    headers: finalHeaders,
-    body: body ? (body instanceof FormData ? body : JSON.stringify(body)) : undefined,
-    cache: cache ?? 'no-store',
-    next,
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8_000);
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE_URL}${path}`, {
+      method,
+      headers: finalHeaders,
+      body: body ? (body instanceof FormData ? body : JSON.stringify(body)) : undefined,
+      cache: cache ?? 'no-store',
+      next,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
 
   const contentType = res.headers.get('content-type') ?? '';
   const isJson = contentType.includes('application/json');
