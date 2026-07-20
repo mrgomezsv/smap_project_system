@@ -9,11 +9,17 @@
   },
   "packageManager": "pnpm@10.34.4",
   "scripts": {
-    "dev": "echo 'Pendiente: orquestador monorepo (FASE 16)' && exit 0",
+    "dev": "concurrently -k -n api,web -c blue,green \"pnpm --filter api dev\" \"pnpm --filter web dev\"",
+    "dev:api": "pnpm --filter api dev",
+    "dev:web": "pnpm --filter web dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
-    "clean": "pnpm -r exec rm -rf node_modules dist .next coverage"
+    "clean": "pnpm -r exec rm -rf node_modules dist .next coverage",
+    "db:migrate": "pnpm --filter api prisma migrate dev",
+    "db:studio": "pnpm --filter api prisma studio",
+    "docker:up": "docker compose up --build -d",
+    "docker:down": "docker compose down"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -22,5 +28,8 @@
       "prisma",
       "unrs-resolver"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
   }
 }
