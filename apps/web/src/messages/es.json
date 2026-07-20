@@ -317,5 +317,26 @@
       "title": "Algo salió mal",
       "subtitle": "Ocurrió un error inesperado. Nuestro equipo ya fue notificado."
     }
+  },
+  "placeholders": {
+    "searchProducts": "Buscar por nombre…",
+    "searchConversations": "Buscar conversación…",
+    "searchAdmin": "Buscar productos, eventos, waivers…",
+    "typeMessage": "Escribe un mensaje…",
+    "emailExample": "tu@email.com",
+    "adminEmailExample": "admin@kidsfun.com",
+    "passwordDots": "••••••••",
+    "nameExample": "María Pérez",
+    "phoneExample": "+1 (305) 555-0100",
+    "phoneFormat": "+1 (000) 000 - 0000",
+    "qrCode": "ABC12345",
+    "eventImageFilename": "evento-2024.jpg",
+    "eventTitle": "🎉 ¡Nueva promo!",
+    "eventBody": "Escribe el cuerpo de la notificación…",
+    "messagePlaceholder": "Cuéntanos sobre tu evento, fecha, número de invitados, etc.",
+    "productDimensions": "3x3x2m",
+    "productSpace": "4x4m",
+    "productCircuits": "1 circuito 110V",
+    "productYoutube": "https://youtube.com/watch?v=…"
   }
 }
