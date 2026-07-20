@@ -1,45 +1,50 @@
+import { getTranslations } from 'next-intl/server';
 import { MobileAppDownload } from '@/components/mobile-app/MobileAppDownload';
 
-export const metadata = {
-  title: 'App Móvil - Kidsfun',
-  description:
-    'Descarga la app móvil de Kidsfun. Catálogo, productos, eventos y más en tu bolsillo.',
-};
+export async function generateMetadata() {
+  const t = await getTranslations('mobileApp');
+  return {
+    title: t('metaTitle'),
+    description: t('metaDesc'),
+  };
+}
 
-const FEATURES = [
-  {
-    icon: '🎪',
-    title: 'Catálogo completo',
-    description: 'Explora todos nuestros productos y servicios desde tu móvil.',
-  },
-  {
-    icon: '❤️',
-    title: 'Likes y comentarios',
-    description: 'Guarda tus productos favoritos y deja tu opinión.',
-  },
-  {
-    icon: '🎟️',
-    title: 'Eventos y entradas',
-    description: 'Compra entradas para eventos y lleva tu QR siempre contigo.',
-  },
-  {
-    icon: '🔔',
-    title: 'Notificaciones',
-    description: 'Recibe avisos de nuevos productos, eventos y promociones.',
-  },
-  {
-    icon: '💬',
-    title: 'Chat directo',
-    description: 'Conversa con nuestro equipo para resolver tus dudas al instante.',
-  },
-  {
-    icon: '📍',
-    title: 'Reservas rápidas',
-    description: 'Reserva tu fecha en pocos pasos desde donde estés.',
-  },
-];
+export default async function MobileAppPage() {
+  const t = await getTranslations('mobileApp');
 
-export default function MobileAppPage() {
+  const FEATURES = [
+    {
+      icon: '🎪',
+      title: t('features.catalog.title'),
+      description: t('features.catalog.desc'),
+    },
+    {
+      icon: '❤️',
+      title: t('features.likes.title'),
+      description: t('features.likes.desc'),
+    },
+    {
+      icon: '🎟️',
+      title: t('features.events.title'),
+      description: t('features.events.desc'),
+    },
+    {
+      icon: '🔔',
+      title: t('features.notifications.title'),
+      description: t('features.notifications.desc'),
+    },
+    {
+      icon: '💬',
+      title: t('features.chat.title'),
+      description: t('features.chat.desc'),
+    },
+    {
+      icon: '📍',
+      title: t('features.bookings.title'),
+      description: t('features.bookings.desc'),
+    },
+  ];
+
   return (
     <div className="bg-surface min-h-screen">
       {/* Hero */}
@@ -48,14 +53,13 @@ export default function MobileAppPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div>
               <span className="inline-block bg-brand-yellow/20 border border-brand-yellow/40 text-brand-yellow px-3 py-1 rounded-full text-sm font-medium mb-4">
-                Kidsfun Mobile App
+                {t('heroBadge')}
               </span>
               <h1 className="text-4xl md:text-5xl font-heading font-extrabold mb-3">
-                Toda la diversión en tu bolsillo
+                {t('heroTitle')}
               </h1>
               <p className="text-white/80 text-lg mb-6">
-                Descubre, reserva y disfruta. La forma más fácil de llevar la magia de
-                Kidsfun a tu próxima fiesta.
+                {t('heroSubtitle')}
               </p>
               <a
                 href="https://play.google.com/store/apps/details?id=com.kidsfun.app.kidsfun"
@@ -92,10 +96,10 @@ export default function MobileAppPage() {
       {/* Features */}
       <section className="container py-16">
         <h2 className="text-3xl font-heading font-extrabold text-text-primary text-center mb-3">
-          Todo lo que puedes hacer
+          {t('featuresTitle')}
         </h2>
         <p className="text-text-muted text-center max-w-2xl mx-auto mb-10">
-          La app de Kidsfun está diseñada para que planear tu fiesta sea fácil y divertido.
+          {t('featuresSubtitle')}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {FEATURES.map((f) => (
@@ -112,10 +116,10 @@ export default function MobileAppPage() {
       <section className="bg-primary text-white py-16">
         <div className="container max-w-2xl text-center">
           <h2 className="text-3xl font-heading font-extrabold mb-3">
-            Descarga la app con QR
+            {t('qrTitle')}
           </h2>
           <p className="text-white/80 mb-8">
-            Escanea el código desde tu móvil y empieza a disfrutar.
+            {t('qrSubtitle')}
           </p>
           <div className="flex justify-center">
             <MobileAppDownload />
