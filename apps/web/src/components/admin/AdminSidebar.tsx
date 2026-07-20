@@ -7,33 +7,33 @@ const sections = [
   {
     title: 'Sitio Web',
     links: [
-      { href: '/dashboard', label: 'Dashboard', icon: '📊' },
-      { href: '/productos', label: 'Productos', icon: '🎪' },
-      { href: '/eventos', label: 'Eventos', icon: '🎉' },
+      { href: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
+      { href: '/admin/productos', label: 'Productos', icon: '🎪' },
+      { href: '/admin/eventos', label: 'Eventos', icon: '🎉' },
     ],
   },
   {
     title: 'Gestión',
     links: [
-      { href: '/waivers', label: 'Waivers', icon: '📋' },
-      { href: '/waivers/escanear', label: 'Escanear QR', icon: '📷' },
-      { href: '/chats', label: 'Chats', icon: '💬' },
-      { href: '/mensajes', label: 'Mensajes Web', icon: '✉️' },
+      { href: '/admin/waivers', label: 'Waivers', icon: '📋' },
+      { href: '/admin/waivers/escanear', label: 'Escanear QR', icon: '📷' },
+      { href: '/admin/chats', label: 'Chats', icon: '💬' },
+      { href: '/admin/mensajes', label: 'Mensajes Web', icon: '✉️' },
     ],
   },
   {
     title: 'Marketing',
     links: [
-      { href: '/notificaciones', label: 'Push Notifications', icon: '🔔' },
-      { href: '/metricas', label: 'Métricas', icon: '📈' },
-      { href: '/usuarios', label: 'Usuarios App', icon: '👥' },
+      { href: '/admin/notificaciones', label: 'Push Notifications', icon: '🔔' },
+      { href: '/admin/metricas', label: 'Métricas', icon: '📈' },
+      { href: '/admin/usuarios', label: 'Usuarios App', icon: '👥' },
     ],
   },
   {
     title: 'Sistema',
     links: [
-      { href: '/sudo', label: 'Sudo Admin', icon: '⚙️' },
-      { href: '/signin', label: 'Cerrar sesión', icon: '🚪' },
+      { href: '/admin/sudo', label: 'Sudo Admin', icon: '⚙️' },
+      { href: '/admin/signin', label: 'Cerrar sesión', icon: '🚪' },
     ],
   },
 ];
@@ -67,7 +67,7 @@ export function AdminSidebar({ mobileOpen = false, onClose }: AdminSidebarProps)
       >
         {/* Brand + close (mobile) */}
         <div className="px-6 py-6 border-b border-white/10 flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-3" onClick={onClose}>
+          <Link href="/admin/dashboard" className="flex items-center gap-3" onClick={onClose}>
             <span className="font-display text-2xl text-brand-yellow">Kidsfun</span>
           </Link>
           <button

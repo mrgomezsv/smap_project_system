@@ -99,7 +99,7 @@ export default function AdminProductosPage() {
             {filtered.length} producto{filtered.length === 1 ? '' : 's'} en catálogo
           </p>
         </div>
-        <Link href="/productos/nuevo" className="btn btn-primary">
+        <Link href="/admin/productos/nuevo" className="btn btn-primary">
           + Crear producto
         </Link>
       </header>

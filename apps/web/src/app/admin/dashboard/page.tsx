@@ -146,7 +146,7 @@ export default function AdminDashboardPage() {
             <h3 className="font-heading font-bold text-text-primary mb-3">Accesos rápidos</h3>
             <div className="space-y-2">
               <a
-                href="/productos/nuevo"
+                href="/admin/productos/nuevo"
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-surface transition"
               >
                 <span className="w-9 h-9 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
@@ -158,7 +158,7 @@ export default function AdminDashboardPage() {
                 </div>
               </a>
               <a
-                href="/eventos/nuevo"
+                href="/admin/eventos/nuevo"
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-surface transition"
               >
                 <span className="w-9 h-9 bg-party-pink/10 text-party-pink rounded-lg flex items-center justify-center">
@@ -170,7 +170,7 @@ export default function AdminDashboardPage() {
                 </div>
               </a>
               <a
-                href="/waivers/escanear"
+                href="/admin/waivers/escanear"
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-surface transition"
               >
                 <span className="w-9 h-9 bg-success/10 text-success rounded-lg flex items-center justify-center">
@@ -182,7 +182,7 @@ export default function AdminDashboardPage() {
                 </div>
               </a>
               <a
-                href="/notificaciones"
+                href="/admin/notificaciones"
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-surface transition"
               >
                 <span className="w-9 h-9 bg-warning/10 text-warning rounded-lg flex items-center justify-center">

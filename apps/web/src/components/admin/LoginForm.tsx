@@ -29,7 +29,7 @@ export function LoginForm() {
         return;
       }
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/dashboard');
+      router.push('/admin/dashboard');
     } catch (e) {
       const code = (e as { code?: string }).code ?? '';
       setError(
@@ -53,7 +53,7 @@ export function LoginForm() {
       }
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-      router.push('/dashboard');
+      router.push('/admin/dashboard');
     } catch {
       setError('No se pudo iniciar sesión con Google.');
     } finally {
@@ -71,7 +71,7 @@ export function LoginForm() {
         </p>
         <p className="mt-2">
           Mientras tanto, puedes ir al{' '}
-          <a href="/dashboard" className="underline font-semibold">
+          <a href="/admin/dashboard" className="underline font-semibold">
             dashboard
           </a>
           .
