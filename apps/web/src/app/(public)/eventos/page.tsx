@@ -1,30 +1,12 @@
 import Link from 'next/link';
 import { api } from '@/lib/api';
-
-interface Event {
-  id: number;
-  title: string;
-  slug: string | null;
-  description: string;
-  image: string | null;
-  location: string;
-  startDatetime: string;
-  ticketPrice: number;
-  published: boolean;
-  partners: string;
-}
-
-const PARTNER_LABELS: Record<string, { label: string; color: string }> = {
-  partner1: { label: 'Kidsfun', color: 'bg-primary' },
-  partner2: { label: 'Tecun Productions', color: 'bg-info' },
-  partner3: { label: 'Otros', color: 'bg-text-muted' },
-};
+import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
 
 function formatDate(iso: string): { day: string; month: string; full: string } {
   const d = new Date(iso);
   return {
     day: d.getDate().toString().padStart(2, '0'),
-    month: d.toLocaleString('es-ES', { month: 'short' }).toUpperCase(),
+    month: d.toLocaleString('es-ES', { month: 'short' }).toUpperCase().replace('.', ''),
     full: d.toLocaleString('es-ES', {
       weekday: 'long',
       day: 'numeric',
@@ -39,7 +21,7 @@ function formatDate(iso: string): { day: string; month: string; full: string } {
 export default async function EventosPage() {
   let events: Event[] = [];
   try {
-    const res = await api.get<{ items: Event[] }>('/api/products?category=option1&take=6');
+    const res = await api.get<{ items: Event[] }>('/api/events?take=20');
     events = res.items;
   } catch (e) {
     console.error('Error cargando eventos:', e);
@@ -79,7 +61,7 @@ export default async function EventosPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((event) => {
               const date = formatDate(event.startDatetime);
-              const partner = PARTNER_LABELS[event.partners] ?? PARTNER_LABELS.partner3;
+              const partner = PARTNER_LABELS[event.partners as EventPartner] ?? PARTNER_LABELS.partner3;
               const hasImage = event.image && !event.image.includes('default_event');
               return (
                 <article
