@@ -1,0 +1,204 @@
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { api, ApiError } from '@/lib/api';
+import type { Product } from '@/lib/types';
+import { CATEGORY_LABELS, type Category } from '@/lib/types';
+
+interface PageProps {
+  params: { id: string };
+}
+
+export default async function ProductoDetallePage({ params }: PageProps) {
+  let product: Product;
+  try {
+    product = await api.get<Product>(`/api/products/${params.id}`);
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 404) {
+      notFound();
+    }
+    throw e;
+  }
+
+  const gallery: string[] = [product.img, product.img1, product.img2, product.img3, product.img4, product.img5]
+    .filter((img) => img && !img.includes('default_product_image'));
+
+  const hasGallery = gallery.length > 0;
+
+  return (
+    <div className="bg-surface min-h-screen">
+      {/* Breadcrumb */}
+      <div className="bg-surface-elevated border-b border-border">
+        <div className="container py-4">
+          <nav className="flex items-center gap-2 text-sm text-text-muted">
+            <Link href="/" className="hover:text-primary">Inicio</Link>
+            <span>/</span>
+            <Link href="/productos" className="hover:text-primary">Productos</Link>
+            <span>/</span>
+            <span className="text-text-primary font-medium truncate">{product.title}</span>
+          </nav>
+        </div>
+      </div>
+
+      <div className="container py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* ===== GALERÍA ===== */}
+          <div>
+            {hasGallery ? (
+              <div className="space-y-4">
+                <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-medium">
+                  <img
+                    src={`/media/${gallery[0]}`}
+                    alt={product.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {gallery.length > 1 && (
+                  <div className="grid grid-cols-4 gap-3">
+                    {gallery.slice(1, 5).map((img, i) => (
+                      <button
+                        key={i}
+                        className="aspect-square rounded-lg overflow-hidden border-2 border-border hover:border-primary transition"
+                      >
+                        <img
+                          src={`/media/${img}`}
+                          alt={`${product.title} ${i + 2}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="aspect-square rounded-2xl bg-gradient-to-br from-brand-yellow/20 to-party-pink/20 flex items-center justify-center text-9xl">
+                🎪
+              </div>
+            )}
+          </div>
+
+          {/* ===== INFO + RESERVA ===== */}
+          <div>
+            <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-semibold mb-3">
+              {CATEGORY_LABELS[product.category as Category]}
+            </span>
+
+            <h1 className="text-3xl md:text-4xl font-heading font-extrabold text-text-primary leading-tight">
+              {product.title}
+            </h1>
+
+            <div className="mt-4 flex items-baseline gap-4">
+              {product.price ? (
+                <p className="text-4xl font-extrabold text-primary">
+                  ${product.price.toFixed(2)}
+                  <span className="text-base font-normal text-text-muted">/evento</span>
+                </p>
+              ) : (
+                <span className="text-text-muted">Consultar precio</span>
+              )}
+              {product.publicated && (
+                <span className="inline-flex items-center gap-1.5 text-success text-sm font-medium">
+                  <span className="w-2 h-2 bg-success rounded-full animate-pulse" />
+                  Disponible
+                </span>
+              )}
+            </div>
+
+            {/* Specs rápidas */}
+            <div className="mt-6 grid grid-cols-3 gap-3">
+              {product.dimensions && (
+                <div className="card !p-3 text-center">
+                  <p className="text-xs text-text-muted">Dimensiones</p>
+                  <p className="font-bold text-text-primary text-sm mt-0.5">{product.dimensions}</p>
+                </div>
+              )}
+              {product.space && (
+                <div className="card !p-3 text-center">
+                  <p className="text-xs text-text-muted">Espacio</p>
+                  <p className="font-bold text-text-primary text-sm mt-0.5">{product.space}</p>
+                </div>
+              )}
+              {product.circuits && (
+                <div className="card !p-3 text-center">
+                  <p className="text-xs text-text-muted">Circuitos</p>
+                  <p className="font-bold text-text-primary text-sm mt-0.5">{product.circuits}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Descripción */}
+            {product.description && (
+              <div className="mt-6">
+                <h2 className="text-lg font-heading font-bold mb-2">Descripción</h2>
+                <p className="text-text-primary leading-relaxed whitespace-pre-line">
+                  {product.description}
+                </p>
+              </div>
+            )}
+
+            {/* Tabs sticky de reserva */}
+            <div className="mt-8 sticky bottom-4 bg-white rounded-2xl shadow-large border border-border p-6">
+              <h3 className="font-heading font-bold mb-3">¿Te interesa?</h3>
+              <div className="flex gap-3">
+                <Link
+                  href="/checkout"
+                  className="btn btn-primary flex-1 py-3 text-base shadow-medium hover:shadow-large"
+                >
+                  Reservar ahora
+                </Link>
+                <a
+                  href="https://wa.me/13478704240?text=Hola%2C%20me%20interesa%20el%20producto%20${product.title}"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn bg-success text-white hover:bg-success/90 px-5"
+                >
+                  WhatsApp
+                </a>
+              </div>
+              <p className="mt-3 text-xs text-text-muted text-center">
+                Te contactaremos en menos de 24 horas
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Sección info adicional */}
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="card text-center">
+            <div className="text-4xl mb-3">🚚</div>
+            <h3 className="font-heading font-bold mb-1">Entrega puntual</h3>
+            <p className="text-sm text-text-muted">
+              Llevamos e instalamos todo en el horario acordado
+            </p>
+          </div>
+          <div className="card text-center">
+            <div className="text-4xl mb-3">🛡️</div>
+            <h3 className="font-heading font-bold mb-1">Equipos certificados</h3>
+            <p className="text-sm text-text-muted">
+              Todos nuestros equipos cumplen normas de seguridad
+            </p>
+          </div>
+          <div className="card text-center">
+            <div className="text-4xl mb-3">⭐</div>
+            <h3 className="font-heading font-bold mb-1">+5 años de experiencia</h3>
+            <p className="text-sm text-text-muted">
+              Más de 500 fiestas exitosas en El Salvador
+            </p>
+          </div>
+        </div>
+
+        {/* Comentarios placeholder */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-heading font-bold mb-6">
+            Comentarios ({product._count?.comments ?? 0})
+          </h2>
+          <div className="card text-center py-12">
+            <div className="text-5xl mb-3 opacity-30">💬</div>
+            <p className="text-text-muted">
+              Pronto podrás dejar comentarios aquí. Inicia sesión para opinar.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
