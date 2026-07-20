@@ -190,6 +190,115 @@
     "ctaTitle": "Ready for your next party?",
     "ctaSubtitle": "Book now or contact us for a personalized quote."
   },
+  "payment": {
+    "secureBadge": "Secure payments",
+    "title": "Payment methods",
+    "subtitle": "We accept secure payments via Zelle. We can also coordinate bank transfers.",
+    "zelleSubtitle": "Instant transfer with no fees",
+    "data": "Account holder details",
+    "zelleData": "To book, contact us and we'll share the Zelle details and the total amount.",
+    "policy": "Booking policy",
+    "policyDeposit": "50% deposit to confirm the date",
+    "policyRest": "Remaining 50% on the day of the event",
+    "policyFull": "Full payment upfront with 5% discount",
+    "howToTitle": "How to pay?",
+    "step1": {
+      "title": "Contact us",
+      "description": "Message us on WhatsApp or use the contact form."
+    },
+    "step2": {
+      "title": "Get the details",
+      "description": "We'll share the Zelle info and total amount."
+    },
+    "step3": {
+      "title": "Make the payment",
+      "description": "Transfer 50% to confirm the booking or 100% upfront."
+    },
+    "step4": {
+      "title": "Send the receipt",
+      "description": "Send us the payment screenshot to confirm your date."
+    },
+    "ctaTitle": "Ready to book?",
+    "ctaSubtitle": "Message us on WhatsApp and we'll share the payment details in under 5 minutes.",
+    "ctaButton": "Open WhatsApp"
+  },
+  "terms": {
+    "badge": "Legal",
+    "title": "Terms and Conditions",
+    "intro": "Please read carefully the terms governing the use of our website and services.",
+    "lastUpdatedLabel": "Last updated",
+    "lastUpdated": "Please read the terms carefully before using our service.",
+    "phoneLabel": "Phone / WhatsApp",
+    "s1": {
+      "title": "Acceptance of Terms",
+      "body": "By accessing and using this website, you agree to be bound by these terms and conditions of use. If you do not agree with any part of these terms, we recommend that you do not use our site."
+    },
+    "s2": {
+      "title": "Service Description",
+      "body": "Kidsfun y Fiestas Infantiles is a company dedicated to kids entertainment, specialized in:",
+      "list": [
+        "Bounce house, jumper and slide rentals",
+        "Electric games and party furniture",
+        "Concession machines and competitive games",
+        "Party and kids event organization",
+        "Water equipment and rental games"
+      ]
+    },
+    "s3": {
+      "title": "Use of the Website",
+      "body": "You agree to use this website only for lawful purposes. It is prohibited to:",
+      "list": [
+        "Use the site for any illegal or unauthorized purpose",
+        "Transmit viruses, malware or harmful code",
+        "Interfere with the operation of the site",
+        "Attempt to access restricted areas of the site"
+      ]
+    },
+    "s4": {
+      "title": "Bookings and Payments",
+      "body": "To confirm a booking of our services:",
+      "list": [
+        "A 50% deposit is required to confirm the date",
+        "The remaining payment must be made before or on the day of the event",
+        "Full payment in advance includes a 5% discount",
+        "Payments are made via Zelle or bank transfer"
+      ]
+    },
+    "s5": {
+      "title": "Cancellations and Refunds",
+      "body": "Cancellation policy:",
+      "list": [
+        "Cancellation with more than 7 days notice: 80% refund",
+        "Cancellation between 3 and 7 days: 50% refund",
+        "Cancellation with less than 3 days: no refund",
+        "Rescheduling at no cost subject to availability"
+      ]
+    },
+    "s6": {
+      "title": "Safety and Waiver",
+      "body": "To participate in activities, you must sign the waiver document. Participants must follow our staff's instructions at all times. Kidsfun is not responsible for injuries caused by misuse of equipment or failure to follow safety rules."
+    },
+    "s7": {
+      "title": "Privacy and Personal Data",
+      "body": "Your privacy is important to us. We collect, use and protect your personal information according to industry-standard practices. We do not share your data with third parties without your express consent, unless required by law."
+    },
+    "s8": {
+      "title": "Intellectual Property",
+      "body": "All content on this website (texts, images, logos, designs) is the property of Kidsfun y Fiestas Infantiles and is protected by intellectual property laws. Total or partial reproduction is prohibited without prior authorization."
+    },
+    "s9": {
+      "title": "Limitation of Liability",
+      "body": "Kidsfun will not be liable for indirect, incidental or consequential damages resulting from the use or inability to use our services. Our total liability is limited to the amount paid for the contracted service."
+    },
+    "s10": {
+      "title": "Modifications",
+      "body": "We reserve the right to modify these terms and conditions at any time. Modifications will be effective immediately after publication on the website. Continued use of the site after any change constitutes your acceptance of the new terms."
+    },
+    "s11": {
+      "title": "Contact",
+      "body": "If you have questions about these terms and conditions, you can contact us:"
+    }
+  },
   "common": {
     "loading": "Loading…",
     "error": "Something went wrong",
