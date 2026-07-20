@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { QueryEventDto } from './dto/query-event.dto';
 
@@ -25,5 +25,18 @@ export class EventsService {
     ]);
 
     return { items, total, skip: query.skip ?? 0, take: query.take ?? 20 };
+  }
+
+  async findOne(id: number) {
+    const event = await this.prisma.event.findUnique({
+      where: { id: BigInt(id) },
+      include: {
+        organizer: { select: { id: true, username: true } },
+      },
+    });
+    if (!event) {
+      throw new NotFoundException(`Evento #${id} no encontrado`);
+    }
+    return event;
   }
 }

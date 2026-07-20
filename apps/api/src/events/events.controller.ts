@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { QueryEventDto } from './dto/query-event.dto';
 import { Public } from '../auth/decorators/public.decorator';
@@ -11,5 +11,11 @@ export class EventsController {
   @Get()
   list(@Query() query: QueryEventDto) {
     return this.eventsService.findAll(query);
+  }
+
+  @Public()
+  @Get(':id')
+  detail(@Param('id') id: string) {
+    return this.eventsService.findOne(Number(id));
   }
 }
