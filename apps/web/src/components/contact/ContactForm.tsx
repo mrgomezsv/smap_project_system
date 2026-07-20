@@ -23,6 +23,7 @@ const EMPTY: FormData = {
 export function ContactForm() {
   const t = useTranslations('contact');
   const tCommon = useTranslations('common');
+  const tPh = useTranslations('placeholders');
   const [data, setData] = useState<FormData>(EMPTY);
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -124,7 +125,7 @@ export function ContactForm() {
         <input
           type="tel"
           className="input"
-          placeholder="+1 (305) 555-0100"
+          placeholder={tPh('phoneExample')}
           value={data.contactNumber}
           onChange={(e) => update('contactNumber', e.target.value)}
         />
@@ -138,7 +139,7 @@ export function ContactForm() {
         <input
           type="email"
           className="input"
-          placeholder="tu@email.com"
+          placeholder={tPh('emailExample')}
           value={data.email}
           onChange={(e) => update('email', e.target.value)}
         />
@@ -152,7 +153,7 @@ export function ContactForm() {
         <textarea
           rows={5}
           className="input resize-none"
-          placeholder="Cuéntanos sobre tu evento, fecha, número de invitados, etc."
+          placeholder={tPh('messagePlaceholder')}
           value={data.reason}
           onChange={(e) => update('reason', e.target.value)}
         />

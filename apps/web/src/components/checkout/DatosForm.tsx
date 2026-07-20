@@ -10,6 +10,7 @@ export function DatosForm() {
   const { data, updateTitular } = useCheckout();
   const t = useTranslations('checkout');
   const tErr = useTranslations('checkout.errors');
+  const tPh = useTranslations('placeholders');
   const [errors, setErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
 
   function validate(): boolean {
@@ -50,7 +51,7 @@ export function DatosForm() {
         <input
           type="text"
           className="input"
-          placeholder="María Pérez"
+          placeholder={tPh('nameExample')}
           value={data.titular.name}
           onChange={(e) => updateTitular({ name: e.target.value })}
           autoComplete="name"
@@ -65,7 +66,7 @@ export function DatosForm() {
         <input
           type="email"
           className="input"
-          placeholder="tu@email.com"
+          placeholder={tPh('emailExample')}
           value={data.titular.email}
           onChange={(e) => updateTitular({ email: e.target.value })}
           autoComplete="email"
@@ -80,7 +81,7 @@ export function DatosForm() {
         <input
           type="tel"
           className="input"
-          placeholder="+1 (305) 555-0100"
+          placeholder={tPh('phoneExample')}
           value={data.titular.phone}
           onChange={(e) => updateTitular({ phone: e.target.value })}
           autoComplete="tel"
