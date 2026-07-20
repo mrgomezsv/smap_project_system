@@ -1,10 +1,33 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { api, ApiError } from '@/lib/api';
 import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
 
 interface PageProps {
   params: { id: string };
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  try {
+    const event = await api.get<Event>(`/api/events/${params.id}`);
+    const description =
+      event.description?.slice(0, 160) ?? `Evento: ${event.title} en ${event.location}`;
+    return {
+      title: event.title,
+      description,
+      openGraph: {
+        title: event.title,
+        description,
+        images: event.image && !event.image.includes('default')
+          ? [{ url: `/media/${event.image}`, width: 800, height: 600, alt: event.title }]
+          : [],
+        type: 'article',
+      },
+    };
+  } catch {
+    return { title: 'Evento no encontrado' };
+  }
 }
 
 function formatEventDate(iso: string): { day: string; month: string; full: string; time: string } {

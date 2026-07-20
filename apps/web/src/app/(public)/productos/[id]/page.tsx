@@ -1,11 +1,35 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { api, ApiError } from '@/lib/api';
 import type { Product } from '@/lib/types';
 import { CATEGORY_LABELS, type Category } from '@/lib/types';
 
 interface PageProps {
   params: { id: string };
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  try {
+    const product = await api.get<Product>(`/api/products/${params.id}`);
+    const description =
+      product.description?.slice(0, 160) ??
+      `${product.title} — ${CATEGORY_LABELS[product.category as Category]}`;
+    return {
+      title: product.title,
+      description,
+      openGraph: {
+        title: product.title,
+        description,
+        images: product.img && !product.img.includes('default')
+          ? [{ url: `/media/${product.img}`, width: 800, height: 600, alt: product.title }]
+          : [],
+        type: 'website',
+      },
+    };
+  } catch {
+    return { title: 'Producto no encontrado' };
+  }
 }
 
 export default async function ProductoDetallePage({ params }: PageProps) {

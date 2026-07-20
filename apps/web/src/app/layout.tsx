@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Titan_One, Plus_Jakarta_Sans, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { metadata as siteMetadata } from "@/lib/metadata";
 
 const titanOne = Titan_One({
   weight: "400",
@@ -28,24 +29,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Kidsfun y Fiestas Infantiles",
-  description:
-    "Brincolines, juegos inflables y diversión para tus fiestas infantiles. Renta de equipos para cumpleaños, graduaciones y eventos familiares.",
-  keywords: [
-    "brincolines",
-    "fiestas infantiles",
-    "alquiler",
-    "El Salvador",
-    "eventos",
-    "bounce house",
-  ],
-  openGraph: {
-    title: "Kidsfun y Fiestas Infantiles",
-    description: "La fiesta perfecta empieza aquí",
-    type: "website",
-  },
-};
+export const metadata: Metadata = siteMetadata;
 
 export default function RootLayout({
   children,
