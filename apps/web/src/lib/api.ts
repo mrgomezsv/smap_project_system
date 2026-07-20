@@ -4,6 +4,8 @@
  * - API_BASE_URL: configurable vía NEXT_PUBLIC_API_URL (default http://localhost:3001)
  * - Pasa automáticamente el Bearer token de Firebase si existe
  * - Devuelve errores tipados con código HTTP
+ * - Soporta auto-refresh del token vía función `getToken` (usada por componentes
+ *   envueltos en AuthProvider)
  */
 
 const API_BASE_URL =
@@ -24,13 +26,19 @@ type RequestOptions = {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
   body?: unknown;
   token?: string | null;
+  /**
+   * Si se pasa, se usa para obtener el token más reciente.
+   * Útil cuando hay un AuthProvider que mantiene la sesión activa
+   * y se quiere auto-refresh del token.
+   */
+  getToken?: () => Promise<string | null>;
   headers?: Record<string, string>;
   cache?: RequestCache;
   next?: { revalidate?: number };
 };
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { method = 'GET', body, token, headers = {}, cache, next } = options;
+  const { method = 'GET', body, token, getToken, headers = {}, cache, next } = options;
 
   const finalHeaders: Record<string, string> = {
     Accept: 'application/json',
@@ -41,8 +49,10 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     finalHeaders['Content-Type'] = 'application/json';
   }
 
-  if (token) {
-    finalHeaders.Authorization = `Bearer ${token}`;
+  // Resolver token: prioridad token explícito > getToken() > null
+  const finalToken = token ?? (getToken ? await getToken() : null);
+  if (finalToken) {
+    finalHeaders.Authorization = `Bearer ${finalToken}`;
   }
 
   const res = await fetch(`${API_BASE_URL}${path}`, {
