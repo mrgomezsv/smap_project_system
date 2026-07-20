@@ -65,7 +65,7 @@ export function MobileMenu({ links, appLabel, bookLabel }: MobileMenuProps) {
       >
         {/* Drawer Panel */}
         <div
-          className={`fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-surface shadow-large flex flex-col p-6 transition-transform duration-300 ease-out transform ${
+          className={`fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-large flex flex-col p-6 transition-transform duration-300 ease-out transform ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
           onClick={(e) => e.stopPropagation()}
