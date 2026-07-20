@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { DataTable, type Column } from '@/components/admin/DataTable';
-import { api, ApiError } from '@/lib/api';
+import { VirtualList } from '@/components/ui/VirtualList';
+import { api, API_BASE_URL, ApiError } from '@/lib/api';
 import { getFirebaseAuth } from '@/lib/firebase';
 import type { Waiver } from '@/lib/types';
 
 type Tab = 'active' | 'inactive' | 'all';
+const VIRTUAL_THRESHOLD = 100;
 
 export function WaiversTabs() {
   const [tab, setTab] = useState<Tab>('active');
@@ -145,6 +147,64 @@ export function WaiversTabs() {
 
       {loading ? (
         <div className="card text-center py-12 text-text-muted">Cargando waivers…</div>
+      ) : filtered.length > VIRTUAL_THRESHOLD ? (
+        <div className="card p-0 overflow-hidden">
+          <div className="grid grid-cols-[100px_1.5fr_2fr_80px_120px_120px_60px] gap-0 bg-surface border-b border-border text-xs font-semibold text-text-muted uppercase tracking-wider px-4 py-3">
+            <div>QR</div>
+            <div>Titular</div>
+            <div>Email</div>
+            <div className="text-right">Acomp.</div>
+            <div>Creado</div>
+            <div>Estado</div>
+            <div></div>
+          </div>
+          <VirtualList
+            items={filtered}
+            rowHeight={56}
+            renderRow={(w) => (
+              <div className="grid grid-cols-[100px_1.5fr_2fr_80px_120px_120px_60px] gap-0 items-center px-4 border-b border-border h-14 hover:bg-surface transition">
+                <code className="font-mono font-bold text-primary text-sm">{w.qrCode}</code>
+                <span className="font-semibold text-text-primary text-sm truncate">
+                  {w.userName}
+                </span>
+                <span className="text-text-muted text-sm truncate">{w.userEmail}</span>
+                <span className="text-right font-semibold text-sm">
+                  {w.relatives?.length ?? 0}
+                </span>
+                <span className="text-text-muted text-xs">
+                  {new Date(w.createdAt).toLocaleString('es-ES', {
+                    dateStyle: 'short',
+                    timeStyle: 'short',
+                  })}
+                </span>
+                <span>
+                  {w.status === 'ACTIVE' ? (
+                    <span className="inline-flex items-center gap-1 bg-success/10 text-success text-xs font-semibold px-2 py-1 rounded-full">
+                      <span className="w-1.5 h-1.5 bg-success rounded-full" />
+                      Activo
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 bg-gray-100 text-text-muted text-xs font-semibold px-2 py-1 rounded-full">
+                      Inactivo
+                    </span>
+                  )}
+                </span>
+                <div className="flex items-center justify-end">
+                  <a
+                    href={`${API_BASE_URL}/api/v2/waiver/download/${w.qrCode}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-text-muted hover:text-primary p-1"
+                    title="Descargar PDF"
+                  >
+                    📄
+                  </a>
+                </div>
+              </div>
+            )}
+            emptyMessage="No hay waivers en esta categoría."
+          />
+        </div>
       ) : (
         <DataTable
           rows={filtered}
@@ -153,7 +213,7 @@ export function WaiversTabs() {
           emptyMessage="No hay waivers en esta categoría."
           rowActions={(w) => (
             <a
-              href={`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'}/api/v2/waiver/download/${w.qrCode}`}
+              href={`${API_BASE_URL}/api/v2/waiver/download/${w.qrCode}`}
               target="_blank"
               rel="noreferrer"
               className="text-text-muted hover:text-primary p-1"
