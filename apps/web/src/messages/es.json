@@ -8,29 +8,63 @@
   },
   "header": {
     "tagline": "Fiestas Infantiles",
+    "brandText": "Kidsfun y Fiestas Infantiles",
     "app": "App",
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",
     "account": "Mi cuenta",
+    "waivers": "Mis waivers",
     "book": "Reservar"
   },
   "hero": {
-    "badge": "Brincolines, juegos y mucha diversión",
-    "title": "La fiesta perfecta empieza aquí",
-    "subtitle": "Brincolines, juegos eléctricos, mobiliario y todo lo que necesitas para una fiesta infantil inolvidable.",
-    "cta": "Ver productos",
-    "secondaryCta": "Cómo funciona"
+    "badge": "Disponible en toda El Salvador",
+    "title": "La fiesta perfecta<br></br> <yellow>empieza aquí</yellow>",
+    "subtitle": "Brincolines, juegos inflables y diversión para tus fiestas infantiles. Hacemos de tu evento algo <yellow>inolvidable</yellow>.",
+    "cta": "Ver catálogo",
+    "secondaryCta": "¿Cómo funciona?"
   },
   "home": {
     "categories": "Categorías destacadas",
+    "categoriesSubtitle": "Todo lo que necesitas para tu fiesta en un solo lugar",
     "popularProducts": "Productos populares",
+    "popularProductsSubtitle": "Los más reservados por nuestros clientes",
     "howItWorks": "Cómo funciona",
+    "howItWorksSubtitle": "Reservar es muy fácil. En 3 pasos tu fiesta estará lista.",
     "howItWorksSteps": {
-      "1": { "title": "Elige", "description": "Explora nuestro catálogo y elige lo que necesitas" },
-      "2": { "title": "Reserva", "description": "Selecciona fecha y completa tus datos" },
-      "3": { "title": "Disfruta", "description": "Llegamos, instalamos y tú solo disfruta" }
+      "1": { "title": "Explora el catálogo", "description": "Revisa nuestra variedad de brincolines, juegos y servicios. Encuentra lo perfecto para tu evento." },
+      "2": { "title": "Reserva y firma el waiver", "description": "Selecciona fecha, completa el formulario digital y obtén tu QR de acceso al instante." },
+      "3": { "title": "¡A divertirse!", "description": "Llega el día, muestra tu QR y disfruta. Nosotros nos encargamos de todo." }
     },
-    "noProducts": "Aún no hay productos publicados."
+    "noProducts": "Aún no hay productos publicados.",
+    "viewAll": "Ver todos",
+    "trust": {
+      "experience": "+5 años de experiencia",
+      "experienceDesc": "Más de 500 fiestas exitosas en El Salvador",
+      "delivery": "Entrega puntual",
+      "deliveryDesc": "Llevamos e instalamos todo en el horario acordado",
+      "certified": "Equipos certificados",
+      "certifiedDesc": "Todos nuestros equipos cumplen normas de seguridad"
+    }
+  },
+  "categories": {
+    "option1": "Brincolines",
+    "option2": "Juegos Eléctricos",
+    "option3": "Mobiliario",
+    "option4": "Máquinas de Concesión",
+    "option5": "Juegos Competitivos",
+    "option6": "Equipos en Alquiler",
+    "option7": "Juegos de Agua"
+  },
+  "catalog": {
+    "badge": "Catálogo Completo",
+    "title": "Nuestros productos",
+    "availableSingle": "producto disponible",
+    "availablePlural": "productos disponibles",
+    "inCategory": " en {category}",
+    "all": "Todos",
+    "notFound": "No encontramos productos",
+    "notFoundDesc": "Intenta con otra categoría o limpia los filtros.",
+    "viewAll": "Ver todos los productos"
   },
   "product": {
     "view": "Ver en sitio público",
@@ -38,7 +72,9 @@
     "backToCatalog": "← Volver al catálogo",
     "category": "Categoría",
     "price": "Precio",
+    "perEvent": "/evento",
     "available": "Disponible",
+    "priceUponRequest": "Consultar",
     "draft": "Borrador",
     "published": "Publicado",
     "specs": {
@@ -47,7 +83,12 @@
       "circuits": "Circuitos"
     },
     "description": "Descripción",
-    "similarProducts": "Productos similares"
+    "similarProducts": "Productos similares",
+    "interested": "¿Te interesa?",
+    "bookNow": "Reservar ahora",
+    "contactHelp": "Te contactaremos en menos de 24 horas",
+    "comments": "Comentarios",
+    "commentsPlaceholder": "Pronto podrás dejar comentarios aquí. Inicia sesión para opinar."
   },
   "event": {
     "upcoming": "Próximos Eventos",
@@ -338,5 +379,74 @@
     "productSpace": "4x4m",
     "productCircuits": "1 circuito 110V",
     "productYoutube": "https://youtube.com/watch?v=…"
+  },
+  "mobileApp": {
+    "metaTitle": "App Móvil - Kidsfun",
+    "metaDesc": "Descarga la app móvil de Kidsfun. Catálogo, productos, eventos y más en tu bolsillo.",
+    "heroBadge": "Kidsfun Mobile App",
+    "heroTitle": "Toda la diversión en tu bolsillo",
+    "heroSubtitle": "Descubre, reserva y disfruta. La forma más fácil de llevar la magia de Kidsfun a tu próxima fiesta.",
+    "featuresTitle": "Todo lo que puedes hacer",
+    "featuresSubtitle": "La app de Kidsfun está diseñada para que planear tu fiesta sea fácil y divertido.",
+    "qrTitle": "Descarga la app con QR",
+    "qrSubtitle": "Escanea el código desde tu móvil y empieza a disfrutar.",
+    "features": {
+      "catalog": {
+        "title": "Catálogo completo",
+        "desc": "Explora todos nuestros productos y servicios desde tu móvil."
+      },
+      "likes": {
+        "title": "Likes y comentarios",
+        "desc": "Guarda tus productos favoritos y deja tu opinión."
+      },
+      "events": {
+        "title": "Eventos y entradas",
+        "desc": "Compra entradas para eventos y lleva tu QR siempre contigo."
+      },
+      "notifications": {
+        "title": "Notificaciones",
+        "desc": "Recibe avisos de nuevos productos, eventos y promociones."
+      },
+      "chat": {
+        "title": "Chat directo",
+        "desc": "Conversa con nuestro equipo para resolver tus dudas al instante."
+      },
+      "bookings": {
+        "title": "Reservas rápidas",
+        "desc": "Reserva tu fecha en pocos pasos desde donde estés."
+      }
+    }
+  },
+  "auth": {
+    "metaTitle": "Mi cuenta - Kidsfun",
+    "metaDesc": "Inicia sesión o crea una cuenta para reservar y comentar.",
+    "title": "Mi cuenta",
+    "subtitle": "Inicia sesión para reservar, comentar y ver tus waivers.",
+    "firebaseError": "Firebase no está configurado. El login está deshabilitado.",
+    "continueGoogle": "Continuar con Google",
+    "orEmail": "o con email",
+    "name": "Nombre",
+    "email": "Email",
+    "password": "Contraseña",
+    "processing": "Procesando…",
+    "signinButton": "Ingresar",
+    "signupButton": "Crear cuenta",
+    "noAccount": "¿No tienes cuenta?",
+    "register": "Regístrate",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "login": "Ingresa",
+    "welcome": "¡Hola!",
+    "myWaivers": "📋 Mis waivers",
+    "myWaiversDesc": "Ver tus QR generados",
+    "exploreProducts": "🎪 Explorar productos",
+    "exploreProductsDesc": "Ver el catálogo completo",
+    "errors": {
+      "notConfigured": "Firebase no está configurado.",
+      "invalidCredential": "Email o contraseña incorrectos.",
+      "emailInUse": "Este email ya está registrado.",
+      "weakPassword": "La contraseña debe tener al menos 6 caracteres.",
+      "generic": "No se pudo completar la operación.",
+      "googleError": "No se pudo iniciar sesión con Google."
+    }
   }
 }

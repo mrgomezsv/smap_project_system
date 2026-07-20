@@ -8,29 +8,63 @@
   },
   "header": {
     "tagline": "Kids Parties",
+    "brandText": "Kidsfun and Kids Parties",
     "app": "App",
     "login": "Log in",
     "logout": "Log out",
     "account": "My account",
+    "waivers": "My waivers",
     "book": "Book now"
   },
   "hero": {
-    "badge": "Bounce houses, games and lots of fun",
-    "title": "The perfect party starts here",
-    "subtitle": "Bounce houses, electric games, furniture and everything you need for an unforgettable kids party.",
-    "cta": "View products",
-    "secondaryCta": "How it works"
+    "badge": "Available in all El Salvador",
+    "title": "The perfect party<br></br> <yellow>starts here</yellow>",
+    "subtitle": "Bounce houses, inflatable games and fun for your kids parties. We make your event <yellow>unforgettable</yellow>.",
+    "cta": "View catalog",
+    "secondaryCta": "How it works?"
   },
   "home": {
     "categories": "Featured categories",
+    "categoriesSubtitle": "Everything you need for your party in one place",
     "popularProducts": "Popular products",
+    "popularProductsSubtitle": "Most booked by our clients",
     "howItWorks": "How it works",
+    "howItWorksSubtitle": "Booking is very easy. In 3 steps your party will be ready.",
     "howItWorksSteps": {
-      "1": { "title": "Choose", "description": "Browse our catalog and pick what you need" },
-      "2": { "title": "Book", "description": "Pick a date and fill in your details" },
-      "3": { "title": "Enjoy", "description": "We deliver, install and you just enjoy" }
+      "1": { "title": "Explore the catalog", "description": "Browse our variety of bounce houses, games and services. Find the perfect fit for your event." },
+      "2": { "title": "Book and sign the waiver", "description": "Select a date, fill out the digital form and get your access QR instantly." },
+      "3": { "title": "Have fun!", "description": "The day arrives, show your QR and enjoy. We take care of everything." }
     },
-    "noProducts": "No products published yet."
+    "noProducts": "No products published yet.",
+    "viewAll": "View all",
+    "trust": {
+      "experience": "+5 years of experience",
+      "experienceDesc": "More than 500 successful parties in El Salvador",
+      "delivery": "Punctual delivery",
+      "deliveryDesc": "We deliver and install everything on the agreed schedule",
+      "certified": "Certified equipment",
+      "certifiedDesc": "All our equipment meets safety standards"
+    }
+  },
+  "categories": {
+    "option1": "Bounce Houses",
+    "option2": "Electric Games",
+    "option3": "Furniture",
+    "option4": "Concession Machines",
+    "option5": "Competitive Games",
+    "option6": "Equipment Rental",
+    "option7": "Water Fun for Rent"
+  },
+  "catalog": {
+    "badge": "Full Catalog",
+    "title": "Our products",
+    "availableSingle": "product available",
+    "availablePlural": "products available",
+    "inCategory": " in {category}",
+    "all": "All",
+    "notFound": "No products found",
+    "notFoundDesc": "Try another category or clear filters.",
+    "viewAll": "View all products"
   },
   "product": {
     "view": "View public site",
@@ -38,7 +72,9 @@
     "backToCatalog": "← Back to catalog",
     "category": "Category",
     "price": "Price",
+    "perEvent": "/event",
     "available": "Available",
+    "priceUponRequest": "Inquire",
     "draft": "Draft",
     "published": "Published",
     "specs": {
@@ -47,7 +83,12 @@
       "circuits": "Circuits"
     },
     "description": "Description",
-    "similarProducts": "Similar products"
+    "similarProducts": "Similar products",
+    "interested": "Interested?",
+    "bookNow": "Book now",
+    "contactHelp": "We'll get back to you within 24 hours",
+    "comments": "Comments",
+    "commentsPlaceholder": "You will be able to leave comments here soon. Log in to review."
   },
   "event": {
     "upcoming": "Upcoming Events",
@@ -338,5 +379,74 @@
     "productSpace": "4x4m",
     "productCircuits": "1 circuit 110V",
     "productYoutube": "https://youtube.com/watch?v=…"
+  },
+  "mobileApp": {
+    "metaTitle": "Mobile App - Kidsfun",
+    "metaDesc": "Download the Kidsfun mobile app. Catalog, products, events and more in your pocket.",
+    "heroBadge": "Kidsfun Mobile App",
+    "heroTitle": "All the fun in your pocket",
+    "heroSubtitle": "Discover, book and enjoy. The easiest way to bring the magic of Kidsfun to your next party.",
+    "featuresTitle": "Everything you can do",
+    "featuresSubtitle": "The Kidsfun app is designed to make planning your party easy and fun.",
+    "qrTitle": "Download the app with QR",
+    "qrSubtitle": "Scan the code from your mobile device and start enjoying.",
+    "features": {
+      "catalog": {
+        "title": "Full catalog",
+        "desc": "Explore all our products and services from your mobile device."
+      },
+      "likes": {
+        "title": "Likes and comments",
+        "desc": "Save your favorite products and leave your review."
+      },
+      "events": {
+        "title": "Events and tickets",
+        "desc": "Buy tickets for events and carry your QR code with you at all times."
+      },
+      "notifications": {
+        "title": "Notifications",
+        "desc": "Receive updates on new products, events, and promotions."
+      },
+      "chat": {
+        "title": "Direct chat",
+        "desc": "Chat with our team to resolve your questions instantly."
+      },
+      "bookings": {
+        "title": "Quick bookings",
+        "desc": "Book your date in a few steps from wherever you are."
+      }
+    }
+  },
+  "auth": {
+    "metaTitle": "My account - Kidsfun",
+    "metaDesc": "Log in or create an account to book and comment.",
+    "title": "My account",
+    "subtitle": "Log in to book, comment and view your waivers.",
+    "firebaseError": "Firebase is not configured. Login is disabled.",
+    "continueGoogle": "Continue with Google",
+    "orEmail": "or with email",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "processing": "Processing…",
+    "signinButton": "Log in",
+    "signupButton": "Create account",
+    "noAccount": "Don't have an account?",
+    "register": "Register",
+    "hasAccount": "Already have an account?",
+    "login": "Log in",
+    "welcome": "Hello!",
+    "myWaivers": "📋 My waivers",
+    "myWaiversDesc": "View your generated QRs",
+    "exploreProducts": "🎪 Explore products",
+    "exploreProductsDesc": "View the full catalog",
+    "errors": {
+      "notConfigured": "Firebase is not configured.",
+      "invalidCredential": "Incorrect email or password.",
+      "emailInUse": "This email is already registered.",
+      "weakPassword": "The password must be at least 6 characters long.",
+      "generic": "Could not complete the operation.",
+      "googleError": "Could not log in with Google."
+    }
   }
 }
