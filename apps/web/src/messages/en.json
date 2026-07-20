@@ -151,6 +151,45 @@
     "rights": "All rights reserved.",
     "followUs": "Follow us"
   },
+  "about": {
+    "badge": "About us",
+    "heroTitle": "Over 5 years of smiles",
+    "heroSubtitle": "We're a family business specialized in kids entertainment and party organization in El Salvador and Miami.",
+    "historyTitle": "Our story",
+    "historyP1": "Kidsfun was born from the dream of turning every kids celebration into a magical and unforgettable experience. We started as a small family business and today we're a reference for bounce house rentals, electric games and party organization in El Salvador.",
+    "historyP2": "Over time, we expanded to Miami to bring the magic of Kidsfun to more families, always keeping the values that defined us from day one: safety, quality and close service.",
+    "stats": {
+      "years": "Years of experience",
+      "parties": "Parties delivered",
+      "products": "Products in catalog",
+      "certified": "Certified equipment"
+    },
+    "missionTitle": "Our mission",
+    "missionBody": "Make every kids party safe, fun and stress-free for parents, offering quality products and a personalized service that exceeds their expectations.",
+    "visionTitle": "Our vision",
+    "visionBody": "Be the leading kids entertainment company in the region, known for our innovation, quality and commitment to child safety.",
+    "valuesTitle": "Our values",
+    "values": {
+      "safeFun": {
+        "title": "Safe fun",
+        "description": "All our equipment meets kids safety standards."
+      },
+      "premium": {
+        "title": "Premium quality",
+        "description": "New, clean products in perfect condition for your event."
+      },
+      "onTime": {
+        "title": "On time",
+        "description": "We arrive and set up everything at the agreed time."
+      },
+      "closeService": {
+        "title": "Close service",
+        "description": "We accompany you from booking to the end of the party."
+      }
+    },
+    "ctaTitle": "Ready for your next party?",
+    "ctaSubtitle": "Book now or contact us for a personalized quote."
+  },
   "common": {
     "loading": "Loading…",
     "error": "Something went wrong",

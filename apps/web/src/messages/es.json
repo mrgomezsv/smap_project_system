@@ -151,6 +151,45 @@
     "rights": "Todos los derechos reservados.",
     "followUs": "Síguenos"
   },
+  "about": {
+    "badge": "Sobre nosotros",
+    "heroTitle": "Más de 5 años creando sonrisas",
+    "heroSubtitle": "Somos una empresa familiar especializada en entretenimiento infantil y organización de fiestas en El Salvador y Miami.",
+    "historyTitle": "Nuestra historia",
+    "historyP1": "Kidsfun nació del sueño de transformar cada celebración infantil en una experiencia mágica e inolvidable. Empezamos como un pequeño emprendimiento familiar y hoy somos referentes en alquiler de inflables, juegos eléctricos y organización de fiestas en El Salvador.",
+    "historyP2": "Con el tiempo, expandimos nuestras operaciones a Miami para llevar la magia de Kidsfun a más familias, manteniendo siempre los valores que nos definieron desde el primer día: seguridad, calidad y atención cercana.",
+    "stats": {
+      "years": "Años de experiencia",
+      "parties": "Fiestas realizadas",
+      "products": "Productos en catálogo",
+      "certified": "Equipos certificados"
+    },
+    "missionTitle": "Nuestra misión",
+    "missionBody": "Hacer que cada fiesta infantil sea segura, divertida y sin estrés para los padres, ofreciendo productos de calidad y un servicio personalizado que supere sus expectativas.",
+    "visionTitle": "Nuestra visión",
+    "visionBody": "Ser la empresa líder de entretenimiento infantil en la región, reconocida por nuestra innovación, calidad y compromiso con la seguridad de los niños.",
+    "valuesTitle": "Nuestros valores",
+    "values": {
+      "safeFun": {
+        "title": "Diversión segura",
+        "description": "Todos nuestros equipos cumplen con normas de seguridad infantil."
+      },
+      "premium": {
+        "title": "Calidad premium",
+        "description": "Productos nuevos, limpios y en perfecto estado para tu evento."
+      },
+      "onTime": {
+        "title": "Puntualidad",
+        "description": "Llegamos e instalamos todo en el horario acordado."
+      },
+      "closeService": {
+        "title": "Atención cercana",
+        "description": "Te acompañamos desde la reserva hasta el final de la fiesta."
+      }
+    },
+    "ctaTitle": "¿Listo para tu próxima fiesta?",
+    "ctaSubtitle": "Reserva ahora o contáctanos para una cotización personalizada."
+  },
   "common": {
     "loading": "Cargando…",
     "error": "Ha ocurrido un error",
