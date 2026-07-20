@@ -1,0 +1,61 @@
+# ============================================
+# Stage 1: deps
+# ============================================
+FROM node:20-alpine AS deps
+RUN corepack enable
+WORKDIR /repo
+
+# Copiar archivos de pnpm
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc ./
+COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+COPY packages/shared/package.json ./packages/shared/ 2>/dev/null || true
+
+# Instalar solo deps de prod del api
+RUN pnpm install --filter api... --frozen-lockfile --prod
+
+# ============================================
+# Stage 2: build
+# ============================================
+FROM node:20-alpine AS build
+RUN corepack enable
+WORKDIR /repo
+
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc ./
+COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+COPY packages/shared/package.json ./packages/shared/ 2>/dev/null || true
+
+RUN pnpm install --filter api... --frozen-lockfile
+
+# Generar cliente Prisma
+COPY apps/api/prisma ./apps/api/prisma
+RUN cd apps/api && pnpm prisma generate
+
+# Copiar fuente y compilar
+COPY apps/api ./apps/api
+RUN cd apps/api && pnpm build && pnpm prune --prod
+
+# ============================================
+# Stage 3: runtime
+# ============================================
+FROM node:20-alpine AS runtime
+RUN apk add --no-cache tini
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Copiar artefactos
+COPY --from=build /repo/apps/api/dist ./dist
+COPY --from=build /repo/apps/api/prisma ./prisma
+COPY --from=build /repo/apps/api/node_modules ./node_modules
+COPY --from=build /repo/apps/api/package.json ./
+
+# Crear carpetas de media
+RUN mkdir -p /app/media/product_images /app/media/event_images /app/logs
+VOLUME ["/app/media", "/app/logs"]
+
+EXPOSE 3001
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["node", "dist/main.js"]

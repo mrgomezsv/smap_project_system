@@ -1,0 +1,54 @@
+# ============================================
+# Stage 1: deps
+# ============================================
+FROM node:20-alpine AS deps
+RUN corepack enable
+WORKDIR /repo
+
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc ./
+COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+COPY packages/shared/package.json ./packages/shared/ 2>/dev/null || true
+
+RUN pnpm install --filter web... --frozen-lockfile
+
+# ============================================
+# Stage 2: build
+# ============================================
+FROM node:20-alpine AS build
+RUN corepack enable
+WORKDIR /repo
+
+ENV NEXT_TELEMETRY_DISABLED=1
+
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc ./
+COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+COPY packages/shared/package.json ./packages/shared/ 2>/dev/null || true
+
+RUN pnpm install --filter web... --frozen-lockfile
+
+COPY apps/web ./apps/web
+RUN cd apps/web && pnpm build
+
+# ============================================
+# Stage 3: runtime
+# ============================================
+FROM node:20-alpine AS runtime
+RUN apk add --no-cache tini
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+# Copiar artefactos de Next.js
+COPY --from=build /repo/apps/web/.next/standalone ./
+COPY --from=build /repo/apps/web/.next/static ./.next/static
+COPY --from=build /repo/apps/web/public ./public
+
+EXPOSE 3000
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["node", "server.js"]
