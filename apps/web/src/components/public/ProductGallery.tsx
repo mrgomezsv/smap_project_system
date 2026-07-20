@@ -8,28 +8,45 @@ interface ProductGalleryProps {
 }
 
 export function ProductGallery({ images, title }: ProductGalleryProps) {
+  const [brokenImages, setBrokenImages] = useState<Record<string, boolean>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
+  // Filter out broken images
+  const validImages = images.filter((img) => !brokenImages[img]);
+
   // Auto-play interval
   useEffect(() => {
-    if (images.length <= 1 || isHovered) return;
+    if (validImages.length <= 1 || isHovered) return;
 
     const timer = setInterval(() => {
       handleNext();
     }, 4000);
 
     return () => clearInterval(timer);
-  }, [currentIndex, images.length, isHovered]);
+  }, [currentIndex, validImages.length, isHovered]);
+
+  // Adjust index if current image becomes invalid/broken
+  useEffect(() => {
+    if (validImages.length > 0 && currentIndex >= validImages.length) {
+      setCurrentIndex(0);
+    }
+  }, [brokenImages, currentIndex, validImages.length]);
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
+    if (validImages.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % validImages.length);
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    if (validImages.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + validImages.length) % validImages.length);
+  };
+
+  const handleImageError = (img: string) => {
+    setBrokenImages((prev) => ({ ...prev, [img]: true }));
   };
 
   // Touch handlers for mobile swipe gestures
@@ -44,23 +61,41 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
   const handleTouchEnd = () => {
     if (!touchStartX.current || !touchEndX.current) return;
     const difference = touchStartX.current - touchEndX.current;
-    const swipeThreshold = 50; // Minimum distance in pixels to trigger swipe
+    const swipeThreshold = 50;
 
     if (difference > swipeThreshold) {
-      // Swipe left -> Next
       handleNext();
     } else if (difference < -swipeThreshold) {
-      // Swipe right -> Prev
       handlePrev();
     }
 
-    // Reset values
     touchStartX.current = null;
     touchEndX.current = null;
   };
 
+  // If all images are broken
+  if (validImages.length === 0) {
+    return (
+      <div className="aspect-square rounded-2xl bg-gradient-to-br from-brand-yellow/20 to-party-pink/20 flex items-center justify-center text-9xl">
+        🎪
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
+      {/* Hidden image preloader to validate URLs */}
+      <div className="hidden">
+        {images.map((img) => (
+          <img
+            key={img}
+            src={`/media/${img}`}
+            onError={() => handleImageError(img)}
+            alt=""
+          />
+        ))}
+      </div>
+
       {/* Main Image Slider */}
       <div
         className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-medium group"
@@ -72,7 +107,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       >
         {/* Images */}
         <div className="w-full h-full relative">
-          {images.map((img, index) => (
+          {validImages.map((img, index) => (
             <img
               key={img}
               src={`/media/${img}`}
@@ -84,8 +119,8 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
           ))}
         </div>
 
-        {/* Navigation Arrows (visible on hover / active) */}
-        {images.length > 1 && (
+        {/* Navigation Arrows */}
+        {validImages.length > 1 && (
           <>
             <button
               onClick={handlePrev}
@@ -109,9 +144,9 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
         )}
 
         {/* Floating Indicator Dots */}
-        {images.length > 1 && (
+        {validImages.length > 1 && (
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-1.5 bg-black/35 backdrop-blur-xs px-3 py-1.5 rounded-full">
-            {images.map((_, index) => (
+            {validImages.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
@@ -126,9 +161,9 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       </div>
 
       {/* Thumbnails list below */}
-      {images.length > 1 && (
+      {validImages.length > 1 && (
         <div className="grid grid-cols-5 gap-3">
-          {images.map((img, index) => (
+          {validImages.map((img, index) => (
             <button
               key={img}
               onClick={() => setCurrentIndex(index)}
