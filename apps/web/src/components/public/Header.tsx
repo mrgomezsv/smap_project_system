@@ -55,7 +55,10 @@ export async function PublicHeader() {
           </Link> */}
           <LanguageSwitcher />
           <UserMenuDynamic />
-          <Link href="/productos" className="btn btn-primary shadow-medium hover:shadow-large">
+          <Link
+            href="/productos"
+            className="px-6 py-2.5 bg-primary hover:bg-primary-600 text-white font-heading font-extrabold text-sm rounded-full shadow-medium hover:shadow-large transition-all duration-300 hover:scale-[1.03] active:scale-[0.97]"
+          >
             {tHeader('book')}
           </Link>
         </div>
