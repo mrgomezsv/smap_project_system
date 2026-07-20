@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server';
 import { api, ApiError } from '@/lib/api';
 import type { Product } from '@/lib/types';
 import { type Category } from '@/lib/types';
+import { ProductGallery } from '@/components/public/ProductGallery';
 
 interface PageProps {
   params: { id: string };
@@ -75,31 +76,7 @@ export default async function ProductoDetallePage({ params }: PageProps) {
           {/* ===== GALERÍA ===== */}
           <div>
             {hasGallery ? (
-              <div className="space-y-4">
-                <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-medium">
-                  <img
-                    src={`/media/${gallery[0]}`}
-                    alt={product.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                {gallery.length > 1 && (
-                  <div className="grid grid-cols-4 gap-3">
-                    {gallery.slice(1, 5).map((img, i) => (
-                      <button
-                        key={i}
-                        className="aspect-square rounded-lg overflow-hidden border-2 border-border hover:border-primary transition"
-                      >
-                        <img
-                          src={`/media/${img}`}
-                          alt={`${product.title} ${i + 2}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <ProductGallery images={gallery} title={product.title} />
             ) : (
               <div className="aspect-square rounded-2xl bg-gradient-to-br from-brand-yellow/20 to-party-pink/20 flex items-center justify-center text-9xl">
                 🎪
