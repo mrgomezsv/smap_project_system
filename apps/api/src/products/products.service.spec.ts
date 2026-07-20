@@ -1,10 +1,10 @@
 import { Test } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 describe('ProductsService', () => {
   let service: ProductsService;
-  let prisma: PrismaService;
 
   const mockPrisma = {
     product: {
@@ -18,39 +18,201 @@ describe('ProductsService', () => {
   };
 
   beforeEach(async () => {
+    jest.clearAllMocks();
     const module = await Test.createTestingModule({
       providers: [
         ProductsService,
         { provide: PrismaService, useValue: mockPrisma },
       ],
     }).compile();
-
     service = module.get(ProductsService);
-    prisma = module.get(PrismaService);
   });
 
-  it('findAll retorna lista y total', async () => {
-    const products = [{ id: 1n, title: 'Test' }];
-    mockPrisma.product.findMany.mockResolvedValue(products);
-    mockPrisma.product.count.mockResolvedValue(1);
+  describe('findAll', () => {
+    it('retorna items y total con defaults', async () => {
+      const products = [
+        { id: 1n, title: 'A' },
+        { id: 2n, title: 'B' },
+      ];
+      mockPrisma.product.findMany.mockResolvedValue(products);
+      mockPrisma.product.count.mockResolvedValue(2);
 
-    const result = await service.findAll({});
-    expect(result.items).toEqual(products);
-    expect(result.total).toBe(1);
+      const result = await service.findAll({});
+
+      expect(result.items).toEqual(products);
+      expect(result.total).toBe(2);
+      expect(result.skip).toBe(0);
+      expect(result.take).toBe(20);
+      expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {},
+          skip: 0,
+          take: 20,
+          orderBy: { created: 'desc' },
+        }),
+      );
+    });
+
+    it('aplica filtro de categoría', async () => {
+      mockPrisma.product.findMany.mockResolvedValue([]);
+      mockPrisma.product.count.mockResolvedValue(0);
+
+      await service.findAll({ category: 'option1' });
+
+      expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { category: 'option1' } }),
+      );
+    });
+
+    it('aplica filtro de publicated', async () => {
+      mockPrisma.product.findMany.mockResolvedValue([]);
+      mockPrisma.product.count.mockResolvedValue(0);
+
+      await service.findAll({ publicated: true });
+
+      expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { publicated: true } }),
+      );
+    });
+
+    it('aplica búsqueda por título (contains)', async () => {
+      mockPrisma.product.findMany.mockResolvedValue([]);
+      mockPrisma.product.count.mockResolvedValue(0);
+
+      await service.findAll({ search: 'brincolín' });
+
+      expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { title: { contains: 'brincolín' } } }),
+      );
+    });
+
+    it('combina múltiples filtros', async () => {
+      mockPrisma.product.findMany.mockResolvedValue([]);
+      mockPrisma.product.count.mockResolvedValue(0);
+
+      await service.findAll({
+        category: 'option2',
+        publicated: true,
+        search: 'mesa',
+      });
+
+      expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            category: 'option2',
+            publicated: true,
+            title: { contains: 'mesa' },
+          },
+        }),
+      );
+    });
+
+    it('respeta paginación custom', async () => {
+      mockPrisma.product.findMany.mockResolvedValue([]);
+      mockPrisma.product.count.mockResolvedValue(100);
+
+      const result = await service.findAll({ skip: 40, take: 20 });
+
+      expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ skip: 40, take: 20 }),
+      );
+      expect(result.skip).toBe(40);
+      expect(result.take).toBe(20);
+    });
   });
 
-  it('findOne lanza NotFound si no existe', async () => {
-    mockPrisma.product.findUnique.mockResolvedValue(null);
-    await expect(service.findOne(999)).rejects.toThrow('Producto #999 no encontrado');
+  describe('findByCategory', () => {
+    it('filtra por categoría y solo publicated=true', async () => {
+      mockPrisma.product.findMany.mockResolvedValue([]);
+
+      await service.findByCategory('option1');
+
+      expect(mockPrisma.product.findMany).toHaveBeenCalledWith({
+        where: { category: 'option1', publicated: true },
+        orderBy: { created: 'desc' },
+      });
+    });
   });
 
-  it('countByProduct filtra solo favoritos en Likes', async () => {
-    mockPrisma.productLike = { count: jest.fn().mockResolvedValue(5) };
-    const LikesServiceModule = await Test.createTestingModule({
-      providers: [
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
-    }).compile();
-    expect(LikesServiceModule).toBeDefined();
+  describe('findOne', () => {
+    it('retorna producto con _count de likes y comments', async () => {
+      const product = {
+        id: 5n,
+        title: 'Brincolín 3x3',
+        _count: { likes: 10, comments: 3 },
+      };
+      mockPrisma.product.findUnique.mockResolvedValue(product);
+
+      const result = await service.findOne(5);
+
+      expect(result).toEqual(product);
+      expect(mockPrisma.product.findUnique).toHaveBeenCalledWith({
+        where: { id: BigInt(5) },
+        include: expect.objectContaining({
+          _count: { select: { likes: true, comments: true } },
+        }),
+      });
+    });
+
+    it('lanza NotFoundException si no existe', async () => {
+      mockPrisma.product.findUnique.mockResolvedValue(null);
+
+      await expect(service.findOne(999)).rejects.toThrow(NotFoundException);
+      await expect(service.findOne(999)).rejects.toThrow('Producto #999 no encontrado');
+    });
+  });
+
+  describe('create', () => {
+    it('crea con valores por defecto para imágenes', async () => {
+      mockPrisma.product.create.mockResolvedValue({ id: 10n, title: 'Nuevo' });
+
+      await service.create(
+        {
+          title: 'Nuevo',
+          category: 'option1',
+        } as never,
+        7,
+      );
+
+      expect(mockPrisma.product.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            title: 'Nuevo',
+            category: 'option1',
+            publicated: false,
+            img: 'default_product_image.jpg',
+            img1: 'default_product_image.jpg',
+            userId: 7,
+          }),
+        }),
+      );
+    });
+  });
+
+  describe('update', () => {
+    it('verifica existencia y luego actualiza', async () => {
+      mockPrisma.product.findUnique.mockResolvedValue({ id: 1n });
+      mockPrisma.product.update.mockResolvedValue({ id: 1n, title: 'Updated' });
+
+      const result = await service.update(1, { title: 'Updated' } as never);
+
+      expect(result).toEqual({ id: 1n, title: 'Updated' });
+      expect(mockPrisma.product.findUnique).toHaveBeenCalled();
+      expect(mockPrisma.product.update).toHaveBeenCalled();
+    });
+  });
+
+  describe('remove', () => {
+    it('verifica existencia y luego elimina', async () => {
+      mockPrisma.product.findUnique.mockResolvedValue({ id: 1n });
+      mockPrisma.product.delete.mockResolvedValue({ id: 1n });
+
+      const result = await service.remove(1);
+
+      expect(result).toEqual({ id: 1n });
+      expect(mockPrisma.product.delete).toHaveBeenCalledWith({
+        where: { id: BigInt(1) },
+      });
+    });
   });
 });
