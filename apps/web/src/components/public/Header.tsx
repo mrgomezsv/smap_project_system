@@ -29,11 +29,8 @@ export async function PublicHeader() {
     <header className="sticky top-0 z-50 bg-brand-yellow shadow-medium backdrop-blur-sm">
       <div className="container flex items-center justify-between h-20">
         <Link href="/" className="flex items-center gap-3 group">
-          <span className="font-display text-3xl text-primary drop-shadow-sm group-hover:scale-105 transition-transform">
-            Kidsfun
-          </span>
-          <span className="hidden sm:block text-sm font-medium text-primary/80">
-            {tHeader('tagline')}
+          <span className="font-display text-xl sm:text-2xl md:text-3xl text-primary drop-shadow-sm group-hover:scale-105 transition-transform whitespace-nowrap">
+            {tHeader('brandText')}
           </span>
         </Link>
 
