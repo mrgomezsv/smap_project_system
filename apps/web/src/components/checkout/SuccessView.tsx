@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
+import Link from 'next/link';
 import { api, API_BASE_URL, ApiError } from '@/lib/api';
-import { getFirebaseAuth } from '@/lib/firebase';
+import { useAuth } from '@/components/auth/AuthProvider';
 import type { Waiver } from '@/lib/types';
 
 interface SuccessViewProps {
@@ -11,6 +12,7 @@ interface SuccessViewProps {
 }
 
 export function SuccessView({ qrCode }: SuccessViewProps) {
+  const { getToken } = useAuth();
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [waiver, setWaiver] = useState<Waiver | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,10 +32,8 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
         if (cancelled) return;
         setQrDataUrl(url);
 
-        // Waiver completo (con auth)
-        const auth = getFirebaseAuth();
-        const token = auth?.currentUser ? await auth.currentUser.getIdToken() : null;
-
+        // Waiver completo (con token auto-refresh vía AuthProvider)
+        const token = await getToken();
         if (token) {
           const res = await api.get<{ waiver: Waiver; isValid: boolean }>(
             `/api/v2/waiver/${qrCode}`,
@@ -58,7 +58,7 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
     return () => {
       cancelled = true;
     };
-  }, [qrCode]);
+  }, [qrCode, getToken]);
 
   const pdfUrl = `${API_BASE_URL}/api/v2/waiver/download/${qrCode}`;
 
@@ -146,6 +146,12 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
         >
           ⬇ Descargar QR
         </a>
+      </div>
+
+      <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <Link href="/cuenta#waivers" className="text-sm text-primary hover:underline">
+          Ver mis waivers en Mi cuenta →
+        </Link>
       </div>
 
       <p className="text-xs text-text-muted mt-6">

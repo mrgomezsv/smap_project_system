@@ -1,33 +1,47 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useCheckout } from './CheckoutProvider';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
-import { getFirebaseAuth } from '@/lib/firebase';
 import type { Waiver } from '@/lib/types';
 
 export function ConfirmForm() {
   const router = useRouter();
   const { data, reset } = useCheckout();
+  const { getToken, user, ready } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const pathname = usePathname();
+
   const isEmpty = !data.titular.name;
+  const needsAuth = ready && !user;
+
+  useEffect(() => {
+    if (needsAuth && !isEmpty) {
+      // guardar intent y redirigir a login
+      sessionStorage.setItem('checkout_intent', '1');
+    }
+  }, [needsAuth, isEmpty]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (isEmpty) return;
 
+    if (needsAuth) {
+      router.push(`/cuenta?next=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
 
     try {
-      const auth = getFirebaseAuth();
-      const token = auth?.currentUser ? await auth.currentUser.getIdToken() : null;
-
+      const token = await getToken();
       if (!token) {
-        setError('Necesitas iniciar sesión para generar el waiver.');
+        setError('No se pudo obtener tu sesión. Inicia sesión nuevamente.');
         setSubmitting(false);
         return;
       }
@@ -47,6 +61,7 @@ export function ConfirmForm() {
     } catch (e) {
       const msg = e instanceof ApiError ? e.message : 'Error al generar el waiver';
       setError(msg);
+    } finally {
       setSubmitting(false);
     }
   }
@@ -54,7 +69,9 @@ export function ConfirmForm() {
   return (
     <form onSubmit={handleSubmit} className="card space-y-6">
       <header>
-        <h1 className="text-2xl font-heading font-extrabold text-text-primary">Confirma tu información</h1>
+        <h1 className="text-2xl font-heading font-extrabold text-text-primary">
+          Confirma tu información
+        </h1>
         <p className="text-sm text-text-muted mt-1">
           Revisa que todo esté correcto antes de generar tu waiver.
         </p>
@@ -66,6 +83,22 @@ export function ConfirmForm() {
           <Link href="/checkout" className="underline font-medium">
             Volver a completar
           </Link>
+        </div>
+      )}
+
+      {needsAuth && !isEmpty && (
+        <div className="bg-info/10 border border-info/30 text-info text-sm rounded-lg p-4">
+          <p className="font-semibold mb-1">🔐 Necesitas iniciar sesión</p>
+          <p>
+            Para generar tu waiver necesitas una cuenta.{' '}
+            <Link
+              href={`/cuenta?next=${encodeURIComponent(pathname)}`}
+              className="underline font-semibold"
+            >
+              Inicia sesión o regístrate
+            </Link>{' '}
+            para continuar.
+          </p>
         </div>
       )}
 
@@ -137,7 +170,11 @@ export function ConfirmForm() {
           className="btn btn-primary px-8 py-3 disabled:opacity-50"
           disabled={isEmpty || submitting}
         >
-          {submitting ? 'Generando…' : 'Generar waiver'}
+          {submitting
+            ? 'Generando…'
+            : needsAuth
+              ? '🔐 Iniciar sesión para continuar'
+              : 'Generar waiver'}
         </button>
       </div>
     </form>
