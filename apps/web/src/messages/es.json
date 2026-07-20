@@ -1,0 +1,132 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "products": "Productos",
+    "events": "Eventos",
+    "about": "Nosotros",
+    "contact": "Contacto"
+  },
+  "header": {
+    "tagline": "Fiestas Infantiles",
+    "app": "App",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "account": "Mi cuenta",
+    "book": "Reservar"
+  },
+  "hero": {
+    "badge": "Brincolines, juegos y mucha diversión",
+    "title": "La fiesta perfecta empieza aquí",
+    "subtitle": "Brincolines, juegos eléctricos, mobiliario y todo lo que necesitas para una fiesta infantil inolvidable.",
+    "cta": "Ver productos",
+    "secondaryCta": "Cómo funciona"
+  },
+  "home": {
+    "categories": "Categorías destacadas",
+    "popularProducts": "Productos populares",
+    "howItWorks": "Cómo funciona",
+    "howItWorksSteps": {
+      "1": { "title": "Elige", "description": "Explora nuestro catálogo y elige lo que necesitas" },
+      "2": { "title": "Reserva", "description": "Selecciona fecha y completa tus datos" },
+      "3": { "title": "Disfruta", "description": "Llegamos, instalamos y tú solo disfruta" }
+    },
+    "noProducts": "Aún no hay productos publicados."
+  },
+  "product": {
+    "view": "Ver en sitio público",
+    "edit": "Editar",
+    "backToCatalog": "← Volver al catálogo",
+    "category": "Categoría",
+    "price": "Precio",
+    "available": "Disponible",
+    "draft": "Borrador",
+    "published": "Publicado",
+    "specs": {
+      "dimensions": "Dimensiones",
+      "space": "Espacio",
+      "circuits": "Circuitos"
+    },
+    "description": "Descripción",
+    "similarProducts": "Productos similares"
+  },
+  "event": {
+    "upcoming": "Próximos Eventos",
+    "title": "Eventos & Fiestas",
+    "subtitle": "Conoce nuestros próximos eventos y consigue tu entrada",
+    "details": "Ver detalles",
+    "from": "Desde",
+    "buyTicket": "Comprar entrada",
+    "whatsapp": "WhatsApp",
+    "noEvents": "Próximamente publicaremos nuevos eventos",
+    "ended": "Evento finalizado"
+  },
+  "checkout": {
+    "yourData": "Tus datos",
+    "yourDataSubtitle": "Esta información aparecerá en tu waiver. Te enviaremos el QR a tu email.",
+    "name": "Nombre completo",
+    "email": "Email",
+    "phone": "Teléfono",
+    "continue": "Continuar →",
+    "back": "← Volver",
+    "familiars": "Familiares y acompañantes",
+    "familiarsSubtitle": "Registra a las personas que te acompañan. El titular ya está incluido.",
+    "addRow": "+ Agregar fila",
+    "noFamiliars": "Aún no has agregado acompañantes.",
+    "confirm": "Confirma tu información",
+    "confirmSubtitle": "Revisa que todo esté correcto antes de generar tu waiver.",
+    "titular": "Titular",
+    "companions": "Acompañantes",
+    "noCompanions": "Sin acompañantes registrados.",
+    "generate": "Generar waiver",
+    "generating": "Generando…",
+    "authRequired": "Necesitas iniciar sesión para generar el waiver.",
+    "loginToContinue": "🔐 Iniciar sesión para continuar",
+    "success": "¡Waiver generado!",
+    "successSubtitle": "Guarda este código QR. Lo necesitarás para entrar al evento.",
+    "downloadPdf": "📄 Descargar PDF",
+    "downloadQr": "⬇ Descargar QR",
+    "errors": {
+      "required": "Requerido",
+      "invalidEmail": "Email inválido",
+      "invalidPhone": "Teléfono inválido"
+    }
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "subtitle": "Escríbenos o llámanos. Te respondemos en menos de 24 horas.",
+    "info": "Información de contacto",
+    "phone": "Teléfono",
+    "whatsapp": "WhatsApp",
+    "emails": "Emails",
+    "name": "Nombre",
+    "lastname": "Apellido",
+    "message": "¿En qué te podemos ayudar?",
+    "submit": "Enviar mensaje",
+    "submitting": "Enviando…",
+    "success": "¡Mensaje enviado!",
+    "successSubtitle": "Gracias por contactarnos. Te responderemos en menos de 24 horas."
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "followUs": "Síguenos"
+  },
+  "common": {
+    "loading": "Cargando…",
+    "error": "Ha ocurrido un error",
+    "retry": "🔄 Reintentar",
+    "back": "← Volver",
+    "seeMore": "Ver más",
+    "close": "Cerrar"
+  },
+  "errors": {
+    "404": {
+      "title": "¡Ups! Esta página se fue de fiesta",
+      "subtitle": "La página que buscas no existe o fue movida.",
+      "back": "🏠 Volver al inicio"
+    },
+    "500": {
+      "title": "Algo salió mal",
+      "subtitle": "Ocurrió un error inesperado. Nuestro equipo ya fue notificado."
+    }
+  }
+}

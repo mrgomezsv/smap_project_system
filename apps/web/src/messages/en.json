@@ -1,0 +1,132 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "events": "Events",
+    "about": "About us",
+    "contact": "Contact"
+  },
+  "header": {
+    "tagline": "Kids Parties",
+    "app": "App",
+    "login": "Log in",
+    "logout": "Log out",
+    "account": "My account",
+    "book": "Book now"
+  },
+  "hero": {
+    "badge": "Bounce houses, games and lots of fun",
+    "title": "The perfect party starts here",
+    "subtitle": "Bounce houses, electric games, furniture and everything you need for an unforgettable kids party.",
+    "cta": "View products",
+    "secondaryCta": "How it works"
+  },
+  "home": {
+    "categories": "Featured categories",
+    "popularProducts": "Popular products",
+    "howItWorks": "How it works",
+    "howItWorksSteps": {
+      "1": { "title": "Choose", "description": "Browse our catalog and pick what you need" },
+      "2": { "title": "Book", "description": "Pick a date and fill in your details" },
+      "3": { "title": "Enjoy", "description": "We deliver, install and you just enjoy" }
+    },
+    "noProducts": "No products published yet."
+  },
+  "product": {
+    "view": "View public site",
+    "edit": "Edit",
+    "backToCatalog": "← Back to catalog",
+    "category": "Category",
+    "price": "Price",
+    "available": "Available",
+    "draft": "Draft",
+    "published": "Published",
+    "specs": {
+      "dimensions": "Dimensions",
+      "space": "Space",
+      "circuits": "Circuits"
+    },
+    "description": "Description",
+    "similarProducts": "Similar products"
+  },
+  "event": {
+    "upcoming": "Upcoming Events",
+    "title": "Events & Parties",
+    "subtitle": "Discover our upcoming events and get your ticket",
+    "details": "View details",
+    "from": "From",
+    "buyTicket": "Buy ticket",
+    "whatsapp": "WhatsApp",
+    "noEvents": "We'll publish new events soon",
+    "ended": "Event ended"
+  },
+  "checkout": {
+    "yourData": "Your details",
+    "yourDataSubtitle": "This info will appear on your waiver. We'll send the QR to your email.",
+    "name": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "continue": "Continue →",
+    "back": "← Back",
+    "familiars": "Family & companions",
+    "familiarsSubtitle": "Register the people coming with you. The titular is already included.",
+    "addRow": "+ Add row",
+    "noFamiliars": "You haven't added any companions yet.",
+    "confirm": "Confirm your information",
+    "confirmSubtitle": "Review everything before generating your waiver.",
+    "titular": "Titular",
+    "companions": "Companions",
+    "noCompanions": "No companions registered.",
+    "generate": "Generate waiver",
+    "generating": "Generating…",
+    "authRequired": "You need to log in to generate the waiver.",
+    "loginToContinue": "🔐 Log in to continue",
+    "success": "Waiver generated!",
+    "successSubtitle": "Save this QR code. You'll need it to enter the event.",
+    "downloadPdf": "📄 Download PDF",
+    "downloadQr": "⬇ Download QR",
+    "errors": {
+      "required": "Required",
+      "invalidEmail": "Invalid email",
+      "invalidPhone": "Invalid phone"
+    }
+  },
+  "contact": {
+    "title": "Contact us",
+    "subtitle": "Write or call us. We reply in under 24 hours.",
+    "info": "Contact information",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "emails": "Emails",
+    "name": "First name",
+    "lastname": "Last name",
+    "message": "How can we help?",
+    "submit": "Send message",
+    "submitting": "Sending…",
+    "success": "Message sent!",
+    "successSubtitle": "Thanks for reaching out. We'll get back in under 24 hours."
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "followUs": "Follow us"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "retry": "🔄 Retry",
+    "back": "← Back",
+    "seeMore": "See more",
+    "close": "Close"
+  },
+  "errors": {
+    "404": {
+      "title": "Oops! This page went to the party",
+      "subtitle": "The page you're looking for doesn't exist or was moved.",
+      "back": "🏠 Back to home"
+    },
+    "500": {
+      "title": "Something went wrong",
+      "subtitle": "An unexpected error happened. Our team has been notified."
+    }
+  }
+}
