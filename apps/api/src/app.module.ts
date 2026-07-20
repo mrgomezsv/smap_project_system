@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductsModule } from './products/products.module';
+import { EventsModule } from './events/events.module';
 import { LikesModule } from './likes/likes.module';
 import { CommentsModule } from './comments/comments.module';
 import { WaiversModule } from './waivers/waivers.module';
@@ -17,6 +18,7 @@ import { UploadModule } from './upload/upload.module';
     PrismaModule,
     AuthModule,
     ProductsModule,
+    EventsModule,
     LikesModule,
     CommentsModule,
     WaiversModule,
