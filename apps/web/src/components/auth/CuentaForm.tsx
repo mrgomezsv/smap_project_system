@@ -11,6 +11,7 @@ import {
 } from 'firebase/auth';
 import Link from 'next/link';
 import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 
 export function CuentaForm() {
   const router = useRouter();
@@ -193,9 +194,7 @@ export function CuentaForm() {
         </div>
         <div>
           <label className="block text-sm font-medium text-text-primary mb-1.5">Contraseña</label>
-          <input
-            type="password"
-            className="input"
+          <PasswordInput
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

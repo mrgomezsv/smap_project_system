@@ -8,6 +8,7 @@ import {
   signInWithPopup,
 } from 'firebase/auth';
 import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 
 export function LoginForm() {
   const router = useRouter();
@@ -138,9 +139,7 @@ export function LoginForm() {
           <label className="block text-sm font-medium text-text-primary mb-1.5">
             Contraseña
           </label>
-          <input
-            type="password"
-            className="input"
+          <PasswordInput
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
