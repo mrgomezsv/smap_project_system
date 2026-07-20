@@ -58,7 +58,19 @@
     "buyTicket": "Comprar entrada",
     "whatsapp": "WhatsApp",
     "noEvents": "Próximamente publicaremos nuevos eventos",
-    "ended": "Evento finalizado"
+    "ended": "Evento finalizado",
+    "info": {
+      "date": "Fecha",
+      "location": "Ubicación",
+      "ticket": "Entrada"
+    },
+    "pricePerTicket": "Precio por entrada",
+    "contact24h": "Te contactaremos en menos de 24 horas",
+    "organizer": "Organiza",
+    "organizerHelp": "¿Preguntas sobre el evento? Escríbenos por WhatsApp y te ayudamos.",
+    "ctaTitle": "¿Listo para vivir la experiencia?",
+    "ctaSubtitle": "Asegura tu entrada ahora o contáctanos para reservar un paquete personalizado para tu grupo.",
+    "seeMoreEvents": "Ver más eventos"
   },
   "checkout": {
     "yourData": "Tus datos",

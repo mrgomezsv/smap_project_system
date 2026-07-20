@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { api, ApiError } from '@/lib/api';
 import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
 
@@ -51,7 +52,12 @@ function formatEventDate(iso: string): { day: string; month: string; full: strin
   };
 }
 
+const EVENT_INFO_KEYS = ['date', 'location', 'ticket'] as const;
+const EVENT_INFO_EMOJI = ['📅', '📍', '🎟️'] as const;
+
 export default async function EventoDetallePage({ params }: PageProps) {
+  const t = await getTranslations('event');
+  const tNav = await getTranslations('nav');
   let event: Event;
   try {
     event = await api.get<Event>(`/api/events/${params.id}`);
@@ -74,9 +80,9 @@ export default async function EventoDetallePage({ params }: PageProps) {
       <div className="bg-surface-elevated border-b border-border">
         <div className="container py-4">
           <nav className="flex items-center gap-2 text-sm text-text-muted">
-            <Link href="/" className="hover:text-primary">Inicio</Link>
+            <Link href="/" className="hover:text-primary">{tNav('home')}</Link>
             <span>/</span>
-            <Link href="/eventos" className="hover:text-primary">Eventos</Link>
+            <Link href="/eventos" className="hover:text-primary">{tNav('events')}</Link>
             <span>/</span>
             <span className="text-text-primary font-medium truncate">{event.title}</span>
           </nav>
@@ -112,7 +118,7 @@ export default async function EventoDetallePage({ params }: PageProps) {
               </span>
               {eventIsPast && (
                 <span className="absolute bottom-4 left-4 bg-text-primary/85 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                  Evento finalizado
+                  {t('ended')}
                 </span>
               )}
             </div>
@@ -129,24 +135,25 @@ export default async function EventoDetallePage({ params }: PageProps) {
 
             {/* Info adicional */}
             <section className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="card !p-5 text-center">
-                <div className="text-3xl mb-2">📅</div>
-                <p className="text-xs text-text-muted uppercase tracking-wide">Fecha</p>
-                <p className="font-bold text-text-primary text-sm mt-1 capitalize">{date.full}</p>
-                <p className="text-sm text-primary font-semibold mt-0.5">{date.time}</p>
-              </div>
-              <div className="card !p-5 text-center">
-                <div className="text-3xl mb-2">📍</div>
-                <p className="text-xs text-text-muted uppercase tracking-wide">Ubicación</p>
-                <p className="font-bold text-text-primary text-sm mt-1">{event.location}</p>
-              </div>
-              <div className="card !p-5 text-center">
-                <div className="text-3xl mb-2">🎟️</div>
-                <p className="text-xs text-text-muted uppercase tracking-wide">Entrada</p>
-                <p className="font-extrabold text-primary text-lg mt-1">
-                  ${event.ticketPrice.toFixed(2)}
-                </p>
-              </div>
+              {EVENT_INFO_KEYS.map((key, i) => (
+                <div key={key} className="card !p-5 text-center">
+                  <div className="text-3xl mb-2">{EVENT_INFO_EMOJI[i]}</div>
+                  <p className="text-xs text-text-muted uppercase tracking-wide">
+                    {t(`info.${key}`)}
+                  </p>
+                  <p className="font-bold text-text-primary text-sm mt-1 capitalize">
+                    {key === 'date' ? date.full : key === 'location' ? event.location : ''}
+                  </p>
+                  {key === 'date' && (
+                    <p className="text-sm text-primary font-semibold mt-0.5">{date.time}</p>
+                  )}
+                  {key === 'ticket' && (
+                    <p className="font-extrabold text-primary text-lg mt-1">
+                      ${event.ticketPrice.toFixed(2)}
+                    </p>
+                  )}
+                </div>
+              ))}
             </section>
           </div>
 
@@ -181,7 +188,7 @@ export default async function EventoDetallePage({ params }: PageProps) {
                 <hr className="my-5 border-border" />
 
                 <div className="flex items-baseline justify-between">
-                  <span className="text-sm text-text-muted">Precio por entrada</span>
+                  <span className="text-sm text-text-muted">{t('pricePerTicket')}</span>
                   <span className="text-3xl font-extrabold text-primary">
                     ${event.ticketPrice.toFixed(2)}
                   </span>
@@ -192,7 +199,7 @@ export default async function EventoDetallePage({ params }: PageProps) {
                     href="/checkout"
                     className="btn btn-primary w-full py-3 text-base shadow-medium hover:shadow-large"
                   >
-                    Comprar entrada
+                    {t('buyTicket')}
                   </Link>
                   <a
                     href={`https://wa.me/13478704240?text=${encodeURIComponent(`Hola, me interesa el evento: ${event.title}`)}`}
@@ -200,23 +207,23 @@ export default async function EventoDetallePage({ params }: PageProps) {
                     rel="noreferrer"
                     className="btn bg-success text-white hover:bg-success/90 w-full py-3 text-base"
                   >
-                    WhatsApp
+                    {t('whatsapp')}
                   </a>
                 </div>
 
                 <p className="mt-4 text-xs text-text-muted text-center">
-                  Te contactaremos en menos de 24 horas
+                  {t('contact24h')}
                 </p>
               </div>
 
               {/* Card organizador */}
               <div className="card !p-5">
-                <p className="text-xs text-text-muted uppercase tracking-wide">Organiza</p>
+                <p className="text-xs text-text-muted uppercase tracking-wide">{t('organizer')}</p>
                 <p className="font-heading font-bold text-text-primary mt-1">
                   {partner.label}
                 </p>
                 <p className="text-xs text-text-muted mt-2">
-                  ¿Preguntas sobre el evento? Escríbenos por WhatsApp y te ayudamos.
+                  {t('organizerHelp')}
                 </p>
               </div>
             </div>
@@ -227,24 +234,23 @@ export default async function EventoDetallePage({ params }: PageProps) {
         {!eventIsPast && (
           <section className="mt-16 card bg-gradient-to-br from-primary to-primary-700 text-white !p-8 text-center">
             <h2 className="text-2xl md:text-3xl font-heading font-extrabold mb-2">
-              ¿Listo para vivir la experiencia?
+              {t('ctaTitle')}
             </h2>
             <p className="text-white/80 mb-6 max-w-xl mx-auto">
-              Asegura tu entrada ahora o contáctanos para reservar un paquete personalizado
-              para tu grupo.
+              {t('ctaSubtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/checkout"
                 className="btn bg-brand-yellow text-primary hover:bg-brand-yellow-600 px-8 py-3 font-bold shadow-large"
               >
-                Comprar entrada
+                {t('buyTicket')}
               </Link>
               <Link
                 href="/eventos"
                 className="btn border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-3 font-bold"
               >
-                Ver más eventos
+                {t('seeMoreEvents')}
               </Link>
             </div>
           </section>

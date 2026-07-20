@@ -58,7 +58,19 @@
     "buyTicket": "Buy ticket",
     "whatsapp": "WhatsApp",
     "noEvents": "We'll publish new events soon",
-    "ended": "Event ended"
+    "ended": "Event ended",
+    "info": {
+      "date": "Date",
+      "location": "Location",
+      "ticket": "Ticket"
+    },
+    "pricePerTicket": "Price per ticket",
+    "contact24h": "We'll get back to you within 24 hours",
+    "organizer": "Organized by",
+    "organizerHelp": "Questions about the event? Message us on WhatsApp and we'll help.",
+    "ctaTitle": "Ready for the experience?",
+    "ctaSubtitle": "Get your ticket now or contact us to reserve a custom package for your group.",
+    "seeMoreEvents": "See more events"
   },
   "checkout": {
     "yourData": "Your details",

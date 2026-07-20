@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { api } from '@/lib/api';
 import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
 
@@ -23,6 +24,8 @@ function formatDate(iso: string): { day: string; month: string; full: string } {
 }
 
 export default async function EventosPage() {
+  const t = await getTranslations('event');
+  const tCommon = await getTranslations('common');
   let events: Event[] = [];
   try {
     const res = await api.get<{ items: Event[] }>('/api/events?take=20');
@@ -38,14 +41,12 @@ export default async function EventosPage() {
         <div className="container">
           <div className="max-w-2xl">
             <span className="inline-block bg-brand-yellow/20 border border-brand-yellow/40 text-brand-yellow px-3 py-1 rounded-full text-sm font-medium mb-4">
-              Próximos Eventos
+              {t('upcoming')}
             </span>
             <h1 className="text-4xl md:text-5xl font-heading font-extrabold mb-3">
-              Eventos & Fiestas
+              {t('title')}
             </h1>
-            <p className="text-white/80 text-lg">
-              Conoce nuestros próximos eventos y consigue tu entrada
-            </p>
+            <p className="text-white/80 text-lg">{t('subtitle')}</p>
           </div>
         </div>
       </section>
@@ -54,11 +55,9 @@ export default async function EventosPage() {
         {events.length === 0 ? (
           <div className="card text-center py-16">
             <div className="text-6xl mb-4 opacity-40">🎉</div>
-            <h3 className="text-xl font-heading font-bold mb-2">
-              Próximamente publicaremos nuevos eventos
-            </h3>
+            <h3 className="text-xl font-heading font-bold mb-2">{t('noEvents')}</h3>
             <p className="text-text-muted">
-              Síguenos en redes sociales para no perderte ninguno.
+              {tCommon('seeMore')} en nuestras redes sociales.
             </p>
           </div>
         ) : (
@@ -105,21 +104,16 @@ export default async function EventosPage() {
                       </svg>
                       {event.location}
                     </p>
-                    <p className="mt-1 text-sm text-text-muted">
-                      {date.full}
-                    </p>
+                    <p className="mt-1 text-sm text-text-muted">{date.full}</p>
                     <div className="mt-4 flex items-end justify-between pt-4 border-t border-border">
                       <div>
-                        <p className="text-xs text-text-muted">Desde</p>
+                        <p className="text-xs text-text-muted">{t('from')}</p>
                         <p className="text-2xl font-extrabold text-primary">
                           ${event.ticketPrice.toFixed(2)}
                         </p>
                       </div>
-                      <Link
-                        href={`/eventos/${event.id}`}
-                        className="btn btn-primary"
-                      >
-                        Ver detalles
+                      <Link href={`/eventos/${event.id}`} className="btn btn-primary">
+                        {t('details')}
                       </Link>
                     </div>
                   </div>
