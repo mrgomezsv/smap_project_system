@@ -1,5 +1,12 @@
 import Link from 'next/link';
-import { UserMenu } from '@/components/auth/UserMenu';
+import dynamic from 'next/dynamic';
+
+// UserMenu usa Firebase Auth (cliente). Se carga dinámicamente para no
+// inflar el bundle del header en la primera carga (code splitting).
+const UserMenu = dynamic(
+  () => import('@/components/auth/UserMenu').then((m) => m.UserMenu),
+  { ssr: false },
+);
 
 const navLinks = [
   { href: '/', label: 'Inicio' },

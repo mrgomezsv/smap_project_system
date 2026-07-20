@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Product } from '@/lib/types';
 import { CATEGORY_LABELS, type Category } from '@/lib/types';
+import { SafeImage } from '@/components/ui/SafeImage';
 
 interface ProductCardProps {
   product: Product;
@@ -16,22 +17,24 @@ export function ProductCard({ product }: ProductCardProps) {
     >
       <div className="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative">
         {hasRealImage ? (
-          <img
+          <SafeImage
             src={`/media/${product.img}`}
             alt={product.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            fallback="🎪"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-6xl opacity-40">
             🎪
           </div>
         )}
-        <span className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-soft">
+        <span className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-soft z-10">
           {CATEGORY_LABELS[product.category as Category]}
         </span>
         {product.publicated && (
-          <span className="absolute top-3 right-3 bg-success/95 text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-soft">
+          <span className="absolute top-3 right-3 bg-success/95 text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-soft z-10">
             Disponible
           </span>
         )}
