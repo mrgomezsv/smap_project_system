@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { api, ApiError } from '@/lib/api';
 import { getFirebaseAuth } from '@/lib/firebase';
 
 type Segment = 'all' | 'event-attendees' | 'product-buyer';
 
 export function PushForm() {
+  const tPh = useTranslations('placeholders');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [segment, setSegment] = useState<Segment>('all');
@@ -81,7 +83,7 @@ export function PushForm() {
           <input
             type="text"
             className="input"
-            placeholder="🎉 ¡Nueva promo!"
+            placeholder={tPh('eventTitle')}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -96,7 +98,7 @@ export function PushForm() {
           <textarea
             rows={5}
             className="input resize-none"
-            placeholder="Escribe el cuerpo de la notificación…"
+            placeholder={tPh('eventBody')}
             value={body}
             onChange={(e) => setBody(e.target.value)}
             required

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { DataTable, type Column } from '@/components/admin/DataTable';
 import { VirtualList } from '@/components/ui/VirtualList';
 import { api, ApiError } from '@/lib/api';
@@ -10,6 +11,7 @@ import { CATEGORY_LABELS, type Product } from '@/lib/types';
 const VIRTUAL_THRESHOLD = 100;
 
 export function ProductosList() {
+  const tPh = useTranslations('placeholders');
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -113,7 +115,7 @@ export function ProductosList() {
       <div className="mb-4 max-w-md">
         <input
           type="search"
-          placeholder="Buscar por nombre…"
+          placeholder={tPh('searchProducts')}
           className="input"
           value={search}
           onChange={(e) => setSearch(e.target.value)}

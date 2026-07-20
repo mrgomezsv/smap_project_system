@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { api, ApiError } from '@/lib/api';
 import { getFirebaseAuth } from '@/lib/firebase';
 import type { Waiver } from '@/lib/types';
@@ -12,6 +13,7 @@ interface ValidationResult {
 }
 
 export function QrScanner() {
+  const tPh = useTranslations('placeholders');
   const [code, setCode] = useState('');
   const [result, setResult] = useState<ValidationResult | null>(null);
   const [validating, setValidating] = useState(false);
@@ -66,7 +68,7 @@ export function QrScanner() {
               type="text"
               autoFocus
               className="input font-mono text-lg uppercase tracking-wider"
-              placeholder="ABC12345"
+              placeholder={tPh('qrCode')}
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
               maxLength={8}

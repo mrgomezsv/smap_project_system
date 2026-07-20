@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { api, ApiError } from '@/lib/api';
 import { CATEGORY_LABELS, type Category, type Product } from '@/lib/types';
 
@@ -46,6 +47,7 @@ const EMPTY: FormData = {
 
 export function ProductForm({ initial, mode }: ProductFormProps) {
   const router = useRouter();
+  const tPh = useTranslations('placeholders');
   const [data, setData] = useState<FormData>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [saving, setSaving] = useState(false);
@@ -200,7 +202,7 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
             <input
               type="text"
               className="input"
-              placeholder="3x3x2m"
+              placeholder={tPh('productDimensions')}
               value={data.dimensions}
               onChange={(e) => update('dimensions', e.target.value)}
             />
@@ -210,7 +212,7 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
             <input
               type="text"
               className="input"
-              placeholder="4x4m"
+              placeholder={tPh('productSpace')}
               value={data.space}
               onChange={(e) => update('space', e.target.value)}
             />
@@ -220,7 +222,7 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
             <input
               type="text"
               className="input"
-              placeholder="1 circuito 110V"
+              placeholder={tPh('productCircuits')}
               value={data.circuits}
               onChange={(e) => update('circuits', e.target.value)}
             />
@@ -231,7 +233,7 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
           <input
             type="url"
             className="input"
-            placeholder="https://youtube.com/watch?v=…"
+            placeholder={tPh('productYoutube')}
             value={data.youtubeUrl}
             onChange={(e) => update('youtubeUrl', e.target.value)}
           />

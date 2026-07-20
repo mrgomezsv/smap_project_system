@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface Conversation {
   id: number;
@@ -34,6 +35,7 @@ const SAMPLE_MESSAGES: Message[] = [
 ];
 
 export function ChatsView() {
+  const tPh = useTranslations('placeholders');
   const [selectedId, setSelectedId] = useState<number>(SAMPLE_CONVS[0].id);
   const [reply, setReply] = useState('');
   const selected = SAMPLE_CONVS.find((c) => c.id === selectedId)!;
@@ -45,7 +47,7 @@ export function ChatsView() {
         <div className="p-3 border-b border-border">
           <input
             type="search"
-            placeholder="Buscar conversación…"
+            placeholder={tPh('searchConversations')}
             className="input !py-2 text-sm"
           />
         </div>
@@ -132,7 +134,7 @@ export function ChatsView() {
           <input
             type="text"
             className="input flex-1"
-            placeholder="Escribe un mensaje…"
+            placeholder={tPh('typeMessage')}
             value={reply}
             onChange={(e) => setReply(e.target.value)}
           />

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { api, ApiError } from '@/lib/api';
 import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
 
@@ -34,6 +35,7 @@ const EMPTY: FormData = {
 
 export function EventForm({ initial, mode }: EventFormProps) {
   const router = useRouter();
+  const tPh = useTranslations('placeholders');
   const [data, setData] = useState<FormData>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -180,7 +182,7 @@ export function EventForm({ initial, mode }: EventFormProps) {
           <input
             type="text"
             className="input"
-            placeholder="evento-2024.jpg"
+            placeholder={tPh('eventImageFilename')}
             value={data.image}
             onChange={(e) => update('image', e.target.value)}
           />

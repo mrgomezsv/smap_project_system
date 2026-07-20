@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -12,6 +13,7 @@ import { PasswordInput } from '@/components/ui/PasswordInput';
 
 export function LoginForm() {
   const router = useRouter();
+  const tPh = useTranslations('placeholders');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -128,7 +130,7 @@ export function LoginForm() {
           <input
             type="email"
             className="input"
-            placeholder="admin@kidsfun.com"
+            placeholder={tPh('adminEmailExample')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -140,7 +142,7 @@ export function LoginForm() {
             Contraseña
           </label>
           <PasswordInput
-            placeholder="••••••••"
+            placeholder={tPh('passwordDots')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

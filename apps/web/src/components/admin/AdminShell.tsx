@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { AdminSidebar } from './AdminSidebar';
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
+  const tPh = useTranslations('placeholders');
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -46,7 +48,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 </svg>
                 <input
                   type="search"
-                  placeholder="Buscar productos, eventos, waivers…"
+                  placeholder={tPh('searchAdmin')}
                   className="input pl-10 !py-2"
                 />
               </div>
