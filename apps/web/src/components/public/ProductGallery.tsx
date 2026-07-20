@@ -14,6 +14,22 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
+  // Validate images purely on client side to avoid hydration timing issues
+  useEffect(() => {
+    images.forEach((img) => {
+      const htmlImage = new globalThis.Image();
+      htmlImage.src = `/media/${img}`;
+      htmlImage.onload = () => {
+        if (htmlImage.naturalWidth === 0) {
+          handleImageError(img);
+        }
+      };
+      htmlImage.onerror = () => {
+        handleImageError(img);
+      };
+    });
+  }, [images]);
+
   // Filter out broken images
   const validImages = images.filter((img) => !brokenImages[img]);
 
@@ -84,18 +100,6 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
 
   return (
     <div className="space-y-4">
-      {/* Hidden image preloader to validate URLs */}
-      <div className="hidden">
-        {images.map((img) => (
-          <img
-            key={img}
-            src={`/media/${img}`}
-            onError={() => handleImageError(img)}
-            alt=""
-          />
-        ))}
-      </div>
-
       {/* Main Image Slider */}
       <div
         className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-medium group"
