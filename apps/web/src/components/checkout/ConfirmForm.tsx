@@ -1,17 +1,54 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useCheckout } from './CheckoutProvider';
+import { api, ApiError } from '@/lib/api';
+import { getFirebaseAuth } from '@/lib/firebase';
+import type { Waiver } from '@/lib/types';
 
 export function ConfirmForm() {
   const router = useRouter();
-  const { data } = useCheckout();
+  const { data, reset } = useCheckout();
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const isEmpty = !data.titular.name;
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    router.push('/checkout/success?qr=DEMO');
+    if (isEmpty) return;
+
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const auth = getFirebaseAuth();
+      const token = auth?.currentUser ? await auth.currentUser.getIdToken() : null;
+
+      if (!token) {
+        setError('Necesitas iniciar sesión para generar el waiver.');
+        setSubmitting(false);
+        return;
+      }
+
+      const result = await api.post<{ qrCode: string; waiver: Waiver }>(
+        '/api/v2/waiver',
+        {
+          userName: data.titular.name,
+          userEmail: data.titular.email,
+          relatives: data.familiares,
+        },
+        { token },
+      );
+
+      reset();
+      router.push(`/checkout/success?qr=${result.qrCode}`);
+    } catch (e) {
+      const msg = e instanceof ApiError ? e.message : 'Error al generar el waiver';
+      setError(msg);
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -29,6 +66,12 @@ export function ConfirmForm() {
           <Link href="/checkout" className="underline font-medium">
             Volver a completar
           </Link>
+        </div>
+      )}
+
+      {error && (
+        <div className="bg-danger/10 border border-danger/30 text-danger text-sm rounded-lg p-4">
+          ✕ {error}
         </div>
       )}
 
@@ -85,11 +128,16 @@ export function ConfirmForm() {
           type="button"
           onClick={() => router.push('/checkout/waiver')}
           className="btn btn-ghost"
+          disabled={submitting}
         >
           ← Volver
         </button>
-        <button type="submit" className="btn btn-primary px-8 py-3" disabled={isEmpty}>
-          Generar waiver
+        <button
+          type="submit"
+          className="btn btn-primary px-8 py-3 disabled:opacity-50"
+          disabled={isEmpty || submitting}
+        >
+          {submitting ? 'Generando…' : 'Generar waiver'}
         </button>
       </div>
     </form>
