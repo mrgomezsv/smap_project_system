@@ -118,6 +118,27 @@ export interface WaiverResponse {
   isValid: boolean;
 }
 
+export type EventPartner = 'partner1' | 'partner2' | 'partner3';
+
+export const PARTNER_LABELS: Record<EventPartner, { label: string; color: string }> = {
+  partner1: { label: 'Kidsfun', color: 'bg-primary' },
+  partner2: { label: 'Tecun Productions', color: 'bg-info' },
+  partner3: { label: 'Otros', color: 'bg-text-muted' },
+};
+
+export interface Event {
+  id: number;
+  title: string;
+  description: string;
+  image: string | null;
+  location: string;
+  startDatetime: string;
+  ticketPrice: number;
+  published: boolean;
+  partners: EventPartner | string;
+  slug: string | null;
+}
+
 export interface AuthUser {
   uid: string;
   email: string;
