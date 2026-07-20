@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import type { Product } from '@/lib/types';
-import { CATEGORY_LABELS, type Category } from '@/lib/types';
+import { type Category } from '@/lib/types';
 import { SafeImage } from '@/components/ui/SafeImage';
 
 interface ProductCardProps {
@@ -8,6 +9,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const tCategories = useTranslations('categories');
+  const tProduct = useTranslations('product');
   const hasRealImage = product.img && !product.img.includes('default_product_image');
 
   return (
@@ -31,11 +34,11 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
         <span className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-soft z-10">
-          {CATEGORY_LABELS[product.category as Category]}
+          {tCategories(product.category as Category)}
         </span>
         {product.publicated && (
           <span className="absolute top-3 right-3 bg-success/95 text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-soft z-10">
-            Disponible
+            {tProduct('available')}
           </span>
         )}
       </div>
@@ -52,10 +55,10 @@ export function ProductCard({ product }: ProductCardProps) {
           {product.price ? (
             <p className="text-2xl font-extrabold text-primary">
               ${product.price.toFixed(2)}
-              <span className="text-sm font-normal text-text-muted">/evento</span>
+              <span className="text-sm font-normal text-text-muted">{tProduct('perEvent')}</span>
             </p>
           ) : (
-            <span className="text-sm text-text-muted">Consultar</span>
+            <span className="text-sm text-text-muted">{tProduct('priceUponRequest')}</span>
           )}
         </div>
         <div className="mt-3 flex items-center gap-4 text-xs text-text-muted pt-3 border-t border-border">

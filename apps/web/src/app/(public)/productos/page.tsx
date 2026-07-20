@@ -1,7 +1,8 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { api } from '@/lib/api';
 import type { Product, ProductsListResponse } from '@/lib/types';
-import { CATEGORY_LABELS, type Category } from '@/lib/types';
+import { type Category } from '@/lib/types';
 import { ProductCard } from '@/components/public/ProductCard';
 
 interface SearchParams {
@@ -26,6 +27,9 @@ export default async function ProductosPage({
 }: {
   searchParams: SearchParams;
 }) {
+  const tCatalog = await getTranslations('catalog');
+  const tCategories = await getTranslations('categories');
+
   const selectedCategory = searchParams.category as Category | undefined;
   const search = searchParams.search ?? '';
   const skip = Number(searchParams.skip ?? 0);
@@ -52,14 +56,14 @@ export default async function ProductosPage({
         <div className="container">
           <div className="max-w-2xl">
             <span className="inline-block bg-brand-yellow/20 border border-brand-yellow/40 text-brand-yellow px-3 py-1 rounded-full text-sm font-medium mb-4">
-              Catálogo Completo
+              {tCatalog('badge')}
             </span>
             <h1 className="text-4xl md:text-5xl font-heading font-extrabold mb-3">
-              Nuestros productos
+              {tCatalog('title')}
             </h1>
             <p className="text-white/80 text-lg">
-              {data.total} {data.total === 1 ? 'producto disponible' : 'productos disponibles'}
-              {selectedCategory && ` en ${CATEGORY_LABELS[selectedCategory]}`}
+              {data.total} {data.total === 1 ? tCatalog('availableSingle') : tCatalog('availablePlural')}
+              {selectedCategory && tCatalog('inCategory', { category: tCategories(selectedCategory) })}
             </p>
           </div>
         </div>
@@ -76,7 +80,7 @@ export default async function ProductosPage({
                 : 'bg-white text-text-primary border border-border hover:border-primary'
             }`}
           >
-            Todos
+            {tCatalog('all')}
           </Link>
           {ALL_CATEGORIES.map((cat) => (
             <Link
@@ -89,7 +93,7 @@ export default async function ProductosPage({
               }`}
             >
               <span className="mr-1">{cat.emoji}</span>
-              {CATEGORY_LABELS[cat.key]}
+              {tCategories(cat.key)}
             </Link>
           ))}
         </div>
@@ -99,13 +103,13 @@ export default async function ProductosPage({
           <div className="card text-center py-16">
             <div className="text-6xl mb-4 opacity-40">🎪</div>
             <h3 className="text-xl font-heading font-bold mb-2">
-              No encontramos productos
+              {tCatalog('notFound')}
             </h3>
             <p className="text-text-muted mb-6">
-              Intenta con otra categoría o limpia los filtros.
+              {tCatalog('notFoundDesc')}
             </p>
             <Link href="/productos" className="btn btn-primary">
-              Ver todos los productos
+              {tCatalog('viewAll')}
             </Link>
           </div>
         ) : (
