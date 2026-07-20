@@ -1,11 +1,8 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { api } from '@/lib/api';
 import type { Product } from '@/lib/types';
-import { CATEGORY_LABELS, type Category } from '@/lib/types';
-
-// ISR: revalidar cada 5 minutos
-export const revalidate = 300;
-export const dynamic = 'force-static';
+import { type Category } from '@/lib/types';
 
 const HERO_IMG = '/media/product_images/barbie_bounce_house/barbie_bounce_house_01.jpeg';
 
@@ -19,6 +16,11 @@ const featuredCategories: Array<{ key: Category; emoji: string; bg: string }> = 
 ];
 
 export default async function HomePage() {
+  const tHero = await getTranslations('hero');
+  const tHome = await getTranslations('home');
+  const tCategories = await getTranslations('categories');
+  const tProduct = await getTranslations('product');
+
   let products: Product[] = [];
   try {
     const res = await api.get<{ items: Product[] }>('/api/products?take=8&publicated=true');
@@ -43,20 +45,17 @@ export default async function HomePage() {
         {/* Content */}
         <div className="container relative z-10 text-white">
           <div className="max-w-2xl animate-fade-in">
-            <span className="inline-flex items-center gap-2 bg-brand-yellow/20 backdrop-blur-sm border border-brand-yellow/40 text-brand-yellow px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-              <span className="w-2 h-2 bg-brand-yellow rounded-full animate-pulse" />
-              Disponible en toda El Salvador
-            </span>
-
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-extrabold leading-[1.05] mb-6">
-              La fiesta perfecta
-              <br />
-              <span className="text-brand-yellow">empieza aquí</span>
+              {tHero.rich('title', {
+                br: () => <br />,
+                yellow: (chunks) => <span className="text-brand-yellow">{chunks}</span>
+              })}
             </h1>
 
             <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
-              Brincolines, juegos inflables y diversión para tus fiestas infantiles.
-              Hacemos de tu evento algo <span className="font-semibold text-brand-yellow">inolvidable</span>.
+              {tHero.rich('subtitle', {
+                yellow: (chunks) => <span className="font-semibold text-brand-yellow">{chunks}</span>
+              })}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -64,7 +63,7 @@ export default async function HomePage() {
                 href="/productos"
                 className="btn btn-secondary px-8 py-4 text-lg shadow-large hover:shadow-glow"
               >
-                Ver catálogo
+                {tHero('cta')}
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -73,7 +72,7 @@ export default async function HomePage() {
                 href="/sobre-nosotros"
                 className="btn bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-4 text-lg hover:bg-white/20"
               >
-                ¿Cómo funciona?
+                {tHero('secondaryCta')}
               </Link>
             </div>
 
@@ -83,19 +82,19 @@ export default async function HomePage() {
                 <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>+5 años de experiencia</span>
+                <span>{tHome('trust.experience')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Entrega puntual</span>
+                <span>{tHome('trust.delivery')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <svg className="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293exxxxx" clipRule="evenodd" />
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Equipos certificados</span>
+                <span>{tHome('trust.certified')}</span>
               </div>
             </div>
           </div>
@@ -114,10 +113,10 @@ export default async function HomePage() {
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-text-primary">
-              Categorías destacadas
+              {tHome('categories')}
             </h2>
             <p className="mt-3 text-text-muted text-lg">
-              Todo lo que necesitas para tu fiesta en un solo lugar
+              {tHome('categoriesSubtitle')}
             </p>
           </div>
 
@@ -132,7 +131,7 @@ export default async function HomePage() {
                   {cat.emoji}
                 </div>
                 <p className="font-heading font-bold text-text-primary text-sm">
-                  {CATEGORY_LABELS[cat.key]}
+                  {tCategories(cat.key)}
                 </p>
               </Link>
             ))}
@@ -146,17 +145,17 @@ export default async function HomePage() {
           <div className="flex items-end justify-between mb-12">
             <div>
               <h2 className="text-3xl md:text-4xl font-heading font-bold text-text-primary">
-                Productos populares
+                {tHome('popularProducts')}
               </h2>
               <p className="mt-3 text-text-muted text-lg">
-                Los más reservados por nuestros clientes
+                {tHome('popularProductsSubtitle')}
               </p>
             </div>
             <Link
               href="/productos"
               className="hidden sm:inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all"
             >
-              Ver todos
+              {tHome('viewAll')}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -188,7 +187,7 @@ export default async function HomePage() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <span className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-2.5 py-1 rounded-full">
-                      {CATEGORY_LABELS[product.category]}
+                      {tCategories(product.category)}
                     </span>
                   </div>
                   <div className="p-5">
@@ -198,7 +197,7 @@ export default async function HomePage() {
                     {product.price && (
                       <p className="mt-2 text-2xl font-extrabold text-primary">
                         ${product.price.toFixed(2)}
-                        <span className="text-sm font-normal text-text-muted">/evento</span>
+                        <span className="text-sm font-normal text-text-muted">{tProduct('perEvent')}</span>
                       </p>
                     )}
                     <div className="mt-3 flex items-center gap-4 text-xs text-text-muted">
@@ -222,10 +221,10 @@ export default async function HomePage() {
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-heading font-bold">
-              ¿Cómo funciona?
+              {tHome('howItWorks')}
             </h2>
             <p className="mt-3 text-white/80 text-lg max-w-2xl mx-auto">
-              Reservar es muy fácil. En 3 pasos tu fiesta estará lista.
+              {tHome('howItWorksSubtitle')}
             </p>
           </div>
 
@@ -233,20 +232,20 @@ export default async function HomePage() {
             {[
               {
                 n: 1,
-                title: 'Explora el catálogo',
-                desc: 'Revisa nuestra variedad de brincolines, juegos y servicios. Encuentra lo perfecto para tu evento.',
+                title: tHome('howItWorksSteps.1.title'),
+                desc: tHome('howItWorksSteps.1.description'),
                 icon: '🔍',
               },
               {
                 n: 2,
-                title: 'Reserva y firma el waiver',
-                desc: 'Selecciona fecha, completa el formulario digital y obtén tu QR de acceso al instante.',
+                title: tHome('howItWorksSteps.2.title'),
+                desc: tHome('howItWorksSteps.2.description'),
                 icon: '📋',
               },
               {
                 n: 3,
-                title: '¡A divertirse!',
-                desc: 'Llega el día, muestra tu QR y disfruta. Nosotros nos encargamos de todo.',
+                title: tHome('howItWorksSteps.3.title'),
+                desc: tHome('howItWorksSteps.3.description'),
                 icon: '🎉',
               },
             ].map((step) => (
