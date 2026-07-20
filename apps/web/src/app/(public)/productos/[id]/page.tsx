@@ -159,7 +159,7 @@ export default async function ProductoDetallePage({ params }: PageProps) {
             )}
 
             {/* Tabs sticky de reserva */}
-            <div className="mt-8 sticky bottom-4 bg-white rounded-2xl shadow-large border border-border p-6">
+            <div className="mt-8 sticky bottom-4 bg-white rounded-2xl shadow-large border border-border p-4 sm:p-6">
               <h3 className="font-heading font-bold mb-3">{tProduct('interested')}</h3>
               <div className="flex gap-3">
                 <Link

@@ -71,10 +71,10 @@ export default async function ProductosPage({
 
       <div className="container py-10">
         {/* Filtros horizontales (chips) */}
-        <div className="mb-8 flex flex-wrap gap-2">
+        <div className="mb-8 flex overflow-x-auto pb-2 scrollbar-none md:flex-wrap gap-2 -mx-4 px-4 md:mx-0 md:px-0">
           <Link
             href="/productos"
-            className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition ${
               !selectedCategory
                 ? 'bg-primary text-white shadow-soft'
                 : 'bg-white text-text-primary border border-border hover:border-primary'
@@ -86,7 +86,7 @@ export default async function ProductosPage({
             <Link
               key={cat.key}
               href={`/productos?category=${cat.key}`}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+              className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition ${
                 selectedCategory === cat.key
                   ? 'bg-primary text-white shadow-soft'
                   : 'bg-white text-text-primary border border-border hover:border-primary'
