@@ -138,6 +138,7 @@ Servicios:
 
 - [Backend (apps/api)](./apps/api/README.md)
 - [Frontend (apps/web)](./apps/web/README.md)
+- [Arquitectura detallada](./docs/ARCHITECTURE.md)
 - [Plan de refactorización](./PLAN_REFACTORIZACION.md)
 - [Convenciones de commits](./COMMIT_STANDARDS.md)
 

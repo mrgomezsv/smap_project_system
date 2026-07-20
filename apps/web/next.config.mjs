@@ -3,6 +3,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 const MEDIA_URL = process.env.NEXT_PUBLIC_MEDIA_URL ?? API_URL;
 
 const nextConfig = {
+  // Build standalone para Docker
+  output: 'standalone',
   // Proxy de /api/* al backend NestJS (solo dev). En prod, el cliente debe apuntar
   // directamente al backend o usar un reverse proxy.
   async rewrites() {
