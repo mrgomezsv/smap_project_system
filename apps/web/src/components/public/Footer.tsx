@@ -1,48 +1,48 @@
-import Link from 'next/link';
+'use client';
 
-const footerSections = [
-  {
-    title: 'Productos',
-    links: [
-      { href: '/productos?category=option1', label: 'Brincolines' },
-      { href: '/productos?category=option2', label: 'Juegos Eléctricos' },
-      { href: '/productos?category=option4', label: 'Máquinas de Concesión' },
-      { href: '/productos?category=option7', label: 'Juegos de Agua' },
-    ],
-  },
-  {
-    title: 'Empresa',
-    links: [
-      { href: '/sobre-nosotros', label: 'Sobre Nosotros' },
-      { href: '/eventos', label: 'Eventos' },
-      // { href: '/mobile-app', label: 'Nuestra App' },
-      { href: '/contacto', label: 'Contacto' },
-    ],
-  },
-  {
-    title: 'Legal',
-    links: [
-      { href: '/terminos', label: 'Términos' },
-      { href: '/metodos-de-pago', label: 'Métodos de Pago' },
-      { href: '/contacto', label: 'Soporte' },
-    ],
-  },
-];
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export function PublicFooter() {
+  const t = useTranslations('footer');
+
+  const footerSections = [
+    {
+      key: 'products',
+      links: [
+        { href: '/productos?category=option1', label: t('sections.products.bounce') },
+        { href: '/productos?category=option2', label: t('sections.products.electric') },
+        { href: '/productos?category=option4', label: t('sections.products.concession') },
+        { href: '/productos?category=option7', label: t('sections.products.water') },
+      ],
+    },
+    {
+      key: 'company',
+      links: [
+        { href: '/sobre-nosotros', label: t('sections.company.about') },
+        { href: '/eventos', label: t('sections.company.events') },
+        { href: '/contacto', label: t('sections.company.contact') },
+      ],
+    },
+    {
+      key: 'legal',
+      links: [
+        { href: '/terminos', label: t('sections.legal.terms') },
+        { href: '/metodos-de-pago', label: t('sections.legal.payment') },
+        { href: '/contacto', label: t('sections.legal.support') },
+      ],
+    },
+  ];
+
   return (
     <footer className="bg-gradient-footer text-white">
       <div className="container py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          {/* Brand */}
           <div className="md:col-span-1">
             <Link href="/" className="inline-block mb-4">
               <span className="font-display text-3xl text-brand-yellow">Kidsfun</span>
             </Link>
-            <p className="text-white/70 text-sm leading-relaxed">
-              Brincolines, juegos y diversión para tus fiestas infantiles.
-              Hacemos de tu evento algo inolvidable.
-            </p>
+            <p className="text-white/70 text-sm leading-relaxed">{t('tagline')}</p>
             <div className="mt-6 flex gap-3">
               <a
                 href="https://facebook.com/kidsfunyfiestasinfantiles"
@@ -80,11 +80,10 @@ export function PublicFooter() {
             </div>
           </div>
 
-          {/* Links */}
           {footerSections.map((section) => (
-            <div key={section.title}>
+            <div key={section.key}>
               <h3 className="font-heading font-semibold text-white mb-4 uppercase text-sm tracking-wider">
-                {section.title}
+                {t(`sections.${section.key}.title`)}
               </h3>
               <ul className="space-y-2">
                 {section.links.map((link) => (
@@ -104,10 +103,13 @@ export function PublicFooter() {
 
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-white/60">
-            © {new Date().getFullYear()} Kidsfun y Fiestas Infantiles · Todos los derechos reservados
+            © {new Date().getFullYear()} Kidsfun y Fiestas Infantiles · {t('rights')}
           </p>
           <p className="text-sm text-white/50">
-            Hecho con ❤️ por <a href="mailto:mrgomez.dev@outlook.com" className="text-brand-yellow hover:underline">mrgomez.dev</a>
+            {t('madeWithLovePrefix', { heart: '❤️' })}{' '}
+            <a href="mailto:mrgomez.dev@outlook.com" className="text-brand-yellow hover:underline">
+              {t('madeWithLoveAuthor')}
+            </a>
           </p>
         </div>
       </div>

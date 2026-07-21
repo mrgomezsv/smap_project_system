@@ -190,8 +190,32 @@
     "whatsappCtaSubtitle": "Instant reply during business hours."
   },
   "footer": {
+    "tagline": "Bounce houses, games and fun for your kids' parties. We make your event unforgettable.",
     "rights": "All rights reserved.",
-    "followUs": "Follow us"
+    "followUs": "Follow us",
+    "madeWithLovePrefix": "Made with {heart} by",
+    "madeWithLoveAuthor": "mrgomez.dev",
+    "sections": {
+      "products": {
+        "title": "Products",
+        "bounce": "Bounce Houses",
+        "electric": "Electric Games",
+        "concession": "Concession Machines",
+        "water": "Water Games"
+      },
+      "company": {
+        "title": "Company",
+        "about": "About Us",
+        "events": "Events",
+        "contact": "Contact"
+      },
+      "legal": {
+        "title": "Legal",
+        "terms": "Terms",
+        "payment": "Payment Methods",
+        "support": "Support"
+      }
+    }
   },
   "about": {
     "badge": "About us",
@@ -449,5 +473,27 @@
       "generic": "Could not complete the operation.",
       "googleError": "Could not log in with Google."
     }
+  },
+  "misWaivers": {
+    "sectionTitle": "My waivers",
+    "sectionSubtitle": "List of waivers you have generated. You can download each PDF or QR.",
+    "loading": "Loading your waivers…",
+    "empty": "You have not generated any waivers yet.",
+    "emptyHint": "Start one from any product: pick an item and complete the checkout.",
+    "ctaBrowse": "Browse products",
+    "errorTitle": "We could not load your waivers",
+    "errorRetry": "Retry",
+    "companions": "Companions",
+    "companion_one": "{count} companion",
+    "companion_other": "{count} companions",
+    "createdAt": "Created on {date}",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "statusExpired": "Expired",
+    "downloadPdf": "📄 Download PDF",
+    "downloadQr": "⬇ Download QR",
+    "viewDetail": "View detail",
+    "pdfHint": "The PDF opens in a new tab",
+    "authRequired": "Sign in to view your waivers."
   }
 }

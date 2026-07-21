@@ -190,8 +190,32 @@
     "whatsappCtaSubtitle": "Respuesta inmediata en horario comercial."
   },
   "footer": {
+    "tagline": "Brincolines, juegos y diversión para tus fiestas infantiles. Hacemos de tu evento algo inolvidable.",
     "rights": "Todos los derechos reservados.",
-    "followUs": "Síguenos"
+    "followUs": "Síguenos",
+    "madeWithLovePrefix": "Hecho con {heart} por",
+    "madeWithLoveAuthor": "mrgomez.dev",
+    "sections": {
+      "products": {
+        "title": "Productos",
+        "bounce": "Brincolines",
+        "electric": "Juegos Eléctricos",
+        "concession": "Máquinas de Concesión",
+        "water": "Juegos de Agua"
+      },
+      "company": {
+        "title": "Empresa",
+        "about": "Sobre Nosotros",
+        "events": "Eventos",
+        "contact": "Contacto"
+      },
+      "legal": {
+        "title": "Legal",
+        "terms": "Términos",
+        "payment": "Métodos de Pago",
+        "support": "Soporte"
+      }
+    }
   },
   "about": {
     "badge": "Sobre nosotros",
@@ -449,5 +473,27 @@
       "generic": "No se pudo completar la operación.",
       "googleError": "No se pudo iniciar sesión con Google."
     }
+  },
+  "misWaivers": {
+    "sectionTitle": "Mis waivers",
+    "sectionSubtitle": "Lista de tus waivers generados. Puedes descargar el PDF o el QR de cada uno.",
+    "loading": "Cargando tus waivers…",
+    "empty": "Aún no has generado ningún waiver.",
+    "emptyHint": "Empieza uno desde cualquier producto: elige un brincolín y completa el checkout.",
+    "ctaBrowse": "Ver productos",
+    "errorTitle": "No pudimos cargar tus waivers",
+    "errorRetry": "Reintentar",
+    "companions": "Acompañantes",
+    "companion_one": "{count} acompañante",
+    "companion_other": "{count} acompañantes",
+    "createdAt": "Creado el {date}",
+    "statusActive": "Activo",
+    "statusInactive": "Inactivo",
+    "statusExpired": "Expirado",
+    "downloadPdf": "📄 Descargar PDF",
+    "downloadQr": "⬇ Descargar QR",
+    "viewDetail": "Ver detalle",
+    "pdfHint": "El PDF se abre en una pestaña nueva",
+    "authRequired": "Inicia sesión para ver tus waivers."
   }
 }
