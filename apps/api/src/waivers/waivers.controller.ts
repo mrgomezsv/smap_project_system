@@ -3,15 +3,18 @@ import {
   Get,
   Post,
   Param,
+  Query,
   Body,
   Res,
 } from '@nestjs/common';
 import type { Response } from 'express';
+import { IsString, IsNotEmpty } from 'class-validator';
+
 import { WaiversService } from './waivers.service';
 import { CreateWaiverDto } from './dto/create-waiver.dto';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
-import { IsString, IsNotEmpty } from 'class-validator';
+import { assertAdminEmail } from '../auth/admin-allowlist';
 
 class ValidateWaiverDto {
   @IsString()
@@ -32,11 +35,32 @@ export class WaiversController {
   }
 
   /**
-   * GET /api/v2/waiver/:qr - Obtener waiver por código QR
+   * GET /api/v2/waiver/all - Listar TODOS los waivers (admin only).
+   * Soporta query params: ?status=ACTIVE|INACTIVE&take=50&skip=0
    */
-  @Get(':qr')
-  findByQr(@Param('qr') qr: string) {
-    return this.waiversService.findByQr(qr);
+  @Get('all')
+  findAll(
+    @CurrentUser() user: AuthUser,
+    @Query('take') take?: string,
+    @Query('skip') skip?: string,
+    @Query('status') status?: string,
+  ) {
+    assertAdminEmail(user.email);
+    return this.waiversService.findAll({
+      take: take ? Math.min(parseInt(take, 10) || 50, 200) : 50,
+      skip: skip ? parseInt(skip, 10) || 0 : 0,
+      status,
+    });
+  }
+
+  /**
+   * GET /api/v2/waiver/user/me - Lista los waivers del usuario autenticado.
+   * Equivalente a user/:uid pero resuelve el uid desde el token de Firebase.
+   * (Ruta declarada antes que user/:uid para evitar que `me` sea capturado).
+   */
+  @Get('user/me')
+  findByMe(@CurrentUser() user: AuthUser) {
+    return this.waiversService.findByUser(user.uid, user.uid);
   }
 
   /**
@@ -48,16 +72,28 @@ export class WaiversController {
   }
 
   /**
-   * POST /api/v2/waiver/validate - Validar QR y registrar scan
+   * POST /api/v2/waiver/validate - Validar QR y registrar scan (admin only).
+   * Lanza 403 si el email no está en ADMIN_EMAILS.
    */
   @Post('validate')
   validate(@Body() dto: ValidateWaiverDto, @CurrentUser() user: AuthUser) {
+    assertAdminEmail(user.email);
     const scannedBy = user.email || user.uid;
     return this.waiversService.validate(dto.qrCode, scannedBy);
   }
 
   /**
-   * GET /api/v2/waiver/download/:qr - Descargar PDF (requiere auth)
+   * GET /api/v2/waiver/collaborator/scans - Historial de scans (admin only).
+   */
+  @Get('collaborator/scans')
+  getScans(@CurrentUser() user: AuthUser) {
+    assertAdminEmail(user.email);
+    const email = user.email || user.uid;
+    return this.waiversService.getCollaboratorScans(email);
+  }
+
+  /**
+   * GET /api/v2/waiver/download/:qr - Descargar PDF (requiere auth del titular o admin).
    */
   @Get('download/:qr')
   async download(
@@ -74,11 +110,11 @@ export class WaiversController {
   }
 
   /**
-   * GET /api/v2/waiver/collaborator/scans - Historial de scans del colaborador
+   * GET /api/v2/waiver/:qr - Obtener waiver por código QR (genérico).
+   * Declarado al final para no capturar rutas específicas.
    */
-  @Get('collaborator/scans')
-  getScans(@CurrentUser() user: AuthUser) {
-    const email = user.email || user.uid;
-    return this.waiversService.getCollaboratorScans(email);
+  @Get(':qr')
+  findByQr(@Param('qr') qr: string) {
+    return this.waiversService.findByQr(qr);
   }
 }
