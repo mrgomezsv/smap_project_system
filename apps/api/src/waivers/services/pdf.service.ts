@@ -10,6 +10,7 @@ export interface WaiverPdfData {
   userName: string;
   userId: string;
   userEmail: string;
+  userPhone?: string | null;
   createdAt: Date;
   relatives: Array<{ name: string; age: number }>;
   legalText?: string;
@@ -122,6 +123,10 @@ export class PdfService {
     page.drawText(`ID: ${data.userId}`, { x: margin, y, size: 10, font: helvetica });
     y -= 18;
     page.drawText(`EMAIL: ${data.userEmail}`, { x: margin, y, size: 10, font: helvetica });
+    if (data.userPhone) {
+      y -= 18;
+      page.drawText(`TELÉFONO: ${data.userPhone}`, { x: margin, y, size: 10, font: helvetica });
+    }
     y -= 30;
 
     // === FAMILIARES ===

@@ -151,6 +151,7 @@ model WaiverQRV2 {
   userId    String   @map("user_id") @db.VarChar(100)
   userName  String   @map("user_name") @db.VarChar(100)
   userEmail String   @map("user_email") @db.VarChar(255)
+  userPhone String?  @map("user_phone") @db.VarChar(32)
   createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
   expiresAt DateTime @map("expires_at") @db.DateTime(0)
   status    String   @default("ACTIVE") @db.VarChar(10)

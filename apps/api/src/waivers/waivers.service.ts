@@ -61,6 +61,7 @@ export class WaiversService {
         userId,
         userName: dto.userName,
         userEmail: dto.userEmail,
+        userPhone: dto.userPhone ?? null,
         expiresAt,
         status: 'ACTIVE',
         relatives: {
@@ -79,6 +80,7 @@ export class WaiversService {
       userName: waiver.userName,
       userId: waiver.userId,
       userEmail: waiver.userEmail,
+      userPhone: waiver.userPhone ?? undefined,
       createdAt: waiver.createdAt,
       relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
       legalText: await this.getLegalText(),
@@ -190,6 +192,7 @@ export class WaiversService {
       userName: waiver.userName,
       userId: waiver.userId,
       userEmail: waiver.userEmail,
+      userPhone: waiver.userPhone ?? undefined,
       createdAt: waiver.createdAt,
       relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
       legalText: await this.getLegalText(),
@@ -207,6 +210,42 @@ export class WaiversService {
       include: { waiverQr: true },
     });
     return { scans, totalCount: scans.length };
+  }
+
+  /**
+   * Listado paginado de TODOS los waivers (uso admin).
+   * Side-effects: actualiza status si expiraron (fire-and-forget).
+   */
+  async findAll(opts: { take: number; skip: number; status?: string }) {
+    const where: { status?: string } = {};
+    if (opts.status === 'ACTIVE' || opts.status === 'INACTIVE') {
+      where.status = opts.status;
+    }
+
+    const [waivers, totalCount] = await Promise.all([
+      this.prisma.waiverQRV2.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        take: opts.take,
+        skip: opts.skip,
+        include: { relatives: true, scans: true },
+      }),
+      this.prisma.waiverQRV2.count({ where }),
+    ]);
+
+    for (const w of waivers) {
+      this.updateStatusIfExpired(w);
+    }
+
+    return {
+      waivers,
+      totalCount,
+      hasMore: opts.skip + waivers.length < totalCount,
+      page: {
+        take: opts.take,
+        skip: opts.skip,
+      },
+    };
   }
 
   // === HELPERS ===
@@ -240,6 +279,10 @@ export class WaiversService {
       )
       .join('');
 
+    const contactRow = dto.userPhone
+      ? `<tr><td style="padding:8px;border:1px solid #ddd"><strong>Teléfono</strong></td><td style="padding:8px;border:1px solid #ddd">${dto.userPhone}</td></tr>`
+      : '';
+
     return `
 <!DOCTYPE html>
 <html>
@@ -256,6 +299,14 @@ export class WaiversService {
     <div style="background: white; border: 2px solid #1E3A8A; padding: 20px; text-align: center; margin: 20px 0;">
       <h1 style="color: #1E3A8A; letter-spacing: 4px; margin: 0;">${qrCode}</h1>
     </div>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+      <thead><tr><th style="padding:8px;border:1px solid #ddd;background:#1E3A8A;color:white;text-align:left;" colspan="2">Datos del titular</th></tr></thead>
+      <tbody>
+        <tr><td style="padding:8px;border:1px solid #ddd"><strong>Nombre</strong></td><td style="padding:8px;border:1px solid #ddd">${dto.userName}</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd"><strong>Email</strong></td><td style="padding:8px;border:1px solid #ddd">${dto.userEmail}</td></tr>
+        ${contactRow}
+      </tbody>
+    </table>
     <p>Adjunto encontrarás el PDF del waiver firmado con tu código QR y los datos de tus familiares registrados:</p>
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
       <thead><tr><th style="padding:8px;border:1px solid #ddd;background:#1E3A8A;color:white;text-align:left;">Nombre</th><th style="padding:8px;border:1px solid #ddd;background:#1E3A8A;color:white;text-align:left;">Edad</th></tr></thead>
