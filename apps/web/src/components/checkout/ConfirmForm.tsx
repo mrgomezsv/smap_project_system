@@ -52,6 +52,7 @@ export function ConfirmForm() {
         {
           userName: data.titular.name,
           userEmail: data.titular.email,
+          userPhone: data.titular.phone?.trim() || undefined,
           relatives: data.familiares,
         },
         { token },

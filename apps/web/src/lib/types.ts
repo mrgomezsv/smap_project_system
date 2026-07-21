@@ -96,6 +96,7 @@ export interface Waiver {
   userId: string;
   userName: string;
   userEmail: string;
+  userPhone?: string | null;
   createdAt: string;
   expiresAt: string;
   status: 'ACTIVE' | 'INACTIVE';

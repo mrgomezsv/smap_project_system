@@ -99,6 +99,12 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
             <span className="text-text-muted">{t('email')}</span>
             <span className="font-semibold text-text-primary">{waiver.userEmail}</span>
           </div>
+          {waiver.userPhone && (
+            <div className="flex justify-between py-1">
+              <span className="text-text-muted">{t('phone')}</span>
+              <span className="font-semibold text-text-primary">{waiver.userPhone}</span>
+            </div>
+          )}
           {waiver.relatives && waiver.relatives.length > 0 && (
             <div className="flex justify-between py-1">
               <span className="text-text-muted">{t('companions')}</span>
