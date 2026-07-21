@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
-import { CuentaForm } from '@/components/auth/CuentaForm';
+import { CuentaPanel } from '@/components/cuenta/CuentaPanel';
 
 export async function generateMetadata() {
   const t = await getTranslations('auth');
@@ -14,7 +14,7 @@ export default async function CuentaPage() {
   const t = await getTranslations('auth');
   return (
     <div className="bg-surface min-h-screen">
-      <div className="container py-12 max-w-md">
+      <div className="container py-12 max-w-2xl">
         <header className="text-center mb-8">
           <h1 className="text-3xl md:text-4xl font-heading font-extrabold text-text-primary">
             {t('title')}
@@ -24,7 +24,7 @@ export default async function CuentaPage() {
           </p>
         </header>
         <Suspense fallback={<div className="card h-96 animate-pulse" />}>
-          <CuentaForm />
+          <CuentaPanel />
         </Suspense>
       </div>
     </div>
