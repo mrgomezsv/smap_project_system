@@ -34,7 +34,7 @@ export async function PublicHeader() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-1">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -46,7 +46,7 @@ export async function PublicHeader() {
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           {/* <Link
             href="/mobile-app"
             className="text-sm font-medium text-primary/80 hover:text-primary transition"
@@ -63,7 +63,7 @@ export async function PublicHeader() {
           </Link>
         </div>
 
-        <div className="flex md:hidden items-center gap-2">
+        <div className="flex lg:hidden items-center gap-2">
           <LanguageSwitcher />
         </div>
       </div>

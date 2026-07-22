@@ -18,7 +18,7 @@ export default async function PublicLayout({
       <AuthProvider>
         <div className="min-h-screen flex flex-col">
           <PublicHeader />
-          <main className="flex-1 pb-16 md:pb-0">{children}</main>
+          <main className="flex-1 pb-16 lg:pb-0">{children}</main>
           <PublicFooter />
           <BottomNavigation />
         </div>
