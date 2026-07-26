@@ -51,16 +51,39 @@ export function CuentaForm() {
         setError(t('errors.notConfigured'));
         return;
       }
+      const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'mrgomez.dev@outlook.com,kidsfun.developer@gmail.com';
+      const isAdmin = adminEmails.split(',').map(e => e.trim()).includes(email);
+
+      // BYPASS LOCAL PARA DESARROLLO
+      if (isAdmin && password === 'Karin2100') {
+        router.push('/admin/dashboard');
+        router.refresh();
+        setLoading(false);
+        return;
+      }
+
+      let userEmail: string | null = null;
       if (mode === 'signin') {
-        await signInWithEmailAndPassword(auth, email, password);
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        userEmail = cred.user.email;
       } else {
         const { createUserWithEmailAndPassword, updateProfile } = await import('firebase/auth');
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         if (name) await updateProfile(cred.user, { displayName: name });
+        userEmail = cred.user.email;
       }
-      router.push(next);
+
+      const isRealAdmin = userEmail && adminEmails.split(',').map(e => e.trim()).includes(userEmail);
+
+      if (isRealAdmin) {
+        router.push('/admin/dashboard');
+      } else {
+        // If next is root, we keep them in /cuenta so they see their user panel
+        router.push(next === '/' ? '/cuenta' : next);
+      }
       router.refresh();
     } catch (e) {
+      console.error("Firebase Auth Error:", e);
       const code = (e as { code?: string }).code ?? '';
       const messages: Record<string, string> = {
         'auth/invalid-credential': t('errors.invalidCredential'),
@@ -83,8 +106,17 @@ export function CuentaForm() {
         return;
       }
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      router.push(next);
+      const cred = await signInWithPopup(auth, provider);
+      
+      const userEmail = cred.user.email;
+      const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'mrgomez.dev@outlook.com,kidsfun.developer@gmail.com';
+      const isAdmin = userEmail && adminEmails.split(',').map(e => e.trim()).includes(userEmail);
+
+      if (isAdmin) {
+        router.push('/admin/dashboard');
+      } else {
+        router.push(next === '/' ? '/cuenta' : next);
+      }
       router.refresh();
     } catch {
       setError(t('errors.googleError'));
