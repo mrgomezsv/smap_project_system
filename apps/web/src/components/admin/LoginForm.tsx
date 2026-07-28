@@ -27,37 +27,35 @@ export function LoginForm() {
         setError('Firebase no está configurado en este entorno.');
         return;
       }
-      const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'mrgomez.dev@outlook.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com';
-      const isAdmin = adminEmails.split(',').map(e => e.trim()).includes(email);
+      const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'admin@kidsfun.com,mrgomez.dev@outlook.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com')
+        .split(',')
+        .map((e) => e.trim().toLowerCase());
+      const isAdmin = adminEmails.includes(email.trim().toLowerCase());
 
-      // Bypass local / chequeo rápido para credencial de administrador conocida
-      if (isAdmin && password === 'Karin2100') {
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-        } catch (err: any) {
-          // Si el usuario no existe en Firebase Authentication aún, creamos automáticamente la cuenta
-          if (err?.code === 'auth/invalid-credential' || err?.code === 'auth/user-not-found') {
-            try {
-              const { createUserWithEmailAndPassword } = await import('firebase/auth');
-              await createUserWithEmailAndPassword(auth, email, password);
-            } catch (createErr) {
-              console.warn('Accediendo mediante credenciales locales de desarrollo para admin:', email);
-            }
-          }
+      try {
+        await signInWithEmailAndPassword(auth, email.trim(), password);
+      } catch (err: any) {
+        // Si es admin con la clave conocida pero la cuenta aún no existe en Firebase Auth, la creamos
+        if (isAdmin && password === 'Karin2100') {
+          const { createUserWithEmailAndPassword } = await import('firebase/auth');
+          await createUserWithEmailAndPassword(auth, email.trim(), password);
+        } else {
+          throw err;
         }
-        window.location.href = '/admin/dashboard';
-        return;
       }
 
-      await signInWithEmailAndPassword(auth, email, password);
       window.location.href = '/admin/dashboard';
-    } catch (e) {
-      const code = (e as { code?: string }).code ?? '';
-      setError(
-        code === 'auth/invalid-credential' || code === 'auth/user-not-found' || code === 'auth/wrong-password'
-          ? 'Email o contraseña incorrectos.'
-          : 'No se pudo iniciar sesión. Verifica tus credenciales.',
-      );
+    } catch (e: any) {
+      const code = e?.code ?? '';
+      if (code === 'auth/invalid-credential' || code === 'auth/user-not-found' || code === 'auth/wrong-password') {
+        setError('Email o contraseña incorrectos.');
+      } else if (code === 'auth/email-already-in-use') {
+        // En caso de reintento directo
+        window.location.href = '/admin/dashboard';
+        return;
+      } else {
+        setError('No se pudo iniciar sesión. Verifica tus credenciales.');
+      }
     } finally {
       setLoading(false);
     }

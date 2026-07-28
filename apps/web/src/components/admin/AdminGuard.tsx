@@ -22,7 +22,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
   useEffect(() => {
     if (!ready) return;
 
-    const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'mrgomez.dev@outlook.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com')
+    const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'admin@kidsfun.com,mrgomez.dev@outlook.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com')
       .split(',')
       .map((e) => e.trim().toLowerCase());
 
