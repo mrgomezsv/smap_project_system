@@ -86,11 +86,17 @@ export class WaiversService {
       legalText: await this.getLegalText(),
     });
 
-    // Enviar email con PDF adjunto
+    // Enviar email con plantilla bilingüe y PDF adjunto
+    const { subject, html } = this.emailService.getWaiverEmailTemplate({
+      userName: dto.userName,
+      qrCode,
+      lang: 'es',
+    });
+
     const emailSent = await this.emailService.send({
       to: dto.userEmail,
-      subject: `Confirmación de Waiver - ${dto.userName}`,
-      html: this.buildEmailHtml(dto, qrCode),
+      subject,
+      html,
       attachments: [
         {
           filename: `waiver_${qrCode}.pdf`,
@@ -106,6 +112,50 @@ export class WaiversService {
       emailSent,
       pdfSize: pdfBytes.length,
     };
+  }
+
+  /**
+   * Reenvía un waiver por correo electrónico
+   */
+  async resendWaiverEmail(qrCode: string, lang: 'es' | 'en' = 'es'): Promise<boolean> {
+    const waiver = await this.prisma.waiverQRV2.findUnique({
+      where: { qrCode: qrCode.toUpperCase() },
+      include: { relatives: true },
+    });
+
+    if (!waiver) {
+      throw new NotFoundException(`Waiver con QR ${qrCode} no encontrado`);
+    }
+
+    const pdfBytes = await this.pdfService.generateWaiverPdf({
+      qrCode: waiver.qrCode,
+      userName: waiver.userName,
+      userId: waiver.userId,
+      userEmail: waiver.userEmail,
+      userPhone: waiver.userPhone ?? undefined,
+      createdAt: waiver.createdAt,
+      relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
+      legalText: await this.getLegalText(),
+    });
+
+    const { subject, html } = this.emailService.getWaiverEmailTemplate({
+      userName: waiver.userName,
+      qrCode: waiver.qrCode,
+      lang,
+    });
+
+    return this.emailService.send({
+      to: waiver.userEmail,
+      subject,
+      html,
+      attachments: [
+        {
+          filename: `waiver_${waiver.qrCode}.pdf`,
+          content: Buffer.from(pdfBytes),
+          contentType: 'application/pdf',
+        },
+      ],
+    });
   }
 
   /**

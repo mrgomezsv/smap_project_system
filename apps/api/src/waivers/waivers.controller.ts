@@ -110,6 +110,20 @@ export class WaiversController {
   }
 
   /**
+   * POST /api/v2/waiver/resend-email - Reenviar waiver por correo
+   */
+  @Post('resend-email')
+  async resendEmail(
+    @Body('qrCode') qrCode: string,
+    @Body('lang') lang: 'es' | 'en',
+    @CurrentUser() user: AuthUser,
+  ) {
+    assertAdminEmail(user.email);
+    const sent = await this.waiversService.resendWaiverEmail(qrCode, lang || 'es');
+    return { success: sent, message: sent ? 'Email enviado exitosamente' : 'Error al enviar el email' };
+  }
+
+  /**
    * GET /api/v2/waiver/:qr - Obtener waiver por código QR (genérico).
    * Declarado al final para no capturar rutas específicas.
    */
