@@ -39,6 +39,7 @@ export interface WaiverPdfData {
   userEmail: string;
   userPhone?: string | null;
   createdAt: Date;
+  expiresAt?: Date | null;
   relatives: Array<{ name: string; age: number }>;
   legalText?: string;
 }
@@ -72,6 +73,28 @@ export class PdfService {
 
     const margin = 50;
     let y = height - margin;
+
+    // === MARCA DE AGUA (FAVICON) AL CENTRO DEL PDF ===
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const watermarkPath = path.join(process.cwd(), 'apps/api/src/assets/favicon-watermark.png');
+      const watermarkBuffer = await fs.readFile(watermarkPath);
+      const watermarkPic = await doc.embedPng(watermarkBuffer);
+
+      const watermarkWidth = 280;
+      const watermarkHeight = 280;
+
+      page.drawImage(watermarkPic, {
+        x: (width - watermarkWidth) / 2,
+        y: (height - watermarkHeight) / 2,
+        width: watermarkWidth,
+        height: watermarkHeight,
+        opacity: 0.1, // Marca de agua tenue/sutil
+      });
+    } catch (e) {
+      this.logger.warn('No se pudo cargar la marca de agua del favicon para el PDF');
+    }
 
     // === HEADER: Logo - Título - QR (3 columnas) ===
     const webUrl = process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000';
@@ -169,14 +192,29 @@ export class PdfService {
     });
     y -= 25;
 
-    const fechaStr = data.createdAt.toLocaleDateString('es-ES', {
+    const fechaStr = data.createdAt.toLocaleString('es-ES', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
 
-    page.drawText(`FECHA: ${fechaStr}`, { x: margin, y, size: 10, font: helveticaBold });
+    page.drawText(`FECHA DE EMISIÓN: ${fechaStr}`, { x: margin, y, size: 10, font: helveticaBold });
     y -= 18;
+
+    if (data.expiresAt) {
+      const expStr = new Date(data.expiresAt).toLocaleString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      page.drawText(`VIGENCIA HASTA: ${expStr}`, { x: margin, y, size: 10, font: helveticaBold, color: this.primary });
+      y -= 18;
+    }
+
     page.drawText(`CLIENTE / RESPONSABLE: ${data.userName}`, { x: margin, y, size: 10, font: helvetica });
     y -= 18;
     page.drawText(`ID: ${data.userId}`, { x: margin, y, size: 10, font: helvetica });

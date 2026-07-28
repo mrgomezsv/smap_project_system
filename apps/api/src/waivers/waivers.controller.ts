@@ -135,6 +135,15 @@ export class WaiversController {
   }
 
   /**
+   * GET /api/v2/waiver/verify/:qr - Obtener waiver por código QR para verificación pública.
+   */
+  @Public()
+  @Get('verify/:qr')
+  verifyByQr(@Param('qr') qr: string) {
+    return this.waiversService.findByQr(qr);
+  }
+
+  /**
    * GET /api/v2/waiver/:qr - Obtener waiver por código QR (genérico).
    * Declarado al final para no capturar rutas específicas.
    */

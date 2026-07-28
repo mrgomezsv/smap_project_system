@@ -18,7 +18,7 @@ export class WaiversService {
     private readonly prisma: PrismaService,
     private readonly pdfService: PdfService,
     private readonly emailService: EmailService,
-  ) {}
+  ) { }
 
   /**
    * Genera un código QR único de 8 caracteres (equivalente al uuid4()[:8] de Django).
@@ -244,6 +244,7 @@ export class WaiversService {
       userEmail: waiver.userEmail,
       userPhone: waiver.userPhone ?? undefined,
       createdAt: waiver.createdAt,
+      expiresAt: waiver.expiresAt,
       relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
       legalText: await this.getLegalText(),
     });
