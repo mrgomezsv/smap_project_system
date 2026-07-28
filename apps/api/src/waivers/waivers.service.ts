@@ -298,6 +298,27 @@ export class WaiversService {
     };
   }
 
+  /**
+   * Elimina uno o más waivers por ID/bigint.
+   */
+  async deleteMany(ids: (string | number)[]) {
+    if (!ids || ids.length === 0) {
+      throw new BadRequestException('Debes proporcionar al menos un ID para eliminar');
+    }
+    const numericIds = ids.map((id) => (typeof id === 'string' ? BigInt(id) : BigInt(id)));
+    // Primero eliminar familiares y scans relacionados en cascada o explicitamente
+    await this.prisma.waiverDataV2.deleteMany({
+      where: { waiverQrId: { in: numericIds } },
+    });
+    await this.prisma.waiverScanV2.deleteMany({
+      where: { waiverQrId: { in: numericIds } },
+    });
+    const result = await this.prisma.waiverQRV2.deleteMany({
+      where: { id: { in: numericIds } },
+    });
+    return { count: result.count, success: true };
+  }
+
   // === HELPERS ===
 
   private isExpired(expiresAt: Date): boolean {

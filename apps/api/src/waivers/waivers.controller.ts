@@ -126,9 +126,19 @@ export class WaiversController {
   }
 
   /**
+   * POST /api/v2/waiver/delete-batch - Eliminar waivers por IDs (admin only).
+   */
+  @Post('delete-batch')
+  deleteBatch(@Body('ids') ids: string[], @CurrentUser() user: AuthUser) {
+    assertAdminEmail(user.email);
+    return this.waiversService.deleteMany(ids);
+  }
+
+  /**
    * GET /api/v2/waiver/:qr - Obtener waiver por código QR (genérico).
    * Declarado al final para no capturar rutas específicas.
    */
+  @Public()
   @Get(':qr')
   findByQr(@Param('qr') qr: string) {
     return this.waiversService.findByQr(qr);

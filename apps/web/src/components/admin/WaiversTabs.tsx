@@ -195,6 +195,36 @@ export function WaiversTabs() {
     },
   ];
 
+  const handleDeleteWaiver = async (waiversToDelete: Waiver[]) => {
+    if (waiversToDelete.length === 0) return;
+    const confirmMsg = waiversToDelete.length === 1
+      ? `¿Estás seguro de que deseas borrar el waiver con QR ${waiversToDelete[0].qrCode}?`
+      : `¿Estás seguro de que deseas borrar ${waiversToDelete.length} waivers seleccionados?`;
+
+    if (!window.confirm(confirmMsg)) return;
+
+    try {
+      setLoading(true);
+      const auth = getFirebaseAuth();
+      const token = auth?.currentUser ? await auth.currentUser.getIdToken() : null;
+
+      const ids = waiversToDelete.map((w) => String(w.id));
+      await api.post('/api/v2/waiver/delete-batch', { ids }, { token });
+
+      setWaivers((prev) => prev.filter((w) => !ids.includes(String(w.id))));
+      setNotification({
+        type: 'success',
+        message: waiversToDelete.length === 1
+          ? 'Waiver eliminado exitosamente.'
+          : `${waiversToDelete.length} waivers eliminados exitosamente.`,
+      });
+    } catch (e: any) {
+      setNotification({ type: 'error', message: e.message || 'Error al eliminar los waivers.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <WaiverWhatsAppModal
@@ -304,87 +334,21 @@ export function WaiversTabs() {
 
       {loading ? (
         <div className="p-12 text-center text-text-muted font-medium">Cargando lista de waivers...</div>
-      ) : filtered.length >= VIRTUAL_THRESHOLD ? (
-        <div className="bg-white rounded-2xl border border-border overflow-hidden">
-          <div className="grid grid-cols-[100px_1.5fr_120px_2fr_80px_120px_120px_100px] gap-0 items-center px-4 py-3 bg-surface border-b border-border text-xs font-bold text-text-muted uppercase">
-            <div>QR</div>
-            <div>Titular</div>
-            <div>ID User</div>
-            <div>Email</div>
-            <div className="text-right">Acomp.</div>
-            <div>Creado</div>
-            <div>Estado</div>
-            <div className="text-right">Acciones</div>
-          </div>
-          <VirtualList
-            items={filtered}
-            rowHeight={56}
-            renderRow={(w) => (
-              <div className="grid grid-cols-[100px_1.5fr_120px_2fr_80px_120px_120px_100px] gap-0 items-center px-4 border-b border-border h-14 hover:bg-surface transition">
-                <code className="font-mono font-bold text-primary text-sm">{w.qrCode}</code>
-                <span className="font-semibold text-text-primary text-sm truncate">
-                  {w.userName}
-                </span>
-                <span className="text-text-muted text-xs font-mono truncate">{w.userId}</span>
-                <span className="text-text-muted text-sm truncate">{w.userEmail}</span>
-                <span className="text-right font-semibold text-sm">
-                  {w.relatives?.length ?? 0}
-                </span>
-                <span className="text-text-muted text-xs">
-                  {new Date(w.createdAt).toLocaleString('es-ES', {
-                    dateStyle: 'short',
-                    timeStyle: 'short',
-                  })}
-                </span>
-                <span>
-                  {w.status === 'ACTIVE' ? (
-                    <span className="inline-flex items-center gap-1 bg-success/10 text-success text-xs font-semibold px-2 py-1 rounded-full">
-                      <span className="w-1.5 h-1.5 bg-success rounded-full" />
-                      Activo
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 bg-gray-100 text-text-muted text-xs font-semibold px-2 py-1 rounded-full">
-                      Inactivo
-                    </span>
-                  )}
-                </span>
-                <div className="flex items-center justify-end gap-1">
-                  <a
-                    href={`${API_BASE_URL}/api/v2/waiver/download/${w.qrCode}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-2 rounded-xl text-text-muted hover:text-primary hover:bg-primary/10 transition border border-transparent hover:border-primary/20"
-                    title="Descargar PDF"
-                  >
-                    📄
-                  </a>
-                  <button
-                    onClick={() => handleResendEmail(w)}
-                    disabled={sendingEmailQr === w.qrCode}
-                    className="p-2 rounded-xl text-text-muted hover:text-info hover:bg-info/10 transition border border-transparent hover:border-info/20 disabled:opacity-50"
-                    title="Reenviar Email"
-                  >
-                    ✉️
-                  </button>
-                  <button
-                    onClick={() => setSelectedWaiverForWa(w)}
-                    className="p-2 rounded-xl text-text-muted hover:text-success hover:bg-success/10 transition border border-transparent hover:border-success/20"
-                    title="Reenviar por WhatsApp"
-                  >
-                    💬
-                  </button>
-                </div>
-              </div>
-            )}
-            emptyMessage="No hay waivers que coincidan con la búsqueda."
-          />
-        </div>
       ) : (
         <DataTable
           rows={filtered}
           columns={columns}
           rowKey={(w) => w.id}
+          selectable={true}
           emptyMessage="No hay waivers que coincidan con la búsqueda."
+          bulkActions={(selectedRows) => (
+            <button
+              onClick={() => handleDeleteWaiver(selectedRows)}
+              className="px-3 py-1.5 bg-red-600 text-white text-xs font-semibold rounded-lg hover:bg-red-700 transition flex items-center gap-1.5"
+            >
+              🗑️ Borrar seleccionados ({selectedRows.length})
+            </button>
+          )}
           rowActions={(w) => (
             <div className="flex items-center justify-end gap-1">
               <a
@@ -410,6 +374,13 @@ export function WaiversTabs() {
                 title="Reenviar por WhatsApp"
               >
                 💬
+              </button>
+              <button
+                onClick={() => handleDeleteWaiver([w])}
+                className="p-2 rounded-xl text-text-muted hover:text-red-600 hover:bg-red-50 transition border border-transparent hover:border-red-200"
+                title="Borrar Waiver"
+              >
+                🗑️
               </button>
             </div>
           )}

@@ -74,7 +74,9 @@ export class PdfService {
     let y = height - margin;
 
     // === HEADER: Logo - Título - QR (3 columnas) ===
-    const qrImage = await this.qrService.toBuffer(data.qrCode);
+    const webUrl = process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000';
+    const qrTargetUrl = `${webUrl}/waiver/verify/${data.qrCode}`;
+    const qrImage = await this.qrService.toBuffer(qrTargetUrl);
     const qrPic = await doc.embedPng(qrImage);
     const qrDim = { width: 80, height: 80 };
 
