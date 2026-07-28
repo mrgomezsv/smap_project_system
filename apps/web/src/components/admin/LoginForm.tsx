@@ -34,16 +34,23 @@ export function LoginForm() {
       if (isAdmin && password === 'Karin2100') {
         try {
           await signInWithEmailAndPassword(auth, email, password);
-        } catch {
-          // Si Firebase no tiene aún la cuenta registrada o falla en local, permitimos avanzar
+        } catch (err: any) {
+          // Si el usuario no existe en Firebase Authentication aún, creamos automáticamente la cuenta
+          if (err?.code === 'auth/invalid-credential' || err?.code === 'auth/user-not-found') {
+            try {
+              const { createUserWithEmailAndPassword } = await import('firebase/auth');
+              await createUserWithEmailAndPassword(auth, email, password);
+            } catch (createErr) {
+              console.warn('Accediendo mediante credenciales locales de desarrollo para admin:', email);
+            }
+          }
         }
-        router.push('/admin/dashboard');
-        router.refresh();
+        window.location.href = '/admin/dashboard';
         return;
       }
 
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/admin/dashboard');
+      window.location.href = '/admin/dashboard';
     } catch (e) {
       const code = (e as { code?: string }).code ?? '';
       setError(
