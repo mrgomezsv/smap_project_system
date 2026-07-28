@@ -14,6 +14,7 @@ import { ContactMessagesModule } from './contact/contact-messages.module';
 import { UploadModule } from './upload/upload.module';
 
 import { DashboardModule } from './dashboard/dashboard.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     ContactMessagesModule,
     UploadModule,
     DashboardModule,
+    MetricsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

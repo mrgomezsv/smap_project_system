@@ -81,6 +81,58 @@ export interface LikeResponse {
   count: number;
 }
 
+export interface MetricsResponse {
+  range: { from: string; to: string };
+  waiversByMonth: Array<{ month: string; waivers: number }>;
+  topProducts: Array<{ id: string; name: string; interactions: number }>;
+  waiverStatuses: Array<{ name: string; value: number; color: string }>;
+  trend: Array<{
+    date: string;
+    label: string;
+    likes: number;
+    comments: number;
+    waivers: number;
+  }>;
+  totals: { waivers: number; likes: number; comments: number };
+  users: { total: number; active: number; inactive: number; newInRange: number };
+  waiverOperations: {
+    scans: number;
+    uniqueScanned: number;
+    relatives: number;
+    scanRate: number | null;
+  };
+  events: {
+    created: number;
+    scheduled: number;
+    upcomingPublished: number;
+    byPartner: Array<{ name: string; events: number }>;
+  };
+  communications: {
+    contacts: number;
+    unreadContacts: number;
+    chatMessages: number;
+    unreadChatMessages: number;
+    activeChatRooms: number;
+    uniqueChatRooms: number;
+    trend: Array<{
+      date: string;
+      label: string;
+      contacts: number;
+      chats: number;
+    }>;
+  };
+  catalog: {
+    totalProducts: number;
+    publishedProducts: number;
+    categories: Array<{
+      category: string;
+      products: number;
+      published: number;
+      interactions: number;
+    }>;
+  };
+}
+
 export interface IsFavoriteResponse {
   isFavorite: boolean;
 }
