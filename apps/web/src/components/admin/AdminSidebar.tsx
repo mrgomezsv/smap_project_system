@@ -140,6 +140,7 @@ export function AdminSidebar({ mobileOpen = false, onClose }: AdminSidebarProps)
               <span className="text-base">🚪</span>
               <span>Cerrar sesión</span>
             </button>
+          </div>
         </nav>
 
         <div className="px-6 py-4 border-t border-white/10">

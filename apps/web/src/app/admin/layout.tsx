@@ -1,5 +1,6 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
+import { AuthProvider } from '@/components/auth/AuthProvider';
 import { AdminShell } from '@/components/admin/AdminShell';
 
 export default async function AdminLayout({
@@ -12,7 +13,9 @@ export default async function AdminLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <AdminShell>{children}</AdminShell>
+      <AuthProvider>
+        <AdminShell>{children}</AdminShell>
+      </AuthProvider>
     </NextIntlClientProvider>
   );
 }

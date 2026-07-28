@@ -19,6 +19,16 @@ export class AuthController {
   }
 
   /**
+   * Verifica si el usuario actual tiene permisos de administrador.
+   * Lanza 403 Forbidden si el correo no está en el allowlist.
+   */
+  @Get('check-admin')
+  checkAdmin(@CurrentUser() user: AuthUser) {
+    assertAdminEmail(user.email);
+    return { ok: true, email: user.email };
+  }
+
+  /**
    * Devuelve la lista de usuarios de Firebase Auth.
    * Requiere rol admin.
    */

@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { StatCard } from '@/components/admin/StatCard';
 import { api, ApiError } from '@/lib/api';
-import { getFirebaseAuth } from '@/lib/firebase';
 
 interface Activity {
   id: string;
@@ -33,43 +32,43 @@ const ICONS: Record<Activity['type'], { icon: string; bg: string; text: string }
 };
 
 export default function AdminDashboardPage() {
+  const { user, getToken } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const auth = getFirebaseAuth();
-    if (!auth) {
-      setLoading(false);
-      return;
-    }
+    if (!user) return;
 
-    const unsub = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        setLoading(false);
-        setError('Debes iniciar sesión con una cuenta autorizada.');
-        return;
-      }
-
+    let isMounted = true;
+    async function loadStats() {
       try {
         setLoading(true);
-        const token = await user.getIdToken(true);
+        const token = await getToken();
         const res = await api.get<DashboardData>('/api/dashboard/stats', { token });
-        setData(res);
-        setError(null);
+        if (isMounted) {
+          setData(res);
+          setError(null);
+        }
       } catch (e: any) {
-        if (e instanceof ApiError && e.status === 403) {
-          setError(`Acceso restringido: El correo (${user.email}) no tiene permisos de administrador.`);
-        } else {
-          setError(e instanceof ApiError ? e.message : 'Error al cargar datos del dashboard');
+        if (isMounted) {
+          if (e instanceof ApiError && e.status === 403) {
+            setError(`Acceso restringido: El correo (${user?.email ?? 'desconocido'}) no tiene permisos de administrador.`);
+          } else {
+            setError(e instanceof ApiError ? e.message : 'Error al cargar datos del dashboard');
+          }
         }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
-    });
+    }
 
-    return unsub;
-  }, []);
+    loadStats();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user, getToken]);
 
   if (loading) {
     return <div className="card text-center py-12 text-text-muted">Cargando métricas reales…</div>;
