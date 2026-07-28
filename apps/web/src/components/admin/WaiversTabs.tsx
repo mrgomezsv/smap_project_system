@@ -348,30 +348,33 @@ export function WaiversTabs() {
                     </span>
                   )}
                 </span>
-                <div className="flex items-center justify-end gap-1">
+                <div className="flex items-center justify-end gap-1.5">
                   <a
                     href={`${API_BASE_URL}/api/v2/waiver/download/${w.qrCode}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-text-muted hover:text-primary p-1.5 rounded-md hover:bg-gray-100 transition"
-                    title="Descargar PDF"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-text-primary hover:text-primary px-2 py-1 rounded-lg bg-gray-100 hover:bg-primary/10 transition"
+                    title="Descargar PDF del Waiver"
                   >
-                    📄
+                    <span>📄</span>
+                    <span>Descargar PDF</span>
                   </a>
                   <button
                     onClick={() => handleResendEmail(w)}
                     disabled={sendingEmailQr === w.qrCode}
-                    className="text-text-muted hover:text-primary p-1.5 rounded-md hover:bg-gray-100 transition disabled:opacity-50"
-                    title="Reenviar por Email"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-text-primary hover:text-primary px-2 py-1 rounded-lg bg-gray-100 hover:bg-primary/10 transition disabled:opacity-50"
+                    title="Reenviar Waiver por Correo Electrónico"
                   >
-                    ✉️
+                    <span>✉️</span>
+                    <span>Reenviar Email</span>
                   </button>
                   <button
                     onClick={() => setSelectedWaiverForWa(w)}
-                    className="text-text-muted hover:text-emerald-600 p-1.5 rounded-md hover:bg-gray-100 transition"
-                    title="Reenviar por WhatsApp"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-text-primary hover:text-emerald-700 px-2 py-1 rounded-lg bg-gray-100 hover:bg-emerald-50 transition"
+                    title="Reenviar Waiver por WhatsApp"
                   >
-                    💬
+                    <span>💬</span>
+                    <span>WhatsApp</span>
                   </button>
                 </div>
               </div>
@@ -386,30 +389,33 @@ export function WaiversTabs() {
           rowKey={(w) => w.id}
           emptyMessage="No hay waivers que coincidan con la búsqueda."
           rowActions={(w) => (
-            <div className="flex items-center justify-end gap-1">
+            <div className="flex items-center justify-end gap-1.5">
               <a
                 href={`${API_BASE_URL}/api/v2/waiver/download/${w.qrCode}`}
                 target="_blank"
                 rel="noreferrer"
-                className="text-text-muted hover:text-primary p-1.5 rounded-md hover:bg-gray-100 transition"
-                title="Descargar PDF"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-text-primary hover:text-primary px-2 py-1 rounded-lg bg-gray-100 hover:bg-primary/10 transition"
+                title="Descargar PDF del Waiver"
               >
-                📄
+                <span>📄</span>
+                <span>Descargar PDF</span>
               </a>
               <button
                 onClick={() => handleResendEmail(w)}
                 disabled={sendingEmailQr === w.qrCode}
-                className="text-text-muted hover:text-primary p-1.5 rounded-md hover:bg-gray-100 transition disabled:opacity-50"
-                title="Reenviar por Email"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-text-primary hover:text-primary px-2 py-1 rounded-lg bg-gray-100 hover:bg-primary/10 transition disabled:opacity-50"
+                title="Reenviar Waiver por Correo Electrónico"
               >
-                ✉️
+                <span>✉️</span>
+                <span>Reenviar Email</span>
               </button>
               <button
                 onClick={() => setSelectedWaiverForWa(w)}
-                className="text-text-muted hover:text-emerald-600 p-1.5 rounded-md hover:bg-gray-100 transition"
-                title="Reenviar por WhatsApp"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-text-primary hover:text-emerald-700 px-2 py-1 rounded-lg bg-gray-100 hover:bg-emerald-50 transition"
+                title="Reenviar Waiver por WhatsApp"
               >
-                💬
+                <span>💬</span>
+                <span>WhatsApp</span>
               </button>
             </div>
           )}
