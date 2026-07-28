@@ -25,21 +25,31 @@ export class UserMappingService {
   }): Promise<AuthUser> {
     const username = payload.email || payload.uid;
     const email = payload.email || `${payload.uid}@firebase.local`;
-    const name = payload.name || username.split('@')[0] || payload.uid.substring(0, 10);
+    const name =
+      payload.name || username.split('@')[0] || payload.uid.substring(0, 10);
 
-    const user = await this.prisma.user.upsert({
-      where: { username },
-      update: {
-        email,
-        firstName: name,
-      },
-      create: {
-        username,
-        email,
-        firstName: name,
-        isActive: true,
+    const existingUser = await this.prisma.user.findFirst({
+      where: {
+        OR: [{ username }, { email }],
       },
     });
+
+    const user = existingUser
+      ? await this.prisma.user.update({
+          where: { id: existingUser.id },
+          data: {
+            email,
+            firstName: name,
+          },
+        })
+      : await this.prisma.user.create({
+          data: {
+            username,
+            email,
+            firstName: name,
+            isActive: true,
+          },
+        });
 
     return {
       uid: payload.uid,

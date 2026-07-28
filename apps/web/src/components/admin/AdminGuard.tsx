@@ -40,7 +40,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
         const token = await getToken();
         if (token) {
           await api.get<{ ok: boolean }>('/api/auth/check-admin', { token });
-        } else if (user.email && adminEmails.includes(user.email.toLowerCase())) {
+        } else if (user?.email && adminEmails.includes(user.email.toLowerCase())) {
           // Bypass local si es admin autorizado y no hay token de Firebase generado
           if (isMounted) {
             setAuthorized(true);
@@ -56,7 +56,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
         }
       } catch (err: any) {
         if (isMounted) {
-          if (user.email && adminEmails.includes(user.email.toLowerCase())) {
+          if (user?.email && adminEmails.includes(user.email.toLowerCase())) {
             setAuthorized(true);
             setErrorMsg(null);
           } else {

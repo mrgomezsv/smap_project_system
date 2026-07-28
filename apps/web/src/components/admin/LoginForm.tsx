@@ -1,14 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { FirebaseError } from 'firebase/app';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
 import { PasswordInput } from '@/components/ui/PasswordInput';
 
 export function LoginForm() {
-  const router = useRouter();
   const tPh = useTranslations('placeholders');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,34 +26,24 @@ export function LoginForm() {
         setError('Firebase no está configurado en este entorno.');
         return;
       }
-      const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'admin@kidsfun.com,mrgomez.dev@outlook.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com')
-        .split(',')
-        .map((e) => e.trim().toLowerCase());
-      const isAdmin = adminEmails.includes(email.trim().toLowerCase());
-
-      try {
-        await signInWithEmailAndPassword(auth, email.trim(), password);
-      } catch (err: any) {
-        // Si es admin con la clave conocida pero la cuenta aún no existe en Firebase Auth, la creamos
-        if (isAdmin && password === 'Karin2100') {
-          const { createUserWithEmailAndPassword } = await import('firebase/auth');
-          await createUserWithEmailAndPassword(auth, email.trim(), password);
-        } else {
-          throw err;
-        }
-      }
-
+      await signInWithEmailAndPassword(auth, email.trim(), password);
       window.location.href = '/admin/dashboard';
-    } catch (e: any) {
-      const code = e?.code ?? '';
+    } catch (error) {
+      const code = error instanceof FirebaseError ? error.code : '';
       if (code === 'auth/invalid-credential' || code === 'auth/user-not-found' || code === 'auth/wrong-password') {
         setError('Email o contraseña incorrectos.');
-      } else if (code === 'auth/email-already-in-use') {
-        // En caso de reintento directo
-        window.location.href = '/admin/dashboard';
-        return;
+      } else if (code === 'auth/operation-not-allowed') {
+        setError('El acceso con email y contraseña no está habilitado en Firebase.');
+      } else if (code === 'auth/invalid-api-key') {
+        setError('La configuración de Firebase no es válida.');
+      } else if (code === 'auth/too-many-requests') {
+        setError('Demasiados intentos. Espera unos minutos antes de volver a intentar.');
+      } else if (code === 'auth/user-disabled') {
+        setError('Esta cuenta está deshabilitada.');
+      } else if (code === 'auth/invalid-email') {
+        setError('El email no es válido.');
       } else {
-        setError('No se pudo iniciar sesión. Verifica tus credenciales.');
+        setError('No se pudo iniciar sesión. Verifica la configuración de Firebase.');
       }
     } finally {
       setLoading(false);
