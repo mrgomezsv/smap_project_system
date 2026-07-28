@@ -20,15 +20,21 @@ export class FirebaseService implements OnModuleInit {
       return;
     }
 
-    const absolutePath = path.isAbsolute(credentialsPath)
+    let absolutePath = path.isAbsolute(credentialsPath)
       ? credentialsPath
       : path.join(process.cwd(), credentialsPath);
 
     if (!fs.existsSync(absolutePath)) {
-      this.logger.warn(
-        `Firebase no inicializado: archivo de credenciales no existe en ${absolutePath}`,
-      );
-      return;
+      // Fallback: buscar desde la raíz del monorepo si process.cwd() es apps/api
+      const rootPath = path.join(process.cwd(), '../../', credentialsPath);
+      if (fs.existsSync(rootPath)) {
+        absolutePath = rootPath;
+      } else {
+        this.logger.warn(
+          `Firebase no inicializado: archivo de credenciales no existe en ${absolutePath}`,
+        );
+        return;
+      }
     }
 
     try {
@@ -54,5 +60,12 @@ export class FirebaseService implements OnModuleInit {
       throw new Error('Firebase no está inicializado. Revisa las credenciales.');
     }
     return getAuth().verifyIdToken(idToken);
+  }
+
+  async listUsers(maxResults = 100, pageToken?: string) {
+    if (!this.app) {
+      return { users: [], pageToken: undefined };
+    }
+    return getAuth().listUsers(maxResults, pageToken);
   }
 }
