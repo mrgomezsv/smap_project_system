@@ -12,6 +12,7 @@ import { IsString, IsNotEmpty } from 'class-validator';
 
 import { WaiversService } from './waivers.service';
 import { CreateWaiverDto } from './dto/create-waiver.dto';
+import { Public } from '../auth/decorators/public.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
 import { assertAdminEmail } from '../auth/admin-allowlist';
@@ -93,8 +94,9 @@ export class WaiversController {
   }
 
   /**
-   * GET /api/v2/waiver/download/:qr - Descargar PDF (requiere auth del titular o admin).
+   * GET /api/v2/waiver/download/:qr - Descargar PDF del waiver por código QR.
    */
+  @Public()
   @Get('download/:qr')
   async download(
     @Param('qr') qr: string,
