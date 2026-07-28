@@ -22,7 +22,7 @@ export default function VerifyWaiverPage() {
       try {
         setLoading(true);
         setError(null);
-        const res = await api.get<{ waiver: Waiver; isValid: boolean }>(`/api/v2/waiver/${qr}`);
+        const res = await api.get<{ waiver: Waiver; isValid: boolean }>(`/api/v2/waiver/verify/${qr}`);
         setWaiver(res.waiver);
         setIsValid(res.isValid);
       } catch (err: any) {
@@ -54,8 +54,8 @@ export default function VerifyWaiverPage() {
             ❌
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-900">Waiver No Válido</h1>
-            <p className="text-sm text-slate-500 mt-2">{error || 'El código QR no pertenece a ningún documento activo.'}</p>
+            <h1 className="text-2xl font-black text-slate-900">Código QR No Encontrado</h1>
+            <p className="text-sm text-slate-500 mt-2">{error || 'El código QR consultado no existe o no se pudo cargar.'}</p>
           </div>
           <Link
             href="/"
@@ -132,15 +132,29 @@ export default function VerifyWaiverPage() {
             )}
           </div>
 
-          {/* Fechas de Registro */}
-          <div className="text-xs text-slate-400 pt-2 border-t border-slate-100 flex justify-between items-center">
-            <span>Fecha de emisión:</span>
-            <span className="font-semibold text-slate-600">
-              {new Date(waiver.createdAt).toLocaleString('es-ES', {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              })}
-            </span>
+          {/* Fechas de Registro y Expiración */}
+          <div className="text-xs text-slate-500 pt-2 border-t border-slate-100 space-y-2">
+            <div className="flex justify-between items-center">
+              <span>Fecha de emisión:</span>
+              <span className="font-semibold text-slate-700">
+                {new Date(waiver.createdAt).toLocaleString('es-ES', {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+                })}
+              </span>
+            </div>
+
+            {!isValid && waiver.expiresAt && (
+              <div className="flex justify-between items-center text-red-600 bg-red-50 p-2.5 rounded-xl border border-red-100">
+                <span className="font-bold flex items-center gap-1">⏰ Expiró el:</span>
+                <span className="font-extrabold font-mono">
+                  {new Date(waiver.expiresAt).toLocaleString('es-ES', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  })}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Botón Descargar PDF */}
