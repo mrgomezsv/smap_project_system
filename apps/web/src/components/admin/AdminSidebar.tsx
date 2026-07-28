@@ -1,7 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { signOut } from 'firebase/auth';
+import { getFirebaseAuth } from '@/lib/firebase';
 
 const sections = [
   {
@@ -33,7 +35,6 @@ const sections = [
     title: 'Sistema',
     links: [
       { href: '/admin/sudo', label: 'Sudo Admin', icon: '⚙️' },
-      { href: '/admin/signin', label: 'Cerrar sesión', icon: '🚪' },
     ],
   },
 ];
@@ -45,6 +46,21 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ mobileOpen = false, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleSignOut() {
+    try {
+      const auth = getFirebaseAuth();
+      if (auth) {
+        await signOut(auth);
+      }
+    } catch (e) {
+      console.error('Error signing out:', e);
+    } finally {
+      if (onClose) onClose();
+      router.push('/cuenta');
+    }
+  }
 
   return (
     <>
@@ -114,6 +130,16 @@ export function AdminSidebar({ mobileOpen = false, onClose }: AdminSidebarProps)
               </ul>
             </div>
           ))}
+
+          {/* Botón de Cerrar Sesión dedicado */}
+          <div className="pt-2 border-t border-white/10 mt-4">
+            <button
+              onClick={handleSignOut}
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-red-500/20 hover:text-white transition text-left"
+            >
+              <span className="text-base">🚪</span>
+              <span>Cerrar sesión</span>
+            </button>
         </nav>
 
         <div className="px-6 py-4 border-t border-white/10">
