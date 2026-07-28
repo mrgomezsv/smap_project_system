@@ -1,50 +1,28 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
 import { StatCard } from '@/components/admin/StatCard';
+import { api, ApiError } from '@/lib/api';
+import { getFirebaseAuth } from '@/lib/firebase';
 
 interface Activity {
-  id: number;
+  id: string;
   type: 'waiver' | 'product' | 'event' | 'message' | 'chat';
   title: string;
   description: string;
   timestamp: string;
 }
 
-const SAMPLE_ACTIVITY: Activity[] = [
-  {
-    id: 1,
-    type: 'waiver',
-    title: 'Nuevo waiver generado',
-    description: 'QR ABC12345 para María Pérez',
-    timestamp: 'Hace 5 min',
-  },
-  {
-    id: 2,
-    type: 'message',
-    title: 'Mensaje recibido',
-    description: 'Carlos López consultó sobre brincolines',
-    timestamp: 'Hace 12 min',
-  },
-  {
-    id: 3,
-    type: 'event',
-    title: 'Evento publicado',
-    description: 'Gran Inauguración Miami',
-    timestamp: 'Hace 1 hora',
-  },
-  {
-    id: 4,
-    type: 'product',
-    title: 'Producto actualizado',
-    description: 'Brincolín 3x3 — nuevo precio',
-    timestamp: 'Hace 2 horas',
-  },
-  {
-    id: 5,
-    type: 'chat',
-    title: 'Chat abierto',
-    description: 'Ana Rodríguez preguntó por disponibilidad',
-    timestamp: 'Hace 3 horas',
-  },
-];
+interface DashboardData {
+  stats: {
+    activeProducts: number;
+    eventsCount: number;
+    waiversToday: number;
+    unreadMessages: number;
+  };
+  activity: Activity[];
+}
 
 const ICONS: Record<Activity['type'], { icon: string; bg: string; text: string }> = {
   waiver: { icon: '📋', bg: 'bg-success/10', text: 'text-success' },
@@ -55,12 +33,57 @@ const ICONS: Record<Activity['type'], { icon: string; bg: string; text: string }
 };
 
 export default function AdminDashboardPage() {
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        setLoading(false);
+        setError('Debes iniciar sesión para ver el dashboard.');
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const token = await user.getIdToken();
+        const res = await api.get<DashboardData>('/api/dashboard/stats', { token });
+        setData(res);
+        setError(null);
+      } catch (e: any) {
+        setError(e instanceof ApiError ? e.message : 'Error al cargar datos del dashboard');
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    return unsub;
+  }, []);
+
+  if (loading) {
+    return <div className="card text-center py-12 text-text-muted">Cargando métricas reales…</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-semibold mb-6">⚠ {error}</div>;
+  }
+
+  const stats = data?.stats ?? { activeProducts: 0, eventsCount: 0, waiversToday: 0, unreadMessages: 0 };
+  const activity = data?.activity ?? [];
+
   return (
     <div>
       <header className="mb-8">
         <h1 className="text-3xl font-heading font-extrabold text-text-primary">Dashboard</h1>
         <p className="text-text-muted mt-1">
-          Resumen general de la actividad de Kidsfun
+          Resumen general de la actividad de Kidsfun en tiempo real
         </p>
       </header>
 
@@ -68,76 +91,74 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           label="Productos activos"
-          value="48"
-          delta="+12% vs mes anterior"
+          value={String(stats.activeProducts)}
+          delta="En catálogo público"
           trend="up"
           color="primary"
           icon="🎪"
-          sparkline={[10, 14, 12, 18, 22, 20, 28, 30, 32, 35, 38, 48]}
         />
         <StatCard
-          label="Eventos próximos"
-          value="6"
-          delta="+2 este mes"
+          label="Eventos publicados"
+          value={String(stats.eventsCount)}
+          delta="Disponibles en sitio"
           trend="up"
           color="info"
           icon="🎉"
-          sparkline={[2, 3, 3, 4, 4, 5, 5, 5, 6, 6, 6, 6]}
         />
         <StatCard
-          label="Waivers hoy"
-          value="14"
-          delta="+3 vs ayer"
+          label="Waivers registrados hoy"
+          value={String(stats.waiversToday)}
+          delta="Nuevos accesos"
           trend="up"
           color="success"
           icon="📋"
-          sparkline={[3, 5, 8, 6, 9, 11, 8, 10, 12, 9, 11, 14]}
         />
         <StatCard
-          label="Ingresos del mes"
-          value="$8,420"
-          delta="+18% vs mes anterior"
-          trend="up"
+          label="Mensajes sin leer"
+          value={String(stats.unreadMessages)}
+          delta="Buzón de contacto"
+          trend={stats.unreadMessages > 0 ? 'up' : 'down'}
           color="warning"
-          icon="💰"
-          sparkline={[3, 4, 5, 4, 6, 5, 7, 6, 8, 7, 8, 9]}
+          icon="✉️"
         />
       </div>
 
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Actividad reciente */}
         <section className="card lg:col-span-2">
-          <header className="flex items-center justify-between mb-5">
+          <header className="flex items-center justify-between mb-5 border-b border-border pb-3">
             <h2 className="text-lg font-heading font-bold text-text-primary">
-              Actividad reciente
+              Actividad reciente real
             </h2>
-            <button className="text-sm text-primary hover:underline">Ver todo</button>
           </header>
-          <ol className="space-y-3">
-            {SAMPLE_ACTIVITY.map((a, i) => {
-              const meta = ICONS[a.type];
-              return (
-                <li
-                  key={a.id}
-                  className="flex items-start gap-3 p-3 rounded-lg hover:bg-surface transition"
-                >
-                  <div
-                    className={`w-9 h-9 shrink-0 rounded-full ${meta.bg} ${meta.text} flex items-center justify-center`}
+          {activity.length === 0 ? (
+            <p className="text-sm text-text-muted py-6 text-center">No hay actividad reciente registrada.</p>
+          ) : (
+            <ol className="space-y-3">
+              {activity.map((a) => {
+                const meta = ICONS[a.type] || { icon: '📌', bg: 'bg-gray-100', text: 'text-gray-600' };
+                return (
+                  <li
+                    key={a.id}
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-surface transition border-b border-border/50 last:border-0"
                   >
-                    {meta.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-text-primary text-sm">{a.title}</p>
-                    <p className="text-text-muted text-sm truncate">{a.description}</p>
-                  </div>
-                  <span className="text-xs text-text-muted shrink-0">{a.timestamp}</span>
-                  {i < SAMPLE_ACTIVITY.length - 1 && (
-                    <div className="absolute left-7 mt-9 w-px h-3 bg-border" style={{ display: 'none' }} />
-                  )}
-                </li>
-              );
-            })}
-          </ol>
+                    <div
+                      className={`w-9 h-9 shrink-0 rounded-full ${meta.bg} ${meta.text} flex items-center justify-center`}
+                    >
+                      {meta.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-text-primary text-sm">{a.title}</p>
+                      <p className="text-text-muted text-sm truncate">{a.description}</p>
+                    </div>
+                    <span className="text-xs text-text-muted shrink-0">
+                      {new Date(a.timestamp).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' })}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+          )}
         </section>
 
         {/* Accesos rápidos */}
