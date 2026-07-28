@@ -106,25 +106,35 @@ export function MisWaivers() {
     return (
       <section
         id="waivers"
-        className="card text-center py-10"
+        className="card text-center py-12 border-dashed border-border"
       >
         <div className="text-5xl mb-3">🎈</div>
         <p className="font-heading font-bold text-text-primary mb-1">{t('empty')}</p>
         <p className="text-sm text-text-muted mb-4">{t('emptyHint')}</p>
-        <Link href="/productos" className="btn btn-primary px-5 py-2 inline-block">
-          {t('ctaBrowse')} →
-        </Link>
+        <div className="flex justify-center gap-3">
+          <Link href="/checkout/waiver" className="btn btn-primary px-5 py-2 inline-block">
+            📝 Llenar Waiver Ahora →
+          </Link>
+        </div>
       </section>
     );
   }
 
   return (
     <section id="waivers" className="space-y-4">
-      <header>
-        <h2 className="text-xl font-heading font-extrabold text-text-primary">
-          {t('sectionTitle')}
-        </h2>
-        <p className="text-sm text-text-muted mt-1">{t('sectionSubtitle')}</p>
+      <header className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-heading font-extrabold text-text-primary">
+            {t('sectionTitle')}
+          </h2>
+          <p className="text-sm text-text-muted mt-1">{t('sectionSubtitle')}</p>
+        </div>
+        <Link
+          href="/checkout/waiver"
+          className="btn btn-primary text-xs px-3.5 py-2 flex items-center gap-1.5 font-bold shadow-xs"
+        >
+          <span>📝</span> Nuevo Waiver
+        </Link>
       </header>
       <div className="grid gap-4 sm:grid-cols-2">
         {waivers.map((w) => (

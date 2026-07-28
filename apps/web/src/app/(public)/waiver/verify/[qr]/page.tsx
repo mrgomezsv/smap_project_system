@@ -177,7 +177,7 @@ export default function VerifyWaiverPage() {
                   </p>
                 </div>
                 <Link
-                  href="/cuenta"
+                  href="/checkout/waiver"
                   className="w-full py-3 px-4 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm"
                 >
                   <span>📝</span> Generar Nuevo Waiver
