@@ -157,8 +157,8 @@ export default function VerifyWaiverPage() {
             )}
           </div>
 
-          {/* Botón Descargar PDF */}
-          <div className="pt-2">
+          {/* Acciones: Descargar PDF y Renovar/Crear Nuevo Waiver */}
+          <div className="pt-2 space-y-3">
             <a
               href={`${API_BASE_URL}/api/v2/waiver/download/${waiver.qrCode}`}
               target="_blank"
@@ -167,6 +167,23 @@ export default function VerifyWaiverPage() {
             >
               <span>📄</span> Descargar Documento PDF
             </a>
+
+            {!isValid && (
+              <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200/80 text-center space-y-3">
+                <div>
+                  <p className="font-extrabold text-amber-900 text-sm">¿Necesitas renovar tu permiso de acceso?</p>
+                  <p className="text-xs text-amber-700 mt-0.5">
+                    Este documento ha vencido. Genera un nuevo waiver en 1 minuto para entrar al evento sin demoras.
+                  </p>
+                </div>
+                <Link
+                  href="/cuenta"
+                  className="w-full py-3 px-4 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm"
+                >
+                  <span>📝</span> Generar Nuevo Waiver
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
