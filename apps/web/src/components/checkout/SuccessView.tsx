@@ -143,7 +143,7 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
           rel="noreferrer"
           className="btn bg-primary text-white hover:bg-primary-600 px-6 py-3"
         >
-          📄 {t('downloadPdf')}
+          {t('downloadPdf')}
         </a>
         <a
           href={qrDataUrl ?? '#'}

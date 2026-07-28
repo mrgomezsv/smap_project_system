@@ -2,6 +2,33 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { QrService } from './qr.service';
 
+export const DEFAULT_WAIVER_TEXT = `POLÍTICA DE PRIVACIDAD
+
+El presente Política de Privacidad establece los términos en que Kidsfun y Fiestas Infantiles usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Esta compañía está comprometida con la seguridad de los datos de sus usuarios. Cuando le pedimos llenar los campos de información personal con la cual usted pueda ser identificado, lo hacemos asegurando que sólo se empleará de acuerdo con los términos de este documento. Sin embargo esta Política de Privacidad puede cambiar con el tiempo o ser actualizada por lo que le recomendamos y enfatizamos revisar continuamente esta página para asegurarse que está de acuerdo con dichos cambios.
+
+Información que es recogida
+Nuestro sitio web podrá recoger información personal por ejemplo: Nombre, información de contacto como su dirección de correo electrónica e información demográfica. Así mismo cuando sea necesario podrá ser requerida información específica para procesar algún pedido o realizar una entrega o facturación.
+
+Uso de la información recogida
+Nuestro sitio web emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para mantener un registro de usuarios, de pedidos en caso que aplique, y mejorar nuestros productos y servicios. Es posible que sean enviados correos electrónicos periódicamente a través de nuestro sitio con ofertas especiales, nuevos productos y otra información publicitaria que consideremos relevante para usted o que pueda brindarle algún beneficio, estos correos electrónicos serán enviados a la dirección que usted proporcione y podrán ser cancelados en cualquier momento.
+
+Kidsfun y Fiestas Infantiles está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos los sistemas más avanzados y los actualizamos constantemente para asegurarnos que no exista ningún acceso no autorizado.
+
+Cookies
+Una cookie se refiere a un fichero que es enviado con la finalidad de solicitar permiso para almacenarse en su ordenador, al aceptar dicho fichero se crea y la cookie sirve entonces para tener información respecto al tráfico web, y también facilita las futuras visitas a una web recurrente. Otra función que tienen las cookies es que con ellas las web pueden reconocerte individualmente y por tanto brindarte el mejor servicio personalizado de su web.
+
+Nuestro sitio web emplea las cookies para poder identificar las páginas que son visitadas y su frecuencia. Esta información es empleada únicamente para análisis estadístico y después la información se elimina de forma permanente. Usted puede eliminar las cookies en cualquier momento desde su ordenador. Sin embargo las cookies ayudan a proporcionar un mejor servicio de los sitios web, no dan acceso a información de su ordenador ni de usted, a menos de que usted así lo quiera y la proporcione directamente noticias . Usted puede aceptar o negar el uso de cookies, sin embargo la mayoría de los navegadores aceptan cookies automáticamente pues sirve para tener un mejor servicio web. También usted puede cambiar la configuración de su ordenador para rechazar las cookies. Si se declinan es posible que no pueda utilizar algunos de nuestros servicios.
+
+Enlaces a Terceros
+Este sitio web pudiera contener enlaces a otros sitios que pudieran ser de su interés. Una vez que usted de clic en estos enlaces y abandone nuestra página, ya no tenemos control sobre al sitio al que es redirigido y por lo tanto no somos responsables de los términos o privacidad ni de la protección de sus datos en esos otros sitios terceros. Dichos sitios están sujetos a sus propias políticas de privacidad por lo cual es recomendable que los consulte para confirmar que usted está de acuerdo con estas.
+
+Control de su información personal
+En cualquier momento usted puede restringir la recopilación o el uso de la información personal que se proporciona a nuestro sitio web. Cada vez que se le solicita rellenar un formulario, como el de alta de usuario, puede marcar o desmarcar la opción de recibir información por correo electrónico. En caso de que haya marcado la opción de recibir nuestro boletín o publicidad usted puede cancelarla en cualquier momento.
+
+Esta compañía no venderá, cederá ni distribuirá la información personal que es recopilada sin su consentimiento, salvo que sea requerida por un juez con una orden judicial.
+
+Kidsfun y Fiestas Infantiles Se reserva el derecho de cambiar los términos de la presente Política de Privacidad en cualquier momento.`;
+
 /**
  * Interface con los datos del waiver para generar el PDF.
  */
@@ -37,7 +64,7 @@ export class PdfService {
 
   async generateWaiverPdf(data: WaiverPdfData): Promise<Uint8Array> {
     const doc = await PDFDocument.create();
-    const page = doc.addPage([612, 792]); // Letter size
+    let page = doc.addPage([612, 792]); // Letter size
     const { width, height } = page.getSize();
 
     const helvetica = await doc.embedFont(StandardFonts.Helvetica);
@@ -197,64 +224,92 @@ export class PdfService {
     }
 
     // === TÉRMINOS Y CONDICIONES ===
-    if (data.legalText) {
-      page.drawText('TÉRMINOS Y CONDICIONES', {
+    const legalTextToUse = data.legalText && data.legalText.trim().length > 0 ? data.legalText : DEFAULT_WAIVER_TEXT;
+
+    if (legalTextToUse) {
+      page.drawText('POLÍTICA DE PRIVACIDAD Y TÉRMINOS', {
         x: margin,
         y,
-        size: 12,
+        size: 11,
         font: helveticaBold,
         color: this.primary,
       });
-      y -= 18;
+      y -= 16;
 
-      // Texto legal envuelto (line wrapping simple)
       const maxWidth = width - 2 * margin;
-      const lines = this.wrapText(data.legalText, maxWidth, helvetica, 9);
-      for (const line of lines) {
-        if (y < margin + 100) break; // dejar espacio para firmas
-        page.drawText(line, { x: margin, y, size: 9, font: helvetica });
-        y -= 12;
+      const paragraphs = legalTextToUse.split('\n');
+      
+      for (const para of paragraphs) {
+        if (!para.trim()) {
+          y -= 6;
+          continue;
+        }
+        const lines = this.wrapText(para.trim(), maxWidth, helvetica, 8);
+        for (const line of lines) {
+          if (y < margin + 90) {
+            // Si el texto legal no cabe en la primera página antes de las firmas,
+            // creamos una nueva página de continuación
+            const newPage = doc.addPage([612, 792]);
+            page = newPage;
+            y = height - margin;
+            page.drawText('POLÍTICA DE PRIVACIDAD (Continuación)', {
+              x: margin,
+              y,
+              size: 10,
+              font: helveticaBold,
+              color: this.primary,
+            });
+            y -= 20;
+          }
+          page.drawText(line, { x: margin, y, size: 8, font: helvetica });
+          y -= 11;
+        }
+        y -= 4; // espacio entre párrafos
       }
-      y -= 15;
+      y -= 10;
     }
 
     // === FIRMAS ===
-    if (y > margin + 80) {
-      page.drawText('ACEPTACIÓN Y FIRMA', {
-        x: margin,
-        y,
-        size: 12,
-        font: helveticaBold,
-        color: this.primary,
-      });
-      y -= 50;
-
-      page.drawLine({
-        start: { x: margin, y },
-        end: { x: margin + 230, y },
-        thickness: 0.5,
-        color: this.gray,
-      });
-      page.drawLine({
-        start: { x: width / 2 + 20, y },
-        end: { x: width - margin, y },
-        thickness: 0.5,
-        color: this.gray,
-      });
-
-      page.drawText('Firma del Cliente / Responsable', {
-        x: margin,
-        y: y - 12,
-        size: 9,
-        font: helvetica,
-      });
-      page.drawText('Firma de Padre o Tutor (si aplica)', {
-        x: width / 2 + 20,
-        y: y - 12,
-        size: 9,
-        font: helvetica,
-      });
+    if (y < margin + 80) {
+      const newPage = doc.addPage([612, 792]);
+      page = newPage;
+      y = height - margin - 40;
     }
+
+    page.drawText('ACEPTACIÓN Y FIRMA', {
+      x: margin,
+      y,
+      size: 11,
+      font: helveticaBold,
+      color: this.primary,
+    });
+    y -= 45;
+
+    page.drawLine({
+      start: { x: margin, y },
+      end: { x: margin + 220, y },
+      thickness: 0.5,
+      color: this.gray,
+    });
+    page.drawLine({
+      start: { x: width / 2 + 20, y },
+      end: { x: width - margin, y },
+      thickness: 0.5,
+      color: this.gray,
+    });
+
+    page.drawText('Firma del Cliente / Responsable', {
+      x: margin,
+      y: y - 12,
+      size: 9,
+      font: helvetica,
+    });
+    page.drawText('Firma de Padre o Tutor (si aplica)', {
+      x: width / 2 + 20,
+      y: y - 12,
+      size: 9,
+      font: helvetica,
+    });
 
     // === FOOTER ===
     page.drawText(
