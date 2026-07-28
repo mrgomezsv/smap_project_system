@@ -94,13 +94,19 @@ export default async function ProductoDetallePage({ params }: PageProps) {
               {product.title}
             </h1>
 
-            <div className="mt-4">
+            <div className="mt-4 flex items-center gap-3">
               {product.publicated && (
                 <span className="inline-flex items-center gap-1.5 text-success text-sm font-medium">
                   <span className="w-2 h-2 bg-success rounded-full animate-pulse" />
                   {tProduct('available')}
                 </span>
               )}
+              <span className="inline-flex items-center gap-1.5 bg-party-pink/10 text-party-pink px-3 py-1 rounded-full text-sm font-bold">
+                ♥ {product._count?.likes ?? 0} Likes
+              </span>
+              <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-bold">
+                💬 {product._count?.comments ?? 0} Comentarios
+              </span>
             </div>
 
             {/* Specs rápidas */}
