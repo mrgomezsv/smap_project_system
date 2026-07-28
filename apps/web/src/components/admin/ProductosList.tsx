@@ -82,16 +82,6 @@ export function ProductosList() {
       ),
     },
     {
-      key: 'price',
-      label: 'Precio',
-      align: 'right',
-      render: (p) => (
-        <span className="font-semibold text-text-primary">
-          {p.price ? `$${p.price.toFixed(2)}` : '—'}
-        </span>
-      ),
-    },
-    {
       key: 'publicated',
       label: 'Estado',
       render: (p) =>
@@ -201,27 +191,22 @@ export function ProductosList() {
                         {p.title}
                       </h4>
 
-                      <div className="mt-2 flex items-center justify-between text-xs pt-2 border-t border-border">
-                        <span className="font-extrabold text-primary">
-                          {p.price ? `$${p.price.toFixed(2)}` : '—'}
-                        </span>
-                        <div className="flex items-center gap-1">
-                          <a
-                            href={`/productos/${p.id}`}
-                            className="p-1 text-text-muted hover:text-primary rounded"
-                            title="Ver"
-                            target="_blank"
-                          >
-                            👁
-                          </a>
-                          <a
-                            href={`/admin/productos/${p.id}/editar`}
-                            className="p-1 text-text-muted hover:text-primary rounded"
-                            title="Editar"
-                          >
-                            ✏️
-                          </a>
-                        </div>
+                      <div className="mt-2 flex items-center justify-end text-xs pt-2 border-t border-border gap-1">
+                        <a
+                          href={`/productos/${p.id}`}
+                          className="p-1 text-text-muted hover:text-primary rounded"
+                          title="Ver"
+                          target="_blank"
+                        >
+                          👁
+                        </a>
+                        <a
+                          href={`/admin/productos/${p.id}/editar`}
+                          className="p-1 text-text-muted hover:text-primary rounded"
+                          title="Editar"
+                        >
+                          ✏️
+                        </a>
                       </div>
                     </div>
                   ))
@@ -235,10 +220,9 @@ export function ProductosList() {
         <div>
           {useVirtual ? (
             <div className="card p-0 overflow-hidden">
-              <div className="grid grid-cols-[2fr_1fr_120px_140px_80px] gap-0 bg-surface border-b border-border text-xs font-semibold text-text-muted uppercase tracking-wider px-4 py-3">
+              <div className="grid grid-cols-[2fr_1fr_140px_80px] gap-0 bg-surface border-b border-border text-xs font-semibold text-text-muted uppercase tracking-wider px-4 py-3">
                 <div>Producto</div>
                 <div>Categoría</div>
-                <div className="text-right">Precio</div>
                 <div>Estado</div>
                 <div></div>
               </div>
@@ -246,8 +230,8 @@ export function ProductosList() {
                 items={filtered}
                 rowHeight={64}
                 renderRow={(p) => (
-                  <div className="grid grid-cols-[2fr_1fr_120px_140px_80px] gap-0 items-center px-4 border-b border-border h-16 hover:bg-surface transition">
-                    {columns.slice(0, 4).map((c) => (
+                  <div className="grid grid-cols-[2fr_1fr_140px_80px] gap-0 items-center px-4 border-b border-border h-16 hover:bg-surface transition">
+                    {columns.map((c) => (
                       <div key={c.key} className={c.align === 'right' ? 'text-right' : ''}>
                         {c.render ? c.render(p) : null}
                       </div>
