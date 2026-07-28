@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 import type { Product } from '@/lib/types';
 import { type Category } from '@/lib/types';
 import { SafeImage } from '@/components/ui/SafeImage';
+import { ProductLikeButton } from '@/components/public/ProductLikeButton';
 
 interface ProductCardProps {
   product: Product;
@@ -53,9 +54,7 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
 
         <div className="mt-3 flex items-center gap-4 text-xs text-text-muted pt-3 border-t border-border">
-          <span className="flex items-center gap-1">
-            <span className="text-party-pink">♥</span> {product._count?.likes ?? 0}
-          </span>
+          <ProductLikeButton productId={product.id} initialLikes={product._count?.likes ?? 0} />
           <span className="flex items-center gap-1">
             💬 {product._count?.comments ?? 0}
           </span>

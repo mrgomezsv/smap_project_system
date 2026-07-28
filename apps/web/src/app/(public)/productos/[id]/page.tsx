@@ -6,6 +6,8 @@ import { api, ApiError } from '@/lib/api';
 import type { Product } from '@/lib/types';
 import { type Category } from '@/lib/types';
 import { ProductGallery } from '@/components/public/ProductGallery';
+import { ProductLikeButton } from '@/components/public/ProductLikeButton';
+import { ProductCommentsSection } from '@/components/public/ProductCommentsSection';
 
 interface PageProps {
   params: { id: string };
@@ -101,12 +103,11 @@ export default async function ProductoDetallePage({ params }: PageProps) {
                   {tProduct('available')}
                 </span>
               )}
-              <span className="inline-flex items-center gap-1.5 bg-party-pink/10 text-party-pink px-3 py-1 rounded-full text-sm font-bold">
-                ♥ {product._count?.likes ?? 0} Likes
-              </span>
-              <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-bold">
-                💬 {product._count?.comments ?? 0} Comentarios
-              </span>
+              <ProductLikeButton
+                productId={product.id}
+                initialLikes={product._count?.likes ?? 0}
+                size="md"
+              />
             </div>
 
             {/* Specs rápidas */}
@@ -141,7 +142,7 @@ export default async function ProductoDetallePage({ params }: PageProps) {
               </div>
             )}
 
-            {/* Tabs sticky de reserva - Solo sticky en pantallas grandes para evitar tapar contenido en móviles/tablets */}
+            {/* Tabs sticky de reserva */}
             <div className="mt-8 relative lg:sticky lg:bottom-6 bg-white rounded-2xl shadow-large border border-border p-4 sm:p-6">
               <h3 className="font-heading font-bold mb-3">{tProduct('interested')}</h3>
               <div className="flex gap-3">
@@ -192,18 +193,11 @@ export default async function ProductoDetallePage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Comentarios placeholder */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-heading font-bold mb-6">
-            {tProduct('comments')} ({product._count?.comments ?? 0})
-          </h2>
-          <div className="card text-center py-12">
-            <div className="text-5xl mb-3 opacity-30">💬</div>
-            <p className="text-text-muted">
-              {tProduct('commentsPlaceholder')}
-            </p>
-          </div>
-        </div>
+        {/* Sección interactiva de Comentarios */}
+        <ProductCommentsSection
+          productId={product.id}
+          initialCommentsCount={product._count?.comments ?? 0}
+        />
       </div>
     </div>
   );
