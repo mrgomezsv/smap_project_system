@@ -13,6 +13,8 @@ import { ChatModule } from './chat/chat.module';
 import { ContactMessagesModule } from './contact/contact-messages.module';
 import { UploadModule } from './upload/upload.module';
 
+import { DashboardModule } from './dashboard/dashboard.module';
+
 @Module({
   imports: [
     PrismaModule,
@@ -26,6 +28,7 @@ import { UploadModule } from './upload/upload.module';
     ChatModule,
     ContactMessagesModule,
     UploadModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

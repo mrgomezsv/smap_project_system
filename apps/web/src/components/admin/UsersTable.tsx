@@ -108,7 +108,7 @@ export function UsersTable() {
       emptyMessage="No hay usuarios registrados en Firebase Auth."
       rowActions={(u) => (
         <a
-          href={`/admin/chats?userId=${u.id}&name=${encodeURIComponent(u.name)}&email=${encodeURIComponent(u.email)}`}
+          href={`/admin/chats?userId=${u.id}&name=${encodeURIComponent(u.name)}&email=${encodeURIComponent(u.email)}&photoUrl=${encodeURIComponent(u.photoUrl || '')}`}
           className="btn btn-outline text-xs px-3 py-1.5 flex items-center gap-1 hover:bg-primary hover:text-white transition"
           title={`Iniciar chat con ${u.name}`}
         >

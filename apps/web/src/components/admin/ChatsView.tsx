@@ -24,6 +24,7 @@ export function ChatsView() {
   const searchParams = useSearchParams();
   const targetUserId = searchParams.get('userId');
   const targetName = searchParams.get('name');
+  const targetPhotoUrl = searchParams.get('photoUrl');
 
   const tPh = useTranslations('placeholders');
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -41,6 +42,7 @@ export function ChatsView() {
             {
               id: targetUserId,
               name: decodeURIComponent(targetName),
+              avatar: targetPhotoUrl ? decodeURIComponent(targetPhotoUrl) : undefined,
               lastMessage: 'Conversación directa iniciada por Admin',
               timestamp: 'Ahora',
               unread: 0,
@@ -52,7 +54,7 @@ export function ChatsView() {
       });
       setSelectedId(targetUserId);
     }
-  }, [targetUserId, targetName]);
+  }, [targetUserId, targetName, targetPhotoUrl]);
 
   const selected = conversations.find((c) => c.id === selectedId);
 
@@ -87,9 +89,13 @@ export function ChatsView() {
                   ].join(' ')}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-brand-yellow text-white flex items-center justify-center font-bold text-sm shrink-0">
-                      {c.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
-                    </div>
+                    {c.avatar ? (
+                      <img src={c.avatar} alt={c.name} className="w-10 h-10 rounded-full object-cover shrink-0 border border-border" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-brand-yellow text-white flex items-center justify-center font-bold text-sm shrink-0">
+                        {c.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <p className="font-semibold text-text-primary text-sm truncate">{c.name}</p>
@@ -115,12 +121,16 @@ export function ChatsView() {
         {selected ? (
           <>
             <header className="p-4 border-b border-border flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-brand-yellow text-white flex items-center justify-center font-bold text-sm">
-                {selected.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
-              </div>
+              {selected.avatar ? (
+                <img src={selected.avatar} alt={selected.name} className="w-10 h-10 rounded-full object-cover border border-border" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-brand-yellow text-white flex items-center justify-center font-bold text-sm">
+                  {selected.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
+                </div>
+              )}
               <div>
                 <p className="font-semibold text-text-primary">{selected.name}</p>
-                <p className="text-xs text-text-muted">En línea</p>
+                <p className="text-xs text-text-muted">Google User • En línea</p>
               </div>
             </header>
 
