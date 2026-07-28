@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 interface Conversation {
@@ -20,12 +21,38 @@ interface Message {
 }
 
 export function ChatsView() {
+  const searchParams = useSearchParams();
+  const targetUserId = searchParams.get('userId');
+  const targetName = searchParams.get('name');
+
   const tPh = useTranslations('placeholders');
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(targetUserId);
   const [messages, setMessages] = useState<Message[]>([]);
   const [reply, setReply] = useState('');
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (targetUserId && targetName) {
+      setConversations((prev) => {
+        const exists = prev.some((c) => c.id === targetUserId);
+        if (!exists) {
+          return [
+            {
+              id: targetUserId,
+              name: decodeURIComponent(targetName),
+              lastMessage: 'Conversación directa iniciada por Admin',
+              timestamp: 'Ahora',
+              unread: 0,
+            },
+            ...prev,
+          ];
+        }
+        return prev;
+      });
+      setSelectedId(targetUserId);
+    }
+  }, [targetUserId, targetName]);
 
   const selected = conversations.find((c) => c.id === selectedId);
 

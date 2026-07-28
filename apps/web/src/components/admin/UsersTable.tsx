@@ -84,7 +84,6 @@ export function UsersTable() {
     {
       key: 'disabled',
       label: 'Estado',
-      align: 'right',
       render: (u) => (
         <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${u.disabled ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
           {u.disabled ? 'Inactivo' : 'Activo'}
@@ -107,6 +106,15 @@ export function UsersTable() {
       columns={columns}
       rowKey={(u) => u.id}
       emptyMessage="No hay usuarios registrados en Firebase Auth."
+      rowActions={(u) => (
+        <a
+          href={`/admin/chats?userId=${u.id}&name=${encodeURIComponent(u.name)}&email=${encodeURIComponent(u.email)}`}
+          className="btn btn-outline text-xs px-3 py-1.5 flex items-center gap-1 hover:bg-primary hover:text-white transition"
+          title={`Iniciar chat con ${u.name}`}
+        >
+          <span>💬</span> Chat
+        </a>
+      )}
     />
   );
 }
