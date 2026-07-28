@@ -78,21 +78,51 @@ export class PdfService {
     const qrPic = await doc.embedPng(qrImage);
     const qrDim = { width: 80, height: 80 };
 
-    // Logo placeholder (texto) en columna izquierda
-    page.drawText('KIDSFUN', {
-      x: margin,
-      y: y - 20,
-      size: 18,
-      font: helveticaBold,
-      color: this.primary,
-    });
-    page.drawText('Fiestas Infantiles', {
-      x: margin,
-      y: y - 35,
-      size: 10,
-      font: helvetica,
-      color: this.gray,
-    });
+    // Logo en columna izquierda
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const logoPath = path.join(process.cwd(), 'apps/api/src/assets/logo.png');
+      const logoAltPath = path.join(process.cwd(), 'src/assets/logo.png');
+      
+      let logoBuffer: Buffer | null = null;
+      try {
+        logoBuffer = await fs.readFile(logoPath);
+      } catch {
+        try {
+          logoBuffer = await fs.readFile(logoAltPath);
+        } catch {
+          this.logger.warn('Logo file not found, falling back to text header');
+        }
+      }
+
+      if (logoBuffer) {
+        const logoPic = await doc.embedPng(logoBuffer);
+        page.drawImage(logoPic, {
+          x: margin,
+          y: y - 55,
+          width: 110,
+          height: 55,
+        });
+      } else {
+        page.drawText('KIDSFUN', {
+          x: margin,
+          y: y - 20,
+          size: 18,
+          font: helveticaBold,
+          color: this.primary,
+        });
+        page.drawText('Fiestas Infantiles', {
+          x: margin,
+          y: y - 35,
+          size: 10,
+          font: helvetica,
+          color: this.gray,
+        });
+      }
+    } catch (e) {
+      this.logger.error('Error embedding logo in PDF:', e);
+    }
 
     // Título centrado
     page.drawText('DOCUMENTO DE EXENCIÓN DE', {

@@ -12,9 +12,9 @@ export class DashboardService {
     const [activeProductsCount, totalEventsCount, waiversTodayCount, unreadMessagesCount] =
       await Promise.all([
         this.prisma.product.count({ where: { publicated: true } }),
-        this.prisma.event.count({ where: { publicated: true } }),
+        this.prisma.event.count(),
         this.prisma.waiverQRV2.count({ where: { createdAt: { gte: todayStart } } }),
-        this.prisma.webContactMessage.count({ where: { read: false } }),
+        this.prisma.contactMessage.count(),
       ]);
 
     // Obtener actividades recientes reales
@@ -29,7 +29,7 @@ export class DashboardService {
       },
     });
 
-    const recentMessages = await this.prisma.webContactMessage.findMany({
+    const recentMessages = await this.prisma.contactMessage.findMany({
       take: 3,
       orderBy: { createdAt: 'desc' },
       select: {
