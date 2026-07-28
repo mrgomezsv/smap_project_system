@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
 import { DataTable, type Column } from '@/components/admin/DataTable';
 import { ConfirmModal } from '@/components/admin/ConfirmModal';
 import { api, ApiError } from '@/lib/api';
@@ -28,23 +29,33 @@ export function MessagesInbox() {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const res = await api.get<WebMessage[]>('/api/web-messages');
-        if (!cancelled) setMessages(res);
-      } catch (e) {
-        if (!cancelled) {
-          setError(e instanceof ApiError ? e.message : 'Error al cargar mensajes');
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      setLoading(false);
+      return;
     }
-    load();
-    return () => {
-      cancelled = true;
-    };
+
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        setLoading(false);
+        setError('Debes iniciar sesión para ver los mensajes.');
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const token = await user.getIdToken();
+        const res = await api.get<WebMessage[]>('/api/web-messages', { token });
+        setMessages(res);
+        setError(null);
+      } catch (e) {
+        setError(e instanceof ApiError ? e.message : 'Error al cargar mensajes');
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    return unsub;
   }, []);
 
   async function performDelete() {
