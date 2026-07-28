@@ -47,18 +47,22 @@ export default function AdminDashboardPage() {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         setLoading(false);
-        setError('Debes iniciar sesión para ver el dashboard.');
+        setError('Debes iniciar sesión con una cuenta autorizada.');
         return;
       }
 
       try {
         setLoading(true);
-        const token = await user.getIdToken();
+        const token = await user.getIdToken(true);
         const res = await api.get<DashboardData>('/api/dashboard/stats', { token });
         setData(res);
         setError(null);
       } catch (e: any) {
-        setError(e instanceof ApiError ? e.message : 'Error al cargar datos del dashboard');
+        if (e instanceof ApiError && e.status === 403) {
+          setError(`Acceso restringido: El correo (${user.email}) no tiene permisos de administrador.`);
+        } else {
+          setError(e instanceof ApiError ? e.message : 'Error al cargar datos del dashboard');
+        }
       } finally {
         setLoading(false);
       }
