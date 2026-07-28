@@ -51,7 +51,7 @@ export function CuentaForm() {
         setError(t('errors.notConfigured'));
         return;
       }
-      const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'mrgomez.dev@outlook.com,kidsfun.developer@gmail.com';
+      const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'mrgomez.dev@outlook.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com';
       const isAdmin = adminEmails.split(',').map(e => e.trim()).includes(email);
 
       // BYPASS LOCAL PARA DESARROLLO
