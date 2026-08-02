@@ -60,7 +60,6 @@ services:
 
 volumes:
   db_data:
-    external: true
     name: proyecto_kidsfun_db_data
 
 networks:
