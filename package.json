@@ -19,7 +19,8 @@
     "db:migrate": "pnpm --filter api prisma migrate dev",
     "db:studio": "pnpm --filter api prisma studio",
     "docker:up": "docker compose up --build -d",
-    "docker:down": "docker compose down"
+    "docker:down": "docker compose down",
+    "docker:deploy": "./scripts/deploy-dockerhub.sh"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
