@@ -10,7 +10,12 @@ COPY apps/web/package.json ./apps/web/
 
 RUN pnpm install --frozen-lockfile
 
-COPY apps/web ./apps/web
+COPY apps/web/src ./apps/web/src
+COPY apps/web/public ./apps/web/public
+COPY apps/web/tsconfig*.json ./apps/web/
+COPY apps/web/next.config.* ./apps/web/
+COPY apps/web/tailwind.config.* ./apps/web/
+COPY apps/web/postcss.config.* ./apps/web/
 
 WORKDIR /app/apps/web
 ENV NEXT_TELEMETRY_DISABLED 1

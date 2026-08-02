@@ -14,7 +14,10 @@ COPY apps/web/package.json ./apps/web/
 RUN pnpm install --frozen-lockfile
 
 # 4. Copiar código fuente de api y esquema de prisma
-COPY apps/api ./apps/api
+COPY apps/api/src ./apps/api/src
+COPY apps/api/prisma ./apps/api/prisma
+COPY apps/api/tsconfig*.json ./apps/api/
+COPY apps/api/nest-cli.json ./apps/api/
 
 # 5. Generar cliente de Prisma y construir la aplicación NestJS
 WORKDIR /app/apps/api
