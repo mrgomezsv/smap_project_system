@@ -89,6 +89,9 @@ export class WaiversService {
     // Enviar email con plantilla bilingüe y PDF adjunto
     const { subject, html } = this.emailService.getWaiverEmailTemplate({
       userName: dto.userName,
+      userEmail: dto.userEmail,
+      userPhone: dto.userPhone,
+      relatives: dto.relatives?.map((r) => ({ name: r.name, age: r.age })),
       qrCode,
       lang: 'es',
     });
@@ -140,6 +143,10 @@ export class WaiversService {
 
     const { subject, html } = this.emailService.getWaiverEmailTemplate({
       userName: waiver.userName,
+      userEmail: waiver.userEmail,
+      userPhone: waiver.userPhone ?? undefined,
+      relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
+      createdAt: waiver.createdAt,
       qrCode: waiver.qrCode,
       lang,
     });

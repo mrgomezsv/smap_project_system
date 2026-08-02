@@ -6,6 +6,7 @@ export interface EmailAttachment {
   filename: string;
   content: Buffer;
   contentType?: string;
+  content_id?: string;
 }
 
 export interface EmailOptions {
@@ -56,9 +57,10 @@ export class EmailService {
         };
 
         if (options.attachments && options.attachments.length > 0) {
-          payload.attachments = options.attachments.map((a) => ({
+          payload.attachments = options.attachments.map((a: any) => ({
             filename: a.filename,
             content: a.content,
+            content_id: a.content_id || a.contentId,
           }));
         }
 
@@ -110,6 +112,10 @@ export class EmailService {
     qrCode: string;
     pdfDownloadUrl?: string;
     lang?: 'es' | 'en';
+    userEmail?: string;
+    userPhone?: string;
+    relatives?: Array<{ name: string; age?: number }>;
+    createdAt?: Date;
   }): { subject: string; html: string } {
     const isEn = data.lang === 'en';
 
@@ -121,15 +127,25 @@ export class EmailService {
     const greeting = isEn ? `Hello ${data.userName},` : `Hola ${data.userName},`;
     const message = isEn
       ? 'Thank you for completing your waiver. Below is your entry QR code and access details for the event.'
-      : 'Gracias por completar tu exención de responsabilidad (waiver). A continuación encuentras tu código QR de acceso y detalles para el evento.';
+      : 'Gracias por completar tu exención de responsabilidad (waiver). A continuación encuentras tu código QR de acceso y el resumen de la información registrada.';
     const qrLabel = isEn ? 'Your Entry QR Code:' : 'Tu Código QR de Entrada:';
     const attachmentNote = isEn
-      ? '📎 Attached to this email you will find your official PDF Waiver document.'
-      : '📎 Adjunto a este correo encontrarás tu documento PDF oficial de Waiver.';
+      ? '📄 <strong>Attached Document:</strong> Attached to this email you will find your official PDF Waiver document.'
+      : '📄 <strong>Documento Adjunto:</strong> Adjunto a este correo encontrarás tu documento PDF oficial de Waiver para guardar en tu archivo.';
     const helpText = isEn
       ? 'If you have any questions, please contact our support team.'
       : 'Si tienes alguna duda, no dudes en contactar a nuestro equipo de soporte.';
     const footerText = `© ${new Date().getFullYear()} Kidsfun y Fiestas Infantiles. All rights reserved.`;
+
+    const formattedDate = (data.createdAt || new Date()).toLocaleDateString(isEn ? 'en-US' : 'es-ES', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    });
+
+    const relativesHtml = data.relatives && data.relatives.length > 0
+      ? data.relatives.map(r => `• ${r.name}${r.age ? ` (${r.age} ${isEn ? 'years' : 'años'})` : ''}`).join('<br/>')
+      : (isEn ? 'None registered' : 'Ninguno registrado');
 
     const html = `
 <!DOCTYPE html>
@@ -139,29 +155,61 @@ export class EmailService {
   <style>
     body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; color: #1e293b; }
     .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-    .header { background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%); padding: 32px 24px; text-align: center; color: #ffffff; }
-    .header h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+    .header { background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%); padding: 28px 24px; text-align: center; color: #ffffff; }
+    .header h1 { margin: 0; font-size: 32px; font-weight: 900; letter-spacing: -0.5px; }
     .content { padding: 32px 24px; text-align: left; line-height: 1.6; }
-    .qr-box { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 24px; text-align: center; margin: 24px 0; }
+    .qr-box { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0; }
     .qr-code { font-size: 32px; font-weight: 900; font-family: monospace; color: #1E3A8A; letter-spacing: 2px; }
-    .note-box { background: #eff6ff; border-left: 4px solid #3B82F6; padding: 16px; border-radius: 4px; margin: 20px 0; font-size: 14px; color: #1e40af; }
+    .details-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #f8fafc; border-radius: 10px; overflow: hidden; }
+    .details-table td { padding: 12px 16px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+    .details-table td.label { font-weight: 700; color: #475569; width: 40%; background: #f1f5f9; }
+    .details-table tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; background: #dcfce7; color: #166534; font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 20px; }
+    .note-box { background: #eff6ff; border-left: 4px solid #3B82F6; padding: 16px; border-radius: 6px; margin: 20px 0; font-size: 14px; color: #1e40af; }
     .footer { background: #f1f5f9; padding: 20px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>Kidsfun</h1>
-      <p style="margin:4px 0 0 0; opacity:0.9; font-size:14px;">${title}</p>
+      <h1 style="margin:0; font-size:32px; font-weight:900; letter-spacing:-0.5px;">Kidsfun</h1>
+      <p style="margin:4px 0 0 0; opacity:0.9; font-size:14px; font-weight: 500;">${title}</p>
     </div>
     <div class="content">
       <h2 style="margin-top:0; font-size:18px; color:#0f172a;">${greeting}</h2>
       <p style="color:#475569;">${message}</p>
       
       <div class="qr-box">
-        <p style="margin:0 0 8px 0; font-size:13px; text-transform:uppercase; color:#64748b; font-weight:700;">${qrLabel}</p>
+        <p style="margin:0 0 8px 0; font-size:12px; text-transform:uppercase; color:#64748b; font-weight:700;">${qrLabel}</p>
         <div class="qr-code">${data.qrCode}</div>
+        <div style="margin-top:8px;"><span class="badge">${isEn ? 'ACTIVE / VERIFIED' : 'ACTIVO / VERIFICADO'}</span></div>
       </div>
+
+      <h3 style="font-size:15px; color:#0f172a; margin-bottom:10px;">📋 ${isEn ? 'Registered Waiver Details:' : 'Resumen de Información Registrada:'}</h3>
+      <table class="details-table">
+        <tr>
+          <td class="label">${isEn ? 'Main Adult / Holder:' : 'Titular / Adulto:'}</td>
+          <td>${data.userName}</td>
+        </tr>
+        ${data.userEmail ? `
+        <tr>
+          <td class="label">${isEn ? 'Email:' : 'Correo Electrónico:'}</td>
+          <td>${data.userEmail}</td>
+        </tr>` : ''}
+        ${data.userPhone ? `
+        <tr>
+          <td class="label">${isEn ? 'Phone:' : 'Teléfono:'}</td>
+          <td>${data.userPhone}</td>
+        </tr>` : ''}
+        <tr>
+          <td class="label">${isEn ? 'Registered Minors:' : 'Menores Registrados:'}</td>
+          <td>${relativesHtml}</td>
+        </tr>
+        <tr>
+          <td class="label">${isEn ? 'Registration Date:' : 'Fecha de Registro:'}</td>
+          <td>${formattedDate}</td>
+        </tr>
+      </table>
 
       <div class="note-box">
         ${attachmentNote}
