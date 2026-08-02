@@ -20,7 +20,8 @@
     "db:studio": "pnpm --filter api prisma studio",
     "docker:up": "docker compose up --build -d",
     "docker:down": "docker compose down",
-    "docker:deploy": "./scripts/deploy-dockerhub.sh"
+    "docker:deploy": "./build_deploy_portainer.sh",
+    "deploy:portainer": "./build_deploy_portainer.sh"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
