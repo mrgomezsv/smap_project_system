@@ -36,5 +36,4 @@ COPY --from=base /app/apps/web/package.json ./apps/web/package.json
 
 EXPOSE 3000
 
-WORKDIR /app/apps/web
-CMD ["pnpm", "start"]
+CMD ["node", "node_modules/next/dist/bin/next", "start"]
