@@ -1,5 +1,5 @@
 import { IsOptional, IsString, IsInt, Min, Max, IsBoolean } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 
 export class QueryProductDto {
   @IsOptional()
@@ -8,7 +8,7 @@ export class QueryProductDto {
 
   @IsOptional()
   @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(({ value }) => value === 'true' || value === true || value === 1 || value === '1')
   publicated?: boolean;
 
   @IsOptional()
