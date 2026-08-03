@@ -36,4 +36,5 @@ COPY --from=base /app/apps/web/package.json ./apps/web/package.json
 
 EXPOSE 3000
 
-CMD ["node", "node_modules/next/dist/bin/next", "start"]
+WORKDIR /app/apps/web
+CMD ["node", "../../node_modules/next/dist/bin/next", "start"]
