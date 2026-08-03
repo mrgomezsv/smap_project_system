@@ -1,23 +1,26 @@
-version: '3.8'
-
 services:
-  # Base de Datos MariaDB reutilizando el contenedor y datos existentes en el VPS
   db:
     image: mariadb:10.6
     container_name: proyecto_kidsfun-db-1
     restart: always
     environment:
-      MYSQL_DATABASE: smap_kf
-      MYSQL_USER: mrgomez
-      MYSQL_PASSWORD: Karin2100
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-smap_kf}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "healthcheck.sh --connect --innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     networks:
       - kidsfun-net
 
-  # Backend API (NestJS + Prisma)
   api:
+    image: ${KIDSFUN_API_IMAGE:-mrgomezdev/kidsfun-api:latest}
     build:
       context: .
       dockerfile: apps/api/Dockerfile
@@ -26,42 +29,71 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-      DATABASE_URL: "mysql://mrgomez:Karin2100@db:3306/smap_kf"
+      DATABASE_URL: ${DATABASE_URL}
       RESEND_API_KEY: ${RESEND_API_KEY}
       RESEND_FROM_EMAIL: "Kidsfun <waiver@kidsfunyfiestasinfantiles.com>"
-      CORS_ORIGINS: "https://kidsfunyfiestasinfantiles.com,https://www.kidsfunyfiestasinfantiles.com,http://localhost:3000"
-      ADMIN_EMAILS: "mrgomez.dev@outlook.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com"
-      FIREBASE_CREDENTIALS_PATH: "credentials/smap-kf-firebase-adminsdk-xqq0l-42c4ee6425.json"
+      CORS_ORIGINS: "https://kidsfunyfiestasinfantiles.com,https://www.kidsfunyfiestasinfantiles.com"
+      ADMIN_EMAILS: ${ADMIN_EMAILS}
+      FIREBASE_CREDENTIALS_PATH: "/run/secrets/firebase-credentials.json"
       FIREBASE_PROJECT_ID: "smap-kf"
+      UPLOAD_DIR: "/app/media"
+    volumes:
+      - media_data:/app/media
+      - ${FIREBASE_CREDENTIALS_FILE}:/run/secrets/firebase-credentials.json:ro
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "3001:3001"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3001/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     networks:
       - kidsfun-net
 
-  # Frontend Web (Next.js SSR)
   web:
+    image: ${KIDSFUN_WEB_IMAGE:-mrgomezdev/kidsfun-web:latest}
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: "https://kidsfunyfiestasinfantiles.com"
+        NEXT_PUBLIC_MEDIA_URL: "https://kidsfunyfiestasinfantiles.com"
     container_name: kidsfun-web
     restart: always
     environment:
       NODE_ENV: production
       PORT: 3000
-      NEXT_PUBLIC_API_URL: "https://kidsfunyfiestasinfantiles.com/api"
+      NEXT_PUBLIC_API_URL: "https://kidsfunyfiestasinfantiles.com"
+      NEXT_PUBLIC_MEDIA_URL: "https://kidsfunyfiestasinfantiles.com"
+      INTERNAL_API_URL: "http://api:3001"
+      INTERNAL_MEDIA_URL: "http://api:3001"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     ports:
-      - "8080:3000" # Conectado al proxy Nginx del puerto 8080
+      - "8080:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     networks:
       - kidsfun-net
 
 volumes:
   db_data:
+    external: true
     name: proyecto_kidsfun_db_data
+  media_data:
+    external: true
+    name: proyecto_kidsfun_media_data
 
 networks:
   kidsfun-net:
+    name: kidsfun-net
     driver: bridge

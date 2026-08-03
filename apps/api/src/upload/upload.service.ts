@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
-import { diskStorage } from 'multer';
+import { join, relative, resolve, sep } from 'path';
 import { randomBytes } from 'crypto';
-import { extname } from 'path';
 
 /**
  * Servicio de upload de archivos.
- * Guarda en MEDIA_DIR (default: ./media) preservando la estructura
- * product_images/<slug>/<slug>_<n>.<ext> similar a Django.
+ * Los archivos se guardan en `${UPLOAD_DIR}/product_images/<random>.<ext>`.
+ * El frontend debe componer la URL pública con `${MEDIA_URL}/media/<path>`.
  */
 @Injectable()
 export class UploadService {
@@ -16,35 +14,15 @@ export class UploadService {
   private readonly maxSize: number;
 
   constructor() {
-    this.uploadDir = process.env.UPLOAD_DIR || 'media';
+    this.uploadDir = resolve(process.env.UPLOAD_DIR ?? join(process.cwd(), 'media'));
     this.maxSize = Number(process.env.MAX_UPLOAD_SIZE_MB ?? 10) * 1024 * 1024;
     if (!existsSync(this.uploadDir)) {
       mkdirSync(this.uploadDir, { recursive: true });
     }
   }
 
-  /**
-   * Storage config para multer: guarda en product_images/<slug>/<slug>_<n>.<ext>
-   * Si no hay slug, usa nombre aleatorio.
-   */
-  getStorage() {
-    return diskStorage({
-      destination: (req, file, cb) => {
-        const slug = (req.body?.slug as string) || '';
-        const sub = slug ? join(this.uploadDir, 'product_images', slug) : this.uploadDir;
-        if (!existsSync(sub)) {
-          mkdirSync(sub, { recursive: true });
-        }
-        cb(null, sub);
-      },
-      filename: (req, file, cb) => {
-        const ext = extname(file.originalname);
-        const random = randomBytes(4).toString('hex');
-        const slug = (req.body?.slug as string) || 'img';
-        const safeSlug = slug.toLowerCase().replace(/[^a-z0-9]/g, '_');
-        cb(null, `${safeSlug}_${random}${ext}`);
-      },
-    });
+  createFilename(extension: string): string {
+    return `${randomBytes(16).toString('hex')}${extension.toLowerCase()}`;
   }
 
   getMaxSize(): number {
@@ -55,7 +33,12 @@ export class UploadService {
    * Helper para convertir path absoluto a URL relativa (lo que se guarda en BD).
    */
   toRelativePath(absolutePath: string, baseDir?: string): string {
-    const base = baseDir || this.uploadDir;
-    return absolutePath.replace(base + '/', '').replace(base + '\\', '');
+    const base = resolve(baseDir ?? this.uploadDir);
+    const file = resolve(absolutePath);
+    const path = relative(base, file);
+    if (!path || path === '..' || path.startsWith(`..${sep}`)) {
+      throw new Error('Ruta de archivo fuera del directorio de uploads');
+    }
+    return path.split(sep).join('/');
   }
 }

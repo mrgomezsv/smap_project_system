@@ -1,5 +1,10 @@
 FROM node:20-alpine AS base
 
+ARG NEXT_PUBLIC_API_URL=https://kidsfunyfiestasinfantiles.com
+ARG NEXT_PUBLIC_MEDIA_URL=https://kidsfunyfiestasinfantiles.com
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_MEDIA_URL=$NEXT_PUBLIC_MEDIA_URL
+
 RUN corepack enable && corepack prepare pnpm@10.34.4 --activate
 
 WORKDIR /app
@@ -18,7 +23,7 @@ COPY apps/web/tailwind.config.* ./apps/web/
 COPY apps/web/postcss.config.* ./apps/web/
 
 WORKDIR /app/apps/web
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm build
 
 FROM node:20-alpine AS runner
@@ -26,7 +31,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/apps/web/node_modules ./apps/web/node_modules

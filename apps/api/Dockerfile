@@ -16,14 +16,13 @@ RUN pnpm install --frozen-lockfile
 # 4. Copiar código fuente de api y esquema de prisma
 COPY apps/api/src ./apps/api/src
 COPY apps/api/prisma ./apps/api/prisma
-COPY apps/api/credentials ./apps/api/credentials
 COPY apps/api/tsconfig*.json ./apps/api/
 COPY apps/api/nest-cli.json ./apps/api/
 
 # 5. Generar cliente de Prisma y construir la aplicación NestJS
 WORKDIR /app/apps/api
 RUN pnpm prisma generate
-RUN pnpm build
+RUN pnpm exec nest build --builder swc
 
 # 6. Etapa de ejecución (Runner)
 FROM node:20-alpine AS runner
@@ -37,10 +36,9 @@ COPY --from=base /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=base /app/apps/api/dist ./apps/api/dist
 COPY --from=base /app/apps/api/package.json ./apps/api/package.json
 COPY --from=base /app/apps/api/prisma ./apps/api/prisma
-COPY --from=base /app/apps/api/credentials ./apps/api/credentials
 COPY --from=base /app/apps/api/src/assets ./apps/api/dist/assets
 
 EXPOSE 3001
 
 WORKDIR /app/apps/api
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
+CMD ["node", "dist/main.js"]

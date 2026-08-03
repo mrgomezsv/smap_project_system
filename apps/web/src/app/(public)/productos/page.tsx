@@ -32,8 +32,9 @@ export default async function ProductosPage({
 
   const selectedCategory = searchParams.category as Category | undefined;
   const search = searchParams.search ?? '';
-  const skip = Number(searchParams.skip ?? 0);
   const take = Number(searchParams.take ?? 24);
+  const rawSkip = Number(searchParams.skip ?? 0);
+  const skip = Number.isFinite(rawSkip) && rawSkip >= 0 ? rawSkip : 0;
 
   let data: ProductsListResponse = { items: [], total: 0, skip, take };
   try {
@@ -48,6 +49,21 @@ export default async function ProductosPage({
   } catch (e) {
     console.error('Error cargando productos:', e);
   }
+
+  const total = data.total;
+  const currentPage = Math.floor(skip / take) + 1;
+  const totalPages = Math.max(1, Math.ceil(total / take));
+  const hasPrev = skip > 0;
+  const hasNext = skip + take < total;
+  const buildPageHref = (page: number) => {
+    const params = new URLSearchParams();
+    if (selectedCategory) params.set('category', selectedCategory);
+    if (search) params.set('search', search);
+    params.set('take', String(take));
+    if (page > 1) params.set('skip', String((page - 1) * take));
+    const qs = params.toString();
+    return qs ? `/productos?${qs}` : '/productos';
+  };
 
   return (
     <div className="bg-surface min-h-screen">
@@ -118,6 +134,40 @@ export default async function ProductosPage({
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
+        )}
+
+        {total > take && (
+          <nav className="mt-10 flex items-center justify-center gap-2" aria-label="Paginación">
+            {hasPrev && (
+              <Link
+                href={buildPageHref(currentPage - 1)}
+                className="px-4 py-2 rounded-full border border-border bg-white text-text-primary text-sm hover:border-primary"
+              >
+                Anterior
+              </Link>
+            )}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <Link
+                key={page}
+                href={buildPageHref(page)}
+                className={`px-3 py-2 rounded-full text-sm ${
+                  page === currentPage
+                    ? 'bg-primary text-white'
+                    : 'bg-white text-text-primary border border-border hover:border-primary'
+                }`}
+              >
+                {page}
+              </Link>
+            ))}
+            {hasNext && (
+              <Link
+                href={buildPageHref(currentPage + 1)}
+                className="px-4 py-2 rounded-full border border-border bg-white text-text-primary text-sm hover:border-primary"
+              >
+                Siguiente
+              </Link>
+            )}
+          </nav>
         )}
       </div>
     </div>

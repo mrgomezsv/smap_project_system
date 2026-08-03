@@ -3,8 +3,13 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 
 /** @type {import('next').NextConfig} */
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
-const MEDIA_URL = process.env.NEXT_PUBLIC_MEDIA_URL ?? API_URL;
+const normalizeBaseUrl = (value) => value.replace(/\/+$/, '');
+const API_URL = normalizeBaseUrl(
+  process.env.INTERNAL_API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001',
+);
+const MEDIA_URL = normalizeBaseUrl(
+  process.env.INTERNAL_MEDIA_URL ?? process.env.NEXT_PUBLIC_MEDIA_URL ?? API_URL,
+);
 
 const nextConfig = {
   // Build standalone para Docker

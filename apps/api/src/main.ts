@@ -1,3 +1,6 @@
+import { join, resolve } from 'path';
+import { existsSync } from 'fs';
+import express from 'express';
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
@@ -16,6 +19,26 @@ async function bootstrap() {
     origin: origins,
     credentials: true,
   });
+
+  const uploadDir = resolve(process.env.UPLOAD_DIR ?? join(process.cwd(), 'media'));
+  app.use(
+    '/media',
+    (req, res, next) => {
+      const requested = req.path.replace(/^\/+/, '');
+      const direct = resolve(uploadDir, requested);
+      if (existsSync(direct)) {
+        return express.static(uploadDir, { fallthrough: false })(req, res, next);
+      }
+      const stripped = requested.replace(/^product_images\//, '');
+      const fallback = resolve(uploadDir, stripped);
+      if (existsSync(fallback) && fallback !== direct) {
+        const rewritable = `/media/${stripped}`;
+        req.url = `/${stripped}`;
+        return express.static(uploadDir, { fallthrough: false })(req, res, next);
+      }
+      return express.static(uploadDir, { fallthrough: false })(req, res, next);
+    },
+  );
 
   // Validation pipe global (whitelist rechaza campos extra, forbidNonWhitelisted los marca como error)
   app.useGlobalPipes(
