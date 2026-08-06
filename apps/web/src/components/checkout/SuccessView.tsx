@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
@@ -16,6 +17,7 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
   const t = useTranslations('checkout');
   const tAccount = useTranslations('header');
   const { getToken } = useAuth();
+  const router = useRouter();
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [waiver, setWaiver] = useState<Waiver | null>(null);
   const [loading, setLoading] = useState(true);
@@ -66,7 +68,16 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
   const pdfUrl = `${API_BASE_URL}/api/v2/waiver/download/${qrCode}`;
 
   return (
-    <div className="card text-center py-10">
+    <div className="card text-center py-10 relative">
+      <Link
+        href="/cuenta"
+        className="absolute top-4 left-4 p-2 text-text-muted hover:text-text-primary hover:bg-surface rounded-full transition z-10"
+        title="Ir a mi cuenta"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+        </svg>
+      </Link>
       <div className="text-6xl mb-3">🎉</div>
       <h1 className="text-2xl md:text-3xl font-heading font-extrabold text-text-primary">
         {t('success')}
