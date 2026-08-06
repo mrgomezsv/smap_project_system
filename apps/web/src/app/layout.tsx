@@ -41,7 +41,10 @@ export default function RootLayout({
       lang="es"
       className={`${titanOne.variable} ${plusJakarta.variable} ${inter.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="font-sans antialiased bg-surface text-text-primary min-h-screen">
+      <body
+        className="font-sans antialiased bg-surface text-text-primary min-h-screen"
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>
