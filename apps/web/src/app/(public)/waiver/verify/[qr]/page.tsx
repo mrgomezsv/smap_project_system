@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { api, API_BASE_URL } from '@/lib/api';
+import { api, PUBLIC_API_URL } from '@/lib/api';
 import type { Waiver } from '@/lib/types';
 import Link from 'next/link';
 
@@ -160,7 +160,7 @@ export default function VerifyWaiverPage() {
           {/* Acciones: Descargar PDF y Renovar/Crear Nuevo Waiver */}
           <div className="pt-2 space-y-3">
             <a
-              href={`${API_BASE_URL}/api/v2/waiver/download/${waiver.qrCode}`}
+              href={`${PUBLIC_API_URL}/api/v2/waiver/download/${waiver.qrCode}`}
               target="_blank"
               rel="noreferrer"
               className="w-full py-3.5 px-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-2xl transition shadow-lg shadow-primary/20 flex items-center justify-center gap-2 text-sm"

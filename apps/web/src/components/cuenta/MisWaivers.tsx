@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { api, API_BASE_URL } from '@/lib/api';
+import { api, PUBLIC_API_URL } from '@/lib/api';
 import { useAuth } from '@/components/auth/AuthProvider';
 import type { Waiver } from '@/lib/types';
 
@@ -142,7 +142,7 @@ export function MisWaivers() {
             key={w.id}
             waiver={w}
             qrDataUrl={qrImages[w.qrCode]}
-            pdfUrl={`${API_BASE_URL}/api/v2/waiver/download/${w.qrCode}`}
+            pdfUrl={`${PUBLIC_API_URL}/api/v2/waiver/download/${w.qrCode}`}
           />
         ))}
       </div>

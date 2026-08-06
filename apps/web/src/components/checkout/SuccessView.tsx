@@ -66,7 +66,7 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
   }, [qrCode, getToken, t]);
 
   const locale = useLocale();
-  const pdfUrl = `${API_BASE_URL}/api/v2/waiver/download/${qrCode}?lang=${locale}`;
+  const pdfUrl = `${PUBLIC_API_URL}/api/v2/waiver/download/${qrCode}?lang=${locale}`;
 
   return (
     <div className="card text-center py-10 relative">

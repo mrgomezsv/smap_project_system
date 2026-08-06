@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import type { Waiver } from '@/lib/types';
-import { API_BASE_URL } from '@/lib/api';
+import { PUBLIC_API_URL } from '@/lib/api';
 
 interface GroupedWaiversListProps {
   waivers: Waiver[];
@@ -219,7 +219,7 @@ export function GroupedWaiversList({
                               <td className="py-3 px-4 text-right">
                                 <div className="flex items-center justify-end gap-1">
                                   <a
-                                    href={`${API_BASE_URL}/api/v2/waiver/download/${w.qrCode}`}
+                                    href={`${PUBLIC_API_URL}/api/v2/waiver/download/${w.qrCode}`}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="p-2 rounded-xl text-text-muted hover:text-primary hover:bg-primary/10 transition border border-transparent hover:border-primary/20"
