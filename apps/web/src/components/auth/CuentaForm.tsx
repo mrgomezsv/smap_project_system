@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
@@ -28,6 +29,13 @@ export function CuentaForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+
+  // Estados para modal de restablecimiento de contraseña
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [resetSuccess, setResetSuccess] = useState(false);
 
   useEffect(() => {
     if (!isFirebaseConfigured()) return;
@@ -94,6 +102,32 @@ export function CuentaForm() {
       setError(messages[code] ?? t('errors.generic'));
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleResetPassword(e: React.FormEvent) {
+    e.preventDefault();
+    setResetError(null);
+    setResetSuccess(false);
+    setResetLoading(true);
+    try {
+      const auth = getFirebaseAuth();
+      if (!auth) {
+        setResetError(t('errors.notConfigured'));
+        return;
+      }
+      await sendPasswordResetEmail(auth, resetEmail);
+      setResetSuccess(true);
+    } catch (e) {
+      console.error('Password reset error:', e);
+      const code = (e as { code?: string }).code ?? '';
+      if (code === 'auth/user-not-found' || code === 'auth/invalid-email') {
+        setResetError(t('errors.invalidCredential'));
+      } else {
+        setResetError(t('errors.generic'));
+      }
+    } finally {
+      setResetLoading(false);
     }
   }
 
@@ -242,7 +276,23 @@ export function CuentaForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1.5">{t('password')}</label>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="block text-sm font-medium text-text-primary">{t('password')}</label>
+            {mode === 'signin' && (
+              <button
+                type="button"
+                onClick={() => {
+                  setResetEmail(email);
+                  setResetError(null);
+                  setResetSuccess(false);
+                  setShowResetModal(true);
+                }}
+                className="text-xs font-semibold text-primary hover:underline"
+              >
+                {t('forgotPassword')}
+              </button>
+            )}
+          </div>
           <PasswordInput
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -285,6 +335,85 @@ export function CuentaForm() {
           </>
         )}
       </p>
+
+      {/* Modal de Restablecimiento de Contraseña */}
+      {showResetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-border relative">
+            <button
+              type="button"
+              onClick={() => setShowResetModal(false)}
+              className="absolute top-4 right-4 text-text-muted hover:text-text-primary text-xl font-bold"
+            >
+              ✕
+            </button>
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 text-primary flex items-center justify-center text-2xl mb-2">
+                🔑
+              </div>
+              <h3 className="text-xl font-heading font-extrabold text-text-primary">
+                {t('forgotModalTitle')}
+              </h3>
+              <p className="text-xs text-text-muted mt-1">
+                {t('forgotModalDesc')}
+              </p>
+            </div>
+
+            {resetSuccess ? (
+              <div className="space-y-4">
+                <div className="p-3 bg-success/10 border border-success/30 text-success text-sm rounded-lg text-center font-medium">
+                  {t('resetSentSuccess')}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowResetModal(false)}
+                  className="btn btn-primary w-full py-2.5 text-xs font-semibold"
+                >
+                  {t('backToLogin')}
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleResetPassword} className="space-y-4">
+                {resetError && (
+                  <div className="p-3 bg-danger/10 border border-danger/30 text-danger text-xs rounded-lg">
+                    ⚠ {resetError}
+                  </div>
+                )}
+                <div>
+                  <label className="block text-xs font-semibold text-text-primary mb-1">
+                    {t('email')}
+                  </label>
+                  <input
+                    type="email"
+                    className="input"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    required
+                    placeholder="ejemplo@correo.com"
+                    autoComplete="email"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowResetModal(false)}
+                    className="btn btn-outline flex-1 py-2.5 text-xs"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={resetLoading}
+                    className="btn btn-primary flex-1 py-2.5 text-xs font-semibold"
+                  >
+                    {resetLoading ? t('processing') : t('sendResetLink')}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
