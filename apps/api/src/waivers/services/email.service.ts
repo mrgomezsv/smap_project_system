@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { Resend } from 'resend';
+import { DEFAULT_WAIVER_TEXT, DEFAULT_WAIVER_TEXT_EN } from './pdf.service';
 
 export interface EmailAttachment {
   filename: string;
@@ -147,6 +148,37 @@ export class EmailService {
       ? data.relatives.map(r => `• ${r.name}${r.age ? ` (${r.age} ${isEn ? 'years' : 'años'})` : ''}`).join('<br/>')
       : (isEn ? 'None registered' : 'Ninguno registrado');
 
+    /**
+     * Bloque bilingüe de Política de Privacidad.
+     * Siempre se incluyen ambos idiomas para que el cliente conserve ambas versiones.
+     */
+    const privacyBlock = `
+      <div style="margin-top:32px; padding:20px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px;">
+        <h3 style="margin:0 0 8px 0; font-size:15px; color:#0f172a;">
+          📜 ${isEn ? 'Privacy Policy (Bilingual)' : 'Política de Privacidad (Bilingüe)'}
+        </h3>
+        <p style="margin:0 0 14px 0; font-size:12px; color:#64748b;">
+          ${isEn
+            ? 'For your reference, you will find the privacy policy in both Spanish and English below.'
+            : 'Para su referencia, encontrará la política de privacidad en español y en inglés a continuación.'}
+        </p>
+
+        <div style="margin-bottom:18px;">
+          <div style="font-weight:700; color:#1E3A8A; font-size:13px; margin-bottom:6px;">
+            🇲🇽 Español (ES)
+          </div>
+          <div style="white-space:pre-wrap; font-size:12px; line-height:1.5; color:#334155; max-height:280px; overflow:auto; padding:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px;">${this.escapeHtml(DEFAULT_WAIVER_TEXT)}</div>
+        </div>
+
+        <div>
+          <div style="font-weight:700; color:#1E3A8A; font-size:13px; margin-bottom:6px;">
+            🇺🇸 English (EN)
+          </div>
+          <div style="white-space:pre-wrap; font-size:12px; line-height:1.5; color:#334155; max-height:280px; overflow:auto; padding:12px; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px;">${this.escapeHtml(DEFAULT_WAIVER_TEXT_EN)}</div>
+        </div>
+      </div>
+    `;
+
     const html = `
 <!DOCTYPE html>
 <html>
@@ -216,6 +248,8 @@ export class EmailService {
       </div>
 
       <p style="font-size:14px; color:#64748b; margin-top:24px;">${helpText}</p>
+
+      ${privacyBlock}
     </div>
     <div class="footer">
       ${footerText}
@@ -226,5 +260,18 @@ export class EmailService {
     `;
 
     return { subject, html };
+  }
+
+  /**
+   * Escapa caracteres HTML para evitar inyección cuando se inserta
+   * texto de políticas de privacidad (con caracteres como &, <, >, ") en HTML.
+   */
+  private escapeHtml(input: string): string {
+    return input
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 }
