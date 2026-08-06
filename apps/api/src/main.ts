@@ -1,18 +1,12 @@
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import * as express from 'express';
-import { join } from 'path';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { BigIntInterceptor } from './common/interceptors/bigint.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // Servir archivos estáticos de productos (/media)
-  app.use('/media', express.static(join(process.cwd(), 'media')));
-  app.use('/media', express.static(join(process.cwd(), '..', 'media')));
 
   // CORS
   const origins = (process.env.CORS_ORIGINS ?? 'http://localhost:3000')

@@ -16,6 +16,8 @@ import { UploadModule } from './upload/upload.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { MetricsModule } from './metrics/metrics.module';
 
+import { MediaController } from './media/media.controller';
+
 @Module({
   imports: [
     PrismaModule,
@@ -32,7 +34,7 @@ import { MetricsModule } from './metrics/metrics.module';
     DashboardModule,
     MetricsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, MediaController],
   providers: [AppService],
 })
 export class AppModule {}
