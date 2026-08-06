@@ -20,10 +20,16 @@ export class QrService {
   private loadLogo() {
     try {
       const possiblePaths = [
-        join(process.cwd(), 'apps/api/src/assets/favicon-watermark.png'),
+        join(process.cwd(), 'dist/assets/favicon-watermark.png'),
         join(process.cwd(), 'src/assets/favicon-watermark.png'),
-        join(process.cwd(), 'apps/api/src/assets/logo.png'),
+        join(__dirname, '../../assets/favicon-watermark.png'),
+        join(process.cwd(), 'apps/api/dist/assets/favicon-watermark.png'),
+        join(process.cwd(), 'apps/api/src/assets/favicon-watermark.png'),
+        join(process.cwd(), 'dist/assets/logo.png'),
         join(process.cwd(), 'src/assets/logo.png'),
+        join(__dirname, '../../assets/logo.png'),
+        join(process.cwd(), 'apps/api/dist/assets/logo.png'),
+        join(process.cwd(), 'apps/api/src/assets/logo.png'),
       ];
       for (const p of possiblePaths) {
         if (existsSync(p)) {
