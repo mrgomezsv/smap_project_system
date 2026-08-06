@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as qrcode from 'qrcode';
-import * as sharp from 'sharp';
+import sharp from 'sharp';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
