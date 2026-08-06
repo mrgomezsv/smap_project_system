@@ -21,6 +21,7 @@ COPY apps/web/postcss.config.* ./apps/web/
 
 WORKDIR /app/apps/web
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_PUBLIC_API_URL=https://kidsfunyfiestasinfantiles.com
 ENV NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyA0f6Kx-Ixq77JzDAKMbxwvZFBXYaoRK4M
 ENV NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=smap-kf.firebaseapp.com
 ENV NEXT_PUBLIC_FIREBASE_PROJECT_ID=smap-kf
