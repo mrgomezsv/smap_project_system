@@ -357,7 +357,7 @@ export class WaiversService {
     dto: CreateWaiverDto,
     qrCode: string,
   ): string {
-    const relativesRows = dto.relatives
+    const relativesRows = (dto.relatives || [])
       .map(
         (r) =>
           `<tr><td style="padding:8px;border:1px solid #ddd">${r.name}</td><td style="padding:8px;border:1px solid #ddd">${r.age}</td></tr>`,

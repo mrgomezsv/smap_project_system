@@ -106,9 +106,35 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
             </div>
           )}
           {waiver.relatives && waiver.relatives.length > 0 && (
+            <div className="mt-3 pt-3 border-t border-border">
+              <div className="flex justify-between py-1 mb-2">
+                <span className="text-text-muted font-semibold">
+                  {t('companions')} ({waiver.relatives.length})
+                </span>
+              </div>
+              <ul className="space-y-1.5">
+                {waiver.relatives.map((r) => (
+                  <li
+                    key={r.id}
+                    className="flex items-center justify-between gap-2 bg-white rounded-lg px-3 py-2 text-sm border border-border"
+                  >
+                    <span className="font-semibold text-text-primary truncate">
+                      {r.relativeName}
+                    </span>
+                    <span className="text-xs text-text-muted shrink-0">
+                      {r.relativeAge} {t('yearsOld')}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {waiver.relatives && waiver.relatives.length === 0 && (
             <div className="flex justify-between py-1">
               <span className="text-text-muted">{t('companions')}</span>
-              <span className="font-semibold text-text-primary">{waiver.relatives.length}</span>
+              <span className="text-text-muted italic text-xs">
+                {t('noCompanions')}
+              </span>
             </div>
           )}
           <div className="flex justify-between py-1">

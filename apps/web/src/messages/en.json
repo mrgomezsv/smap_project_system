@@ -474,6 +474,8 @@
     "myWaiversDesc": "View your generated QRs",
     "exploreProducts": "🎪 Explore products",
     "exploreProductsDesc": "View the full catalog",
+    "logout": "🚪 Log out",
+    "logoutDesc": "Sign out securely from your account",
     "errors": {
       "notConfigured": "Firebase is not configured.",
       "invalidCredential": "Incorrect email or password.",
@@ -493,8 +495,7 @@
     "errorTitle": "We could not load your waivers",
     "errorRetry": "Retry",
     "companions": "Companions",
-    "companion_one": "{count} companion",
-    "companion_other": "{count} companions",
+    "companion": "{count, plural, =0 {No companions} one {# companion} other {# companions}}",
     "createdAt": "Created on {date}",
     "statusActive": "Active",
     "statusInactive": "Inactive",

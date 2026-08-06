@@ -474,6 +474,8 @@
     "myWaiversDesc": "Ver tus QR generados",
     "exploreProducts": "🎪 Explorar productos",
     "exploreProductsDesc": "Ver el catálogo completo",
+    "logout": "🚪 Cerrar sesión",
+    "logoutDesc": "Salir de tu cuenta de forma segura",
     "errors": {
       "notConfigured": "Firebase no está configurado.",
       "invalidCredential": "Email o contraseña incorrectos.",
@@ -493,8 +495,7 @@
     "errorTitle": "No pudimos cargar tus waivers",
     "errorRetry": "Reintentar",
     "companions": "Acompañantes",
-    "companion_one": "{count} acompañante",
-    "companion_other": "{count} acompañantes",
+    "companion": "{count, plural, =0 {Sin acompañantes} one {# acompañante} other {# acompañantes}}",
     "createdAt": "Creado el {date}",
     "statusActive": "Activo",
     "statusInactive": "Inactivo",
