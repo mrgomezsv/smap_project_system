@@ -12,6 +12,7 @@ RUN pnpm install --frozen-lockfile
 
 COPY apps/web/src ./apps/web/src
 COPY apps/web/public ./apps/web/public
+COPY media ./media
 COPY media ./apps/web/public/media
 COPY apps/web/tsconfig*.json ./apps/web/
 COPY apps/web/next.config.* ./apps/web/
@@ -33,6 +34,7 @@ COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/apps/web/node_modules ./apps/web/node_modules
 COPY --from=base /app/apps/web/.next ./apps/web/.next
 COPY --from=base /app/apps/web/public ./apps/web/public
+COPY --from=base /app/media ./apps/web/public/media
 COPY --from=base /app/apps/web/package.json ./apps/web/package.json
 
 EXPOSE 3000
