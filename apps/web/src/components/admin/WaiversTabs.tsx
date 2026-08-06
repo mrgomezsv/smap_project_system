@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { DataTable, type Column } from '@/components/admin/DataTable';
+import { GroupedWaiversList } from './GroupedWaiversList';
 import { VirtualList } from '@/components/ui/VirtualList';
 import { api, API_BASE_URL, ApiError } from '@/lib/api';
 import { getFirebaseAuth } from '@/lib/firebase';
@@ -137,63 +137,7 @@ export function WaiversTabs() {
     inactive: waivers.filter((w) => w.status === 'INACTIVE').length,
   };
 
-  const columns: Column<Waiver>[] = [
-    {
-      key: 'qrCode',
-      label: 'QR',
-      render: (w) => (
-        <code className="font-mono font-bold text-primary text-sm">{w.qrCode}</code>
-      ),
-    },
-    {
-      key: 'userName',
-      label: 'Titular',
-      render: (w) => (
-        <div>
-          <span className="font-semibold text-text-primary text-sm block">{w.userName}</span>
-          <span className="text-xs text-text-muted">{w.userEmail}</span>
-        </div>
-      ),
-    },
-    {
-      key: 'relatives',
-      label: 'Acompañantes',
-      align: 'right',
-      render: (w) => (
-        <span className="font-semibold text-sm text-text-primary">
-          {w.relatives?.length ?? 0}
-        </span>
-      ),
-    },
-    {
-      key: 'createdAt',
-      label: 'Fecha Registro',
-      render: (w) => (
-        <span className="text-text-muted text-xs">
-          {new Date(w.createdAt).toLocaleString('es-ES', {
-            dateStyle: 'short',
-            timeStyle: 'short',
-          })}
-        </span>
-      ),
-    },
-    {
-      key: 'status',
-      label: 'Estado',
-      render: (w) => (
-        w.status === 'ACTIVE' ? (
-          <span className="inline-flex items-center gap-1 bg-success/10 text-success text-xs font-semibold px-2 py-0.5 rounded-full">
-            <span className="w-1.5 h-1.5 bg-success rounded-full" />
-            Activo
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 bg-gray-100 text-text-muted text-xs font-semibold px-2 py-0.5 rounded-full">
-            Inactivo
-          </span>
-        )
-      ),
-    },
-  ];
+
 
   const handleDeleteWaiver = async (waiversToDelete: Waiver[]) => {
     if (waiversToDelete.length === 0) return;
@@ -335,55 +279,14 @@ export function WaiversTabs() {
       {loading ? (
         <div className="p-12 text-center text-text-muted font-medium">Cargando lista de waivers...</div>
       ) : (
-        <DataTable
-          rows={filtered}
-          columns={columns}
-          rowKey={(w) => w.id}
-          selectable={true}
+        <GroupedWaiversList
+          waivers={filtered}
           emptyMessage="No hay waivers que coincidan con la búsqueda."
-          bulkActions={(selectedRows) => (
-            <button
-              onClick={() => handleDeleteWaiver(selectedRows)}
-              className="px-3 py-1.5 bg-red-600 text-white text-xs font-semibold rounded-lg hover:bg-red-700 transition flex items-center gap-1.5"
-            >
-              🗑️ Borrar seleccionados ({selectedRows.length})
-            </button>
-          )}
-          rowActions={(w) => (
-            <div className="flex items-center justify-end gap-1">
-              <a
-                href={`${API_BASE_URL}/api/v2/waiver/download/${w.qrCode}`}
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 rounded-xl text-text-muted hover:text-primary hover:bg-primary/10 transition border border-transparent hover:border-primary/20"
-                title="Descargar PDF"
-              >
-                📄
-              </a>
-              <button
-                onClick={() => handleResendEmail(w)}
-                disabled={sendingEmailQr === w.qrCode}
-                className="p-2 rounded-xl text-text-muted hover:text-info hover:bg-info/10 transition border border-transparent hover:border-info/20 disabled:opacity-50"
-                title="Reenviar Email"
-              >
-                ✉️
-              </button>
-              <button
-                onClick={() => setSelectedWaiverForWa(w)}
-                className="p-2 rounded-xl text-text-muted hover:text-success hover:bg-success/10 transition border border-transparent hover:border-success/20"
-                title="Reenviar por WhatsApp"
-              >
-                💬
-              </button>
-              <button
-                onClick={() => handleDeleteWaiver([w])}
-                className="p-2 rounded-xl text-text-muted hover:text-red-600 hover:bg-red-50 transition border border-transparent hover:border-red-200"
-                title="Borrar Waiver"
-              >
-                🗑️
-              </button>
-            </div>
-          )}
+          onDeleteSelected={handleDeleteWaiver}
+          onResendEmail={handleResendEmail}
+          isSendingEmail={(qr) => sendingEmailQr === qr}
+          onSendWhatsApp={(w) => setSelectedWaiverForWa(w)}
+          onDeleteSingle={(w) => handleDeleteWaiver([w])}
         />
       )}
 
