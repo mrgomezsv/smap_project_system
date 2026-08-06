@@ -38,7 +38,9 @@ COPY --from=base /app/apps/api/dist ./apps/api/dist
 COPY --from=base /app/apps/api/package.json ./apps/api/package.json
 COPY --from=base /app/apps/api/prisma ./apps/api/prisma
 COPY --from=base /app/apps/api/credentials ./apps/api/credentials
+COPY media ./media
 COPY --from=base /app/apps/api/src/assets ./apps/api/dist/assets
+COPY --from=base /app/media ./apps/api/media
 
 EXPOSE 3001
 
