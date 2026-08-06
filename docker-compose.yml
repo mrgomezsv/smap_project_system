@@ -14,7 +14,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     ports:
-      - "3307:3306"
+      - "3309:3306"
     networks:
       - kidsfun-net
 
@@ -35,6 +35,8 @@ services:
       ADMIN_EMAILS: "mrgomez.dev@outlook.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com"
       FIREBASE_CREDENTIALS_PATH: "credentials/smap-kf-firebase-adminsdk-xqq0l-42c4ee6425.json"
       FIREBASE_PROJECT_ID: "smap-kf"
+    volumes:
+      - media_data:/app/apps/api/media
     depends_on:
       - db
     ports:
@@ -52,7 +54,10 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      NEXT_PUBLIC_API_URL: "https://kidsfunyfiestasinfantiles.com/api"
+      NEXT_PUBLIC_API_URL: "https://kidsfunyfiestasinfantiles.com"
+      INTERNAL_API_URL: "http://api:3001"
+    volumes:
+      - media_data:/app/apps/web/public/media
     depends_on:
       - api
     ports:
@@ -63,6 +68,8 @@ services:
 volumes:
   db_data:
     name: proyecto_kidsfun_db_data
+  media_data:
+    name: proyecto_kidsfun_media_data
 
 networks:
   kidsfun-net:
