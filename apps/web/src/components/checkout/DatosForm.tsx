@@ -1,17 +1,43 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useCheckout } from './CheckoutProvider';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 export function DatosForm() {
   const router = useRouter();
+  const { user } = useAuth();
   const { data, updateTitular } = useCheckout();
   const t = useTranslations('checkout');
   const tErr = useTranslations('checkout.errors');
   const tPh = useTranslations('placeholders');
   const [errors, setErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
+
+  useEffect(() => {
+    if (user) {
+      if (!data.titular.name && user.displayName) {
+        updateTitular({ name: user.displayName });
+      }
+      if (!data.titular.email && user.email) {
+        updateTitular({ email: user.email });
+      }
+      // Obtener teléfono de waivers anteriores del usuario si está vacío
+      user.getIdToken().then((token) => {
+        import('@/lib/api').then(({ api }) => {
+          api.get<{ waivers: Array<{ userPhone?: string }> }>('/api/v2/waiver/user/me', { token })
+            .then((res) => {
+              const latestPhone = res.waivers?.find((w) => w.userPhone && w.userPhone.trim() !== '')?.userPhone;
+              if (latestPhone) {
+                updateTitular({ phone: latestPhone });
+              }
+            })
+            .catch(() => {});
+        });
+      });
+    }
+  }, [user]);
 
   function validate(): boolean {
     const next: typeof errors = {};

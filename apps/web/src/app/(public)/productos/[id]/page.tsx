@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { api, ApiError } from '@/lib/api';
 import type { Product } from '@/lib/types';
 import { type Category } from '@/lib/types';
@@ -15,8 +15,9 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const tCategories = await getTranslations('categories');
+  const locale = await getLocale();
   try {
-    const product = await api.get<Product>(`/api/products/${params.id}`);
+    const product = await api.get<Product>(`/api/products/${params.id}?lang=${locale}`);
     const description =
       product.description?.slice(0, 160) ??
       `${product.title} — ${tCategories(product.category as Category)}`;
@@ -42,10 +43,11 @@ export default async function ProductoDetallePage({ params }: PageProps) {
   const tNav = await getTranslations('nav');
   const tCategories = await getTranslations('categories');
   const tHome = await getTranslations('home');
+  const locale = await getLocale();
 
   let product: Product;
   try {
-    product = await api.get<Product>(`/api/products/${params.id}`);
+    product = await api.get<Product>(`/api/products/${params.id}?lang=${locale}`);
   } catch (e) {
     if (e instanceof ApiError && e.status === 404) {
       notFound();

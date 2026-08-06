@@ -23,15 +23,15 @@ export class ProductsController {
   @Public()
   @Cache(60)
   @Get('category/:category')
-  byCategory(@Param('category') category: string) {
-    return this.productsService.findByCategory(category);
+  byCategory(@Param('category') category: string, @Query('lang') lang?: 'es' | 'en') {
+    return this.productsService.findByCategory(category, lang);
   }
 
   @Public()
   @Cache(60)
   @Get(':id')
-  detail(@Param('id') id: string) {
-    return this.productsService.findOne(Number(id));
+  detail(@Param('id') id: string, @Query('lang') lang?: 'es' | 'en') {
+    return this.productsService.findOne(Number(id), lang);
   }
 
   @SkipCache()

@@ -16,6 +16,10 @@ export class QueryProductDto {
   search?: string;
 
   @IsOptional()
+  @IsString()
+  lang?: 'es' | 'en';
+
+  @IsOptional()
   @IsInt()
   @Min(0)
   @Type(() => Number)

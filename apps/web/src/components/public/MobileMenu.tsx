@@ -185,7 +185,7 @@ export function MobileMenu({ links, appLabel, bookLabel }: MobileMenuProps) {
 
           {/* Booking action button */}
           <Link
-            href="/productos"
+            href="/productos?prompt=book"
             className="btn btn-primary w-full py-4 text-center font-extrabold text-base shadow-medium hover:shadow-large hover:scale-[1.01] active:scale-95 transition-all block"
           >
             🚀 {bookLabel}

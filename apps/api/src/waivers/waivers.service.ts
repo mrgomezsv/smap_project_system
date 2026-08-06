@@ -65,7 +65,7 @@ export class WaiversService {
         expiresAt,
         status: 'ACTIVE',
         relatives: {
-          create: dto.relatives.map((r: RelativeDto) => ({
+          create: (dto.relatives || []).map((r: RelativeDto) => ({
             relativeName: r.name,
             relativeAge: r.age,
           })),
@@ -74,46 +74,52 @@ export class WaiversService {
       include: { relatives: true },
     });
 
-    // Generar PDF
-    const pdfBytes = await this.pdfService.generateWaiverPdf({
-      qrCode: waiver.qrCode,
-      userName: waiver.userName,
-      userId: waiver.userId,
-      userEmail: waiver.userEmail,
-      userPhone: waiver.userPhone ?? undefined,
-      createdAt: waiver.createdAt,
-      relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
-      legalText: await this.getLegalText(),
-    });
+    // Generar PDF y enviar email sin romper la creación del waiver si el envío falla
+    let emailSent = false;
+    let pdfBytes: Uint8Array | null = null;
 
-    // Enviar email con plantilla bilingüe y PDF adjunto
-    const { subject, html } = this.emailService.getWaiverEmailTemplate({
-      userName: dto.userName,
-      userEmail: dto.userEmail,
-      userPhone: dto.userPhone,
-      relatives: dto.relatives?.map((r) => ({ name: r.name, age: r.age })),
-      qrCode,
-      lang: 'es',
-    });
+    try {
+      pdfBytes = await this.pdfService.generateWaiverPdf({
+        qrCode: waiver.qrCode,
+        userName: waiver.userName,
+        userId: waiver.userId,
+        userEmail: waiver.userEmail,
+        userPhone: waiver.userPhone ?? undefined,
+        createdAt: waiver.createdAt,
+        relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
+        legalText: await this.getLegalText(),
+      });
 
-    const emailSent = await this.emailService.send({
-      to: dto.userEmail,
-      subject,
-      html,
-      attachments: [
-        {
-          filename: `waiver_${qrCode}.pdf`,
-          content: Buffer.from(pdfBytes),
-          contentType: 'application/pdf',
-        },
-      ],
-    });
+      const { subject, html } = this.emailService.getWaiverEmailTemplate({
+        userName: dto.userName,
+        userEmail: dto.userEmail,
+        userPhone: dto.userPhone,
+        relatives: dto.relatives?.map((r) => ({ name: r.name, age: r.age })),
+        qrCode,
+        lang: 'es',
+      });
+
+      emailSent = await this.emailService.send({
+        to: dto.userEmail,
+        subject,
+        html,
+        attachments: [
+          {
+            filename: `waiver_${qrCode}.pdf`,
+            content: Buffer.from(pdfBytes),
+            contentType: 'application/pdf',
+          },
+        ],
+      });
+    } catch (err: any) {
+      this.logger.error(`Error procesando PDF o Email para el waiver ${qrCode}: ${err.message}`, err.stack);
+    }
 
     return {
       waiver,
       qrCode: waiver.qrCode,
       emailSent,
-      pdfSize: pdfBytes.length,
+      pdfSize: pdfBytes ? pdfBytes.length : 0,
     };
   }
 

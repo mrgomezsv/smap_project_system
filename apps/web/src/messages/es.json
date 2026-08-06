@@ -65,7 +65,8 @@
     "all": "Todos",
     "notFound": "No encontramos productos",
     "notFoundDesc": "Intenta con otra categoría o limpia los filtros.",
-    "viewAll": "Ver todos los productos"
+    "viewAll": "Ver todos los productos",
+    "bookPrompt": "👉 Para hacer una reserva, haz clic en el producto de tu interés y selecciona 'Reservar ahora'."
   },
   "product": {
     "view": "Ver en sitio público",
@@ -89,7 +90,15 @@
     "bookNow": "Reservar ahora",
     "contactHelp": "Te contactaremos en menos de 24 horas",
     "comments": "Comentarios",
-    "commentsPlaceholder": "Pronto podrás dejar comentarios aquí. Inicia sesión para opinar."
+    "commentsPlaceholder": "Escribe tu comentario o pregunta sobre este producto...",
+    "commentSubmitting": "Publicando...",
+    "commentSubmit": "Publicar comentario",
+    "commentAuthPrompt": "¿Tienes alguna duda o quieres opinar sobre este producto?",
+    "commentLoginCta": "Inicia sesión para comentar",
+    "commentsLoading": "Cargando comentarios...",
+    "noComments": "Aún no hay comentarios. ¡Sé el primero en dejar una opinión!",
+    "anonymousUser": "Usuario",
+    "commentError": "Error al enviar el comentario"
   },
   "event": {
     "upcoming": "Próximos Eventos",

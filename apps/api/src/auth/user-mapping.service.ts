@@ -34,22 +34,25 @@ export class UserMappingService {
       },
     });
 
-    const user = existingUser
-      ? await this.prisma.user.update({
-          where: { id: existingUser.id },
-          data: {
-            email,
-            firstName: name,
-          },
-        })
-      : await this.prisma.user.create({
-          data: {
-            username,
-            email,
-            firstName: name,
-            isActive: true,
-          },
-        });
+    let user;
+    if (existingUser) {
+      user = await this.prisma.user.update({
+        where: { id: existingUser.id },
+        data: {
+          email: existingUser.email === email ? email : existingUser.email,
+          firstName: name,
+        },
+      });
+    } else {
+      user = await this.prisma.user.create({
+        data: {
+          username,
+          email,
+          firstName: name,
+          isActive: true,
+        },
+      });
+    }
 
     return {
       uid: payload.uid,

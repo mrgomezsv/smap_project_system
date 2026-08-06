@@ -65,7 +65,8 @@
     "all": "All",
     "notFound": "No products found",
     "notFoundDesc": "Try another category or clear filters.",
-    "viewAll": "View all products"
+    "viewAll": "View all products",
+    "bookPrompt": "👉 To make a reservation, click on the product you want and select 'Book now'."
   },
   "product": {
     "view": "View public site",
@@ -89,7 +90,15 @@
     "bookNow": "Book now",
     "contactHelp": "We'll get back to you within 24 hours",
     "comments": "Comments",
-    "commentsPlaceholder": "You will be able to leave comments here soon. Log in to review."
+    "commentsPlaceholder": "Write your comment or question about this product...",
+    "commentSubmitting": "Posting...",
+    "commentSubmit": "Post comment",
+    "commentAuthPrompt": "Have a question or want to review this product?",
+    "commentLoginCta": "Log in to comment",
+    "commentsLoading": "Loading comments...",
+    "noComments": "No comments yet. Be the first to leave a review!",
+    "anonymousUser": "User",
+    "commentError": "Failed to send comment"
   },
   "event": {
     "upcoming": "Upcoming Events",

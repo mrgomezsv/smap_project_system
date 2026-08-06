@@ -1,12 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { TranslationService } from '../common/translation.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly translationService: TranslationService,
+  ) {}
 
   async findAll(query: QueryProductDto) {
     const where: Record<string, unknown> = {};
@@ -27,17 +31,25 @@ export class ProductsService {
       this.prisma.product.count({ where }),
     ]);
 
-    return { items, total, skip: query.skip ?? 0, take: query.take ?? 20 };
+    const translatedItems = query.lang
+      ? await Promise.all(items.map((item) => this.translationService.translateProduct(item, query.lang)))
+      : items;
+
+    return { items: translatedItems, total, skip: query.skip ?? 0, take: query.take ?? 20 };
   }
 
-  async findByCategory(category: string) {
-    return this.prisma.product.findMany({
+  async findByCategory(category: string, lang?: 'es' | 'en') {
+    const items = await this.prisma.product.findMany({
       where: { category, publicated: true },
       orderBy: { created: 'desc' },
     });
+
+    return lang
+      ? Promise.all(items.map((item) => this.translationService.translateProduct(item, lang)))
+      : items;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, lang?: 'es' | 'en') {
     const product = await this.prisma.product.findUnique({
       where: { id: BigInt(id) },
       include: {
@@ -48,7 +60,7 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException(`Producto #${id} no encontrado`);
     }
-    return product;
+    return lang ? this.translationService.translateProduct(product, lang) : product;
   }
 
   async create(dto: CreateProductDto, userId: number) {

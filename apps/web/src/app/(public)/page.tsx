@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { api } from '@/lib/api';
 import type { Product } from '@/lib/types';
 import { type Category } from '@/lib/types';
@@ -20,10 +20,11 @@ export default async function HomePage() {
   const tHome = await getTranslations('home');
   const tCategories = await getTranslations('categories');
   const tProduct = await getTranslations('product');
+  const locale = await getLocale();
 
   let products: Product[] = [];
   try {
-    const res = await api.get<{ items: Product[] }>('/api/products?take=8&publicated=true');
+    const res = await api.get<{ items: Product[] }>(`/api/products?take=8&publicated=true&lang=${locale}`);
     products = res.items;
   } catch (e) {
     console.error('Error cargando productos:', e);

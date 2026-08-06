@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { api } from '@/lib/api';
 import type { Product, ProductsListResponse } from '@/lib/types';
 import { type Category } from '@/lib/types';
@@ -10,6 +10,7 @@ interface SearchParams {
   search?: string;
   take?: string;
   skip?: string;
+  prompt?: string;
 }
 
 const ALL_CATEGORIES: Array<{ key: Category; emoji: string }> = [
@@ -29,11 +30,13 @@ export default async function ProductosPage({
 }) {
   const tCatalog = await getTranslations('catalog');
   const tCategories = await getTranslations('categories');
+  const locale = await getLocale();
 
   const selectedCategory = searchParams.category as Category | undefined;
   const search = searchParams.search ?? '';
   const skip = Number(searchParams.skip ?? 0);
-  const take = Number(searchParams.take ?? 24);
+  const take = Number(searchParams.take ?? 100);
+  const isBookPrompt = searchParams.prompt === 'book';
 
   let data: ProductsListResponse = { items: [], total: 0, skip, take };
   try {
@@ -43,6 +46,7 @@ export default async function ProductosPage({
     query.set('publicated', 'true');
     query.set('skip', String(skip));
     query.set('take', String(take));
+    query.set('lang', locale);
 
     data = await api.get<ProductsListResponse>(`/api/products?${query.toString()}`);
   } catch (e) {
@@ -70,6 +74,23 @@ export default async function ProductosPage({
       </section>
 
       <div className="container py-10">
+        {/* Burbuja informativa cuando se pulsa en "Reservar" */}
+        {isBookPrompt && (
+          <div className="mb-8 p-4 md:p-5 rounded-2xl bg-gradient-to-r from-brand-yellow/20 via-primary/10 to-party-pink/20 border-2 border-brand-yellow/60 shadow-medium flex items-center gap-4 animate-bounce-short">
+            <span className="text-3xl shrink-0">💡</span>
+            <div className="flex-1">
+              <p className="text-sm md:text-base font-bold text-text-primary">
+                {tCatalog('bookPrompt')}
+              </p>
+            </div>
+            <Link
+              href="/productos"
+              className="text-xs text-text-muted hover:text-text-primary underline font-medium shrink-0"
+            >
+              ✕
+            </Link>
+          </div>
+        )}
         {/* Filtros horizontales (chips) */}
         <div className="mb-8 flex overflow-x-auto pb-2 scrollbar-none md:flex-wrap gap-2 -mx-4 px-4 md:mx-0 md:px-0">
           <Link

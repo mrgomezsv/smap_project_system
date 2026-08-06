@@ -121,7 +121,7 @@ export function ProductCommentsSection({
               rows={3}
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Escribe tu comentario o pregunta sobre este producto..."
+              placeholder={tProduct('commentsPlaceholder')}
               className="input w-full p-3 resize-none text-sm"
               required
             />
@@ -132,21 +132,21 @@ export function ProductCommentsSection({
                 disabled={submitting || !newComment.trim()}
                 className="btn btn-primary px-6 py-2.5 text-sm font-semibold shadow-soft hover:shadow-medium disabled:opacity-50"
               >
-                {submitting ? 'Publicando...' : 'Publicar comentario'}
+                {submitting ? tProduct('commentSubmitting') : tProduct('commentSubmit')}
               </button>
             </div>
           </form>
         ) : (
           <div className="text-center py-4 space-y-3">
             <p className="text-sm text-text-muted">
-              ¿Tienes alguna duda o quieres opinar sobre este producto?
+              {tProduct('commentAuthPrompt')}
             </p>
             <button
               type="button"
               onClick={handleRequireAuth}
               className="btn btn-primary px-6 py-2.5 text-sm font-semibold shadow-soft hover:shadow-medium inline-flex items-center gap-2"
             >
-              <span>🔒</span> Inicia sesión para comentar
+              <span>🔒</span> {tProduct('commentLoginCta')}
             </button>
           </div>
         )}
@@ -155,7 +155,7 @@ export function ProductCommentsSection({
       {/* Lista de comentarios */}
       {loading ? (
         <div className="card text-center py-8 text-text-muted text-sm animate-pulse">
-          Cargando comentarios...
+          {tProduct('commentsLoading')}
         </div>
       ) : comments.length > 0 ? (
         <div className="space-y-4">
@@ -166,10 +166,10 @@ export function ProductCommentsSection({
             >
               <div className="flex items-center justify-between">
                 <span className="font-bold text-sm text-text-primary">
-                  {item.authorName || 'Usuario'}
+                  {item.authorName || tProduct('anonymousUser')}
                 </span>
                 <span className="text-xs text-text-muted">
-                  {new Date(item.createdAt).toLocaleDateString('es-ES', {
+                  {new Date(item.createdAt).toLocaleDateString(undefined, {
                     day: 'numeric',
                     month: 'short',
                     year: 'numeric',
@@ -186,7 +186,7 @@ export function ProductCommentsSection({
         <div className="card text-center py-12">
           <div className="text-5xl mb-3 opacity-30">💬</div>
           <p className="text-text-muted text-sm">
-            Aún no hay comentarios. ¡Sé el primero en dejar una opinión!
+            {tProduct('noComments')}
           </p>
         </div>
       )}

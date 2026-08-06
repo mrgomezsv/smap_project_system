@@ -43,8 +43,9 @@ export class CreateWaiverDto {
   })
   userPhone?: string;
 
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => RelativeDto)
-  relatives!: RelativeDto[];
+  relatives?: RelativeDto[];
 }
