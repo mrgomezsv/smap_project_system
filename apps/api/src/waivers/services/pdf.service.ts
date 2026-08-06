@@ -355,8 +355,9 @@ export class PdfService {
     }
 
     // === TÉRMINOS Y CONDICIONES (BILINGÜE: ES + EN) ===
-    const spanishText = data.legalText && data.legalText.trim().length > 0 ? data.legalText : DEFAULT_WAIVER_TEXT;
-    const englishText = DEFAULT_WAIVER_TEXT_EN;
+    const isPlaceholder = !data.legalText || data.legalText.trim().length < 100 || data.legalText.includes('por defecto');
+    const spanishText: string = isPlaceholder ? DEFAULT_WAIVER_TEXT : (data.legalText || DEFAULT_WAIVER_TEXT);
+    const englishText: string = DEFAULT_WAIVER_TEXT_EN;
 
     const renderLegalSection = (title: string, content: string, contTitle: string) => {
       page.drawText(title, {
@@ -399,25 +400,39 @@ export class PdfService {
       y -= 10;
     };
 
-    if (spanishText) {
+    if (lang === 'en') {
+      renderLegalSection(
+        'PRIVACY POLICY AND TERMS (EN)',
+        englishText,
+        'PRIVACY POLICY AND TERMS (EN) — Continued',
+      );
+      y -= 6;
+      page.drawLine({
+        start: { x: margin, y },
+        end: { x: width - margin, y },
+        thickness: 0.6,
+        color: this.gray,
+      });
+      y -= 14;
       renderLegalSection(
         'POLÍTICA DE PRIVACIDAD Y TÉRMINOS (ES)',
         spanishText,
         'POLÍTICA DE PRIVACIDAD Y TÉRMINOS (ES) — Continuación',
       );
-    }
-
-    // Separador visual entre idiomas
-    y -= 6;
-    page.drawLine({
-      start: { x: margin, y },
-      end: { x: width - margin, y },
-      thickness: 0.6,
-      color: this.gray,
-    });
-    y -= 14;
-
-    if (englishText) {
+    } else {
+      renderLegalSection(
+        'POLÍTICA DE PRIVACIDAD Y TÉRMINOS (ES)',
+        spanishText,
+        'POLÍTICA DE PRIVACIDAD Y TÉRMINOS (ES) — Continuación',
+      );
+      y -= 6;
+      page.drawLine({
+        start: { x: margin, y },
+        end: { x: width - margin, y },
+        thickness: 0.6,
+        color: this.gray,
+      });
+      y -= 14;
       renderLegalSection(
         'PRIVACY POLICY AND TERMS (EN)',
         englishText,
