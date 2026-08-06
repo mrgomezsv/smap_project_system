@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { api, API_BASE_URL, ApiError } from '@/lib/api';
 import { useAuth } from '@/components/auth/AuthProvider';
 import type { Waiver } from '@/lib/types';
@@ -65,7 +65,8 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
     };
   }, [qrCode, getToken, t]);
 
-  const pdfUrl = `${API_BASE_URL}/api/v2/waiver/download/${qrCode}`;
+  const locale = useLocale();
+  const pdfUrl = `${API_BASE_URL}/api/v2/waiver/download/${qrCode}?lang=${locale}`;
 
   return (
     <div className="card text-center py-10 relative">

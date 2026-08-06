@@ -106,7 +106,25 @@ export class PdfService {
 
   constructor(private readonly qrService: QrService) {}
 
-  async generateWaiverPdf(data: WaiverPdfData): Promise<Uint8Array> {
+  async generateWaiverPdf(data: WaiverPdfData, lang: string = 'es'): Promise<Uint8Array> {
+    const isEn = lang === 'en';
+    const t = {
+      title1: isEn ? 'WAIVER OF LIABILITY' : 'DOCUMENTO DE EXENCIÓN DE',
+      title2: isEn ? 'DOCUMENT' : 'RESPONSABILIDAD (WAIVER)',
+      regInfo: isEn ? 'REGISTRATION INFORMATION' : 'INFORMACIÓN DE REGISTRO',
+      dateStr: isEn ? 'ISSUE DATE:' : 'FECHA DE EMISIÓN:',
+      expStr: isEn ? 'VALID UNTIL:' : 'VIGENCIA HASTA:',
+      client: isEn ? 'CLIENT / RESPONSIBLE:' : 'CLIENTE / RESPONSABLE:',
+      phone: isEn ? 'PHONE:' : 'TELÉFONO:',
+      famTitle: isEn ? 'REGISTERED FAMILY AND COMPANIONS' : 'FAMILIARES Y ACOMPAÑANTES REGISTRADOS',
+      famName: isEn ? 'Relative Name' : 'Nombre del Familiar',
+      famAge: isEn ? 'Age' : 'Edad',
+      signTitle: isEn ? 'ACCEPTANCE AND SIGNATURE' : 'ACEPTACIÓN Y FIRMA',
+      sign1: isEn ? 'Signature of Client / Responsible' : 'Firma del Cliente / Responsable',
+      sign2: isEn ? 'Signature of Parent or Guardian (if applicable)' : 'Firma de Padre o Tutor (si aplica)',
+      footer: isEn ? `This document was generated electronically on ` : `Este documento fue generado electrónicamente el `,
+    };
+
     const doc = await PDFDocument.create();
     let page = doc.addPage([612, 792]); // Letter size
     const { width, height } = page.getSize();
@@ -193,14 +211,14 @@ export class PdfService {
     }
 
     // Título centrado
-    page.drawText('DOCUMENTO DE EXENCIÓN DE', {
+    page.drawText(t.title1, {
       x: margin + 110,
       y: y - 15,
       size: 12,
       font: helveticaBold,
       color: this.primary,
     });
-    page.drawText('RESPONSABILIDAD (WAIVER)', {
+    page.drawText(t.title2, {
       x: margin + 110,
       y: y - 30,
       size: 12,
@@ -226,7 +244,7 @@ export class PdfService {
     y -= qrDim.height + 40;
 
     // === INFORMACIÓN DE REGISTRO ===
-    page.drawText('INFORMACIÓN DE REGISTRO', {
+    page.drawText(t.regInfo, {
       x: margin,
       y: y,
       size: 12,
@@ -243,7 +261,7 @@ export class PdfService {
       minute: '2-digit',
     });
 
-    page.drawText(`FECHA DE EMISIÓN: ${fechaStr}`, { x: margin, y, size: 10, font: helveticaBold });
+    page.drawText(`${t.dateStr} ${fechaStr}`, { x: margin, y, size: 10, font: helveticaBold });
     y -= 18;
 
     if (data.expiresAt) {
@@ -254,24 +272,24 @@ export class PdfService {
         hour: '2-digit',
         minute: '2-digit',
       });
-      page.drawText(`VIGENCIA HASTA: ${expStr}`, { x: margin, y, size: 10, font: helveticaBold, color: this.primary });
+      page.drawText(`${t.expStr} ${expStr}`, { x: margin, y, size: 10, font: helveticaBold, color: this.primary });
       y -= 18;
     }
 
-    page.drawText(`CLIENTE / RESPONSABLE: ${data.userName}`, { x: margin, y, size: 10, font: helvetica });
+    page.drawText(`${t.client} ${data.userName}`, { x: margin, y, size: 10, font: helvetica });
     y -= 18;
     page.drawText(`ID: ${data.userId}`, { x: margin, y, size: 10, font: helvetica });
     y -= 18;
     page.drawText(`EMAIL: ${data.userEmail}`, { x: margin, y, size: 10, font: helvetica });
     if (data.userPhone) {
       y -= 18;
-      page.drawText(`TELÉFONO: ${data.userPhone}`, { x: margin, y, size: 10, font: helvetica });
+      page.drawText(`${t.phone} ${data.userPhone}`, { x: margin, y, size: 10, font: helvetica });
     }
     y -= 30;
 
     // === FAMILIARES ===
     if (data.relatives.length > 0) {
-      page.drawText('FAMILIARES Y ACOMPAÑANTES REGISTRADOS', {
+      page.drawText(t.famTitle, {
         x: margin,
         y,
         size: 12,
@@ -293,14 +311,14 @@ export class PdfService {
         height: rowHeight,
         color: this.lightGray,
       });
-      page.drawText('Nombre del Familiar', {
+      page.drawText(t.famName, {
         x: tableX + 8,
         y: y - 14,
         size: 11,
         font: helveticaBold,
         color: this.primary,
       });
-      page.drawText('Edad', {
+      page.drawText(t.famAge, {
         x: tableX + colWidths[0] + 8,
         y: y - 14,
         size: 11,
@@ -414,7 +432,7 @@ export class PdfService {
       y = height - margin - 40;
     }
 
-    page.drawText('ACEPTACIÓN Y FIRMA', {
+    page.drawText(t.signTitle, {
       x: margin,
       y,
       size: 11,
@@ -436,13 +454,13 @@ export class PdfService {
       color: this.gray,
     });
 
-    page.drawText('Firma del Cliente / Responsable', {
+    page.drawText(t.sign1, {
       x: margin,
       y: y - 12,
       size: 9,
       font: helvetica,
     });
-    page.drawText('Firma de Padre o Tutor (si aplica)', {
+    page.drawText(t.sign2, {
       x: width / 2 + 20,
       y: y - 12,
       size: 9,
@@ -451,7 +469,7 @@ export class PdfService {
 
     // === FOOTER ===
     page.drawText(
-      `Este documento fue generado electrónicamente el ${data.createdAt.toLocaleString('es-ES')}.`,
+      `${t.footer}${data.createdAt.toLocaleString(isEn ? 'en-US' : 'es-ES')}.`,
       {
         x: margin,
         y: margin,

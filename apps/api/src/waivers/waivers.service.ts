@@ -242,7 +242,7 @@ export class WaiversService {
   /**
    * Genera el PDF para descarga por parte del admin.
    */
-  async generatePdf(qrCode: string): Promise<Buffer> {
+  async generatePdf(qrCode: string, lang: string = 'es'): Promise<Buffer> {
     const waiver = await this.prisma.waiverQRV2.findUnique({
       where: { qrCode: qrCode.toUpperCase() },
       include: { relatives: true },
@@ -260,7 +260,7 @@ export class WaiversService {
       expiresAt: waiver.expiresAt,
       relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
       legalText: await this.getLegalText(),
-    });
+    }, lang);
     return Buffer.from(pdfBytes);
   }
 

@@ -100,9 +100,10 @@ export class WaiversController {
   @Get('download/:qr')
   async download(
     @Param('qr') qr: string,
+    @Query('lang') lang: string,
     @Res() res: Response,
   ): Promise<void> {
-    const pdfBuffer = await this.waiversService.generatePdf(qr);
+    const pdfBuffer = await this.waiversService.generatePdf(qr, lang);
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="Waiver_${qr.toUpperCase()}.pdf"`,
