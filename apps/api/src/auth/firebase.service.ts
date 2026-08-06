@@ -68,4 +68,9 @@ export class FirebaseService implements OnModuleInit {
     }
     return getAuth().listUsers(maxResults, pageToken);
   }
+
+  async generatePasswordResetLink(email: string): Promise<string | null> {
+    if (!this.app) return null;
+    return getAuth().generatePasswordResetLink(email);
+  }
 }

@@ -1,12 +1,38 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, BadRequestException } from '@nestjs/common';
 import { CurrentUser } from './decorators/current-user.decorator';
 import type { AuthUser } from './decorators/current-user.decorator';
 import { FirebaseService } from './firebase.service';
+import { EmailService } from '../waivers/services/email.service';
 import { assertAdminEmail } from './admin-allowlist';
+import { Public } from './decorators/public.decorator';
 
 @Controller('api/auth')
 export class AuthController {
-  constructor(private readonly firebaseService: FirebaseService) {}
+  constructor(
+    private readonly firebaseService: FirebaseService,
+    private readonly emailService: EmailService,
+  ) {}
+
+  /**
+   * Genera el enlace de restablecimiento de contraseña vía Firebase Admin
+   * y envía un correo HTML con la plantilla corporativa de Kidsfun vía Resend.
+   */
+  @Public()
+  @Post('request-password-reset')
+  async requestPasswordReset(@Body() body: { email: string; lang?: 'es' | 'en' }) {
+    if (!body?.email) {
+      throw new BadRequestException('El correo electrónico es requerido');
+    }
+    try {
+      const link = await this.firebaseService.generatePasswordResetLink(body.email);
+      if (link) {
+        await this.emailService.sendPasswordReset(body.email, link, body.lang ?? 'es');
+      }
+    } catch (e) {
+      // Por seguridad y privacidad no revelamos si el usuario existe o no
+    }
+    return { ok: true };
+  }
 
   /**
    * Devuelve el usuario autenticado actualmente.

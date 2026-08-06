@@ -4,6 +4,7 @@ import { FirebaseService } from './firebase.service';
 import { UserMappingService } from './user-mapping.service';
 import { FirebaseAuthGuard } from './firebase-auth.guard';
 import { AuthController } from './auth.controller';
+import { EmailService } from '../waivers/services/email.service';
 
 @Global()
 @Module({
@@ -11,11 +12,12 @@ import { AuthController } from './auth.controller';
   providers: [
     FirebaseService,
     UserMappingService,
+    EmailService,
     {
       provide: APP_GUARD,
       useClass: FirebaseAuthGuard,
     },
   ],
-  exports: [FirebaseService, UserMappingService],
+  exports: [FirebaseService, UserMappingService, EmailService],
 })
 export class AuthModule {}

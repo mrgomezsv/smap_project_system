@@ -15,6 +15,7 @@ import {
 import Link from 'next/link';
 import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
 import { PasswordInput } from '@/components/ui/PasswordInput';
+import { api } from '@/lib/api';
 
 export function CuentaForm() {
   const t = useTranslations('auth');
@@ -111,21 +112,19 @@ export function CuentaForm() {
     setResetSuccess(false);
     setResetLoading(true);
     try {
-      const auth = getFirebaseAuth();
-      if (!auth) {
-        setResetError(t('errors.notConfigured'));
-        return;
+      try {
+        const locale = typeof window !== 'undefined' ? (document.documentElement.lang || 'es') : 'es';
+        await api.post('/api/auth/request-password-reset', { email: resetEmail, lang: locale });
+      } catch {
+        const auth = getFirebaseAuth();
+        if (auth) {
+          await sendPasswordResetEmail(auth, resetEmail);
+        }
       }
-      await sendPasswordResetEmail(auth, resetEmail);
       setResetSuccess(true);
     } catch (e) {
       console.error('Password reset error:', e);
-      const code = (e as { code?: string }).code ?? '';
-      if (code === 'auth/user-not-found' || code === 'auth/invalid-email') {
-        setResetError(t('errors.invalidCredential'));
-      } else {
-        setResetError(t('errors.generic'));
-      }
+      setResetError(t('errors.generic'));
     } finally {
       setResetLoading(false);
     }
