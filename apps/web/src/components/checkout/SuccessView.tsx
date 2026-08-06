@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
-import { api, API_BASE_URL, ApiError } from '@/lib/api';
+import { api, PUBLIC_API_URL, ApiError } from '@/lib/api';
 import { useAuth } from '@/components/auth/AuthProvider';
 import type { Waiver } from '@/lib/types';
 
