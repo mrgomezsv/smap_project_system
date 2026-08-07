@@ -11,10 +11,10 @@
 const isServer = typeof window === 'undefined';
 
 const API_BASE_URL = isServer
-  ? (process.env.INTERNAL_API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'https://kidsfunyfiestasinfantiles.com')
-  : (process.env.NEXT_PUBLIC_API_URL ?? 'https://kidsfunyfiestasinfantiles.com');
+  ? (process.env.INTERNAL_API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001')
+  : (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001');
 
-const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://kidsfunyfiestasinfantiles.com';
+const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
 export class ApiError extends Error {
   status: number;
