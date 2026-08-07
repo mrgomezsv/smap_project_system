@@ -8,7 +8,7 @@ WORKDIR /repo
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
-COPY packages/shared/package.json ./packages/shared/ 2>/dev/null || true
+COPY packages/shared/package.json* ./packages/shared/
 
 RUN pnpm install --filter web... --frozen-lockfile
 
@@ -31,7 +31,7 @@ ENV NEXT_PUBLIC_FIREBASE_APP_ID=1:270487164933:web:6575488d5a733fe878a46c
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
-COPY packages/shared/package.json ./packages/shared/ 2>/dev/null || true
+COPY packages/shared/package.json* ./packages/shared/
 
 RUN pnpm install --filter web... --frozen-lockfile
 

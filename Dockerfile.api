@@ -9,7 +9,7 @@ WORKDIR /repo
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
-COPY packages/shared/package.json ./packages/shared/ 2>/dev/null || true
+COPY packages/shared/package.json* ./packages/shared/
 
 # Instalar solo deps de prod del api
 RUN pnpm install --filter api... --frozen-lockfile --prod
@@ -24,7 +24,7 @@ WORKDIR /repo
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml .npmrc ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
-COPY packages/shared/package.json ./packages/shared/ 2>/dev/null || true
+COPY packages/shared/package.json* ./packages/shared/
 
 RUN pnpm install --filter api... --frozen-lockfile
 
