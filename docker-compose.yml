@@ -4,7 +4,6 @@ services:
   # Base de Datos MariaDB reutilizando el contenedor y datos existentes en el VPS
   db:
     image: mariadb:10.6
-    container_name: proyecto_kidsfun-db-1
     restart: always
     environment:
       MYSQL_DATABASE: smap_kf
@@ -24,7 +23,6 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-    container_name: kidsfun-api
     restart: always
     environment:
       NODE_ENV: production
@@ -51,7 +49,6 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
-    container_name: kidsfun-web
     restart: always
     environment:
       NODE_ENV: production
