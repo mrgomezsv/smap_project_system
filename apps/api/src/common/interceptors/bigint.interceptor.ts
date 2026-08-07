@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Injectable,
   NestInterceptor,
+  StreamableFile,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -18,11 +19,26 @@ import { Prisma } from '@prisma/client';
  *
  * Sin esto, las respuestas lanzan "Do not know how to serialize a BigInt"
  * y los Decimals se muestran como {s,e,d}.
+ *
+ * NOTA: NO se aplica a `StreamableFile` (u otros valores no-JSON) para no
+ * romper el streaming de archivos. Si se interviniera, Nest serializaría el
+ * objeto del stream como JSON en vez de pipear el archivo al cliente.
  */
 @Injectable()
 export class BigIntInterceptor implements NestInterceptor {
   intercept(_context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    return next.handle().pipe(map((data) => this.transform(data)));
+    return next.handle().pipe(
+      map((data) => {
+        if (this.shouldSkip(data)) return data;
+        return this.transform(data);
+      }),
+    );
+  }
+
+  private shouldSkip(value: unknown): boolean {
+    if (value === null || value === undefined) return true;
+    if (value instanceof StreamableFile) return true;
+    return false;
   }
 
   private transform(value: unknown): unknown {
