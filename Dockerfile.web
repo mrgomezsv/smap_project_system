@@ -46,7 +46,11 @@ ENV HOSTNAME=0.0.0.0
 # Copiar artefactos de Next.js
 COPY --from=build /repo/apps/web/.next/standalone ./
 COPY --from=build /repo/apps/web/.next/static ./.next/static
-COPY --from=build /repo/apps/web/public ./public
+# El standalone de Next.js sirve /public relativo a __dirname del server.js
+# (apps/web/public). Hay que copiar ahí la carpeta public para que el
+# servidor la encuentre; el volumen media_data se monta sobre
+# apps/web/public/media para servir las imágenes de productos en /media/*.
+COPY --from=build /repo/apps/web/public ./apps/web/public
 
 EXPOSE 3000
 
