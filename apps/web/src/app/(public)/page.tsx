@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getTranslations, getLocale } from 'next-intl/server';
+import { ProductCard } from '@/components/public/ProductCard';
 import { api } from '@/lib/api';
 import type { Product } from '@/lib/types';
 import { type Category } from '@/lib/types';
@@ -176,36 +177,7 @@ export default async function HomePage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.slice(0, 8).map((product) => (
-                <Link
-                  key={product.id}
-                  href={`/productos/${product.id}`}
-                  className="group card hover:shadow-large hover:-translate-y-1 transition-all overflow-hidden p-0"
-                >
-                  <div className="aspect-[4/3] bg-gray-100 overflow-hidden relative">
-                    <img
-                      src={`/media/${product.img}`}
-                      alt={product.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <span className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-2.5 py-1 rounded-full">
-                      {tCategories(product.category)}
-                    </span>
-                  </div>
-                  <div className="p-5">
-                    <h3 className="font-heading font-bold text-text-primary line-clamp-1 group-hover:text-primary transition-colors">
-                      {product.title}
-                    </h3>
-
-                    <div className="mt-3 flex items-center gap-4 text-xs text-text-muted">
-                      <span className="flex items-center gap-1">
-                        <span className="text-party-pink">♥</span> {product._count?.likes ?? 0}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        💬 {product._count?.comments ?? 0}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}
