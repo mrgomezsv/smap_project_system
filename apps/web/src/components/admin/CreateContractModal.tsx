@@ -14,6 +14,8 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [createdUrl, setCreatedUrl] = useState<string | null>(null);
 
+  const [hasDeposit, setHasDeposit] = useState(false);
+
   const [formData, setFormData] = useState({
     clientName: '',
     clientEmail: '',
@@ -22,8 +24,8 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
     clientCityStateZip: '',
     driverLicense: '',
     eventDate: '',
-    startTime: '',
-    endTime: '',
+    startTime: '10:00 AM',
+    endTime: '06:00 PM',
     equipment: '',
     groundType: 'Grass',
     price: '',
@@ -37,6 +39,16 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
+  const TIME_OPTIONS = [
+    '06:00 AM', '07:00 AM', '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+    '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM',
+    '08:00 PM', '09:00 PM', '10:00 PM', '11:00 PM',
+  ];
+
+  const priceNum = Number(formData.price || 0);
+  const depositNum = hasDeposit ? Number(formData.deposit || 0) : 0;
+  const balanceDue = Math.max(0, priceNum - depositNum);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -46,7 +58,7 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
       const payload = {
         ...formData,
         price: formData.price ? Number(formData.price) : undefined,
-        deposit: formData.deposit ? Number(formData.deposit) : undefined,
+        deposit: hasDeposit && formData.deposit ? Number(formData.deposit) : 0,
       };
 
       const res = await api.post<{ contract: any; signUrl: string; emailSent: boolean }>(
@@ -206,26 +218,34 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
 
               <div>
                 <label className="block font-semibold mb-1">Hora de Inicio</label>
-                <input
-                  type="text"
+                <select
                   name="startTime"
                   value={formData.startTime}
                   onChange={handleChange}
-                  placeholder="10:00 AM"
                   className="input w-full"
-                />
+                >
+                  {TIME_OPTIONS.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
                 <label className="block font-semibold mb-1">Hora de Finalización</label>
-                <input
-                  type="text"
+                <select
                   name="endTime"
                   value={formData.endTime}
                   onChange={handleChange}
-                  placeholder="06:00 PM"
                   className="input w-full"
-                />
+                >
+                  {TIME_OPTIONS.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="md:col-span-2">
@@ -269,17 +289,41 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
                 />
               </div>
 
-              <div>
-                <label className="block font-semibold mb-1">Depósito ($)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  name="deposit"
-                  value={formData.deposit}
-                  onChange={handleChange}
-                  placeholder="50.00"
-                  className="input w-full"
-                />
+              {/* Checkbox Dio Anticipo */}
+              <div className="md:col-span-2 p-3 bg-surface-elevated rounded-xl border border-border space-y-3">
+                <label className="flex items-center gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={hasDeposit}
+                    onChange={(e) => {
+                      setHasDeposit(e.target.checked);
+                      if (!e.target.checked) setFormData({ ...formData, deposit: '' });
+                    }}
+                    className="w-4 h-4 text-primary rounded border-border focus:ring-primary"
+                  />
+                  <span className="font-bold text-text-primary text-sm">¿El cliente dio anticipo?</span>
+                </label>
+
+                {hasDeposit && (
+                  <div className="pt-2 border-t border-border grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                    <div>
+                      <label className="block text-xs font-semibold mb-1">Monto del Anticipo ($)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        name="deposit"
+                        value={formData.deposit}
+                        onChange={handleChange}
+                        placeholder="Ej. 50.00"
+                        className="input w-full text-sm"
+                      />
+                    </div>
+                    <div className="p-2.5 bg-brand-yellow/10 border border-brand-yellow/30 rounded-lg">
+                      <span className="block text-xs text-text-muted">Saldo Restante a Pagar al Entregar:</span>
+                      <span className="text-base font-extrabold text-primary">${balanceDue.toFixed(2)}</span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="md:col-span-2">

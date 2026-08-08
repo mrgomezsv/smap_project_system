@@ -212,6 +212,22 @@ export default function FirmarContratoPage() {
                     <span className="font-medium">{contract.startTime} - {contract.endTime}</span>
                   </div>
                 )}
+                {contract.price && (
+                  <div className="md:col-span-2 p-3 bg-surface-elevated rounded-xl border border-border flex flex-wrap justify-between gap-4">
+                    <div>
+                      <span className="text-text-muted text-xs block">Precio Acordado:</span>
+                      <strong className="text-text-primary text-base">${Number(contract.price).toFixed(2)}</strong>
+                    </div>
+                    <div>
+                      <span className="text-text-muted text-xs block">Anticipo Pagado:</span>
+                      <strong className="text-success text-base">${Number(contract.deposit || 0).toFixed(2)}</strong>
+                    </div>
+                    <div>
+                      <span className="text-text-muted text-xs block">Saldo Restante al Entregar:</span>
+                      <strong className="text-primary text-base">${Math.max(0, Number(contract.price) - Number(contract.deposit || 0)).toFixed(2)}</strong>
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
 

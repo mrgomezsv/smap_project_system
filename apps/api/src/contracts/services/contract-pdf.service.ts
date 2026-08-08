@@ -353,8 +353,13 @@ export class ContractPdfService {
       color: this.darkText,
     });
 
-    const priceText = data.price ? `$${Number(data.price).toFixed(2)}` : 'Quoted';
-    const depositText = data.deposit ? `$${Number(data.deposit).toFixed(2)}` : '$0.00';
+    const priceVal = data.price ? Number(data.price) : 0;
+    const depositVal = data.deposit ? Number(data.deposit) : 0;
+    const balanceDueVal = Math.max(0, priceVal - depositVal);
+
+    const priceText = data.price ? `$${priceVal.toFixed(2)}` : 'Quoted';
+    const depositText = data.deposit && depositVal > 0 ? `$${depositVal.toFixed(2)}` : '$0.00 (No Deposit)';
+    const balanceText = data.price ? `$${balanceDueVal.toFixed(2)}` : 'N/A';
 
     page2.drawText(`Agreed Price: ${priceText}`, {
       x: margin + 15,
@@ -365,11 +370,19 @@ export class ContractPdfService {
     });
 
     page2.drawText(`Deposit Paid: ${depositText}`, {
-      x: margin + 280,
+      x: margin + 200,
       y: y2 - 56,
       size: 9,
       font: helveticaBold,
       color: this.primary,
+    });
+
+    page2.drawText(`Balance Due at Delivery: ${balanceText}`, {
+      x: margin + 350,
+      y: y2 - 56,
+      size: 9,
+      font: helveticaBold,
+      color: this.brandYellow,
     });
 
     if (data.notes) {
