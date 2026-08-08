@@ -344,4 +344,126 @@ export class EmailService {
 
     return this.send({ to, subject, html });
   }
+
+  /**
+   * Genera plantilla exclusiva para invitación de firma de contrato de alquiler
+   */
+  getContractInviteEmailTemplate(data: {
+    clientName: string;
+    signUrl: string;
+    equipment: string;
+    eventDate?: string | null;
+  }): { subject: string; html: string } {
+    const subject = `📄 Action Required: Sign Your Kidsfun Rental Agreement - ${data.clientName}`;
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+    .header { background: linear-gradient(135deg, #1E3A8A 0%, #172554 100%); padding: 32px 24px; text-align: center; color: white; }
+    .header h1 { margin: 0; font-size: 24px; font-weight: 800; }
+    .header p { margin: 5px 0 0 0; font-size: 14px; opacity: 0.85; }
+    .body { padding: 32px 24px; }
+    .greeting { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+    .text { font-size: 15px; color: #475569; line-height: 1.6; margin-bottom: 24px; }
+    .card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin-bottom: 24px; }
+    .card-title { font-size: 14px; font-weight: 700; color: #1E3A8A; text-transform: uppercase; margin-bottom: 8px; }
+    .card-item { font-size: 14px; color: #334155; margin: 4px 0; }
+    .btn-container { text-align: center; margin: 30px 0; }
+    .btn { display: inline-block; background-color: #F5A91B; color: #1E3A8A !important; font-weight: 800; font-size: 16px; text-decoration: none; padding: 16px 36px; border-radius: 12px; box-shadow: 0 4px 14px rgba(245, 169, 27, 0.4); }
+    .footer { background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Kidsfun & Fiestas Infantiles</h1>
+      <p>Rental Agreement & Liability Waiver</p>
+    </div>
+    <div class="body">
+      <div class="greeting">Hello ${data.clientName},</div>
+      <p class="text">
+        Thank you for choosing Kidsfun for your upcoming party! Please review and electronically sign your official Rental Agreement to complete your reservation.
+      </p>
+      
+      <div class="card">
+        <div class="card-title">Reservation Summary</div>
+        <div class="card-item"><strong>Equipment:</strong> ${data.equipment}</div>
+        ${data.eventDate ? `<div class="card-item"><strong>Date:</strong> ${data.eventDate}</div>` : ''}
+      </div>
+
+      <div class="btn-container">
+        <a href="${data.signUrl}" class="btn" target="_blank">✍️ Review and Sign Agreement</a>
+      </div>
+
+      <p class="text" style="font-size: 13px; color: #64748b;">
+        If you have any questions or need to modify your reservation details, please contact us directly.
+      </p>
+    </div>
+    <div class="footer">
+      &copy; ${new Date().getFullYear()} Kidsfun & Fiestas Infantiles. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    return { subject, html };
+  }
+
+  /**
+   * Genera plantilla exclusiva para confirmación de contrato firmado con copia PDF
+   */
+  getContractSignedEmailTemplate(data: {
+    clientName: string;
+    equipment: string;
+  }): { subject: string; html: string } {
+    const subject = `✅ Signed Copy: Kidsfun Rental Agreement - ${data.clientName}`;
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+    .header { background: linear-gradient(135deg, #10B981 0%, #047857 100%); padding: 32px 24px; text-align: center; color: white; }
+    .header h1 { margin: 0; font-size: 24px; font-weight: 800; }
+    .body { padding: 32px 24px; }
+    .greeting { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+    .text { font-size: 15px; color: #475569; line-height: 1.6; margin-bottom: 24px; }
+    .badge { display: inline-block; background-color: #d1fae5; color: #065f46; font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; }
+    .footer { background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Kidsfun & Fiestas Infantiles</h1>
+    </div>
+    <div class="body">
+      <div class="badge">✓ Agreement Signed & Confirmed</div>
+      <div class="greeting">Hello ${data.clientName},</div>
+      <p class="text">
+        Your Rental Agreement and Liability Waiver for <strong>${data.equipment}</strong> has been successfully signed and stored in our system.
+      </p>
+      <p class="text">
+        📄 <strong>Attached Document:</strong> Attached to this email you will find the official PDF copy of your signed agreement for your records.
+      </p>
+    </div>
+    <div class="footer">
+      &copy; ${new Date().getFullYear()} Kidsfun & Fiestas Infantiles. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    return { subject, html };
+  }
 }

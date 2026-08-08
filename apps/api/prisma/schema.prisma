@@ -275,3 +275,37 @@ model WaiverValidator {
   @@index([userId], map: "t_app_product_waivervalidator_user_id_fk")
   @@map("t_app_product_waivervalidator")
 }
+
+// ============================================================
+// Módulo de Contratos Digitales de Alquiler (RentalContract)
+// ============================================================
+
+model RentalContract {
+  id                 Int       @id @default(autoincrement())
+  token              String    @unique @db.VarChar(64)
+  clientName         String    @map("client_name") @db.VarChar(150)
+  clientEmail        String    @map("client_email") @db.VarChar(254)
+  clientPhone        String?   @map("client_phone") @db.VarChar(50)
+  clientAddress      String    @map("client_address") @db.VarChar(255)
+  clientCityStateZip String?   @map("client_city_state_zip") @db.VarChar(150)
+  driverLicense      String?   @map("driver_license") @db.VarChar(50)
+  eventDate          DateTime? @map("event_date") @db.Date
+  startTime          String?   @map("start_time") @db.VarChar(50)
+  endTime            String?   @map("end_time") @db.VarChar(50)
+  equipment          String    @db.VarChar(255)
+  groundType         String?   @map("ground_type") @db.VarChar(50)
+  price              Decimal?  @db.Decimal(10, 2)
+  deposit            Decimal?  @db.Decimal(10, 2)
+  notes              String?   @db.Text
+  status             String    @default("PENDING") @db.VarChar(20) // PENDING, SIGNED, EXPIRED, CANCELLED
+  safetyChecklist    Json?     @map("safety_checklist")
+  signatureImage     String?   @map("signature_image") @db.LongText
+  signedAt           DateTime? @map("signed_at") @db.DateTime(6)
+  signerIp           String?   @map("signer_ip") @db.VarChar(45)
+  signerUserAgent    String?   @map("signer_user_agent") @db.Text
+  createdAt          DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+
+  @@index([token], map: "idx_rental_contract_token")
+  @@index([clientEmail], map: "idx_rental_contract_email")
+  @@map("t_app_rental_contract")
+}

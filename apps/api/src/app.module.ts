@@ -12,6 +12,7 @@ import { PushModule } from './push/push.module';
 import { ChatModule } from './chat/chat.module';
 import { ContactMessagesModule } from './contact/contact-messages.module';
 import { UploadModule } from './upload/upload.module';
+import { ContractsModule } from './contracts/contracts.module';
 
 import { DashboardModule } from './dashboard/dashboard.module';
 import { MetricsModule } from './metrics/metrics.module';
@@ -31,6 +32,7 @@ import { MediaController } from './media/media.controller';
     ChatModule,
     ContactMessagesModule,
     UploadModule,
+    ContractsModule,
     DashboardModule,
     MetricsModule,
   ],
