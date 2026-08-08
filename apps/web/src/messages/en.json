@@ -18,7 +18,7 @@
     "book": "Book now"
   },
   "hero": {
-    "badge": "Available in all El Salvador",
+    "badge": "Available in New York, New Jersey and Connecticut",
     "title": "The perfect party<br></br> <yellow>starts here</yellow>",
     "subtitle": "Bounce houses, inflatable games and fun for your kids parties. We make your event <yellow>unforgettable</yellow>.",
     "cta": "View catalog",
@@ -39,8 +39,8 @@
     "noProducts": "No products published yet.",
     "viewAll": "View all",
     "trust": {
-      "experience": "+5 years of experience",
-      "experienceDesc": "More than 500 successful parties in El Salvador",
+      "experience": "+15 years of experience",
+      "experienceDesc": "More than 500 successful parties in the region",
       "delivery": "Punctual delivery",
       "deliveryDesc": "We deliver and install everything on the agreed schedule",
       "certified": "Certified equipment",
@@ -235,11 +235,11 @@
   },
   "about": {
     "badge": "About us",
-    "heroTitle": "Over 5 years of smiles",
-    "heroSubtitle": "We're a family business specialized in kids entertainment and party organization in El Salvador and Miami.",
+    "heroTitle": "Over 15 years of smiles",
+    "heroSubtitle": "We're a family business specialized in kids entertainment and party organization in New York, New Jersey and Connecticut.",
     "historyTitle": "Our story",
-    "historyP1": "Kidsfun was born from the dream of turning every kids celebration into a magical and unforgettable experience. We started as a small family business and today we're a reference for bounce house rentals, electric games and party organization in El Salvador.",
-    "historyP2": "Over time, we expanded to Miami to bring the magic of Kidsfun to more families, always keeping the values that defined us from day one: safety, quality and close service.",
+    "historyP1": "Kidsfun was born from the dream of turning every kids celebration into a magical and unforgettable experience. We started as a family business and today we're a reference for bounce house rentals, electric games and party organization.",
+    "historyP2": "We bring the magic of Kidsfun to New York, New Jersey and Connecticut to make your party an unforgettable event, always keeping the values that defined us from day one: safety, quality and close service.",
     "stats": {
       "years": "Years of experience",
       "parties": "Parties delivered",

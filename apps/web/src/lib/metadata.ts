@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kidsfunyfiestasinfantiles.com';
 const SITE_NAME = 'Kidsfun y Fiestas Infantiles';
 const DEFAULT_DESCRIPTION =
-  'Brincolines, juegos inflables y diversión para tus fiestas infantiles. Renta de equipos para cumpleaños, graduaciones y eventos familiares en El Salvador y Miami.';
+  'Brincolines, juegos inflables y diversión para tus fiestas infantiles. Renta de equipos para cumpleaños, graduaciones y eventos familiares en New York, New Jersey y Connecticut.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -16,8 +16,9 @@ export const metadata: Metadata = {
     'brincolines',
     'fiestas infantiles',
     'alquiler',
-    'El Salvador',
-    'Miami',
+    'New York',
+    'New Jersey',
+    'Connecticut',
     'eventos',
     'bounce house',
     'inflables',

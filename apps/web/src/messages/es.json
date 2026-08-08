@@ -18,7 +18,7 @@
     "book": "Reservar"
   },
   "hero": {
-    "badge": "Disponible en toda El Salvador",
+    "badge": "Disponible en New York, New Jersey y Connecticut",
     "title": "La fiesta perfecta<br></br> <yellow>empieza aquí</yellow>",
     "subtitle": "Brincolines, juegos inflables y diversión para tus fiestas infantiles. Hacemos de tu evento algo <yellow>inolvidable</yellow>.",
     "cta": "Ver catálogo",
@@ -39,8 +39,8 @@
     "noProducts": "Aún no hay productos publicados.",
     "viewAll": "Ver todos",
     "trust": {
-      "experience": "+5 años de experiencia",
-      "experienceDesc": "Más de 500 fiestas exitosas en El Salvador",
+      "experience": "+15 años de experiencia",
+      "experienceDesc": "Más de 500 fiestas exitosas en la región",
       "delivery": "Entrega puntual",
       "deliveryDesc": "Llevamos e instalamos todo en el horario acordado",
       "certified": "Equipos certificados",
@@ -236,10 +236,10 @@
   "about": {
     "badge": "Sobre nosotros",
     "heroTitle": "Más de 15 años creando sonrisas",
-    "heroSubtitle": "Somos una empresa familiar especializada en entretenimiento infantil y organización de fiestas en El Salvador y Miami.",
+    "heroSubtitle": "Somos una empresa familiar especializada en entretenimiento infantil y organización de fiestas en New York, New Jersey y Connecticut.",
     "historyTitle": "Nuestra historia",
-    "historyP1": "Kidsfun nació del sueño de transformar cada celebración infantil en una experiencia mágica e inolvidable. Empezamos como un pequeño emprendimiento familiar y hoy somos referentes en alquiler de inflables, juegos eléctricos y organización de fiestas en El Salvador.",
-    "historyP2": "Con el tiempo, expandimos nuestras operaciones a Miami para llevar la magia de Kidsfun a más familias, manteniendo siempre los valores que nos definieron desde el primer día: seguridad, calidad y atención cercana.",
+    "historyP1": "Kidsfun nació del sueño de transformar cada celebración infantil en una experiencia mágica e inolvidable. Empezamos como un emprendimiento familiar y hoy somos referentes en alquiler de inflables, juegos eléctricos y organización de fiestas.",
+    "historyP2": "Llevamos la magia de Kidsfun a New York, New Jersey y Connecticut para hacer de tu fiesta un evento inolvidable, manteniendo siempre los valores que nos definieron desde el primer día: seguridad, calidad y atención cercana.",
     "stats": {
       "years": "Años de experiencia",
       "parties": "Fiestas realizadas",
