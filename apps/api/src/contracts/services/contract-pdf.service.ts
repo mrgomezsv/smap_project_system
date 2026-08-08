@@ -337,16 +337,8 @@ export class ContractPdfService {
       color: this.darkText,
     });
 
-    page2.drawText(`Surface Type: ${data.groundType || 'Grass / General'}`, {
-      x: margin + 15,
-      y: y2 - 38,
-      size: 9,
-      font: helvetica,
-      color: this.darkText,
-    });
-
     page2.drawText(`Schedule: ${data.startTime || 'Standard'} to ${data.endTime || 'Standard'}`, {
-      x: margin + 280,
+      x: margin + 15,
       y: y2 - 38,
       size: 9,
       font: helvetica,

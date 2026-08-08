@@ -262,21 +262,6 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
               </div>
 
               <div>
-                <label className="block font-semibold mb-1">Tipo de Superficie</label>
-                <select
-                  name="groundType"
-                  value={formData.groundType}
-                  onChange={handleChange}
-                  className="input w-full"
-                >
-                  <option value="Grass">Grama / Cesped (Grass)</option>
-                  <option value="Concrete">Concreto / Asfalto (Concrete)</option>
-                  <option value="Dirt">Tierra (Dirt)</option>
-                  <option value="Other">Otro (Other)</option>
-                </select>
-              </div>
-
-              <div>
                 <label className="block font-semibold mb-1">Precio Acordado ($)</label>
                 <input
                   type="number"
