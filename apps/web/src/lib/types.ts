@@ -4,13 +4,20 @@
  */
 
 export type Category =
-  | 'option1' // Bounce House
-  | 'option2' // Electric Games
-  | 'option3' // Furniture
-  | 'option4' // Concession Machines
-  | 'option5' // Competitive Games
-  | 'option6' // Equipment Rental
-  | 'option7'; // Water Fun for Rent
+  | 'option1' // Brincolines / Bounce Houses
+  | 'option2' // Juegos Eléctricos / Electric Games
+  | 'option3' // Mobiliario / Furniture
+  | 'option4' // Máquinas de Concesión / Concession Machines
+  | 'option5' // Juegos Competitivos / Competitive Games
+  | 'option6' // Equipos en Alquiler / Equipment Rental
+  | 'option7' // Juegos de Agua / Water Fun
+  | 'toros_mecanicos'
+  | 'trenes_electricos'
+  | 'kiddie_ride'
+  | 'maquina_espuma'
+  | 'game_trailer'
+  | 'robots_led'
+  | 'shots_carts';
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   option1: 'Brincolines',
@@ -20,6 +27,13 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   option5: 'Juegos Competitivos',
   option6: 'Equipos en Alquiler',
   option7: 'Juegos de Agua',
+  toros_mecanicos: 'Toros Mecánicos',
+  trenes_electricos: 'Trenes Eléctricos',
+  kiddie_ride: 'Kiddie Ride',
+  maquina_espuma: 'Máquina de Espuma',
+  game_trailer: 'Game Trailer',
+  robots_led: 'Robots LED',
+  shots_carts: 'Shots Carts',
 };
 
 export interface Product {

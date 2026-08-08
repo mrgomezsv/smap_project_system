@@ -19,6 +19,13 @@ const CATEGORIES: Category[] = [
   'option5',
   'option6',
   'option7',
+  'toros_mecanicos',
+  'trenes_electricos',
+  'kiddie_ride',
+  'maquina_espuma',
+  'game_trailer',
+  'robots_led',
+  'shots_carts',
 ];
 
 interface FormData {

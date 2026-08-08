@@ -54,7 +54,14 @@
     "option4": "Máquinas de Concesión",
     "option5": "Juegos Competitivos",
     "option6": "Equipos en Alquiler",
-    "option7": "Juegos de Agua"
+    "option7": "Juegos de Agua",
+    "toros_mecanicos": "Toros Mecánicos",
+    "trenes_electricos": "Trenes Eléctricos",
+    "kiddie_ride": "Kiddie Ride",
+    "maquina_espuma": "Máquina de Espuma",
+    "game_trailer": "Game Trailer",
+    "robots_led": "Robots LED",
+    "shots_carts": "Shots Carts"
   },
   "catalog": {
     "badge": "Catálogo Completo",

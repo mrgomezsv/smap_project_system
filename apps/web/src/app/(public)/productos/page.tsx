@@ -21,6 +21,13 @@ const ALL_CATEGORIES: Array<{ key: Category; emoji: string }> = [
   { key: 'option5', emoji: '🏆' },
   { key: 'option6', emoji: '🎁' },
   { key: 'option7', emoji: '💦' },
+  { key: 'toros_mecanicos', emoji: '🐂' },
+  { key: 'trenes_electricos', emoji: '🚂' },
+  { key: 'kiddie_ride', emoji: '🎠' },
+  { key: 'maquina_espuma', emoji: '🫧' },
+  { key: 'game_trailer', emoji: '🎮' },
+  { key: 'robots_led', emoji: '🤖' },
+  { key: 'shots_carts', emoji: '🍹' },
 ];
 
 export default async function ProductosPage({
@@ -39,6 +46,8 @@ export default async function ProductosPage({
   const isBookPrompt = searchParams.prompt === 'book';
 
   let data: ProductsListResponse = { items: [], total: 0, skip, take };
+  let activeCategoryKeys: Set<string> = new Set();
+
   try {
     const query = new URLSearchParams();
     if (selectedCategory) query.set('category', selectedCategory);
@@ -48,10 +57,22 @@ export default async function ProductosPage({
     query.set('take', String(take));
     query.set('lang', locale);
 
+    // Obtener productos filtrados
     data = await api.get<ProductsListResponse>(`/api/products?${query.toString()}`);
+
+    // Obtener todas las categorías que tienen al menos 1 producto publicado
+    const allPublicRes = await api.get<ProductsListResponse>(
+      `/api/products?publicated=true&take=1000&lang=${locale}`
+    );
+    activeCategoryKeys = new Set(allPublicRes.items.map((p) => p.category));
   } catch (e) {
     console.error('Error cargando productos:', e);
   }
+
+  // Filtrar para mostrar solo las categorías con productos asignados
+  const visibleCategories = ALL_CATEGORIES.filter((cat) =>
+    activeCategoryKeys.has(cat.key)
+  );
 
   return (
     <div className="bg-surface min-h-screen">
@@ -103,7 +124,7 @@ export default async function ProductosPage({
           >
             {tCatalog('all')}
           </Link>
-          {ALL_CATEGORIES.map((cat) => (
+          {visibleCategories.map((cat) => (
             <Link
               key={cat.key}
               href={`/productos?category=${cat.key}`}

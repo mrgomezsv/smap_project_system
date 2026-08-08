@@ -7,13 +7,21 @@ import { type Category } from '@/lib/types';
 
 const HERO_IMG = '/media/product_images/barbie_bounce_house/barbie_bounce_house_01.jpeg';
 
-const featuredCategories: Array<{ key: Category; emoji: string; bg: string }> = [
+const ALL_FEATURED_CATEGORIES: Array<{ key: Category; emoji: string; bg: string }> = [
   { key: 'option1', emoji: '🎪', bg: 'from-party-pink/20 to-brand-yellow/20' },
   { key: 'option2', emoji: '⚡', bg: 'from-primary/20 to-info/20' },
   { key: 'option3', emoji: '🪑', bg: 'from-brand-yellow/20 to-party-pink/20' },
   { key: 'option4', emoji: '🍿', bg: 'from-warning/20 to-brand-yellow/20' },
   { key: 'option5', emoji: '🏆', bg: 'from-info/20 to-success/20' },
+  { key: 'option6', emoji: '🎁', bg: 'from-primary/20 to-party-pink/20' },
   { key: 'option7', emoji: '💦', bg: 'from-success/20 to-info/20' },
+  { key: 'toros_mecanicos', emoji: '🐂', bg: 'from-warning/20 to-primary/20' },
+  { key: 'trenes_electricos', emoji: '🚂', bg: 'from-info/20 to-brand-yellow/20' },
+  { key: 'kiddie_ride', emoji: '🎠', bg: 'from-party-pink/20 to-info/20' },
+  { key: 'maquina_espuma', emoji: '🫧', bg: 'from-info/20 to-success/20' },
+  { key: 'game_trailer', emoji: '🎮', bg: 'from-primary/20 to-warning/20' },
+  { key: 'robots_led', emoji: '🤖', bg: 'from-brand-yellow/20 to-primary/20' },
+  { key: 'shots_carts', emoji: '🍹', bg: 'from-party-pink/20 to-warning/20' },
 ];
 
 export default async function HomePage() {
@@ -24,12 +32,19 @@ export default async function HomePage() {
   const locale = await getLocale();
 
   let products: Product[] = [];
+  let activeCategoriesSet: Set<string> = new Set();
+
   try {
-    const res = await api.get<{ items: Product[] }>(`/api/products?take=8&publicated=true&lang=${locale}`);
+    const res = await api.get<{ items: Product[] }>(`/api/products?take=100&publicated=true&lang=${locale}`);
     products = res.items;
+    activeCategoriesSet = new Set(products.map((p) => p.category));
   } catch (e) {
     console.error('Error cargando productos:', e);
   }
+
+  const activeFeaturedCategories = ALL_FEATURED_CATEGORIES.filter((cat) =>
+    activeCategoriesSet.has(cat.key)
+  );
 
   return (
     <>
@@ -123,7 +138,7 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {featuredCategories.map((cat) => (
+            {activeFeaturedCategories.map((cat) => (
               <Link
                 key={cat.key}
                 href={`/productos?category=${cat.key}`}
