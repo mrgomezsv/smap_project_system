@@ -14,20 +14,42 @@ export function SignaturePad({ onSignatureChange }: SignaturePadProps) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
 
-    // Configurar alta resolución para pantallas Retina / Táctiles
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * 2;
-    canvas.height = rect.height * 2;
-    ctx.scale(2, 2);
+    function resizeCanvas() {
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    ctx.strokeStyle = '#1E3A8A'; // Azul primario elegante
-    ctx.lineWidth = 2.5;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-  }, []);
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+
+      // Guardar el contenido previo antes del resize si existía
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tempCtx = tempCanvas.getContext('2d');
+      if (tempCtx) {
+        tempCtx.drawImage(canvas, 0, 0);
+      }
+
+      canvas.width = rect.width * 2;
+      canvas.height = rect.height * 2;
+      ctx.scale(2, 2);
+
+      ctx.strokeStyle = '#1E3A8A';
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      if (hasDrawn && tempCtx) {
+        ctx.drawImage(tempCanvas, 0, 0, tempCanvas.width, tempCanvas.height, 0, 0, rect.width, rect.height);
+      }
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    return () => window.removeEventListener('resize', resizeCanvas);
+  }, [hasDrawn]);
 
   function getCoords(e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) {
     const canvas = canvasRef.current;
@@ -107,7 +129,7 @@ export function SignaturePad({ onSignatureChange }: SignaturePadProps) {
           onTouchStart={startDrawing}
           onTouchMove={draw}
           onTouchEnd={stopDrawing}
-          className="w-full h-44 cursor-crosshair block"
+          className="w-full h-52 sm:h-44 cursor-crosshair block touch-none select-none"
         />
         {!hasDrawn && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-text-muted text-sm font-medium opacity-50 select-none">

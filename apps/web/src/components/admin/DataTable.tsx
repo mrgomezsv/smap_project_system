@@ -66,7 +66,55 @@ export function DataTable<T>({
         </div>
       )}
 
-      <div className="overflow-x-auto">
+      {/* Vista de Tarjetas para Pantallas Móviles (< md) */}
+      <div className="block md:hidden divide-y divide-border">
+        {rows.length === 0 ? (
+          <div className="text-center py-12 text-text-muted px-4">{emptyMessage}</div>
+        ) : (
+          rows.map((row) => {
+            const key = rowKey(row);
+            const isSelected = selected.has(key);
+            return (
+              <div
+                key={key}
+                className={[
+                  'p-4 space-y-3 transition',
+                  isSelected ? 'bg-primary/5' : 'bg-white',
+                ].join(' ')}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  {selectable && (
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleRow(key)}
+                      className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                      aria-label="Seleccionar fila"
+                    />
+                  )}
+                  {rowActions && <div className="ml-auto flex items-center gap-2">{rowActions(row)}</div>}
+                </div>
+
+                <div className="space-y-2 text-sm">
+                  {columns.map((c) => (
+                    <div key={c.key} className="flex justify-between items-baseline gap-4">
+                      <span className="text-xs font-semibold text-text-muted uppercase tracking-wider shrink-0">
+                        {c.label}
+                      </span>
+                      <div className="text-right text-text-primary font-medium break-all">
+                        {c.render ? c.render(row) : String((row as Record<string, unknown>)[c.key] ?? '')}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Vista de Tabla para Escritorio (>= md) */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-surface border-b border-border">
             <tr>

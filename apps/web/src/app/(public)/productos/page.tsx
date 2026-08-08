@@ -112,13 +112,13 @@ export default async function ProductosPage({
             </Link>
           </div>
         )}
-        {/* Filtros horizontales (chips) */}
-        <div className="mb-8 flex overflow-x-auto pb-2 scrollbar-none md:flex-wrap gap-2 -mx-4 px-4 md:mx-0 md:px-0">
+        {/* Filtros horizontales (chips) con scroll deslizable en móviles */}
+        <div className="mb-8 flex overflow-x-auto no-scrollbar py-2 gap-2 -mx-4 px-4 snap-x md:flex-wrap md:mx-0 md:px-0">
           <Link
             href="/productos"
-            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition ${
+            className={`shrink-0 snap-start px-4 py-2.5 rounded-full text-sm font-medium transition active:scale-95 ${
               !selectedCategory
-                ? 'bg-primary text-white shadow-soft'
+                ? 'bg-primary text-white shadow-soft font-semibold'
                 : 'bg-white text-text-primary border border-border hover:border-primary'
             }`}
           >
@@ -128,13 +128,13 @@ export default async function ProductosPage({
             <Link
               key={cat.key}
               href={`/productos?category=${cat.key}`}
-              className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition ${
+              className={`shrink-0 snap-start px-4 py-2.5 rounded-full text-sm font-medium transition active:scale-95 ${
                 selectedCategory === cat.key
-                  ? 'bg-primary text-white shadow-soft'
+                  ? 'bg-primary text-white shadow-soft font-semibold'
                   : 'bg-white text-text-primary border border-border hover:border-primary'
               }`}
             >
-              <span className="mr-1">{cat.emoji}</span>
+              <span className="mr-1.5">{cat.emoji}</span>
               {tCategories(cat.key)}
             </Link>
           ))}

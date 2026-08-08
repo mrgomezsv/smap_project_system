@@ -92,6 +92,20 @@
     background: rgba(15, 23, 42, 0.2);
     border-radius: 3px;
   }
+
+  /* Ocultar barra de desplazamiento manteniendo funcionalidad de scroll horizontal */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Soporte para Safe Area Insets en iOS/Android */
+  .pb-safe {
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  }
 }
 
 @keyframes shimmer {
