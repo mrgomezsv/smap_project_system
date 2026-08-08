@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 /**
  * Limpia el texto del comentario eliminando caracteres de control no válidos.
@@ -39,7 +40,7 @@ export class CommentsService {
    * Lista TODOS los comentarios para el panel de administración (con opción de búsqueda y estado).
    */
   async findAll(query?: { search?: string; status?: 'all' | 'pending' | 'approved'; skip?: number; take?: number }) {
-    const where: any = {};
+    const where: Prisma.ProductCommentWhereInput = {};
     if (query?.status === 'pending') where.isApproved = false;
     if (query?.status === 'approved') where.isApproved = true;
 
