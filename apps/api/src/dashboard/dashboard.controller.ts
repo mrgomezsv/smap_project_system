@@ -5,6 +5,7 @@ import type { AuthUser } from '../auth/decorators/current-user.decorator';
 import { assertAdminEmail } from '../auth/admin-allowlist';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('api/dashboard')
 export class DashboardController {
@@ -153,6 +154,7 @@ export class DashboardController {
    * Health check combinado: BD + Redis. No requiere auth (load balancer friendly).
    * Devuelve 200 si ambos servicios están OK; 503 si alguno falla.
    */
+  @Public()
   @Get('health')
   async getHealth() {
     const dbStart = Date.now();
