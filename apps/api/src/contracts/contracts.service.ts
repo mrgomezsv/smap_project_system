@@ -67,31 +67,74 @@ export class ContractsService {
     };
   }
 
-  async findAll(query?: { search?: string; status?: string; skip?: number; take?: number }) {
+  async findAll(query?: { search?: string; status?: string; skip?: number; take?: number; cursor?: number }) {
     const where: any = {};
     if (query?.status) where.status = query.status;
+    // FULLTEXT para búsquedas largas (>=3 chars), LIKE para términos cortos
     if (query?.search) {
-      where.OR = [
-        { clientName: { contains: query.search } },
-        { clientEmail: { contains: query.search } },
-        { equipment: { contains: query.search } },
-      ];
+      const term = query.search.trim();
+      if (term.length >= 3) {
+        where.OR = [
+          { clientName: { search: term } },
+          { clientEmail: { search: term } },
+          { equipment: { search: term } },
+        ];
+      } else {
+        where.OR = [
+          { clientName: { contains: query.search } },
+          { clientEmail: { contains: query.search } },
+          { equipment: { contains: query.search } },
+        ];
+      }
     }
 
     const take = query?.take ? Number(query.take) : 50;
     const skip = query?.skip ? Number(query.skip) : 0;
+    const useCursor = !!query?.cursor;
 
-    const [items, total] = await Promise.all([
-      this.prisma.rentalContract.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        take,
-        skip,
-      }),
-      this.prisma.rentalContract.count({ where }),
-    ]);
+    // Build findMany args sin spreads ambiguos
+    const findManyArgs: any = {
+      where,
+      orderBy: { id: 'desc' },
+      take,
+      select: {
+        id: true,
+        token: true,
+        clientName: true,
+        clientEmail: true,
+        clientPhone: true,
+        eventDate: true,
+        equipment: true,
+        status: true,
+        price: true,
+        deposit: true,
+        createdAt: true,
+        signedAt: true,
+      },
+    };
+    if (useCursor) {
+      findManyArgs.cursor = { id: Number(query!.cursor) };
+      findManyArgs.skip = 1; // saltar el cursor mismo
+    } else {
+      findManyArgs.skip = skip;
+    }
 
-    return { items, total, skip, take };
+    const items = await this.prisma.rentalContract.findMany(findManyArgs);
+    // El count solo aplica a paginación por OFFSET. Con cursor no se devuelve total
+    // (es caro y no es necesario para UI de scroll infinito).
+    const total = useCursor ? null : await this.prisma.rentalContract.count({ where });
+
+    // Próximo cursor: id del último item devuelto, o null si no hay más
+    const nextCursor = items.length === take ? items[items.length - 1].id : null;
+
+    return {
+      items,
+      total,
+      skip: useCursor ? null : skip,
+      take,
+      nextCursor,
+      hasMore: nextCursor !== null,
+    };
   }
 
   async findByToken(token: string) {
@@ -128,12 +171,34 @@ export class ContractsService {
       data: {
         status: 'SIGNED',
         signatureImage: dto.signatureImage,
+        // Mantener Json en safetyChecklist por retrocompatibilidad (dual-write durante migración).
+        // La fuente de verdad ahora es t_app_contract_safety_item.
         safetyChecklist: dto.safetyChecklist ? JSON.parse(JSON.stringify(dto.safetyChecklist)) : null,
         signedAt: new Date(),
         signerIp: dto.signerIp || null,
         signerUserAgent: dto.signerUserAgent || null,
       },
     });
+
+    // Persistir cada item del checklist en la tabla normalizada.
+    // Si la tabla falla, el Json legacy sigue siendo válido (defensa en profundidad).
+    if (dto.safetyChecklist && Object.keys(dto.safetyChecklist).length > 0) {
+      try {
+        await this.prisma.contractSafetyItem.createMany({
+          data: Object.entries(dto.safetyChecklist).map(([itemKey, isChecked]) => ({
+            contractId: updated.id,
+            itemKey,
+            isChecked: Boolean(isChecked),
+          })),
+          skipDuplicates: true, // (contract_id, item_key) es UNIQUE
+        });
+      } catch (e) {
+        this.logger.warn(
+          `No se pudo persistir safety items en tabla normalizada (contrato ${updated.id}): ${(e as Error).message}. ` +
+          'El checklist sigue disponible en la columna Json legacy.',
+        );
+      }
+    }
 
     // Generar PDF y enviar por correo al cliente y administrador
     try {
