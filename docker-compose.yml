@@ -5,6 +5,17 @@ services:
   db:
     image: mariadb:10.6
     restart: always
+    command:
+      - --slow-query-log=1
+      - --long-query-time=1
+      - --log-output=TABLE
+      - --tmp-table-size=33554432
+      - --max-heap-table-size=33554432
+      - --innodb-buffer-pool-size=256M
+      - --max-connections=200
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_general_ci
+      - --innodb-file-per-table=1
     environment:
       MYSQL_DATABASE: smap_kf
       MYSQL_USER: mrgomez
@@ -14,6 +25,18 @@ services:
       - db_data:/var/lib/mysql
     ports:
       - "3309:3306"
+    networks:
+      - kidsfun-net
+
+  # Redis para cache distribuido (Fase C)
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
     networks:
       - kidsfun-net
 
@@ -28,6 +51,8 @@ services:
       NODE_ENV: production
       PORT: 3001
       DATABASE_URL: "mysql://mrgomez:Karin2100@db:3306/smap_kf"
+      REDIS_URL: "redis://redis:6379"
+      CACHE_ENABLED: "true"
       RESEND_API_KEY: ${RESEND_API_KEY}
       RESEND_FROM_EMAIL: "Kidsfun <waiver@kidsfunyfiestasinfantiles.com>"
       CORS_ORIGINS: "https://kidsfunyfiestasinfantiles.com,https://www.kidsfunyfiestasinfantiles.com,http://localhost:3000"
@@ -38,6 +63,7 @@ services:
       - media_data:/app/apps/api/media
     depends_on:
       - db
+      - redis
     ports:
       - "3001:3001"
     networks:
@@ -67,6 +93,8 @@ services:
 volumes:
   db_data:
     name: proyecto_kidsfun_db_data
+  redis_data:
+    name: proyecto_kidsfun_redis_data
   media_data:
     name: proyecto_kidsfun_media_data
 
