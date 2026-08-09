@@ -17,6 +17,7 @@ import { ContractsModule } from './contracts/contracts.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { MetricsModule } from './metrics/metrics.module';
 
+import { RedisModule } from './redis/redis.module';
 import { MediaController } from './media/media.controller';
 
 @Module({
@@ -35,6 +36,7 @@ import { MediaController } from './media/media.controller';
     ContractsModule,
     DashboardModule,
     MetricsModule,
+    RedisModule,
   ],
   controllers: [AppController, MediaController],
   providers: [AppService],
