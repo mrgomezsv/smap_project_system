@@ -29,10 +29,12 @@ export default function AdminComentariosPage() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved'>('all');
   const [actionId, setActionId] = useState<number | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const fetchComments = async () => {
     try {
       setLoading(true);
+      setLoadError(null);
       const query = new URLSearchParams();
       if (search) query.set('search', search);
       if (statusFilter !== 'all') query.set('status', statusFilter);
@@ -43,7 +45,10 @@ export default function AdminComentariosPage() {
       );
       setComments(res.items || []);
     } catch (e) {
-      console.error('Error cargando comentarios:', e);
+      setComments([]);
+      setLoadError(
+        e instanceof ApiError ? e.message : 'No se pudieron cargar los comentarios.'
+      );
     } finally {
       setLoading(false);
     }
@@ -57,11 +62,9 @@ export default function AdminComentariosPage() {
     try {
       setActionId(id);
       await api.patch(`/api/comments/${id}/approval`, { isApproved: !currentApproved }, { getToken });
-      setComments((prev) =>
-        prev.map((c) => (c.id === id ? { ...c, isApproved: !currentApproved } : c))
-      );
+      await fetchComments();
     } catch (e) {
-      alert('Error al cambiar el estado de aprobación.');
+      alert(e instanceof ApiError ? e.message : 'Error al cambiar el estado de aprobación.');
     } finally {
       setActionId(null);
     }
@@ -72,9 +75,9 @@ export default function AdminComentariosPage() {
     try {
       setActionId(deleteTargetId);
       await api.delete(`/api/comments/${deleteTargetId}`, { getToken });
-      setComments((prev) => prev.filter((c) => c.id !== deleteTargetId));
+      await fetchComments();
     } catch (e) {
-      alert('Error al eliminar el comentario.');
+      alert(e instanceof ApiError ? e.message : 'Error al eliminar el comentario.');
     } finally {
       setActionId(null);
       setDeleteTargetId(null);
@@ -126,6 +129,10 @@ export default function AdminComentariosPage() {
       {/* Tabla / Lista de Comentarios */}
       {loading ? (
         <div className="card text-center py-12 text-text-muted">Cargando comentarios...</div>
+      ) : loadError ? (
+        <div className="card text-center py-12 border border-danger/30 text-danger">
+          {loadError}
+        </div>
       ) : comments.length === 0 ? (
         <div className="card text-center py-16">
           <div className="text-5xl mb-3 opacity-40">💬</div>

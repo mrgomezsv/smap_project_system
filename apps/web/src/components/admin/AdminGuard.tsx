@@ -22,10 +22,6 @@ export function AdminGuard({ children }: AdminGuardProps) {
   useEffect(() => {
     if (!ready) return;
 
-    const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'admin@kidsfun.com,mrgomez.dev@outlook.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com')
-      .split(',')
-      .map((e) => e.trim().toLowerCase());
-
     if (!user) {
       setVerifying(false);
       setAuthorized(false);
@@ -37,35 +33,19 @@ export function AdminGuard({ children }: AdminGuardProps) {
     async function checkAdminAuth() {
       try {
         setVerifying(true);
-        const token = await getToken();
-        if (token) {
-          await api.get<{ ok: boolean }>('/api/auth/check-admin', { token });
-        } else if (user?.email && adminEmails.includes(user.email.toLowerCase())) {
-          // Bypass local si es admin autorizado y no hay token de Firebase generado
-          if (isMounted) {
-            setAuthorized(true);
-            setErrorMsg(null);
-            setVerifying(false);
-            return;
-          }
-        }
+        await api.get<{ ok: boolean }>('/api/auth/check-admin', { getToken });
 
         if (isMounted) {
           setAuthorized(true);
           setErrorMsg(null);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (isMounted) {
-          if (user?.email && adminEmails.includes(user.email.toLowerCase())) {
-            setAuthorized(true);
-            setErrorMsg(null);
+          setAuthorized(false);
+          if (err instanceof ApiError && (err.status === 403 || err.status === 401)) {
+            setErrorMsg(`El correo (${user?.email}) no cuenta con permisos de administrador.`);
           } else {
-            setAuthorized(false);
-            if (err instanceof ApiError && (err.status === 403 || err.status === 401)) {
-              setErrorMsg(`El correo (${user?.email}) no cuenta con permisos de administrador.`);
-            } else {
-              setErrorMsg(err instanceof ApiError ? err.message : 'No se pudo verificar el rol de administrador.');
-            }
+            setErrorMsg(err instanceof ApiError ? err.message : 'No se pudo verificar el rol de administrador.');
           }
         }
       } finally {
