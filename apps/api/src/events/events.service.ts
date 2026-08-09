@@ -11,7 +11,15 @@ export class EventsService {
     if (query.published !== undefined) where.published = query.published;
     if (query.partners) where.partners = query.partners;
     if (query.search) {
-      where.title = { contains: query.search };
+      const term = query.search.trim();
+      if (term.length >= 3) {
+        where.OR = [
+          { title: { search: term } },
+          { description: { search: term } },
+        ];
+      } else {
+        where.title = { contains: term };
+      }
     }
 
     const [items, total] = await Promise.all([
