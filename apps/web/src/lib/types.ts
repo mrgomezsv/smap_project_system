@@ -212,3 +212,156 @@ export interface AuthUser {
   name: string;
   userId?: number;
 }
+
+export type ContractStatus = 'PENDING' | 'SIGNED' | 'EXPIRED' | 'CANCELLED';
+
+export type DocumentKind =
+  | 'ISSUED_PDF'
+  | 'ELECTRONIC_SIGNED_PDF'
+  | 'UPLOADED_SIGNED_PDF'
+  | 'PAYMENT_RECEIPT'
+  | 'OTHER';
+
+export type PaymentType = 'DEPOSIT' | 'PAYMENT' | 'REFUND';
+
+export interface ContractDocument {
+  id: number | string;
+  contractId: number;
+  paymentId: number | string | null;
+  kind: DocumentKind | string;
+  originalFilename: string;
+  mimeType: string;
+  sizeBytes: number;
+  sha256: string;
+  createdAt: string;
+}
+
+export interface ContractPayment {
+  id: number | string;
+  contractId: number;
+  type: PaymentType | string;
+  amount: number;
+  method: string;
+  reference: string | null;
+  notes: string | null;
+  paidAt: string;
+  createdAt: string;
+}
+
+export interface ContractAdminDetail {
+  id: number;
+  token: string;
+  status: ContractStatus | string;
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string | null;
+  clientAddress: string;
+  clientCityStateZip: string | null;
+  driverLicense: string | null;
+  eventDate: string | null;
+  startTime: string | null;
+  endTime: string | null;
+  equipment: string;
+  groundType: string | null;
+  price: number | null;
+  deposit: number | null;
+  notes: string | null;
+  signedAt: string | null;
+  signatureMethod: string | null;
+  signerIp: string | null;
+  expiresAt: string | null;
+  viewedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  archivedAt: string | null;
+  cancelledAt: string | null;
+  cancelReason: string | null;
+  createdById: number | null;
+  client: {
+    id: number;
+    email: string;
+    name: string;
+    phone: string | null;
+    userId: number | null;
+  } | null;
+  documents: ContractDocument[];
+  payments: ContractPayment[];
+  totals: {
+    totalPaid: number;
+    balanceDue: number;
+    price: number;
+    deposit: number;
+  };
+}
+
+export interface ContractSummary {
+  id: number;
+  token: string;
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string | null;
+  eventDate: string | null;
+  equipment: string;
+  status: ContractStatus | string;
+  price: number | null;
+  deposit: number | null;
+  createdAt: string;
+  signedAt: string | null;
+  expiresAt: string | null;
+  archivedAt: string | null;
+}
+
+export interface ContractCreateResponse {
+  contract: {
+    id: number;
+    token: string;
+    status: ContractStatus | string;
+  };
+  signUrl: string;
+  emailSent: boolean;
+  documentId: number | string | null;
+}
+
+export interface Client {
+  id: number;
+  email: string;
+  name: string;
+  phone: string | null;
+  address: string | null;
+  cityStateZip: string | null;
+  driverLicense: string | null;
+  userId: number | null;
+  source: string;
+  notes: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  _count?: { rentalContracts: number };
+  user?: {
+    id: number;
+    email: string | null;
+    username: string | null;
+    firstName: string | null;
+    lastName: string | null;
+  } | null;
+  rentalContracts?: Array<{
+    id: number;
+    token: string;
+    clientName: string;
+    clientEmail: string;
+    equipment: string;
+    eventDate: string | null;
+    status: ContractStatus | string;
+    price: number | null;
+    deposit: number | null;
+    createdAt: string;
+    signedAt: string | null;
+  }>;
+}
+
+export interface ClientsListResponse {
+  items: Client[];
+  total: number;
+  skip: number;
+  take: number;
+}

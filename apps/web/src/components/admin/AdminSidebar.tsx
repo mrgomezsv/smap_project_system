@@ -18,6 +18,7 @@ const sections = [
     title: 'Gestión',
     links: [
       { href: '/admin/contratos', label: 'Contratos Renta', icon: '📄' },
+      { href: '/admin/clientes', label: 'Clientes', icon: '👥' },
       { href: '/admin/comentarios', label: 'Comentarios', icon: '💬' },
       { href: '/admin/waivers', label: 'Waivers', icon: '📋' },
       { href: '/admin/waivers/escanear', label: 'Escanear QR', icon: '📷' },

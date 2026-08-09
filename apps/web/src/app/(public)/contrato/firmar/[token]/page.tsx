@@ -49,7 +49,7 @@ export default function FirmarContratoPage() {
   const [signature, setSignature] = useState<string | null>(null);
   const [checklist, setChecklist] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {};
-    CHECKLIST_ITEMS.forEach((_, i) => (init[`check_${i}`] = true));
+    CHECKLIST_ITEMS.forEach((_, i) => (init[`check_${i}`] = false));
     return init;
   });
 
@@ -80,8 +80,17 @@ export default function FirmarContratoPage() {
     }));
   }
 
+  const allChecklistAccepted = CHECKLIST_ITEMS.every(
+    (_, index) => checklist[`check_${index}`] === true,
+  );
+
   async function handleSignSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!allChecklistAccepted) {
+      alert('Debes aceptar todos los puntos de seguridad antes de firmar.');
+      return;
+    }
+
     if (!signature) {
       alert('Por favor realiza tu firma en el recuadro antes de continuar.');
       return;
@@ -296,7 +305,7 @@ export default function FirmarContratoPage() {
               <div className="pt-4 border-t border-border">
                 <button
                   type="submit"
-                  disabled={submitting || !signature}
+                  disabled={submitting || !signature || !allChecklistAccepted}
                   className="btn btn-primary w-full py-3.5 text-base font-extrabold shadow-large"
                 >
                   {submitting ? 'Procesando Firma...' : '✍️ Firmar y Aceptar Contrato'}

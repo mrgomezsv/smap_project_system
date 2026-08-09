@@ -40,10 +40,24 @@ type RequestOptions = {
   headers?: Record<string, string>;
   cache?: RequestCache;
   next?: { revalidate?: number };
+  signal?: AbortSignal;
+  timeoutMs?: number;
 };
 
+type DownloadOptions = Omit<RequestOptions, 'method' | 'body'>;
+
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { method = 'GET', body, token, getToken, headers = {}, cache, next } = options;
+  const {
+    method = 'GET',
+    body,
+    token,
+    getToken,
+    headers = {},
+    cache,
+    next,
+    signal: externalSignal,
+    timeoutMs = 8_000,
+  } = options;
 
   const finalHeaders: Record<string, string> = {
     Accept: 'application/json',
@@ -61,7 +75,12 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8_000);
+  const onAbort = () => controller.abort();
+  if (externalSignal) {
+    if (externalSignal.aborted) controller.abort();
+    else externalSignal.addEventListener('abort', onAbort, { once: true });
+  }
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   let res: Response;
   try {
     res = await fetch(`${API_BASE_URL}${path}`, {
@@ -74,6 +93,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     });
   } finally {
     clearTimeout(timeout);
+    if (externalSignal) externalSignal.removeEventListener('abort', onAbort);
   }
 
   const contentType = res.headers.get('content-type') ?? '';
@@ -95,6 +115,54 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   return (await res.json()) as T;
 }
 
+async function download(path: string, options: DownloadOptions = {}): Promise<Blob> {
+  const {
+    token,
+    getToken,
+    headers = {},
+    cache,
+    signal: externalSignal,
+    timeoutMs = 30_000,
+  } = options;
+
+  const finalHeaders: Record<string, string> = { ...headers };
+  const finalToken = token ?? (getToken ? await getToken() : null);
+  if (finalToken) finalHeaders.Authorization = `Bearer ${finalToken}`;
+
+  const controller = new AbortController();
+  const onAbort = () => controller.abort();
+  if (externalSignal) {
+    if (externalSignal.aborted) controller.abort();
+    else externalSignal.addEventListener('abort', onAbort, { once: true });
+  }
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE_URL}${path}`, {
+      method: 'GET',
+      headers: finalHeaders,
+      cache: cache ?? 'no-store',
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+    if (externalSignal) externalSignal.removeEventListener('abort', onAbort);
+  }
+
+  if (!res.ok) {
+    const contentType = res.headers.get('content-type') ?? '';
+    const isJson = contentType.includes('application/json');
+    const data = isJson ? await res.json() : await res.text();
+    const message =
+      (isJson && (data as any)?.message) ||
+      (typeof data === 'string' ? data : `HTTP ${res.status}`);
+    const errorMsg = Array.isArray(message) ? message.join(', ') : String(message);
+    throw new ApiError(errorMsg, res.status, data);
+  }
+
+  return res.blob();
+}
+
 export const api = {
   get: <T>(path: string, options?: Omit<RequestOptions, 'method' | 'body'>) =>
     request<T>(path, { ...options, method: 'GET' }),
@@ -102,8 +170,10 @@ export const api = {
     request<T>(path, { ...options, method: 'POST', body }),
   patch: <T>(path: string, body?: unknown, options?: Omit<RequestOptions, 'method' | 'body'>) =>
     request<T>(path, { ...options, method: 'PATCH', body }),
-  delete: <T>(path: string, options?: Omit<RequestOptions, 'method' | 'body'>) =>
+  delete: <T>(path: string, options?: Omit<RequestOptions, 'method'>) =>
     request<T>(path, { ...options, method: 'DELETE' }),
+  download: (path: string, options?: DownloadOptions) => download(path, options),
+  blob: (path: string, options?: DownloadOptions) => download(path, options),
 };
 
 export { API_BASE_URL, PUBLIC_API_URL };
