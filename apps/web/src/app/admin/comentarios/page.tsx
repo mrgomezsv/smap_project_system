@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { api, ApiError } from '@/lib/api';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
 interface ProductCommentItem {
   id: number;
@@ -27,6 +28,7 @@ export default function AdminComentariosPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved'>('all');
   const [actionId, setActionId] = useState<number | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
 
   const fetchComments = async () => {
     try {
@@ -65,16 +67,17 @@ export default function AdminComentariosPage() {
     }
   }
 
-  async function handleDelete(id: number) {
-    if (!confirm('¿Estás seguro de eliminar permanentemente este comentario?')) return;
+  async function confirmDelete() {
+    if (!deleteTargetId) return;
     try {
-      setActionId(id);
-      await api.delete(`/api/comments/${id}`, { getToken });
-      setComments((prev) => prev.filter((c) => c.id !== id));
+      setActionId(deleteTargetId);
+      await api.delete(`/api/comments/${deleteTargetId}`, { getToken });
+      setComments((prev) => prev.filter((c) => c.id !== deleteTargetId));
     } catch (e) {
       alert('Error al eliminar el comentario.');
     } finally {
       setActionId(null);
+      setDeleteTargetId(null);
     }
   }
 
@@ -203,7 +206,7 @@ export default function AdminComentariosPage() {
                     </button>
 
                     <button
-                      onClick={() => handleDelete(item.id)}
+                      onClick={() => setDeleteTargetId(item.id)}
                       disabled={actionId === item.id}
                       className="px-3 py-1 bg-danger/10 text-danger border border-danger/30 rounded-lg text-xs font-bold hover:bg-danger/20 transition"
                       title="Eliminar permanentemente"
@@ -217,6 +220,19 @@ export default function AdminComentariosPage() {
           </table>
         </div>
       )}
+
+      {/* Modal de confirmación estilizado */}
+      <ConfirmModal
+        isOpen={Boolean(deleteTargetId)}
+        title="Eliminar comentario"
+        message="¿Estás seguro de que deseas eliminar permanentemente este comentario? Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        isDanger={true}
+        loading={actionId !== null}
+        onConfirm={confirmDelete}
+        onClose={() => setDeleteTargetId(null)}
+      />
     </div>
   );
 }
