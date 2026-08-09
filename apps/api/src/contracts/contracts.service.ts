@@ -6,7 +6,7 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, RentalContract } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmailService } from '../waivers/services/email.service';
 import { ContractPdfService } from './services/contract-pdf.service';
@@ -144,7 +144,7 @@ export interface SignRequestMeta {
 }
 
 export interface CreateContractResult {
-  contract: Awaited<ReturnType<PrismaService['rentalContract']['create']>>;
+  contract: RentalContract;
   signUrl: string;
   emailSent: boolean;
   documentId: bigint | null;
