@@ -40,6 +40,10 @@ model User {
   waiversLinked     WaiverQRV2[]        @relation("WaiverUserInt")
   waiverValidations WaiverValidator[]
   firebaseUser      FirebaseUser?
+  clientProfile     Client?
+  contractsCreated  RentalContract[]    @relation("ContractCreatedBy")
+  uploadedContractDocuments ContractDocument[] @relation("ContractDocumentUploader")
+  contractPaymentsCreated ContractPayment[]    @relation("ContractPaymentCreator")
 
   @@index([dateJoined], map: "idx_user_datejoined")
   @@index([isActive], map: "idx_user_active")
@@ -154,7 +158,7 @@ model CommentReply {
   userId          String?  @map("user_id") @db.VarChar(128)
   userIdInt       Int?     @map("user_id_int")
   userDisplayName String?  @map("user_display_name") @db.VarChar(255)
-  replyText       String   @map("reply_text") @db.LongText
+  replyText       String   @map("reply_LONGTEXT") @db.LongText
   createdAt       DateTime @default(now()) @map("created_at") @db.DateTime(6)
 
   comment ProductComment @relation(fields: [commentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_product_comment_reply_comment_id_fk")
@@ -346,14 +350,31 @@ model RentalContract {
   signerIp           String?   @map("signer_ip") @db.VarChar(45)
   signerUserAgent    String?   @map("signer_user_agent") @db.Text
   createdAt          DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt          DateTime  @updatedAt @map("updated_at") @db.DateTime(6)
+  expiresAt          DateTime? @map("expires_at") @db.DateTime(6)
+  viewedAt           DateTime? @map("viewed_at") @db.DateTime(6)
+  archivedAt         DateTime? @map("archived_at") @db.DateTime(6)
+  cancelledAt        DateTime? @map("cancelled_at") @db.DateTime(6)
+  cancelReason       String?   @map("cancel_reason") @db.Text
+  signatureMethod    String?   @map("signature_method") @db.VarChar(30)
+  createdById        Int?      @map("created_by_id")
+  clientId           Int?      @map("client_id")
 
-  safetyItems ContractSafetyItem[]
+  createdBy     User?               @relation("ContractCreatedBy", fields: [createdById], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "t_app_rental_contract_created_by_fk")
+  client        Client?             @relation(fields: [clientId], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "t_app_rental_contract_client_fk")
+  safetyItems   ContractSafetyItem[]
+  documents     ContractDocument[]
+  payments      ContractPayment[]
 
   @@index([token], map: "idx_rental_contract_token")
   @@index([clientEmail], map: "idx_rental_contract_email")
   @@index([status, createdAt(sort: Desc)], map: "idx_contract_status_created")
   @@index([eventDate], map: "idx_contract_eventdate")
   @@index([clientName], map: "idx_contract_client_name")
+  @@index([clientId], map: "idx_rental_contract_client_id")
+  @@index([createdById], map: "idx_rental_contract_created_by")
+  @@index([expiresAt], map: "idx_rental_contract_expires_at")
+  @@index([archivedAt], map: "idx_rental_contract_archived_at")
   @@map("t_app_rental_contract")
 }
 
@@ -445,4 +466,73 @@ model ContractSafetyItem {
   @@unique([contractId, itemKey], map: "t_app_contract_safety_unique")
   @@index([contractId], map: "idx_safety_contract")
   @@map("t_app_contract_safety_item")
+}
+
+model Client {
+  id             Int      @id @default(autoincrement())
+  email          String   @unique(map: "t_app_client_email_unique") @db.VarChar(254)
+  name           String   @db.VarChar(150)
+  phone          String?  @db.VarChar(50)
+  address        String?  @db.VarChar(255)
+  cityStateZip   String?  @map("city_state_zip") @db.VarChar(150)
+  driverLicense  String?  @map("driver_license") @db.VarChar(50)
+  userId         Int?     @unique(map: "t_app_client_user_id_unique") @map("user_id")
+  source         String   @default("manual") @db.VarChar(30)
+  notes          String?  @db.Text
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.DateTime(6)
+
+  user          User?           @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "t_app_client_user_fk")
+  rentalContracts RentalContract[]
+
+  @@index([name], map: "idx_client_name")
+  @@index([isActive], map: "idx_client_active")
+  @@index([source], map: "idx_client_source")
+  @@map("t_app_client")
+}
+
+model ContractDocument {
+  id                BigInt   @id @default(autoincrement())
+  contractId        Int      @map("contract_id")
+  paymentId         BigInt?  @map("payment_id")
+  kind              String   @db.VarChar(30)
+  originalFilename  String   @map("original_filename") @db.VarChar(255)
+  mimeType          String   @map("mime_type") @db.VarChar(120)
+  sizeBytes         Int      @map("size_bytes")
+  sha256            String   @db.VarChar(64)
+  storagePath       String   @map("storage_path") @db.VarChar(500)
+  uploadedById      Int?     @map("uploaded_by_id")
+  createdAt         DateTime @default(now()) @map("created_at") @db.DateTime(6)
+
+  contract   RentalContract @relation(fields: [contractId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_contract_document_contract_fk")
+  payment    ContractPayment? @relation(fields: [paymentId], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "t_app_contract_document_payment_fk")
+  uploadedBy User?            @relation("ContractDocumentUploader", fields: [uploadedById], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "t_app_contract_document_uploader_fk")
+
+  @@index([contractId, kind], map: "idx_contract_document_contract_kind")
+  @@index([paymentId], map: "idx_contract_document_payment")
+  @@index([createdAt(sort: Desc)], map: "idx_contract_document_created")
+  @@map("t_app_contract_document")
+}
+
+model ContractPayment {
+  id           BigInt   @id @default(autoincrement())
+  contractId   Int      @map("contract_id")
+  type         String   @db.VarChar(20)
+  amount       Decimal  @db.Decimal(10, 2)
+  method       String   @db.VarChar(40)
+  reference    String?  @db.VarChar(120)
+  notes        String?  @db.Text
+  paidAt       DateTime @map("paid_at") @db.DateTime(6)
+  createdById  Int?     @map("created_by_id")
+  createdAt    DateTime @default(now()) @map("created_at") @db.DateTime(6)
+
+  contract    RentalContract    @relation(fields: [contractId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_contract_payment_contract_fk")
+  createdBy   User?             @relation("ContractPaymentCreator", fields: [createdById], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "t_app_contract_payment_creator_fk")
+  documents   ContractDocument[]
+
+  @@index([contractId], map: "idx_contract_payment_contract")
+  @@index([contractId, type], map: "idx_contract_payment_contract_type")
+  @@index([paidAt(sort: Desc)], map: "idx_contract_payment_paid_at")
+  @@map("t_app_contract_payment")
 }
