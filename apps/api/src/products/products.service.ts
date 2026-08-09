@@ -58,16 +58,31 @@ export class ProductsService {
           youtubeUrl: true,
           userId: true,
           user: { select: { id: true, username: true } },
+          _count: {
+            select: {
+              likes: true,
+              comments: { where: { isApproved: true } },
+            },
+          },
         },
       }),
       this.prisma.product.count({ where }),
     ]);
 
     const translatedItems = query.lang
-      ? await Promise.all(items.map((item) => this.translationService.translateProduct(item, query.lang)))
+      ? await Promise.all(
+          items.map((item) =>
+            this.translationService.translateProduct(item, query.lang),
+          ),
+        )
       : items;
 
-    return { items: translatedItems, total, skip: query.skip ?? 0, take: query.take ?? 20 };
+    return {
+      items: translatedItems,
+      total,
+      skip: query.skip ?? 0,
+      take: query.take ?? 20,
+    };
   }
 
   async findByCategory(category: string, lang?: 'es' | 'en') {
@@ -84,11 +99,21 @@ export class ProductsService {
         img1: true,
         publicated: true,
         created: true,
+        _count: {
+          select: {
+            likes: true,
+            comments: { where: { isApproved: true } },
+          },
+        },
       },
     });
 
     return lang
-      ? Promise.all(items.map((item) => this.translationService.translateProduct(item, lang)))
+      ? Promise.all(
+          items.map((item) =>
+            this.translationService.translateProduct(item, lang),
+          ),
+        )
       : items;
   }
 
@@ -97,13 +122,20 @@ export class ProductsService {
       where: { id: BigInt(id) },
       include: {
         user: { select: { id: true, username: true } },
-        _count: { select: { likes: true, comments: true } },
+        _count: {
+          select: {
+            likes: true,
+            comments: { where: { isApproved: true } },
+          },
+        },
       },
     });
     if (!product) {
       throw new NotFoundException(`Producto #${id} no encontrado`);
     }
-    return lang ? this.translationService.translateProduct(product, lang) : product;
+    return lang
+      ? this.translationService.translateProduct(product, lang)
+      : product;
   }
 
   async create(dto: CreateProductDto, userId: number) {
