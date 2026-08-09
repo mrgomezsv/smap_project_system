@@ -16,8 +16,19 @@ export class ProductsService {
     const where: Record<string, unknown> = {};
     if (query.category) where.category = query.category;
     if (query.publicated !== undefined) where.publicated = query.publicated;
+
+    // FULLTEXT para búsquedas largas (>=4 chars), LIKE para términos cortos
+    // innodb_ft_min_token_size=3 por defecto → cubrimos desde 3 chars
+    const useFulltext = query.search && query.search.trim().length >= 3;
     if (query.search) {
-      where.title = { contains: query.search };
+      if (useFulltext) {
+        where.OR = [
+          { title: { search: query.search.trim() } },
+          { description: { search: query.search.trim() } },
+        ];
+      } else {
+        where.title = { contains: query.search };
+      }
     }
 
     const [items, total] = await Promise.all([
@@ -26,7 +37,28 @@ export class ProductsService {
         skip: query.skip ?? 0,
         take: query.take ?? 20,
         orderBy: { created: 'desc' },
-        include: { user: { select: { id: true, username: true } } },
+        // Select específico en vez de include: menos columnas transferidas
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          price: true,
+          category: true,
+          img: true,
+          img1: true,
+          img2: true,
+          img3: true,
+          img4: true,
+          img5: true,
+          publicated: true,
+          created: true,
+          dimensions: true,
+          space: true,
+          circuits: true,
+          youtubeUrl: true,
+          userId: true,
+          user: { select: { id: true, username: true } },
+        },
       }),
       this.prisma.product.count({ where }),
     ]);
@@ -42,6 +74,17 @@ export class ProductsService {
     const items = await this.prisma.product.findMany({
       where: { category, publicated: true },
       orderBy: { created: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+        category: true,
+        img: true,
+        img1: true,
+        publicated: true,
+        created: true,
+      },
     });
 
     return lang

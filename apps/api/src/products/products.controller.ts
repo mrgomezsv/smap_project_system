@@ -6,7 +6,7 @@ import { QueryProductDto } from './dto/query-product.dto';
 import { Public } from '../auth/decorators/public.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
-import { CacheInterceptor, Cache, SkipCache } from '../common/interceptors/cache.interceptor';
+import { CacheInterceptor, Cache, SkipCache, CacheInvalidate } from '../common/interceptors/cache.interceptor';
 
 @Controller('api/products')
 @UseInterceptors(CacheInterceptor)
@@ -35,18 +35,21 @@ export class ProductsController {
   }
 
   @SkipCache()
+  @CacheInvalidate('/api/products*', '/api/v2/waiver*')
   @Post()
   create(@Body() dto: CreateProductDto, @CurrentUser() user: AuthUser) {
     return this.productsService.create(dto, user.userId!);
   }
 
   @SkipCache()
+  @CacheInvalidate('/api/products*')
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
     return this.productsService.update(Number(id), dto);
   }
 
   @SkipCache()
+  @CacheInvalidate('/api/products*')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(Number(id));
