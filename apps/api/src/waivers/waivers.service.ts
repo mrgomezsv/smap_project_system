@@ -4,6 +4,7 @@ import {
   BadRequestException,
   Logger,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateWaiverDto, RelativeDto } from './dto/create-waiver.dto';
 import { PdfService } from './services/pdf.service';
@@ -29,6 +30,8 @@ export class WaiversService {
 
   /**
    * Crea un nuevo waiver con QR, familiares, PDF y email.
+   * Usa captura de P2002 (unique constraint violation) en lugar de un SELECT previo
+   * para detectar colisiones de QR. Reduce round-trips a la BD.
    */
   async create(
     userId: string,
@@ -39,40 +42,52 @@ export class WaiversService {
     emailSent: boolean;
     pdfSize: number;
   }> {
-    // Generar QR único (reintentar si ya existe)
-    let qrCode = this.generateUniqueQr();
-    let attempts = 0;
-    while (await this.prisma.waiverQRV2.findUnique({ where: { qrCode } })) {
-      qrCode = this.generateUniqueQr();
-      if (++attempts > 10) {
-        throw new BadRequestException('No se pudo generar un QR único');
-      }
-    }
-
     // Calcular expiresAt = medianoche del día actual
     const now = new Date();
     const expiresAt = new Date(now);
     expiresAt.setHours(23, 59, 59, 999);
 
-    // Crear el waiver con sus familiares
-    const waiver = await this.prisma.waiverQRV2.create({
-      data: {
-        qrCode,
-        userId,
-        userName: dto.userName,
-        userEmail: dto.userEmail,
-        userPhone: dto.userPhone ?? null,
-        expiresAt,
-        status: 'ACTIVE',
-        relatives: {
-          create: (dto.relatives || []).map((r: RelativeDto) => ({
-            relativeName: r.name,
-            relativeAge: r.age,
-          })),
-        },
-      },
-      include: { relatives: true },
-    });
+    // Crear el waiver: reintenta QR si choca con constraint UNIQUE.
+    // Aprovecha el índice UNIQUE existente en qr_code (más rápido que SELECT previo).
+    let waiver: Prisma.WaiverQRV2GetPayload<{ include: { relatives: true } }> | null = null;
+    let qrCode = '';
+    let lastError: unknown = null;
+    for (let attempt = 0; attempt < 10; attempt++) {
+      qrCode = this.generateUniqueQr();
+      try {
+        waiver = await this.prisma.waiverQRV2.create({
+          data: {
+            qrCode,
+            userId,
+            userName: dto.userName,
+            userEmail: dto.userEmail,
+            userPhone: dto.userPhone ?? null,
+            expiresAt,
+            status: 'ACTIVE',
+            relatives: {
+              create: (dto.relatives || []).map((r: RelativeDto) => ({
+                relativeName: r.name,
+                relativeAge: r.age,
+              })),
+            },
+          },
+          include: { relatives: true },
+        });
+        break;
+      } catch (err) {
+        lastError = err;
+        // P2002 = unique constraint violation en Prisma
+        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+          continue; // reintentar con nuevo QR
+        }
+        throw err; // otro error: propagar
+      }
+    }
+
+    if (!waiver) {
+      this.logger.error(`No se pudo generar QR único tras 10 intentos. Último error: ${String(lastError)}`);
+      throw new BadRequestException('No se pudo generar un QR único');
+    }
 
     // Generar PDF y enviar email sin romper la creación del waiver si el envío falla
     let emailSent = false;
@@ -279,11 +294,30 @@ export class WaiversService {
   /**
    * Listado paginado de TODOS los waivers (uso admin).
    * Side-effects: actualiza status si expiraron (fire-and-forget).
+   * Usa _count en lugar de include para reducir payload.
+   * Soporta búsqueda opcional por nombre/email/QR.
    */
-  async findAll(opts: { take: number; skip: number; status?: string }) {
-    const where: { status?: string } = {};
+  async findAll(opts: { take: number; skip: number; status?: string; search?: string }) {
+    const where: { status?: string; OR?: Array<Record<string, unknown>> } = {};
     if (opts.status === 'ACTIVE' || opts.status === 'INACTIVE') {
       where.status = opts.status;
+    }
+    if (opts.search && opts.search.trim()) {
+      const term = opts.search.trim();
+      // FULLTEXT para nombres/emails largos, LIKE para QR codes (8 chars max)
+      if (term.length >= 3) {
+        where.OR = [
+          { userName: { search: term } },
+          { userEmail: { search: term } },
+          { qrCode: { contains: term.toUpperCase() } },
+        ];
+      } else {
+        where.OR = [
+          { userName: { contains: term } },
+          { userEmail: { contains: term } },
+          { qrCode: { contains: term.toUpperCase() } },
+        ];
+      }
     }
 
     const [waivers, totalCount] = await Promise.all([
@@ -292,7 +326,18 @@ export class WaiversService {
         orderBy: { createdAt: 'desc' },
         take: opts.take,
         skip: opts.skip,
-        include: { relatives: true, scans: true },
+        select: {
+          id: true,
+          qrCode: true,
+          userId: true,
+          userName: true,
+          userEmail: true,
+          userPhone: true,
+          status: true,
+          createdAt: true,
+          expiresAt: true,
+          _count: { select: { relatives: true, scans: true } },
+        },
       }),
       this.prisma.waiverQRV2.count({ where }),
     ]);
@@ -314,19 +359,14 @@ export class WaiversService {
 
   /**
    * Elimina uno o más waivers por ID/bigint.
+   * Aprovecha el onDelete: Cascade de las FKs para borrar relatives y scans
+   * automáticamente con una sola operación.
    */
   async deleteMany(ids: (string | number)[]) {
     if (!ids || ids.length === 0) {
       throw new BadRequestException('Debes proporcionar al menos un ID para eliminar');
     }
-    const numericIds = ids.map((id) => (typeof id === 'string' ? BigInt(id) : BigInt(id)));
-    // Primero eliminar familiares y scans relacionados en cascada o explicitamente
-    await this.prisma.waiverDataV2.deleteMany({
-      where: { waiverQrId: { in: numericIds } },
-    });
-    await this.prisma.waiverScanV2.deleteMany({
-      where: { waiverQrId: { in: numericIds } },
-    });
+    const numericIds = ids.map((id) => BigInt(id));
     const result = await this.prisma.waiverQRV2.deleteMany({
       where: { id: { in: numericIds } },
     });

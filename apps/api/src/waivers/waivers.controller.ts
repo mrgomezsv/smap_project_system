@@ -37,7 +37,7 @@ export class WaiversController {
 
   /**
    * GET /api/v2/waiver/all - Listar TODOS los waivers (admin only).
-   * Soporta query params: ?status=ACTIVE|INACTIVE&take=50&skip=0
+   * Soporta query params: ?status=ACTIVE|INACTIVE&take=50&skip=0&search=...
    */
   @Get('all')
   findAll(
@@ -45,12 +45,14 @@ export class WaiversController {
     @Query('take') take?: string,
     @Query('skip') skip?: string,
     @Query('status') status?: string,
+    @Query('search') search?: string,
   ) {
     assertAdminEmail(user.email);
     return this.waiversService.findAll({
       take: take ? Math.min(parseInt(take, 10) || 50, 200) : 50,
       skip: skip ? parseInt(skip, 10) || 0 : 0,
       status,
+      search,
     });
   }
 
