@@ -18,15 +18,28 @@ export class ChatService {
     });
   }
 
-  async getRoom(roomId: number) {
+  async getRoom(
+    roomId: number,
+    opts: { take?: number; skip?: number; cursor?: number } = {},
+  ) {
+    const take = Math.min(opts.take ?? 50, 100);
     const room = await this.prisma.chatRoom.findUnique({
       where: { id: roomId },
       include: {
         user: { select: { id: true, username: true, email: true } },
-        messages: { orderBy: { timestamp: 'asc' } },
+        messages: {
+          orderBy: { timestamp: 'desc' }, // más recientes primero (mejor para cursor pagination)
+          take,
+          skip: opts.skip,
+          ...(opts.cursor && { cursor: { id: opts.cursor } }),
+        },
       },
     });
     if (!room) throw new NotFoundException(`Chat room #${roomId} no encontrado`);
+    // Invertir para que se devuelvan en orden cronológico ascendente
+    if (room.messages) {
+      room.messages = room.messages.reverse();
+    }
     return room;
   }
 
