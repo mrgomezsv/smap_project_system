@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { CreateContractModal } from '@/components/admin/CreateContractModal';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 interface RentalContract {
   id: number;
@@ -20,6 +21,7 @@ interface RentalContract {
 }
 
 export default function AdminContratosPage() {
+  const { getToken } = useAuth();
   const [contracts, setContracts] = useState<RentalContract[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -31,7 +33,8 @@ export default function AdminContratosPage() {
       const query = new URLSearchParams();
       if (search) query.set('search', search);
       const res = await api.get<{ items: RentalContract[]; total: number }>(
-        `/api/v2/contracts?${query.toString()}`
+        `/api/v2/contracts?${query.toString()}`,
+        { getToken }
       );
       setContracts(res.items || []);
     } catch (e) {

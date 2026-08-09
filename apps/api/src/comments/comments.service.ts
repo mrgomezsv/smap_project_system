@@ -27,7 +27,7 @@ export class CommentsService {
     opts: { take?: number; skip?: number; cursor?: number } = {},
   ) {
     const take = Math.min(opts.take ?? 20, 50);
-    return this.prisma.productComment.findMany({
+    const comments = await this.prisma.productComment.findMany({
       where: {
         productId: BigInt(productId),
         isApproved: true,
@@ -39,10 +39,19 @@ export class CommentsService {
       include: {
         replies: {
           orderBy: { createdAt: 'asc' },
-          take: 10, // Limitar replies por comment
+          take: 10,
         },
       },
     });
+
+    return comments.map((c) => ({
+      id: Number(c.id),
+      productId: Number(c.productId),
+      authorName: c.userDisplayName || 'Usuario',
+      comment: c.comment,
+      createdAt: c.createdAt,
+      replies: c.replies,
+    }));
   }
 
   /**
@@ -55,20 +64,11 @@ export class CommentsService {
 
     if (query?.search) {
       const term = query.search.trim();
-      // FULLTEXT para texto de comentario (>=3 chars), LIKE para display name
-      if (term.length >= 3) {
-        where.OR = [
-          { comment: { search: term } },
-          { userDisplayName: { contains: term } },
-          { product: { title: { contains: term } } },
-        ];
-      } else {
-        where.OR = [
-          { comment: { contains: term } },
-          { userDisplayName: { contains: term } },
-          { product: { title: { contains: term } } },
-        ];
-      }
+      where.OR = [
+        { comment: { contains: term } },
+        { userDisplayName: { contains: term } },
+        { product: { title: { contains: term } } },
+      ];
     }
 
     const take = query?.take ? Number(query.take) : 50;

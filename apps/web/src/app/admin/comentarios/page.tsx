@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { api, ApiError } from '@/lib/api';
 import Link from 'next/link';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 interface ProductCommentItem {
   id: number;
@@ -20,6 +21,7 @@ interface ProductCommentItem {
 }
 
 export default function AdminComentariosPage() {
+  const { getToken } = useAuth();
   const [comments, setComments] = useState<ProductCommentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -34,7 +36,8 @@ export default function AdminComentariosPage() {
       if (statusFilter !== 'all') query.set('status', statusFilter);
 
       const res = await api.get<{ items: ProductCommentItem[]; total: number }>(
-        `/api/comments/all?${query.toString()}`
+        `/api/comments/all?${query.toString()}`,
+        { getToken }
       );
       setComments(res.items || []);
     } catch (e) {
@@ -51,7 +54,7 @@ export default function AdminComentariosPage() {
   async function handleToggleApproval(id: number, currentApproved: boolean) {
     try {
       setActionId(id);
-      await api.patch(`/api/comments/${id}/approval`, { isApproved: !currentApproved });
+      await api.patch(`/api/comments/${id}/approval`, { isApproved: !currentApproved }, { getToken });
       setComments((prev) =>
         prev.map((c) => (c.id === id ? { ...c, isApproved: !currentApproved } : c))
       );
@@ -66,7 +69,7 @@ export default function AdminComentariosPage() {
     if (!confirm('¿Estás seguro de eliminar permanentemente este comentario?')) return;
     try {
       setActionId(id);
-      await api.delete(`/api/comments/${id}`);
+      await api.delete(`/api/comments/${id}`, { getToken });
       setComments((prev) => prev.filter((c) => c.id !== id));
     } catch (e) {
       alert('Error al eliminar el comentario.');

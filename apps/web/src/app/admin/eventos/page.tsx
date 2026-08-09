@@ -5,8 +5,10 @@ import { useEffect, useState } from 'react';
 import { DataTable, type Column } from '@/components/admin/DataTable';
 import { api, ApiError } from '@/lib/api';
 import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 export default function AdminEventosPage() {
+  const { getToken } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -15,7 +17,7 @@ export default function AdminEventosPage() {
     let cancelled = false;
     async function load() {
       try {
-        const res = await api.get<{ items: Event[] }>('/api/events?take=100');
+        const res = await api.get<{ items: Event[] }>('/api/events?take=100', { getToken });
         if (!cancelled) setEvents(res.items);
       } catch (e) {
         if (!cancelled) {

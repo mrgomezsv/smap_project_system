@@ -73,19 +73,11 @@ export class ContractsService {
     // FULLTEXT para búsquedas largas (>=3 chars), LIKE para términos cortos
     if (query?.search) {
       const term = query.search.trim();
-      if (term.length >= 3) {
-        where.OR = [
-          { clientName: { search: term } },
-          { clientEmail: { search: term } },
-          { equipment: { search: term } },
-        ];
-      } else {
-        where.OR = [
-          { clientName: { contains: query.search } },
-          { clientEmail: { contains: query.search } },
-          { equipment: { contains: query.search } },
-        ];
-      }
+      where.OR = [
+        { clientName: { contains: term } },
+        { clientEmail: { contains: term } },
+        { equipment: { contains: term } },
+      ];
     }
 
     const take = query?.take ? Number(query.take) : 50;
