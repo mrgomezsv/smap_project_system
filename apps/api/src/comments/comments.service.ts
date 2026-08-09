@@ -20,17 +20,26 @@ export class CommentsService {
 
   /**
    * Lista solo los comentarios APROBADOS de un producto para la vista pública.
+   * Soporta paginación por cursor o skip/take.
    */
-  async findByProduct(productId: number) {
+  async findByProduct(
+    productId: number,
+    opts: { take?: number; skip?: number; cursor?: number } = {},
+  ) {
+    const take = Math.min(opts.take ?? 20, 50);
     return this.prisma.productComment.findMany({
       where: {
         productId: BigInt(productId),
         isApproved: true,
       },
       orderBy: { createdAt: 'desc' },
+      take,
+      skip: opts.skip,
+      ...(opts.cursor && { cursor: { id: BigInt(opts.cursor) } }),
       include: {
         replies: {
           orderBy: { createdAt: 'asc' },
+          take: 10, // Limitar replies por comment
         },
       },
     });
@@ -45,11 +54,21 @@ export class CommentsService {
     if (query?.status === 'approved') where.isApproved = true;
 
     if (query?.search) {
-      where.OR = [
-        { comment: { contains: query.search } },
-        { userDisplayName: { contains: query.search } },
-        { product: { title: { contains: query.search } } },
-      ];
+      const term = query.search.trim();
+      // FULLTEXT para texto de comentario (>=3 chars), LIKE para display name
+      if (term.length >= 3) {
+        where.OR = [
+          { comment: { search: term } },
+          { userDisplayName: { contains: term } },
+          { product: { title: { contains: term } } },
+        ];
+      } else {
+        where.OR = [
+          { comment: { contains: term } },
+          { userDisplayName: { contains: term } },
+          { product: { title: { contains: term } } },
+        ];
+      }
     }
 
     const take = query?.take ? Number(query.take) : 50;
