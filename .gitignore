@@ -154,6 +154,7 @@ ruff_report.txt
 event_images/
 product_images/
 media/
+!apps/api/src/media/
 
 # Backups descargados del server
 backups/

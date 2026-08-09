@@ -59,8 +59,10 @@ services:
       ADMIN_EMAILS: "mrgomez.dev@outlook.com,mrgomez.dev@gmail.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com"
       FIREBASE_CREDENTIALS_PATH: "credentials/smap-kf-firebase-adminsdk-xqq0l-4790d70941.json"
       FIREBASE_PROJECT_ID: "smap-kf"
+      CONTRACT_STORAGE_DIR: "/app/apps/api/private/contracts"
     volumes:
       - media_data:/app/apps/api/media
+      - contract_data:/app/apps/api/private/contracts
     depends_on:
       - db
       - redis
@@ -97,6 +99,8 @@ volumes:
     name: proyecto_kidsfun_redis_data
   media_data:
     name: proyecto_kidsfun_media_data
+  contract_data:
+    name: proyecto_kidsfun_contract_data
 
 networks:
   kidsfun-net:
