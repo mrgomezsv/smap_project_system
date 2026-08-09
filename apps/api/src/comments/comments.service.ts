@@ -124,6 +124,11 @@ export class CommentsService {
       throw new NotFoundException(`Comentario #${id} no encontrado`);
     }
 
+    // Borrar primero las respuestas ligadas (CommentReply) para evitar error FK
+    await this.prisma.commentReply.deleteMany({
+      where: { commentId: BigInt(id) },
+    });
+
     await this.prisma.productComment.delete({
       where: { id: BigInt(id) },
     });
