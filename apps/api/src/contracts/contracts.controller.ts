@@ -80,6 +80,7 @@ export class ContractsController {
     @Query('status') status?: string,
     @Query('skip') skip?: string,
     @Query('take') take?: string,
+    @Query('cursor') cursor?: string,
   ) {
     assertAdminEmail(user.email);
     return this.contractsService.findAll({
@@ -87,6 +88,7 @@ export class ContractsController {
       status,
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
+      cursor: cursor ? Number(cursor) : undefined,
     });
   }
 }
