@@ -1,15 +1,25 @@
-import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  OnModuleDestroy,
+  Logger,
+} from '@nestjs/common';
 import { PrismaClient, Prisma } from '@prisma/client';
 
 @Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+export class PrismaService
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
   private readonly logger = new Logger(PrismaService.name);
   private static readonly SLOW_QUERY_THRESHOLD_MS = 200;
 
   constructor() {
     const url = process.env.DATABASE_URL ?? '';
     // Si la URL no trae params de pool, agregarlos por defecto
-    const tunedUrl = url.includes('connection_limit') ? url : injectPoolParams(url);
+    const tunedUrl = url.includes('connection_limit')
+      ? url
+      : injectPoolParams(url);
 
     super({
       datasources: { db: { url: tunedUrl } },
@@ -45,7 +55,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       await this.$queryRaw`SELECT 1 as healthcheck`;
       this.logger.log('Conectado a la base de datos MariaDB');
     } catch (error) {
-      this.logger.error('Error al conectar con la base de datos', error as Error);
+      this.logger.error(
+        'Error al conectar con la base de datos',
+        error as Error,
+      );
       throw error;
     }
   }

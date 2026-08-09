@@ -45,7 +45,10 @@ export class ContractPdfService {
     // Intentar cargar logo / marca de agua si existe
     let logoImage: any = null;
     try {
-      const logoPath = path.join(process.cwd(), 'apps/web/public/media/logo.png');
+      const logoPath = path.join(
+        process.cwd(),
+        'apps/web/public/media/logo.png',
+      );
       const logoBuffer = await fs.readFile(logoPath);
       logoImage = await doc.embedPng(logoBuffer);
     } catch {
@@ -132,13 +135,16 @@ export class ContractPdfService {
       color: this.darkText,
     });
 
-    page1.drawText(`Address: ${data.clientAddress}${data.clientCityStateZip ? `, ${data.clientCityStateZip}` : ''}`, {
-      x: margin + 10,
-      y: y - 34,
-      size: 8.5,
-      font: helvetica,
-      color: this.darkText,
-    });
+    page1.drawText(
+      `Address: ${data.clientAddress}${data.clientCityStateZip ? `, ${data.clientCityStateZip}` : ''}`,
+      {
+        x: margin + 10,
+        y: y - 34,
+        size: 8.5,
+        font: helvetica,
+        color: this.darkText,
+      },
+    );
     page1.drawText(`Phone: ${data.clientPhone || 'N/A'}`, {
       x: margin + 310,
       y: y - 34,
@@ -154,13 +160,16 @@ export class ContractPdfService {
       font: helvetica,
       color: this.darkText,
     });
-    page1.drawText(`Contract ID: ${data.token.substring(0, 10).toUpperCase()}`, {
-      x: margin + 310,
-      y: y - 48,
-      size: 8.5,
-      font: helveticaBold,
-      color: this.primary,
-    });
+    page1.drawText(
+      `Contract ID: ${data.token.substring(0, 10).toUpperCase()}`,
+      {
+        x: margin + 310,
+        y: y - 48,
+        size: 8.5,
+        font: helveticaBold,
+        color: this.primary,
+      },
+    );
 
     y -= 65;
 
@@ -261,7 +270,10 @@ export class ContractPdfService {
 
     if (data.signatureImage) {
       try {
-        const base64Data = data.signatureImage.replace(/^data:image\/\w+;base64,/, '');
+        const base64Data = data.signatureImage.replace(
+          /^data:image\/\w+;base64,/,
+          '',
+        );
         const sigBuffer = Buffer.from(base64Data, 'base64');
         const sigImage = await doc.embedPng(sigBuffer);
         page1.drawImage(sigImage, {
@@ -295,13 +307,16 @@ export class ContractPdfService {
       color: this.darkText,
     });
 
-    page1.drawText(`Digital Audit: IP ${data.signerIp || 'Recorded'} | Token: ${data.token.substring(0, 12)}`, {
-      x: margin + 180,
-      y: y - 65,
-      size: 7.5,
-      font: helvetica,
-      color: this.grayText,
-    });
+    page1.drawText(
+      `Digital Audit: IP ${data.signerIp || 'Recorded'} | Token: ${data.token.substring(0, 12)}`,
+      {
+        x: margin + 180,
+        y: y - 65,
+        size: 7.5,
+        font: helvetica,
+        color: this.grayText,
+      },
+    );
 
     // ==========================================
     // PÁGINA 2: CHECKLIST & DETALLES DEL EQUIPO
@@ -337,20 +352,26 @@ export class ContractPdfService {
       color: this.darkText,
     });
 
-    page2.drawText(`Schedule: ${data.startTime || 'Standard'} to ${data.endTime || 'Standard'}`, {
-      x: margin + 15,
-      y: y2 - 38,
-      size: 9,
-      font: helvetica,
-      color: this.darkText,
-    });
+    page2.drawText(
+      `Schedule: ${data.startTime || 'Standard'} to ${data.endTime || 'Standard'}`,
+      {
+        x: margin + 15,
+        y: y2 - 38,
+        size: 9,
+        font: helvetica,
+        color: this.darkText,
+      },
+    );
 
     const priceVal = data.price ? Number(data.price) : 0;
     const depositVal = data.deposit ? Number(data.deposit) : 0;
     const balanceDueVal = Math.max(0, priceVal - depositVal);
 
     const priceText = data.price ? `$${priceVal.toFixed(2)}` : 'Quoted';
-    const depositText = data.deposit && depositVal > 0 ? `$${depositVal.toFixed(2)}` : '$0.00 (No Deposit)';
+    const depositText =
+      data.deposit && depositVal > 0
+        ? `$${depositVal.toFixed(2)}`
+        : '$0.00 (No Deposit)';
     const balanceText = data.price ? `$${balanceDueVal.toFixed(2)}` : 'N/A';
 
     page2.drawText(`Agreed Price: ${priceText}`, {
@@ -413,7 +434,7 @@ export class ContractPdfService {
 
     for (let i = 0; i < checklistItems.length; i++) {
       const item = checklistItems[i];
-      const isChecked = Boolean(data.safetyChecklist?.[`check_${i}`] ?? true);
+      const isChecked = Boolean(data.safetyChecklist?.[`check_${i}`]);
 
       page2.drawText(`[ ${isChecked ? 'X' : ' '} ] ${item}`, {
         x: margin + 10,
@@ -436,13 +457,16 @@ export class ContractPdfService {
       color: this.primary,
     });
 
-    page2.drawText('This document forms a binding agreement under ESIGN Act & UETA digital signature regulations.', {
-      x: margin,
-      y: y2 - 14,
-      size: 8,
-      font: helvetica,
-      color: this.grayText,
-    });
+    page2.drawText(
+      'This document forms a binding agreement under ESIGN Act & UETA digital signature regulations.',
+      {
+        x: margin,
+        y: y2 - 14,
+        size: 8,
+        font: helvetica,
+        color: this.grayText,
+      },
+    );
 
     const pdfBytes = await doc.save();
     return Buffer.from(pdfBytes);

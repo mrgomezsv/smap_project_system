@@ -1,4 +1,11 @@
-import { Controller, Get, Post, Body, Query, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  BadRequestException,
+} from '@nestjs/common';
 import { CurrentUser } from './decorators/current-user.decorator';
 import type { AuthUser } from './decorators/current-user.decorator';
 import { FirebaseService } from './firebase.service';
@@ -19,14 +26,22 @@ export class AuthController {
    */
   @Public()
   @Post('request-password-reset')
-  async requestPasswordReset(@Body() body: { email: string; lang?: 'es' | 'en' }) {
+  async requestPasswordReset(
+    @Body() body: { email: string; lang?: 'es' | 'en' },
+  ) {
     if (!body?.email) {
       throw new BadRequestException('El correo electrónico es requerido');
     }
     try {
-      const link = await this.firebaseService.generatePasswordResetLink(body.email);
+      const link = await this.firebaseService.generatePasswordResetLink(
+        body.email,
+      );
       if (link) {
-        await this.emailService.sendPasswordReset(body.email, link, body.lang ?? 'es');
+        await this.emailService.sendPasswordReset(
+          body.email,
+          link,
+          body.lang ?? 'es',
+        );
       }
     } catch (e) {
       // Por seguridad y privacidad no revelamos si el usuario existe o no

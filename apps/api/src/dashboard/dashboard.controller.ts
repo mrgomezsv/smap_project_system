@@ -66,7 +66,9 @@ export class DashboardController {
     }
 
     // Versión MariaDB y uptime
-    const serverInfo = await this.prisma.$queryRaw<Array<{ Variable_name: string; Value: string }>>`
+    const serverInfo = await this.prisma.$queryRaw<
+      Array<{ Variable_name: string; Value: string }>
+    >`
       SHOW VARIABLES WHERE Variable_name IN ('version', 'version_compile_os', 'uptime')
     `;
 

@@ -1,14 +1,14 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Body,
-} from '@nestjs/common';
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
-import { IsString, IsNotEmpty, MaxLength, IsInt, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  MaxLength,
+  IsInt,
+  IsBoolean,
+} from 'class-validator';
 
 class SendMessageDto {
   @IsInt()
@@ -49,7 +49,11 @@ export class ChatController {
 
   @Post('messages')
   sendMessage(@Body() dto: SendMessageDto, @CurrentUser() user: AuthUser) {
-    return this.chatService.sendMessage(dto.chatRoomId, user.userId!, dto.content);
+    return this.chatService.sendMessage(
+      dto.chatRoomId,
+      user.userId!,
+      dto.content,
+    );
   }
 
   @Post('messages/:id/read')

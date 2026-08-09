@@ -14,7 +14,12 @@ export class PushService {
 
   constructor(private readonly firebaseService: FirebaseService) {}
 
-  async sendToToken(token: string, title: string, body: string, imageUrl?: string): Promise<string> {
+  async sendToToken(
+    token: string,
+    title: string,
+    body: string,
+    imageUrl?: string,
+  ): Promise<string> {
     if (!this.firebaseService.isInitialized()) {
       this.logger.debug(
         `[DEV MODE] Push no enviado a token ${token.substring(0, 10)}...: "${title}" - "${body}"`,
@@ -32,7 +37,9 @@ export class PushService {
         token,
       };
       const messageId = await getMessaging().send(message);
-      this.logger.log(`Push enviado a ${token.substring(0, 10)}... - messageId: ${messageId}`);
+      this.logger.log(
+        `Push enviado a ${token.substring(0, 10)}... - messageId: ${messageId}`,
+      );
       return messageId;
     } catch (error) {
       this.logger.error(`Error enviando push: ${(error as Error).message}`);
@@ -40,9 +47,16 @@ export class PushService {
     }
   }
 
-  async sendToTopic(topic: string, title: string, body: string, data?: Record<string, string>) {
+  async sendToTopic(
+    topic: string,
+    title: string,
+    body: string,
+    data?: Record<string, string>,
+  ) {
     if (!this.firebaseService.isInitialized()) {
-      this.logger.debug(`[DEV MODE] Push no enviado a topic ${topic}: "${title}"`);
+      this.logger.debug(
+        `[DEV MODE] Push no enviado a topic ${topic}: "${title}"`,
+      );
       return 'dev-message-id';
     }
     try {
@@ -51,10 +65,14 @@ export class PushService {
         topic,
         data,
       });
-      this.logger.log(`Push enviado a topic ${topic} - messageId: ${messageId}`);
+      this.logger.log(
+        `Push enviado a topic ${topic} - messageId: ${messageId}`,
+      );
       return messageId;
     } catch (error) {
-      this.logger.error(`Error enviando push a topic: ${(error as Error).message}`);
+      this.logger.error(
+        `Error enviando push a topic: ${(error as Error).message}`,
+      );
       throw error;
     }
   }

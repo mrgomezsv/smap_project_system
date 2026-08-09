@@ -45,7 +45,9 @@ export class FirebaseService implements OnModuleInit {
             credential: cert(serviceAccount),
             projectId,
           });
-      this.logger.log(`Firebase Admin inicializado correctamente (project: ${projectId})`);
+      this.logger.log(
+        `Firebase Admin inicializado correctamente (project: ${projectId})`,
+      );
     } catch (error) {
       this.logger.error('Error al inicializar Firebase Admin', error);
     }
@@ -57,7 +59,9 @@ export class FirebaseService implements OnModuleInit {
 
   async verifyIdToken(idToken: string): Promise<DecodedIdToken> {
     if (!this.app) {
-      throw new Error('Firebase no está inicializado. Revisa las credenciales.');
+      throw new Error(
+        'Firebase no está inicializado. Revisa las credenciales.',
+      );
     }
     return getAuth().verifyIdToken(idToken);
   }

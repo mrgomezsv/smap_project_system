@@ -34,7 +34,9 @@ describe('WaiversService', () => {
   };
   const mockEmail = {
     send: jest.fn().mockResolvedValue(true),
-    getWaiverEmailTemplate: jest.fn().mockReturnValue({ subject: 's', html: '<p>x</p>' }),
+    getWaiverEmailTemplate: jest
+      .fn()
+      .mockReturnValue({ subject: 's', html: '<p>x</p>' }),
   };
 
   beforeEach(async () => {
@@ -91,7 +93,9 @@ describe('WaiversService', () => {
 
     it('lanza NotFoundException si no existe', async () => {
       mockPrisma.waiverQRV2.findUnique.mockResolvedValue(null);
-      await expect(service.findByQr('NOEXISTE')).rejects.toThrow(NotFoundException);
+      await expect(service.findByQr('NOEXISTE')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('marca isValid=false si waiver está expirado', async () => {
@@ -229,7 +233,9 @@ describe('WaiversService', () => {
       expect(mockPrisma.waiverQRV2.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: { status: 'ACTIVE' } }),
       );
-      expect(mockPrisma.waiverQRV2.count).toHaveBeenCalledWith({ where: { status: 'ACTIVE' } });
+      expect(mockPrisma.waiverQRV2.count).toHaveBeenCalledWith({
+        where: { status: 'ACTIVE' },
+      });
     });
 
     it('omite el filtro de status cuando es undefined', async () => {
@@ -244,7 +250,7 @@ describe('WaiversService', () => {
     it('ignora status con valores no permitidos', async () => {
       mockPrisma.waiverQRV2.findMany.mockResolvedValue([]);
       mockPrisma.waiverQRV2.count.mockResolvedValue(0);
-      await service.findAll({ take: 10, skip: 0, status: 'OTRO' as any });
+      await service.findAll({ take: 10, skip: 0, status: 'OTRO' });
       expect(mockPrisma.waiverQRV2.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: {} }),
       );
@@ -252,7 +258,14 @@ describe('WaiversService', () => {
 
     it('calcula hasMore cuando hay más páginas', async () => {
       const waivers = [
-        { id: 1n, qrCode: 'A1', status: 'ACTIVE', expiresAt: new Date(Date.now() + 1e8), relatives: [], scans: [] },
+        {
+          id: 1n,
+          qrCode: 'A1',
+          status: 'ACTIVE',
+          expiresAt: new Date(Date.now() + 1e8),
+          relatives: [],
+          scans: [],
+        },
       ];
       mockPrisma.waiverQRV2.findMany.mockResolvedValue(waivers);
       mockPrisma.waiverQRV2.count.mockResolvedValue(5);
@@ -264,7 +277,14 @@ describe('WaiversService', () => {
 
     it('hasMore=false cuando se muestran todos', async () => {
       const waivers = [
-        { id: 1n, qrCode: 'A1', status: 'ACTIVE', expiresAt: new Date(Date.now() + 1e8), relatives: [], scans: [] },
+        {
+          id: 1n,
+          qrCode: 'A1',
+          status: 'ACTIVE',
+          expiresAt: new Date(Date.now() + 1e8),
+          relatives: [],
+          scans: [],
+        },
       ];
       mockPrisma.waiverQRV2.findMany.mockResolvedValue(waivers);
       mockPrisma.waiverQRV2.count.mockResolvedValue(1);
@@ -276,7 +296,9 @@ describe('WaiversService', () => {
   describe('deleteMany', () => {
     it('lanza BadRequestException si ids está vacío', async () => {
       await expect(service.deleteMany([])).rejects.toThrow('al menos un ID');
-      await expect(service.deleteMany(undefined as any)).rejects.toThrow('al menos un ID');
+      await expect(service.deleteMany(undefined as any)).rejects.toThrow(
+        'al menos un ID',
+      );
     });
 
     it('borra relatives, scans y waivers en orden', async () => {
@@ -311,7 +333,9 @@ describe('WaiversService', () => {
 
   describe('getCollaboratorScans', () => {
     it('filtra scans por email del colaborador', async () => {
-      const scans = [{ id: 1n, waiverQrId: 9n, scannedBy: 'a@x', scannedAt: new Date() }];
+      const scans = [
+        { id: 1n, waiverQrId: 9n, scannedBy: 'a@x', scannedAt: new Date() },
+      ];
       mockPrisma.waiverScanV2.findMany.mockResolvedValue(scans);
       const result = await service.getCollaboratorScans('a@x');
       expect(mockPrisma.waiverScanV2.findMany).toHaveBeenCalledWith(
@@ -329,7 +353,9 @@ describe('WaiversService', () => {
   describe('generatePdf', () => {
     it('lanza NotFoundException si el QR no existe', async () => {
       mockPrisma.waiverQRV2.findUnique.mockResolvedValue(null);
-      await expect(service.generatePdf('NOEXISTE')).rejects.toThrow(NotFoundException);
+      await expect(service.generatePdf('NOEXISTE')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('devuelve Buffer del PDF generado', async () => {
@@ -398,13 +424,15 @@ describe('WaiversService', () => {
         expiresAt: new Date(Date.now() + 1e8),
         relatives: [],
       });
-      mockPrisma.waiverDocument.findFirst.mockResolvedValue({ content: 'legal' });
+      mockPrisma.waiverDocument.findFirst.mockResolvedValue({
+        content: 'legal',
+      });
 
       const result = await service.create('firebase-uid', {
         userName: 'Test',
         userEmail: 'a@b.c',
         relatives: [{ name: 'Hijo', age: 10 }],
-      } as any);
+      });
 
       expect(result.qrCode).toBe('NEWQR001');
       expect(mockPrisma.waiverQRV2.create).toHaveBeenCalledWith(
@@ -444,7 +472,7 @@ describe('WaiversService', () => {
         userName: 'X',
         userEmail: 'a@b.c',
         relatives: [],
-      } as any);
+      });
 
       expect(mockPrisma.waiverQRV2.findUnique).toHaveBeenCalledTimes(3);
       expect(mockPrisma.waiverQRV2.create).toHaveBeenCalledTimes(1);

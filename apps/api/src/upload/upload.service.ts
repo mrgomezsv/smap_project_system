@@ -31,7 +31,9 @@ export class UploadService {
     return diskStorage({
       destination: (req, file, cb) => {
         const slug = (req.body?.slug as string) || '';
-        const sub = slug ? join(this.uploadDir, 'product_images', slug) : this.uploadDir;
+        const sub = slug
+          ? join(this.uploadDir, 'product_images', slug)
+          : this.uploadDir;
         if (!existsSync(sub)) {
           mkdirSync(sub, { recursive: true });
         }

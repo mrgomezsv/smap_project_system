@@ -51,7 +51,9 @@ export class FirebaseAuthGuard implements CanActivate {
     // creamos/obtenemos un User "dev-anonymous" en BD para tener userId
     // real y poder usar endpoints que lo requieren
     if (!this.firebaseService.isInitialized()) {
-      this.logger.debug('Firebase no inicializado - usando user dev (modo dev)');
+      this.logger.debug(
+        'Firebase no inicializado - usando user dev (modo dev)',
+      );
       const devUser = await this.userMapping.getOrCreateFromFirebase({
         uid: 'dev-anonymous',
         email: 'dev@local',
@@ -73,7 +75,9 @@ export class FirebaseAuthGuard implements CanActivate {
       const authUser = await this.userMapping.getOrCreateFromFirebase({
         uid: decoded.uid,
         email: decoded.email,
-        name: decoded.name || (decoded.email ? decoded.email.split('@')[0] : decoded.uid),
+        name:
+          decoded.name ||
+          (decoded.email ? decoded.email.split('@')[0] : decoded.uid),
         token: idToken,
       });
       (request as Request & { user?: AuthUser }).user = authUser;

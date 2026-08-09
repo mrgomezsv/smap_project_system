@@ -35,7 +35,8 @@ export class ChatService {
         },
       },
     });
-    if (!room) throw new NotFoundException(`Chat room #${roomId} no encontrado`);
+    if (!room)
+      throw new NotFoundException(`Chat room #${roomId} no encontrado`);
     // Invertir para que se devuelvan en orden cronológico ascendente
     if (room.messages) {
       room.messages = room.messages.reverse();
@@ -52,8 +53,11 @@ export class ChatService {
   // === Chat Messages ===
 
   async sendMessage(roomId: number, senderId: number, content: string) {
-    const room = await this.prisma.chatRoom.findUnique({ where: { id: roomId } });
-    if (!room) throw new NotFoundException(`Chat room #${roomId} no encontrado`);
+    const room = await this.prisma.chatRoom.findUnique({
+      where: { id: roomId },
+    });
+    if (!room)
+      throw new NotFoundException(`Chat room #${roomId} no encontrado`);
 
     const message = await this.prisma.chatMessage.create({
       data: { chatRoomId: roomId, senderId, content },

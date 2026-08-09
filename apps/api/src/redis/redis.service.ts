@@ -1,4 +1,9 @@
-import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  OnModuleDestroy,
+  Logger,
+} from '@nestjs/common';
 import Redis from 'ioredis';
 
 /**
@@ -19,7 +24,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     const redisUrl = process.env.REDIS_URL;
 
     if (!cacheEnabled || !redisUrl) {
-      this.logger.warn('Redis deshabilitado (CACHE_ENABLED=false o REDIS_URL no configurada). Cache en memoria fallback.');
+      this.logger.warn(
+        'Redis deshabilitado (CACHE_ENABLED=false o REDIS_URL no configurada). Cache en memoria fallback.',
+      );
       return;
     }
 
@@ -36,9 +43,13 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
       await this.client.connect();
       this.enabled = true;
-      this.logger.log(`Conectado a Redis: ${redisUrl.replace(/:[^:@]+@/, ':***@')}`);
+      this.logger.log(
+        `Conectado a Redis: ${redisUrl.replace(/:[^:@]+@/, ':***@')}`,
+      );
     } catch (err) {
-      this.logger.error(`No se pudo conectar a Redis: ${(err as Error).message}`);
+      this.logger.error(
+        `No se pudo conectar a Redis: ${(err as Error).message}`,
+      );
       this.enabled = false;
     }
   }

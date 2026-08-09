@@ -106,7 +106,10 @@ export class PdfService {
 
   constructor(private readonly qrService: QrService) {}
 
-  async generateWaiverPdf(data: WaiverPdfData, lang: string = 'es'): Promise<Uint8Array> {
+  async generateWaiverPdf(
+    data: WaiverPdfData,
+    lang: string = 'es',
+  ): Promise<Uint8Array> {
     const isEn = lang === 'en';
     const t = {
       title1: isEn ? 'WAIVER OF LIABILITY' : 'DOCUMENTO DE EXENCIÓN DE',
@@ -116,13 +119,21 @@ export class PdfService {
       expStr: isEn ? 'VALID UNTIL:' : 'VIGENCIA HASTA:',
       client: isEn ? 'CLIENT / RESPONSIBLE:' : 'CLIENTE / RESPONSABLE:',
       phone: isEn ? 'PHONE:' : 'TELÉFONO:',
-      famTitle: isEn ? 'REGISTERED FAMILY AND COMPANIONS' : 'FAMILIARES Y ACOMPAÑANTES REGISTRADOS',
+      famTitle: isEn
+        ? 'REGISTERED FAMILY AND COMPANIONS'
+        : 'FAMILIARES Y ACOMPAÑANTES REGISTRADOS',
       famName: isEn ? 'Relative Name' : 'Nombre del Familiar',
       famAge: isEn ? 'Age' : 'Edad',
       signTitle: isEn ? 'ACCEPTANCE AND SIGNATURE' : 'ACEPTACIÓN Y FIRMA',
-      sign1: isEn ? 'Signature of Client / Responsible' : 'Firma del Cliente / Responsable',
-      sign2: isEn ? 'Signature of Parent or Guardian (if applicable)' : 'Firma de Padre o Tutor (si aplica)',
-      footer: isEn ? `This document was generated electronically on ` : `Este documento fue generado electrónicamente el `,
+      sign1: isEn
+        ? 'Signature of Client / Responsible'
+        : 'Firma del Cliente / Responsable',
+      sign2: isEn
+        ? 'Signature of Parent or Guardian (if applicable)'
+        : 'Firma de Padre o Tutor (si aplica)',
+      footer: isEn
+        ? `This document was generated electronically on `
+        : `Este documento fue generado electrónicamente el `,
     };
 
     const doc = await PDFDocument.create();
@@ -139,7 +150,10 @@ export class PdfService {
     try {
       const fs = await import('fs/promises');
       const path = await import('path');
-      const watermarkPath = path.join(process.cwd(), 'apps/api/src/assets/favicon-watermark.png');
+      const watermarkPath = path.join(
+        process.cwd(),
+        'apps/api/src/assets/favicon-watermark.png',
+      );
       const watermarkBuffer = await fs.readFile(watermarkPath);
       const watermarkPic = await doc.embedPng(watermarkBuffer);
 
@@ -154,7 +168,9 @@ export class PdfService {
         opacity: 0.1, // Marca de agua tenue/sutil
       });
     } catch (e) {
-      this.logger.warn('No se pudo cargar la marca de agua del favicon para el PDF');
+      this.logger.warn(
+        'No se pudo cargar la marca de agua del favicon para el PDF',
+      );
     }
 
     // === HEADER: Logo - Título - QR (3 columnas) ===
@@ -170,7 +186,7 @@ export class PdfService {
       const path = await import('path');
       const logoPath = path.join(process.cwd(), 'apps/api/src/assets/logo.png');
       const logoAltPath = path.join(process.cwd(), 'src/assets/logo.png');
-      
+
       let logoBuffer: Buffer | null = null;
       try {
         logoBuffer = await fs.readFile(logoPath);
@@ -261,7 +277,12 @@ export class PdfService {
       minute: '2-digit',
     });
 
-    page.drawText(`${t.dateStr} ${fechaStr}`, { x: margin, y, size: 10, font: helveticaBold });
+    page.drawText(`${t.dateStr} ${fechaStr}`, {
+      x: margin,
+      y,
+      size: 10,
+      font: helveticaBold,
+    });
     y -= 18;
 
     if (data.expiresAt) {
@@ -272,18 +293,44 @@ export class PdfService {
         hour: '2-digit',
         minute: '2-digit',
       });
-      page.drawText(`${t.expStr} ${expStr}`, { x: margin, y, size: 10, font: helveticaBold, color: this.primary });
+      page.drawText(`${t.expStr} ${expStr}`, {
+        x: margin,
+        y,
+        size: 10,
+        font: helveticaBold,
+        color: this.primary,
+      });
       y -= 18;
     }
 
-    page.drawText(`${t.client} ${data.userName}`, { x: margin, y, size: 10, font: helvetica });
+    page.drawText(`${t.client} ${data.userName}`, {
+      x: margin,
+      y,
+      size: 10,
+      font: helvetica,
+    });
     y -= 18;
-    page.drawText(`ID: ${data.userId}`, { x: margin, y, size: 10, font: helvetica });
+    page.drawText(`ID: ${data.userId}`, {
+      x: margin,
+      y,
+      size: 10,
+      font: helvetica,
+    });
     y -= 18;
-    page.drawText(`EMAIL: ${data.userEmail}`, { x: margin, y, size: 10, font: helvetica });
+    page.drawText(`EMAIL: ${data.userEmail}`, {
+      x: margin,
+      y,
+      size: 10,
+      font: helvetica,
+    });
     if (data.userPhone) {
       y -= 18;
-      page.drawText(`${t.phone} ${data.userPhone}`, { x: margin, y, size: 10, font: helvetica });
+      page.drawText(`${t.phone} ${data.userPhone}`, {
+        x: margin,
+        y,
+        size: 10,
+        font: helvetica,
+      });
     }
     y -= 30;
 
@@ -355,11 +402,20 @@ export class PdfService {
     }
 
     // === TÉRMINOS Y CONDICIONES (BILINGÜE: ES + EN) ===
-    const isPlaceholder = !data.legalText || data.legalText.trim().length < 100 || data.legalText.includes('por defecto');
-    const spanishText: string = isPlaceholder ? DEFAULT_WAIVER_TEXT : (data.legalText || DEFAULT_WAIVER_TEXT);
+    const isPlaceholder =
+      !data.legalText ||
+      data.legalText.trim().length < 100 ||
+      data.legalText.includes('por defecto');
+    const spanishText: string = isPlaceholder
+      ? DEFAULT_WAIVER_TEXT
+      : data.legalText || DEFAULT_WAIVER_TEXT;
     const englishText: string = DEFAULT_WAIVER_TEXT_EN;
 
-    const renderLegalSection = (title: string, content: string, contTitle: string) => {
+    const renderLegalSection = (
+      title: string,
+      content: string,
+      contTitle: string,
+    ) => {
       page.drawText(title, {
         x: margin,
         y,
@@ -500,7 +556,12 @@ export class PdfService {
   /**
    * Envoltorio simple de texto por ancho.
    */
-  private wrapText(text: string, maxWidth: number, font: any, fontSize: number): string[] {
+  private wrapText(
+    text: string,
+    maxWidth: number,
+    font: any,
+    fontSize: number,
+  ): string[] {
     const words = text.replace(/\n/g, ' ').split(/\s+/);
     const lines: string[] = [];
     let current = '';

@@ -74,7 +74,10 @@ export class QrService {
       const bgSize = 100;
 
       const resizedLogo = await sharp(this.logoBuffer)
-        .resize(logoSize, logoSize, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } })
+        .resize(logoSize, logoSize, {
+          fit: 'contain',
+          background: { r: 255, g: 255, b: 255, alpha: 0 },
+        })
         .toBuffer();
 
       // SVG para la tarjeta blanca con esquinas redondeadas
@@ -102,7 +105,10 @@ export class QrService {
 
       return compositeQr;
     } catch (e) {
-      this.logger.warn('Fallo al superponer el logo en el QR, devolviendo QR estándar con borde', e);
+      this.logger.warn(
+        'Fallo al superponer el logo en el QR, devolviendo QR estándar con borde',
+        e,
+      );
       return qrBuffer;
     }
   }

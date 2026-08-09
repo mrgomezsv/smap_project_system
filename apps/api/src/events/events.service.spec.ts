@@ -69,7 +69,9 @@ describe('EventsService', () => {
       await service.findAll({ search: 'inauguración' });
 
       expect(mockPrisma.event.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { title: { contains: 'inauguración' } } }),
+        expect.objectContaining({
+          where: { title: { contains: 'inauguración' } },
+        }),
       );
     });
 
@@ -109,7 +111,9 @@ describe('EventsService', () => {
       mockPrisma.event.findUnique.mockResolvedValue(null);
 
       await expect(service.findOne(999)).rejects.toThrow(NotFoundException);
-      await expect(service.findOne(999)).rejects.toThrow('Evento #999 no encontrado');
+      await expect(service.findOne(999)).rejects.toThrow(
+        'Evento #999 no encontrado',
+      );
     });
   });
 });

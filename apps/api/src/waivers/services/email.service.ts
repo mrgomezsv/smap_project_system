@@ -25,10 +25,17 @@ export class EmailService {
   private readonly fromEmail: string;
 
   constructor() {
-    const defaultKey = Buffer.from('cmVfRHpSN2lVa0FfTlNISzMxM0RnWTVXS1VQS0w0N3FRbVEz', 'base64').toString('utf-8');
+    const defaultKey = Buffer.from(
+      'cmVfRHpSN2lVa0FfTlNISzMxM0RnWTVXS1VQS0w0N3FRbVEz',
+      'base64',
+    ).toString('utf-8');
     const envKey = process.env.RESEND_API_KEY;
-    const resendApiKey = (!envKey || envKey.includes('re_T7189Mev')) ? defaultKey : envKey;
-    this.fromEmail = process.env.RESEND_FROM_EMAIL || process.env.SMTP_FROM_EMAIL || 'Kidsfun <waiver@kidsfunyfiestasinfantiles.com>';
+    const resendApiKey =
+      !envKey || envKey.includes('re_T7189Mev') ? defaultKey : envKey;
+    this.fromEmail =
+      process.env.RESEND_FROM_EMAIL ||
+      process.env.SMTP_FROM_EMAIL ||
+      'Kidsfun <waiver@kidsfunyfiestasinfantiles.com>';
 
     if (resendApiKey) {
       this.resend = new Resend(resendApiKey);
@@ -43,9 +50,13 @@ export class EmailService {
           pass: process.env.SMTP_PASSWORD,
         },
       });
-      this.logger.log(`Email service configurado vía SMTP (${process.env.SMTP_HOST}:${process.env.SMTP_PORT})`);
+      this.logger.log(
+        `Email service configurado vía SMTP (${process.env.SMTP_HOST}:${process.env.SMTP_PORT})`,
+      );
     } else {
-      this.logger.warn('Email service en modo dev - Sin RESEND_API_KEY ni SMTP_PASSWORD');
+      this.logger.warn(
+        'Email service en modo dev - Sin RESEND_API_KEY ni SMTP_PASSWORD',
+      );
     }
   }
 
@@ -69,13 +80,19 @@ export class EmailService {
 
         const { data, error } = await this.resend.emails.send(payload);
         if (error) {
-          this.logger.error(`Resend API Error al enviar a ${options.to}: ${error.message}`);
+          this.logger.error(
+            `Resend API Error al enviar a ${options.to}: ${error.message}`,
+          );
           return false;
         }
-        this.logger.log(`Email enviado con Resend a ${options.to} - id: ${data?.id}`);
+        this.logger.log(
+          `Email enviado con Resend a ${options.to} - id: ${data?.id}`,
+        );
         return true;
       } catch (err: any) {
-        this.logger.error(`Excepción enviando con Resend a ${options.to}: ${err.message}`);
+        this.logger.error(
+          `Excepción enviando con Resend a ${options.to}: ${err.message}`,
+        );
         return false;
       }
     }
@@ -93,10 +110,14 @@ export class EmailService {
             contentType: a.contentType,
           })),
         });
-        this.logger.log(`Email SMTP enviado a ${options.to} - messageId: ${info.messageId}`);
+        this.logger.log(
+          `Email SMTP enviado a ${options.to} - messageId: ${info.messageId}`,
+        );
         return true;
       } catch (error) {
-        this.logger.error(`Error enviando email SMTP a ${options.to}: ${(error as Error).message}`);
+        this.logger.error(
+          `Error enviando email SMTP a ${options.to}: ${(error as Error).message}`,
+        );
         return false;
       }
     }
@@ -126,8 +147,12 @@ export class EmailService {
       ? `🎉 Your Kidsfun Waiver Code: ${data.qrCode}`
       : `🎉 Tu Código de Waiver Kidsfun: ${data.qrCode}`;
 
-    const title = isEn ? 'Kidsfun Waiver Confirmation' : 'Confirmación de Waiver Kidsfun';
-    const greeting = isEn ? `Hello ${data.userName},` : `Hola ${data.userName},`;
+    const title = isEn
+      ? 'Kidsfun Waiver Confirmation'
+      : 'Confirmación de Waiver Kidsfun';
+    const greeting = isEn
+      ? `Hello ${data.userName},`
+      : `Hola ${data.userName},`;
     const message = isEn
       ? 'Thank you for completing your waiver. Below is your entry QR code and access details for the event.'
       : 'Gracias por completar tu exención de responsabilidad (waiver). A continuación encuentras tu código QR de acceso y el resumen de la información registrada.';
@@ -140,15 +165,26 @@ export class EmailService {
       : 'Si tienes alguna duda, no dudes en contactar a nuestro equipo de soporte.';
     const footerText = `© ${new Date().getFullYear()} Kidsfun y Fiestas Infantiles. All rights reserved.`;
 
-    const formattedDate = (data.createdAt || new Date()).toLocaleDateString(isEn ? 'en-US' : 'es-ES', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    });
+    const formattedDate = (data.createdAt || new Date()).toLocaleDateString(
+      isEn ? 'en-US' : 'es-ES',
+      {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      },
+    );
 
-    const relativesHtml = data.relatives && data.relatives.length > 0
-      ? data.relatives.map(r => `• ${r.name}${r.age ? ` (${r.age} ${isEn ? 'years' : 'años'})` : ''}`).join('<br/>')
-      : (isEn ? 'None registered' : 'Ninguno registrado');
+    const relativesHtml =
+      data.relatives && data.relatives.length > 0
+        ? data.relatives
+            .map(
+              (r) =>
+                `• ${r.name}${r.age ? ` (${r.age} ${isEn ? 'years' : 'años'})` : ''}`,
+            )
+            .join('<br/>')
+        : isEn
+          ? 'None registered'
+          : 'Ninguno registrado';
 
     /**
      * Bloque bilingüe de Política de Privacidad.
@@ -160,9 +196,11 @@ export class EmailService {
           📜 ${isEn ? 'Privacy Policy (Bilingual)' : 'Política de Privacidad (Bilingüe)'}
         </h3>
         <p style="margin:0 0 14px 0; font-size:12px; color:#64748b;">
-          ${isEn
-            ? 'For your reference, you will find the privacy policy in both Spanish and English below.'
-            : 'Para su referencia, encontrará la política de privacidad en español y en inglés a continuación.'}
+          ${
+            isEn
+              ? 'For your reference, you will find the privacy policy in both Spanish and English below.'
+              : 'Para su referencia, encontrará la política de privacidad en español y en inglés a continuación.'
+          }
         </p>
 
         <div style="margin-bottom:18px;">
@@ -225,16 +263,24 @@ export class EmailService {
           <td class="label">${isEn ? 'Main Adult / Holder:' : 'Titular / Adulto:'}</td>
           <td>${data.userName}</td>
         </tr>
-        ${data.userEmail ? `
+        ${
+          data.userEmail
+            ? `
         <tr>
           <td class="label">${isEn ? 'Email:' : 'Correo Electrónico:'}</td>
           <td>${data.userEmail}</td>
-        </tr>` : ''}
-        ${data.userPhone ? `
+        </tr>`
+            : ''
+        }
+        ${
+          data.userPhone
+            ? `
         <tr>
           <td class="label">${isEn ? 'Phone:' : 'Teléfono:'}</td>
           <td>${data.userPhone}</td>
-        </tr>` : ''}
+        </tr>`
+            : ''
+        }
         <tr>
           <td class="label">${isEn ? 'Registered Minors:' : 'Menores Registrados:'}</td>
           <td>${relativesHtml}</td>
@@ -284,7 +330,11 @@ export class EmailService {
   /**
    * Envía correo electrónico HTML de restablecimiento de contraseña con marca Kidsfun vía Resend / SMTP.
    */
-  async sendPasswordReset(to: string, resetLink: string, lang: 'es' | 'en' = 'es'): Promise<boolean> {
+  async sendPasswordReset(
+    to: string,
+    resetLink: string,
+    lang: 'es' | 'en' = 'es',
+  ): Promise<boolean> {
     const isEn = lang === 'en';
     const subject = isEn
       ? 'Reset your password — Kidsfun and Kids Parties'
@@ -318,9 +368,11 @@ export class EmailService {
       <div class="icon">🔑</div>
       <h2 class="title">${isEn ? 'Password Reset Request' : 'Solicitud de Restablecimiento de Contraseña'}</h2>
       <p class="text">
-        ${isEn
-          ? 'We received a request to reset your password for your Kidsfun account. Click the button below to choose a new password:'
-          : 'Recibimos una solicitud para restablecer la contraseña de tu cuenta en Kidsfun. Haz clic en el botón a continuación para elegir una nueva contraseña:'}
+        ${
+          isEn
+            ? 'We received a request to reset your password for your Kidsfun account. Click the button below to choose a new password:'
+            : 'Recibimos una solicitud para restablecer la contraseña de tu cuenta en Kidsfun. Haz clic en el botón a continuación para elegir una nueva contraseña:'
+        }
       </p>
       <div style="margin: 28px 0;">
         <a href="${resetLink}" class="btn" target="_blank">
@@ -329,9 +381,11 @@ export class EmailService {
       </div>
       <div class="warning">
         <strong>${isEn ? 'Security Notice:' : 'Nota de Seguridad:'}</strong>
-        ${isEn
-          ? 'If you did not request a password reset, you can safely ignore this email. Your password will remain unchanged.'
-          : 'Si no solicitaste este cambio, puedes ignorar este correo de forma segura. Tu contraseña no cambiará.'}
+        ${
+          isEn
+            ? 'If you did not request a password reset, you can safely ignore this email. Your password will remain unchanged.'
+            : 'Si no solicitaste este cambio, puedes ignorar este correo de forma segura. Tu contraseña no cambiará.'
+        }
       </div>
     </div>
     <div class="footer">

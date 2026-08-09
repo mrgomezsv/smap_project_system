@@ -13,6 +13,7 @@ import { ChatModule } from './chat/chat.module';
 import { ContactMessagesModule } from './contact/contact-messages.module';
 import { UploadModule } from './upload/upload.module';
 import { ContractsModule } from './contracts/contracts.module';
+import { ClientsModule } from './clients/clients.module';
 
 import { DashboardModule } from './dashboard/dashboard.module';
 import { MetricsModule } from './metrics/metrics.module';
@@ -34,6 +35,7 @@ import { MediaController } from './media/media.controller';
     ContactMessagesModule,
     UploadModule,
     ContractsModule,
+    ClientsModule,
     DashboardModule,
     MetricsModule,
     RedisModule,

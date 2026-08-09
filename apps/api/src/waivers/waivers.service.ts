@@ -19,7 +19,7 @@ export class WaiversService {
     private readonly prisma: PrismaService,
     private readonly pdfService: PdfService,
     private readonly emailService: EmailService,
-  ) { }
+  ) {}
 
   /**
    * Genera un código QR único de 8 caracteres (equivalente al uuid4()[:8] de Django).
@@ -49,7 +49,9 @@ export class WaiversService {
 
     // Crear el waiver: reintenta QR si choca con constraint UNIQUE.
     // Aprovecha el índice UNIQUE existente en qr_code (más rápido que SELECT previo).
-    let waiver: Prisma.WaiverQRV2GetPayload<{ include: { relatives: true } }> | null = null;
+    let waiver: Prisma.WaiverQRV2GetPayload<{
+      include: { relatives: true };
+    }> | null = null;
     let qrCode = '';
     let lastError: unknown = null;
     for (let attempt = 0; attempt < 10; attempt++) {
@@ -77,7 +79,10 @@ export class WaiversService {
       } catch (err) {
         lastError = err;
         // P2002 = unique constraint violation en Prisma
-        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+        if (
+          err instanceof Prisma.PrismaClientKnownRequestError &&
+          err.code === 'P2002'
+        ) {
           continue; // reintentar con nuevo QR
         }
         throw err; // otro error: propagar
@@ -85,7 +90,9 @@ export class WaiversService {
     }
 
     if (!waiver) {
-      this.logger.error(`No se pudo generar QR único tras 10 intentos. Último error: ${String(lastError)}`);
+      this.logger.error(
+        `No se pudo generar QR único tras 10 intentos. Último error: ${String(lastError)}`,
+      );
       throw new BadRequestException('No se pudo generar un QR único');
     }
 
@@ -101,7 +108,10 @@ export class WaiversService {
         userEmail: waiver.userEmail,
         userPhone: waiver.userPhone ?? undefined,
         createdAt: waiver.createdAt,
-        relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
+        relatives: waiver.relatives.map((r) => ({
+          name: r.relativeName,
+          age: r.relativeAge,
+        })),
         legalText: await this.getLegalText(),
       });
 
@@ -127,7 +137,10 @@ export class WaiversService {
         ],
       });
     } catch (err: any) {
-      this.logger.error(`Error procesando PDF o Email para el waiver ${qrCode}: ${err.message}`, err.stack);
+      this.logger.error(
+        `Error procesando PDF o Email para el waiver ${qrCode}: ${err.message}`,
+        err.stack,
+      );
     }
 
     return {
@@ -141,7 +154,10 @@ export class WaiversService {
   /**
    * Reenvía un waiver por correo electrónico
    */
-  async resendWaiverEmail(qrCode: string, lang: 'es' | 'en' = 'es'): Promise<boolean> {
+  async resendWaiverEmail(
+    qrCode: string,
+    lang: 'es' | 'en' = 'es',
+  ): Promise<boolean> {
     const waiver = await this.prisma.waiverQRV2.findUnique({
       where: { qrCode: qrCode.toUpperCase() },
       include: { relatives: true },
@@ -158,7 +174,10 @@ export class WaiversService {
       userEmail: waiver.userEmail,
       userPhone: waiver.userPhone ?? undefined,
       createdAt: waiver.createdAt,
-      relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
+      relatives: waiver.relatives.map((r) => ({
+        name: r.relativeName,
+        age: r.relativeAge,
+      })),
       legalText: await this.getLegalText(),
     });
 
@@ -166,7 +185,10 @@ export class WaiversService {
       userName: waiver.userName,
       userEmail: waiver.userEmail,
       userPhone: waiver.userPhone ?? undefined,
-      relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
+      relatives: waiver.relatives.map((r) => ({
+        name: r.relativeName,
+        age: r.relativeAge,
+      })),
       createdAt: waiver.createdAt,
       qrCode: waiver.qrCode,
       lang,
@@ -237,7 +259,8 @@ export class WaiversService {
     }
 
     this.updateStatusIfExpired(waiver);
-    const isValid = waiver.status === 'ACTIVE' && !this.isExpired(waiver.expiresAt);
+    const isValid =
+      waiver.status === 'ACTIVE' && !this.isExpired(waiver.expiresAt);
 
     if (isValid) {
       await this.prisma.waiverScanV2.create({
@@ -265,17 +288,23 @@ export class WaiversService {
     if (!waiver) {
       throw new NotFoundException(`Waiver con QR ${qrCode} no encontrado`);
     }
-    const pdfBytes = await this.pdfService.generateWaiverPdf({
-      qrCode: waiver.qrCode,
-      userName: waiver.userName,
-      userId: waiver.userId,
-      userEmail: waiver.userEmail,
-      userPhone: waiver.userPhone ?? undefined,
-      createdAt: waiver.createdAt,
-      expiresAt: waiver.expiresAt,
-      relatives: waiver.relatives.map((r) => ({ name: r.relativeName, age: r.relativeAge })),
-      legalText: await this.getLegalText(),
-    }, lang);
+    const pdfBytes = await this.pdfService.generateWaiverPdf(
+      {
+        qrCode: waiver.qrCode,
+        userName: waiver.userName,
+        userId: waiver.userId,
+        userEmail: waiver.userEmail,
+        userPhone: waiver.userPhone ?? undefined,
+        createdAt: waiver.createdAt,
+        expiresAt: waiver.expiresAt,
+        relatives: waiver.relatives.map((r) => ({
+          name: r.relativeName,
+          age: r.relativeAge,
+        })),
+        legalText: await this.getLegalText(),
+      },
+      lang,
+    );
     return Buffer.from(pdfBytes);
   }
 
@@ -297,7 +326,12 @@ export class WaiversService {
    * Usa _count en lugar de include para reducir payload.
    * Soporta búsqueda opcional por nombre/email/QR.
    */
-  async findAll(opts: { take: number; skip: number; status?: string; search?: string }) {
+  async findAll(opts: {
+    take: number;
+    skip: number;
+    status?: string;
+    search?: string;
+  }) {
     const where: { status?: string; OR?: Array<Record<string, unknown>> } = {};
     if (opts.status === 'ACTIVE' || opts.status === 'INACTIVE') {
       where.status = opts.status;
@@ -364,7 +398,9 @@ export class WaiversService {
    */
   async deleteMany(ids: (string | number)[]) {
     if (!ids || ids.length === 0) {
-      throw new BadRequestException('Debes proporcionar al menos un ID para eliminar');
+      throw new BadRequestException(
+        'Debes proporcionar al menos un ID para eliminar',
+      );
     }
     const numericIds = ids.map((id) => BigInt(id));
     const result = await this.prisma.waiverQRV2.deleteMany({
@@ -379,12 +415,18 @@ export class WaiversService {
     return new Date() > expiresAt;
   }
 
-  private updateStatusIfExpired(waiver: { expiresAt: Date; status: string; id: bigint }) {
+  private updateStatusIfExpired(waiver: {
+    expiresAt: Date;
+    status: string;
+    id: bigint;
+  }) {
     if (this.isExpired(waiver.expiresAt) && waiver.status === 'ACTIVE') {
       // Fire-and-forget update (no bloqueamos la respuesta)
       this.prisma.waiverQRV2
         .update({ where: { id: waiver.id }, data: { status: 'INACTIVE' } })
-        .catch((e) => this.logger.error(`Error actualizando status waiver: ${e.message}`));
+        .catch((e) =>
+          this.logger.error(`Error actualizando status waiver: ${e.message}`),
+        );
     }
   }
 
@@ -393,10 +435,7 @@ export class WaiversService {
     return doc?.content;
   }
 
-  private buildEmailHtml(
-    dto: CreateWaiverDto,
-    qrCode: string,
-  ): string {
+  private buildEmailHtml(dto: CreateWaiverDto, qrCode: string): string {
     const relativesRows = (dto.relatives || [])
       .map(
         (r) =>

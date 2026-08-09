@@ -25,10 +25,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let message: string | object = 'Internal server error';
     if (exception instanceof HttpException) {
       const res = exception.getResponse();
-      message = typeof res === 'string' ? res : (res as Record<string, unknown>);
+      message = typeof res === 'string' ? res : res;
     } else if (exception instanceof Error) {
       message = exception.message;
-      this.logger.error(`${request.method} ${request.url} - ${exception.message}`, exception.stack);
+      this.logger.error(
+        `${request.method} ${request.url} - ${exception.message}`,
+        exception.stack,
+      );
     }
 
     response.status(status).json({

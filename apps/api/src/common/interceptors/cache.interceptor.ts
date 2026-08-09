@@ -18,7 +18,8 @@ export const CACHE_INVALIDATE_METADATA = 'cache_invalidate_patterns';
  * Decorator para cachear la respuesta de un endpoint.
  * @param ttlSeconds - TTL en segundos. Default 60s.
  */
-export const Cache = (ttlSeconds = 60) => SetMetadata(CACHE_TTL_METADATA, ttlSeconds);
+export const Cache = (ttlSeconds = 60) =>
+  SetMetadata(CACHE_TTL_METADATA, ttlSeconds);
 
 /**
  * Decorator para NO cachear este endpoint.
@@ -134,13 +135,20 @@ export class CacheInterceptor implements NestInterceptor {
           await this.redis.set(key, JSON.stringify(value), ttl);
         } else {
           // Fallback memoria
-          this.memoryStore.set(key, { value, expiresAt: Date.now() + ttl * 1000 });
+          this.memoryStore.set(key, {
+            value,
+            expiresAt: Date.now() + ttl * 1000,
+          });
         }
       }),
     );
   }
 
-  private buildKey(req: { originalUrl?: string; url?: string; user?: { uid?: string } }): string {
+  private buildKey(req: {
+    originalUrl?: string;
+    url?: string;
+    user?: { uid?: string };
+  }): string {
     const url = req.originalUrl ?? req.url ?? 'unknown';
     const userId = req.user?.uid ?? 'public';
     return `cache:${url}::user=${userId}`;

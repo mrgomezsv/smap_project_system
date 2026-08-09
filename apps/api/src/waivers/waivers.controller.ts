@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Query,
-  Body,
-  Res,
-} from '@nestjs/common';
+import { Controller, Get, Post, Param, Query, Body, Res } from '@nestjs/common';
 import type { Response } from 'express';
 import { IsString, IsNotEmpty } from 'class-validator';
 
@@ -124,8 +116,14 @@ export class WaiversController {
     @CurrentUser() user: AuthUser,
   ) {
     assertAdminEmail(user.email);
-    const sent = await this.waiversService.resendWaiverEmail(qrCode, lang || 'es');
-    return { success: sent, message: sent ? 'Email enviado exitosamente' : 'Error al enviar el email' };
+    const sent = await this.waiversService.resendWaiverEmail(
+      qrCode,
+      lang || 'es',
+    );
+    return {
+      success: sent,
+      message: sent ? 'Email enviado exitosamente' : 'Error al enviar el email',
+    };
   }
 
   /**

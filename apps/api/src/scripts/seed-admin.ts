@@ -8,7 +8,9 @@ async function seedAdmin() {
   const email = process.env.ADMIN_SEED_EMAIL || 'mrgomez.dev@gmail.com';
   const password = process.env.ADMIN_SEED_PASSWORD || 'Karin2100';
 
-  console.log(`🚀 Iniciando creación/sincronización de superusuario admin: ${email}`);
+  console.log(
+    `🚀 Iniciando creación/sincronización de superusuario admin: ${email}`,
+  );
 
   // 1. Inicializar Firebase Admin
   const credentialsPath =
@@ -19,7 +21,9 @@ async function seedAdmin() {
     : path.join(process.cwd(), credentialsPath);
 
   if (!fs.existsSync(absolutePath)) {
-    console.error(`❌ Archivo de credenciales Firebase no encontrado en ${absolutePath}`);
+    console.error(
+      `❌ Archivo de credenciales Firebase no encontrado en ${absolutePath}`,
+    );
     process.exit(1);
   }
 
@@ -36,7 +40,9 @@ async function seedAdmin() {
 
   try {
     userRecord = await auth.getUserByEmail(email);
-    console.log(`✅ Usuario encontrado en Firebase Auth (UID: ${userRecord.uid})`);
+    console.log(
+      `✅ Usuario encontrado en Firebase Auth (UID: ${userRecord.uid})`,
+    );
     // Actualizar contraseña si fue especificada
     await auth.updateUser(userRecord.uid, { password });
     console.log(`🔑 Contraseña actualizada exitosamente en Firebase Auth.`);
@@ -49,7 +55,9 @@ async function seedAdmin() {
         displayName: 'Mario Gomez (Admin)',
         emailVerified: true,
       });
-      console.log(`✅ Usuario creado en Firebase Auth (UID: ${userRecord.uid})`);
+      console.log(
+        `✅ Usuario creado en Firebase Auth (UID: ${userRecord.uid})`,
+      );
     } else {
       console.error(`❌ Error interactuando con Firebase Auth:`, error);
       process.exit(1);
@@ -75,7 +83,9 @@ async function seedAdmin() {
           isActive: true,
         },
       });
-      console.log(`✅ Usuario sincronizado como Superuser/Staff en MariaDB (ID: ${existingUser.id})`);
+      console.log(
+        `✅ Usuario sincronizado como Superuser/Staff en MariaDB (ID: ${existingUser.id})`,
+      );
     } else {
       const newUser = await prisma.user.create({
         data: {
@@ -88,7 +98,9 @@ async function seedAdmin() {
           isActive: true,
         },
       });
-      console.log(`✅ Creado registro de usuario en MariaDB (ID: ${newUser.id})`);
+      console.log(
+        `✅ Creado registro de usuario en MariaDB (ID: ${newUser.id})`,
+      );
     }
   } catch (error) {
     console.error(`❌ Error sincronizando usuario en MariaDB:`, error);

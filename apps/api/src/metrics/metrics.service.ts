@@ -136,8 +136,14 @@ export class MetricsService {
     `;
 
     // ============ Bucket construction (era JS-heavy, ahora menor) ============
-    const trendMap = new Map<string, { likes: number; comments: number; waivers: number }>();
-    const communicationTrend = new Map<string, { contacts: number; chats: number }>();
+    const trendMap = new Map<
+      string,
+      { likes: number; comments: number; waivers: number }
+    >();
+    const communicationTrend = new Map<
+      string,
+      { contacts: number; chats: number }
+    >();
 
     for (let i = 0; i < days; i++) {
       const date = new Date(from);
@@ -193,7 +199,13 @@ export class MetricsService {
       statusCounts[key] = (statusCounts[key] ?? 0) + Number(count);
     });
 
-    const statusColors = ['#1e3a8a', '#10b981', '#f5a91b', '#ef4444', '#64748b'];
+    const statusColors = [
+      '#1e3a8a',
+      '#10b981',
+      '#f5a91b',
+      '#ef4444',
+      '#64748b',
+    ];
 
     // Unique scanned waivers en rango (count distinct waiver_qr_id)
     const uniqueScannedResult = await this.prisma.$queryRaw<CountRow[]>`

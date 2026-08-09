@@ -26,7 +26,10 @@ import { Prisma } from '@prisma/client';
  */
 @Injectable()
 export class BigIntInterceptor implements NestInterceptor {
-  intercept(_context: ExecutionContext, next: CallHandler): Observable<unknown> {
+  intercept(
+    _context: ExecutionContext,
+    next: CallHandler,
+  ): Observable<unknown> {
     return next.handle().pipe(
       map((data) => {
         if (this.shouldSkip(data)) return data;
@@ -45,7 +48,10 @@ export class BigIntInterceptor implements NestInterceptor {
     if (value === null || value === undefined) return value;
 
     if (typeof value === 'bigint') {
-      if (value <= BigInt(Number.MAX_SAFE_INTEGER) && value >= BigInt(Number.MIN_SAFE_INTEGER)) {
+      if (
+        value <= BigInt(Number.MAX_SAFE_INTEGER) &&
+        value >= BigInt(Number.MIN_SAFE_INTEGER)
+      ) {
         return Number(value);
       }
       return value.toString();
@@ -63,8 +69,10 @@ export class BigIntInterceptor implements NestInterceptor {
       typeof (value as { toFixed?: unknown }).toFixed === 'function' &&
       !('toISOString' in value)
     ) {
-      const n = Number(value as { toString(): string });
-      return Number.isFinite(n) ? n : (value as { toString(): string }).toString();
+      const n = Number(value);
+      return Number.isFinite(n)
+        ? n
+        : (value as { toString(): string }).toString();
     }
 
     if (Array.isArray(value)) {

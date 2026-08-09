@@ -1,7 +1,23 @@
-import { Controller, Get, Post, Patch, Delete, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
 import { ContactMessagesService } from './contact-messages.service';
 import { Public } from '../auth/decorators/public.decorator';
-import { IsString, IsNotEmpty, IsEmail, MaxLength, IsArray, ArrayNotEmpty, IsInt } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  MaxLength,
+  IsArray,
+  ArrayNotEmpty,
+  IsInt,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 class CreateContactDto {

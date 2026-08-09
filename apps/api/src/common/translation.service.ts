@@ -37,7 +37,9 @@ export class TranslationService {
         return cached.translatedText;
       }
     } catch (e) {
-      this.logger.warn(`TranslationCache BD lookup falló: ${(e as Error).message}`);
+      this.logger.warn(
+        `TranslationCache BD lookup falló: ${(e as Error).message}`,
+      );
     }
 
     // L3: API externa
@@ -46,10 +48,12 @@ export class TranslationService {
       const res = await fetch(url, { signal: AbortSignal.timeout(3000) });
       if (!res.ok) throw new Error(`HTTP error ${res.status}`);
 
-      const data = (await res.json()) as any;
+      const data = await res.json();
       if (Array.isArray(data) && Array.isArray(data[0])) {
         const translatedText = data[0]
-          .map((chunk: any) => (Array.isArray(chunk) && chunk[0] ? chunk[0] : ''))
+          .map((chunk: any) =>
+            Array.isArray(chunk) && chunk[0] ? chunk[0] : '',
+          )
           .join('');
 
         if (translatedText) {
@@ -63,7 +67,9 @@ export class TranslationService {
       }
       return text;
     } catch (error) {
-      this.logger.warn(`No se pudo traducir "${text.slice(0, 30)}...": ${error}`);
+      this.logger.warn(
+        `No se pudo traducir "${text.slice(0, 30)}...": ${error}`,
+      );
       return text;
     }
   }
@@ -71,17 +77,18 @@ export class TranslationService {
   /**
    * Traduce title y description de un producto si lang es 'es' o 'en'.
    */
-  async translateProduct<T extends { title: string; description?: string | null }>(
-    product: T,
-    targetLang?: string,
-  ): Promise<T> {
+  async translateProduct<
+    T extends { title: string; description?: string | null },
+  >(product: T, targetLang?: string): Promise<T> {
     if (!targetLang || (targetLang !== 'es' && targetLang !== 'en')) {
       return product;
     }
 
     const [translatedTitle, translatedDesc] = await Promise.all([
       this.translate(product.title, targetLang),
-      product.description ? this.translate(product.description, targetLang) : Promise.resolve(product.description),
+      product.description
+        ? this.translate(product.description, targetLang)
+        : Promise.resolve(product.description),
     ]);
 
     return {
@@ -104,7 +111,11 @@ export class TranslationService {
     this.memoryCache.set(key, value);
   }
 
-  private async persistToDb(sourceText: string, targetLang: string, translatedText: string): Promise<void> {
+  private async persistToDb(
+    sourceText: string,
+    targetLang: string,
+    translatedText: string,
+  ): Promise<void> {
     const sourceHash = this.hash(sourceText);
     try {
       await this.prisma.translationCache.upsert({

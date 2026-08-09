@@ -19,7 +19,10 @@ export class LikesService {
   /**
    * Verifica si el usuario tiene el producto marcado como favorito.
    */
-  async userHasFavorite(userId: number, productId: number): Promise<{ isFavorite: boolean }> {
+  async userHasFavorite(
+    userId: number,
+    productId: number,
+  ): Promise<{ isFavorite: boolean }> {
     const like = await this.prisma.productLike.findUnique({
       where: { userId_productId: { userId, productId: BigInt(productId) } },
     });
@@ -32,7 +35,10 @@ export class LikesService {
    * - Si existe: lo invierte (true→false, false→true)
    * Devuelve el estado resultante.
    */
-  async toggle(userId: number, productId: number): Promise<{ isFavorite: boolean }> {
+  async toggle(
+    userId: number,
+    productId: number,
+  ): Promise<{ isFavorite: boolean }> {
     // Verificar que el producto existe
     const product = await this.prisma.product.findUnique({
       where: { id: BigInt(productId) },

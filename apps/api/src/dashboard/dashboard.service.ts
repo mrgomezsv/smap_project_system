@@ -9,13 +9,19 @@ export class DashboardService {
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
 
-    const [activeProductsCount, totalEventsCount, waiversTodayCount, unreadMessagesCount] =
-      await Promise.all([
-        this.prisma.product.count({ where: { publicated: true } }),
-        this.prisma.event.count(),
-        this.prisma.waiverQRV2.count({ where: { createdAt: { gte: todayStart } } }),
-        this.prisma.contactMessage.count(),
-      ]);
+    const [
+      activeProductsCount,
+      totalEventsCount,
+      waiversTodayCount,
+      unreadMessagesCount,
+    ] = await Promise.all([
+      this.prisma.product.count({ where: { publicated: true } }),
+      this.prisma.event.count(),
+      this.prisma.waiverQRV2.count({
+        where: { createdAt: { gte: todayStart } },
+      }),
+      this.prisma.contactMessage.count(),
+    ]);
 
     // Obtener actividades recientes reales
     const recentWaivers = await this.prisma.waiverQRV2.findMany({
@@ -56,7 +62,12 @@ export class DashboardService {
         description: `${m.firstName} ${m.lastName}: ${m.reason.slice(0, 45)}...`,
         timestamp: m.createdAt.toISOString(),
       })),
-    ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 5);
+    ]
+      .sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+      )
+      .slice(0, 5);
 
     return {
       stats: {

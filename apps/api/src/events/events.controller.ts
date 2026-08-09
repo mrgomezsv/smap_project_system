@@ -2,7 +2,10 @@ import { Controller, Get, Param, Query, UseInterceptors } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { QueryEventDto } from './dto/query-event.dto';
 import { Public } from '../auth/decorators/public.decorator';
-import { Cache, CacheInterceptor } from '../common/interceptors/cache.interceptor';
+import {
+  Cache,
+  CacheInterceptor,
+} from '../common/interceptors/cache.interceptor';
 
 @Controller('api/events')
 @UseInterceptors(CacheInterceptor)
