@@ -16,52 +16,60 @@ datasource db {
 // Commit #26: Product + Event
 
 model User {
-  id           Int       @id @default(autoincrement())
-  password     String    @default("!") @db.VarChar(255)
-  lastLogin    DateTime? @map("last_login") @db.DateTime(6)
-  isSuperuser  Boolean   @default(false) @map("is_superuser")
-  username     String    @unique @db.VarChar(150)
-  firstName    String    @default("") @map("first_name") @db.VarChar(150)
-  lastName     String    @default("") @map("last_name") @db.VarChar(150)
-  email        String    @default("") @unique @db.VarChar(254)
-  isStaff      Boolean   @default(false) @map("is_staff")
-  isActive     Boolean   @default(true) @map("is_active")
-  dateJoined   DateTime  @default(now()) @map("date_joined") @db.DateTime(6)
+  id          Int       @id @default(autoincrement())
+  password    String    @default("!") @db.VarChar(255)
+  lastLogin   DateTime? @map("last_login") @db.DateTime(6)
+  isSuperuser Boolean   @default(false) @map("is_superuser")
+  username    String    @unique @db.VarChar(150)
+  firstName   String    @default("") @map("first_name") @db.VarChar(150)
+  lastName    String    @default("") @map("last_name") @db.VarChar(150)
+  email       String    @unique @default("") @db.VarChar(254)
+  isStaff     Boolean   @default(false) @map("is_staff")
+  isActive    Boolean   @default(true) @map("is_active")
+  dateJoined  DateTime  @default(now()) @map("date_joined") @db.DateTime(6)
 
-  productsCreated  Product[]          @relation("ProductCreatedBy")
-  eventsOrganized  Event[]            @relation("EventOrganizer")
-  productLikes     ProductLike[]
-  chatAdminRoles   ChatAdministrator[]
-  chatRooms        ChatRoom[]
-  sentMessages     ChatMessage[]
+  productsCreated   Product[]           @relation("ProductCreatedBy")
+  eventsOrganized   Event[]             @relation("EventOrganizer")
+  productLikes      ProductLike[]
+  productImages     ProductImage[]
+  commentsLinked    ProductComment[]    @relation("CommentUserInt")
+  repliesLinked     CommentReply[]      @relation("ReplyUserInt")
+  chatAdminRoles    ChatAdministrator[]
+  chatRooms         ChatRoom[]
+  sentMessages      ChatMessage[]
+  waiversLinked     WaiverQRV2[]        @relation("WaiverUserInt")
   waiverValidations WaiverValidator[]
+  firebaseUser      FirebaseUser?
 
+  @@index([dateJoined], map: "idx_user_datejoined")
+  @@index([isActive], map: "idx_user_active")
   @@map("auth_user")
 }
 
 model Product {
-  id          BigInt    @id @default(autoincrement())
-  title       String    @db.VarChar(100)
-  description String?   @db.LongText
-  price       Decimal?  @db.Decimal(10, 2)
-  category    String    @db.VarChar(50)
-  created     DateTime  @default(now()) @db.DateTime(0)
-  publicated  Boolean   @default(false)
-  userId      Int       @map("user_id")
-  // 6 imágenes: principal + 5 adicionales
-  img         String    @default("default_product_image.jpg") @db.VarChar(100)
-  img1        String    @default("default_product_image.jpg") @db.VarChar(100)
-  img2        String    @default("default_product_image.jpg") @db.VarChar(100)
-  img3        String    @default("default_product_image.jpg") @db.VarChar(100)
-  img4        String    @default("default_product_image.jpg") @db.VarChar(100)
-  img5        String    @default("default_product_image.jpg") @db.VarChar(100)
-  dimensions  String?   @db.VarChar(50)
-  youtubeUrl  String?   @map("youtube_url") @db.VarChar(255)
-  circuits    String?   @db.VarChar(50)
-  space       String?   @db.VarChar(50)
+  id          BigInt   @id @default(autoincrement())
+  title       String   @db.VarChar(100)
+  description String?  @db.LongText
+  price       Decimal? @db.Decimal(10, 2)
+  category    String   @db.VarChar(50)
+  created     DateTime @default(now()) @db.DateTime(0)
+  publicated  Boolean  @default(false)
+  userId      Int      @map("user_id")
+  // 6 imágenes legacy: principal + 5 adicionales (mantener durante migración gradual)
+  img         String   @default("default_product_image.jpg") @db.VarChar(100)
+  img1        String   @default("default_product_image.jpg") @db.VarChar(100)
+  img2        String   @default("default_product_image.jpg") @db.VarChar(100)
+  img3        String   @default("default_product_image.jpg") @db.VarChar(100)
+  img4        String   @default("default_product_image.jpg") @db.VarChar(100)
+  img5        String   @default("default_product_image.jpg") @db.VarChar(100)
+  dimensions  String?  @db.VarChar(50)
+  youtubeUrl  String?  @map("youtube_url") @db.VarChar(255)
+  circuits    String?  @db.VarChar(50)
+  space       String?  @db.VarChar(50)
 
   user User @relation("ProductCreatedBy", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "t_app_product_product_user_id_b85feb0c_fk_auth_user_id")
 
+  images   ProductImage[]
   likes    ProductLike[]
   comments ProductComment[]
 
@@ -69,6 +77,8 @@ model Product {
   @@index([publicated], map: "idx_product_publicated")
   @@index([title], map: "idx_product_title")
   @@index([userId], map: "idx_product_user_id")
+  @@index([category, publicated, created(sort: Desc)], map: "idx_product_cat_pub_created")
+  @@index([publicated, created(sort: Desc)], map: "idx_product_pub_created")
   @@map("t_app_product_product")
 }
 
@@ -89,6 +99,9 @@ model Event {
   organizer User @relation("EventOrganizer", fields: [organizerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "t_app_event_organizer_id_e88c3f24_fk_auth_user_id")
 
   @@index([organizerId], map: "t_app_event_organizer_id_e88c3f24")
+  @@index([published, startDatetime], map: "idx_event_pub_start")
+  @@index([startDatetime], map: "idx_event_start")
+  @@index([partners], map: "idx_event_partners")
   @@map("t_app_event")
 }
 
@@ -108,22 +121,30 @@ model ProductLike {
 
   @@unique([userId, productId], map: "t_app_product_like_user_id_product_id_unique")
   @@index([productId], map: "idx_productlike_product")
+  @@index([productId, isFavorite], map: "idx_productlike_product_fav")
+  @@index([createdAt], map: "idx_productlike_created")
   @@map("t_app_product_like")
 }
 
 model ProductComment {
-  id               BigInt   @id @default(autoincrement())
-  productId        BigInt   @map("product_id")
-  userId           String?  @map("user_id") @db.VarChar(128)
-  userDisplayName  String?  @map("user_display_name") @db.VarChar(255)
-  comment          String   @db.LongText
-  isApproved       Boolean  @default(true) @map("is_approved")
-  createdAt        DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  id              BigInt   @id @default(autoincrement())
+  productId       BigInt   @map("product_id")
+  userId          String?  @map("user_id") @db.VarChar(128)
+  userIdInt       Int?     @map("user_id_int")
+  userDisplayName String?  @map("user_display_name") @db.VarChar(255)
+  comment         String   @db.LongText
+  isApproved      Boolean  @default(true) @map("is_approved")
+  createdAt       DateTime @default(now()) @map("created_at") @db.DateTime(6)
 
   product Product        @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_product_comment_product_id_fk")
   replies CommentReply[]
+  userInt User?          @relation("CommentUserInt", fields: [userIdInt], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "t_app_product_comment_user_id_int_fk")
 
+  @@index([userIdInt], map: "idx_comment_user_id_int")
   @@index([productId], map: "idx_productcomment_product")
+  @@index([productId, isApproved, createdAt(sort: Desc)], map: "idx_comment_product_appr_created")
+  @@index([createdAt(sort: Desc)], map: "idx_comment_created")
+  @@index([isApproved], map: "idx_comment_is_approved")
   @@map("t_app_product_comment")
 }
 
@@ -131,13 +152,17 @@ model CommentReply {
   id              BigInt   @id @default(autoincrement())
   commentId       BigInt   @map("comment_id")
   userId          String?  @map("user_id") @db.VarChar(128)
+  userIdInt       Int?     @map("user_id_int")
   userDisplayName String?  @map("user_display_name") @db.VarChar(255)
   replyText       String   @map("reply_text") @db.LongText
   createdAt       DateTime @default(now()) @map("created_at") @db.DateTime(6)
 
   comment ProductComment @relation(fields: [commentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_product_comment_reply_comment_id_fk")
+  userInt User?          @relation("ReplyUserInt", fields: [userIdInt], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "t_app_product_comment_reply_user_id_int_fk")
 
   @@index([commentId], map: "idx_commentreply_comment")
+  @@index([commentId, createdAt], map: "idx_reply_comment_created")
+  @@index([userIdInt], map: "idx_reply_user_id_int")
   @@map("t_app_product_comment_reply")
 }
 
@@ -150,6 +175,7 @@ model WaiverQRV2 {
   id        BigInt   @id @default(autoincrement())
   qrCode    String   @unique @map("qr_code") @db.VarChar(8)
   userId    String   @map("user_id") @db.VarChar(100)
+  userIdInt Int?     @map("user_id_int")
   userName  String   @map("user_name") @db.VarChar(100)
   userEmail String   @map("user_email") @db.VarChar(255)
   userPhone String?  @map("user_phone") @db.VarChar(32)
@@ -159,7 +185,13 @@ model WaiverQRV2 {
 
   relatives WaiverDataV2[]
   scans     WaiverScanV2[]
+  userInt   User?          @relation("WaiverUserInt", fields: [userIdInt], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "waiver_v2_waiverqr_user_id_int_fk")
 
+  @@index([userId], map: "idx_waiver_user")
+  @@index([userIdInt], map: "idx_waiver_user_id_int")
+  @@index([status, createdAt(sort: Desc)], map: "idx_waiver_status_created")
+  @@index([createdAt(sort: Desc)], map: "idx_waiver_created")
+  @@index([expiresAt], map: "idx_waiver_expires")
   @@map("waiver_v2_waiverqr")
 }
 
@@ -173,6 +205,7 @@ model WaiverDataV2 {
   waiverQr WaiverQRV2 @relation(fields: [waiverQrId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "waiver_v2_waiverdata_qr_fk")
 
   @@index([waiverQrId], map: "waiver_v2_waiverdata_waiver_qr_id_fk")
+  @@index([timestamp(sort: Desc)], map: "idx_waiverdata_timestamp")
   @@map("waiver_v2_waiverdata")
 }
 
@@ -185,6 +218,8 @@ model WaiverScanV2 {
   waiverQr WaiverQRV2 @relation(fields: [waiverQrId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "waiver_v2_waiverscan_qr_fk")
 
   @@index([waiverQrId], map: "waiver_v2_waiverscan_waiver_qr_id_fk")
+  @@index([scannedBy, scannedAt(sort: Desc)], map: "idx_scan_by_when")
+  @@index([scannedAt(sort: Desc)], map: "idx_scan_when")
   @@map("waiver_v2_waiverscan")
 }
 
@@ -215,32 +250,36 @@ model ChatAdministrator {
 }
 
 model ChatRoom {
-  id            Int       @id @default(autoincrement())
-  userId        Int       @map("user_id")
-  createdAt     DateTime  @default(now()) @map("created_at") @db.DateTime(6)
-  isActive      Boolean   @default(true) @map("is_active")
-  lastMessageAt DateTime  @default(now()) @map("last_message_at") @db.DateTime(6)
+  id            Int      @id @default(autoincrement())
+  userId        Int      @map("user_id")
+  createdAt     DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  isActive      Boolean  @default(true) @map("is_active")
+  lastMessageAt DateTime @default(now()) @map("last_message_at") @db.DateTime(6)
 
-  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_chat_room_user_id_fk")
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_chat_room_user_id_fk")
   messages ChatMessage[]
 
   @@index([userId], map: "t_app_chat_room_user_id_fk")
+  @@index([lastMessageAt(sort: Desc)], map: "idx_chatroom_lastmsg")
   @@map("t_app_chat_room")
 }
 
 model ChatMessage {
-  id        Int      @id @default(autoincrement())
-  chatRoomId Int     @map("chat_room_id")
-  senderId  Int      @map("sender_id")
-  content   String   @db.LongText
-  timestamp DateTime @default(now()) @db.DateTime(6)
-  isRead    Boolean  @default(false) @map("is_read")
+  id         Int      @id @default(autoincrement())
+  chatRoomId Int      @map("chat_room_id")
+  senderId   Int      @map("sender_id")
+  content    String   @db.LongText
+  timestamp  DateTime @default(now()) @db.DateTime(6)
+  isRead     Boolean  @default(false) @map("is_read")
 
   chatRoom ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_chat_message_chat_room_id_fk")
   sender   User     @relation(fields: [senderId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_chat_message_sender_id_fk")
 
   @@index([chatRoomId], map: "t_app_chat_message_chat_room_id_fk")
   @@index([senderId], map: "t_app_chat_message_sender_id_fk")
+  @@index([chatRoomId, timestamp(sort: Desc)], map: "idx_msg_room_time")
+  @@index([senderId, timestamp(sort: Desc)], map: "idx_msg_sender_time")
+  @@index([isRead, chatRoomId], map: "idx_msg_unread_room")
   @@map("t_app_chat_message")
 }
 
@@ -258,6 +297,8 @@ model ContactMessage {
   isRead        Boolean  @default(false) @map("is_read")
   createdAt     DateTime @default(now()) @map("created_at") @db.DateTime(6)
 
+  @@index([createdAt(sort: Desc)], map: "idx_contact_created")
+  @@index([isRead, createdAt(sort: Desc)], map: "idx_contact_unread_created")
   @@map("t_app_contact_message")
 }
 
@@ -306,7 +347,102 @@ model RentalContract {
   signerUserAgent    String?   @map("signer_user_agent") @db.Text
   createdAt          DateTime  @default(now()) @map("created_at") @db.DateTime(6)
 
+  safetyItems ContractSafetyItem[]
+
   @@index([token], map: "idx_rental_contract_token")
   @@index([clientEmail], map: "idx_rental_contract_email")
+  @@index([status, createdAt(sort: Desc)], map: "idx_contract_status_created")
+  @@index([eventDate], map: "idx_contract_eventdate")
+  @@index([clientName], map: "idx_contract_client_name")
   @@map("t_app_rental_contract")
+}
+
+// ============================================================
+// Fase D - Tablas nuevas (D1, D3, D4, D6, D7, D8)
+// Migraciones: 20260808162800, 20260808163500_product_image_d3_safe,
+//              20260808163700_contract_safety_d4
+// ============================================================
+
+model FirebaseUser {
+  firebaseUid String   @id @map("firebase_uid") @db.VarChar(128)
+  userId      Int      @unique(map: "t_app_firebase_user_user_id_unique") @map("user_id")
+  email       String?  @db.VarChar(254)
+  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_firebase_user_user_fk")
+
+  @@index([userId], map: "idx_firebase_user_user")
+  @@map("t_app_firebase_user")
+}
+
+model TranslationCache {
+  id             Int      @id @default(autoincrement())
+  sourceHash     String   @unique(map: "t_app_translation_cache_hash_unique") @map("source_hash") @db.VarChar(64)
+  sourceText     String   @map("source_text") @db.Text
+  targetLang     String   @map("target_lang") @db.VarChar(5)
+  translatedText String   @map("translated_text") @db.Text
+  createdAt      DateTime @default(now()) @map("created_at") @db.DateTime(6)
+
+  @@index([targetLang], map: "idx_translation_lang")
+  @@map("t_app_translation_cache")
+}
+
+model PushToken {
+  id         Int      @id @default(autoincrement())
+  userId     String   @map("user_id") @db.VarChar(128)
+  token      String   @unique(map: "t_app_push_token_token_unique") @db.VarChar(255)
+  platform   String   @db.VarChar(20)
+  isActive   Boolean  @default(true) @map("is_active")
+  lastUsedAt DateTime @default(now()) @map("last_used_at") @db.DateTime(6)
+  createdAt  DateTime @default(now()) @map("created_at") @db.DateTime(6)
+
+  @@index([userId, isActive], map: "idx_push_token_user_active")
+  @@map("t_app_push_token")
+}
+
+model AuditLog {
+  id        BigInt   @id @default(autoincrement())
+  userId    Int?     @map("user_id")
+  action    String   @db.VarChar(50)
+  entity    String   @db.VarChar(50)
+  entityId  String?  @map("entity_id") @db.VarChar(64)
+  metadata  Json?
+  ip        String?  @db.VarChar(45)
+  userAgent String?  @map("user_agent") @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+
+  @@index([userId, createdAt(sort: Desc)], map: "idx_audit_user_created")
+  @@index([entity, entityId], map: "idx_audit_entity")
+  @@index([action, createdAt(sort: Desc)], map: "idx_audit_action_created")
+  @@map("t_app_audit_log")
+}
+
+model ProductImage {
+  id        BigInt  @id @default(autoincrement())
+  productId BigInt  @map("product_id")
+  url       String  @db.VarChar(255)
+  altText   String? @map("alt_text") @db.VarChar(255)
+  position  Int     @default(0)
+  isPrimary Boolean @default(false) @map("is_primary")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_product_image_product_fk")
+  user    User?   @relation(fields: [userId], references: [id])
+  userId  Int?
+
+  @@index([productId, position], map: "idx_product_image_product")
+  @@index([productId, isPrimary], map: "idx_product_image_primary")
+  @@map("t_app_product_image")
+}
+
+model ContractSafetyItem {
+  id         BigInt  @id @default(autoincrement())
+  contractId Int     @map("contract_id")
+  itemKey    String  @map("item_key") @db.VarChar(50)
+  isChecked  Boolean @default(false) @map("is_checked")
+
+  contract RentalContract @relation(fields: [contractId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_contract_safety_contract_fk")
+
+  @@unique([contractId, itemKey], map: "t_app_contract_safety_unique")
+  @@index([contractId], map: "idx_safety_contract")
+  @@map("t_app_contract_safety_item")
 }
