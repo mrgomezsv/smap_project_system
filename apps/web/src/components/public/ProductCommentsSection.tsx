@@ -12,6 +12,7 @@ interface CommentItem {
   authorName: string;
   comment: string;
   createdAt: string;
+  isApproved: boolean;
 }
 
 interface ProductCommentsSectionProps {
@@ -33,12 +34,14 @@ export function ProductCommentsSection({
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
     async function loadComments() {
       try {
         setLoading(true);
+        setComments([]);
         const data = await api.get<CommentItem[]>(`/api/comments/product/${productId}`);
         if (isMounted) {
           setComments(data);
@@ -70,6 +73,7 @@ export function ProductCommentsSection({
     if (!newComment.trim() || submitting) return;
 
     setError(null);
+    setNotice(null);
     setSubmitting(true);
 
     try {
@@ -79,7 +83,11 @@ export function ProductCommentsSection({
         { productId, comment: newComment.trim() },
         { token }
       );
-      setComments((prev) => [created, ...prev]);
+      if (created.isApproved) {
+        setComments((prev) => [created, ...prev]);
+      } else {
+        setNotice(tProduct('commentPending'));
+      }
       setNewComment('');
     } catch (err) {
       setError(
@@ -110,6 +118,12 @@ export function ProductCommentsSection({
                 {user.displayName || user.email}
               </span>
             </div>
+
+            {notice && (
+              <div className="p-3 bg-success/10 text-success text-sm rounded-lg border border-success/20">
+                {notice}
+              </div>
+            )}
 
             {error && (
               <div className="p-3 bg-danger/10 text-danger text-sm rounded-lg border border-danger/20">
