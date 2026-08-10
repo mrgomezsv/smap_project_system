@@ -460,7 +460,7 @@ export class PdfService {
       renderLegalSection(
         'PRIVACY POLICY AND TERMS (EN)',
         englishText,
-        'PRIVACY POLICY AND TERMS (EN) — Continued',
+        'PRIVACY POLICY AND TERMS (EN) - Continued',
       );
       y -= 6;
       page.drawLine({
@@ -473,13 +473,13 @@ export class PdfService {
       renderLegalSection(
         'POLÍTICA DE PRIVACIDAD Y TÉRMINOS (ES)',
         spanishText,
-        'POLÍTICA DE PRIVACIDAD Y TÉRMINOS (ES) — Continuación',
+        'POLÍTICA DE PRIVACIDAD Y TÉRMINOS (ES) - Continuación',
       );
     } else {
       renderLegalSection(
         'POLÍTICA DE PRIVACIDAD Y TÉRMINOS (ES)',
         spanishText,
-        'POLÍTICA DE PRIVACIDAD Y TÉRMINOS (ES) — Continuación',
+        'POLÍTICA DE PRIVACIDAD Y TÉRMINOS (ES) - Continuación',
       );
       y -= 6;
       page.drawLine({
@@ -492,7 +492,7 @@ export class PdfService {
       renderLegalSection(
         'PRIVACY POLICY AND TERMS (EN)',
         englishText,
-        'PRIVACY POLICY AND TERMS (EN) — Continued',
+        'PRIVACY POLICY AND TERMS (EN) - Continued',
       );
     }
 

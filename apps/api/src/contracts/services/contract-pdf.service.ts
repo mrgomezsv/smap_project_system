@@ -3,6 +3,16 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
+function sanitizePdfText(text: string | null | undefined): string {
+  if (!text) return '';
+  return text
+    .replace(/[—–]/g, '-')
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/…/g, '...')
+    .replace(/[^\x00-\xFF]/g, '');
+}
+
 export interface ContractPdfData {
   token: string;
   clientName: string;
@@ -120,7 +130,7 @@ export class ContractPdfService {
         })
       : 'N/A';
 
-    page1.drawText(`Client Name: ${data.clientName}`, {
+    page1.drawText(`Client Name: ${sanitizePdfText(data.clientName)}`, {
       x: margin + 10,
       y: y - 18,
       size: 9,
@@ -136,7 +146,7 @@ export class ContractPdfService {
     });
 
     page1.drawText(
-      `Address: ${data.clientAddress}${data.clientCityStateZip ? `, ${data.clientCityStateZip}` : ''}`,
+      `Address: ${sanitizePdfText(data.clientAddress)}${data.clientCityStateZip ? `, ${sanitizePdfText(data.clientCityStateZip)}` : ''}`,
       {
         x: margin + 10,
         y: y - 34,
@@ -145,7 +155,7 @@ export class ContractPdfService {
         color: this.darkText,
       },
     );
-    page1.drawText(`Phone: ${data.clientPhone || 'N/A'}`, {
+    page1.drawText(`Phone: ${sanitizePdfText(data.clientPhone) || 'N/A'}`, {
       x: margin + 310,
       y: y - 34,
       size: 8.5,
@@ -153,7 +163,7 @@ export class ContractPdfService {
       color: this.darkText,
     });
 
-    page1.drawText(`Email: ${data.clientEmail}`, {
+    page1.drawText(`Email: ${sanitizePdfText(data.clientEmail)}`, {
       x: margin + 10,
       y: y - 48,
       size: 8.5,
@@ -344,7 +354,7 @@ export class ContractPdfService {
       borderWidth: 1,
     });
 
-    page2.drawText(`Equipment Reserved: ${data.equipment}`, {
+    page2.drawText(`Equipment Reserved: ${sanitizePdfText(data.equipment)}`, {
       x: margin + 15,
       y: y2 - 20,
       size: 10,
@@ -353,7 +363,7 @@ export class ContractPdfService {
     });
 
     page2.drawText(
-      `Schedule: ${data.startTime || 'Standard'} to ${data.endTime || 'Standard'}`,
+      `Schedule: ${sanitizePdfText(data.startTime) || 'Standard'} to ${sanitizePdfText(data.endTime) || 'Standard'}`,
       {
         x: margin + 15,
         y: y2 - 38,
@@ -399,7 +409,7 @@ export class ContractPdfService {
     });
 
     if (data.notes) {
-      page2.drawText(`Notes: ${data.notes}`, {
+      page2.drawText(`Notes: ${sanitizePdfText(data.notes)}`, {
         x: margin + 15,
         y: y2 - 76,
         size: 8.5,
@@ -449,7 +459,7 @@ export class ContractPdfService {
     y2 -= 30;
 
     // Footer de Validez
-    page2.drawText('Official Copy — Kidsfun y Fiestas Infantiles', {
+    page2.drawText('Official Copy - Kidsfun y Fiestas Infantiles', {
       x: margin,
       y: y2,
       size: 9,
