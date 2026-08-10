@@ -89,11 +89,13 @@ ENV/
 env.bak/
 venv.bak/
 
-# Python lib dirs (legacy Django) - no ignorar apps/web/src/lib
+# Python lib dirs (legacy Django) - no ignorar apps/web/src/lib ni apps/api/prisma/migrations
 /lib/
 /lib64/
 !/apps/**/lib/
 !/apps/**/lib/**
+!/apps/**/prisma/migrations/
+!/apps/**/prisma/migrations/**
 
 # Spyder project settings
 .spyderproject
