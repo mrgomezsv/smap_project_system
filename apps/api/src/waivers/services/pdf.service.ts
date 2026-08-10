@@ -174,7 +174,13 @@ export class PdfService {
     }
 
     // === HEADER: Logo - Título - QR (3 columnas) ===
-    const webUrl = process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000';
+    const webUrl =
+      process.env.PUBLIC_WEB_URL ||
+      process.env.SITE_URL ||
+      process.env.NEXT_PUBLIC_WEB_URL ||
+      (process.env.NODE_ENV === 'production'
+        ? 'https://kidsfunyfiestasinfantiles.com'
+        : 'http://localhost:3000');
     const qrTargetUrl = `${webUrl}/waiver/verify/${data.qrCode}`;
     const qrImage = await this.qrService.toBuffer(qrTargetUrl);
     const qrPic = await doc.embedPng(qrImage);

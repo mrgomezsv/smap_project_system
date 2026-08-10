@@ -300,7 +300,10 @@ export class ContractsService {
     const webBaseUrl =
       process.env.PUBLIC_WEB_URL ||
       process.env.SITE_URL ||
-      'http://localhost:3000';
+      process.env.NEXT_PUBLIC_WEB_URL ||
+      (process.env.NODE_ENV === 'production'
+        ? 'https://kidsfunyfiestasinfantiles.com'
+        : 'http://localhost:3000');
     const signUrl = `${webBaseUrl}/contrato/firmar/${token}`;
 
     let emailSent = false;
