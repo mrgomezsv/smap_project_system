@@ -101,11 +101,17 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
 
   if (!res.ok) {
     const data = isJson ? await res.json() : await res.text();
-    const message =
-      (isJson && (data as any)?.message) ||
-      (typeof data === 'string' ? data : `HTTP ${res.status}`);
-    const errorMsg = Array.isArray(message) ? message.join(', ') : String(message);
-    throw new ApiError(errorMsg, res.status, data);
+    let message: string;
+    if (isJson && (data as any)?.message) {
+      message = Array.isArray((data as any).message)
+        ? (data as any).message.join(', ')
+        : String((data as any).message);
+    } else if (typeof data === 'string' && data.trim().startsWith('<')) {
+      message = `Error del servidor (${res.status} ${res.statusText || 'Bad Gateway'})`;
+    } else {
+      message = typeof data === 'string' ? data : `HTTP ${res.status}`;
+    }
+    throw new ApiError(message, res.status, data);
   }
 
   if (res.status === 204 || !isJson) {

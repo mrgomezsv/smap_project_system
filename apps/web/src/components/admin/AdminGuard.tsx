@@ -17,7 +17,31 @@ export function AdminGuard({ children }: AdminGuardProps) {
   const pathname = usePathname();
   const [verifying, setVerifying] = useState(true);
   const [authorized, setAuthorized] = useState<boolean | null>(null);
+  const [isServerError, setIsServerError] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const checkAdminAuth = async () => {
+    if (!user) return;
+    try {
+      setVerifying(true);
+      setIsServerError(false);
+      setErrorMsg(null);
+      await api.get<{ ok: boolean }>('/api/auth/check-admin', { getToken });
+      setAuthorized(true);
+    } catch (err: unknown) {
+      setAuthorized(false);
+      if (err instanceof ApiError && (err.status === 403 || err.status === 401)) {
+        setIsServerError(false);
+        setErrorMsg(`El correo (${user?.email}) no cuenta con permisos de administrador.`);
+      } else {
+        setIsServerError(true);
+        const codeText = err instanceof ApiError ? `(Error ${err.status})` : '';
+        setErrorMsg(`No se pudo conectar con el servidor para verificar los permisos de administrador ${codeText}. Por favor reintenta en unos momentos.`);
+      }
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   useEffect(() => {
     if (!ready) return;
@@ -29,37 +53,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
       return;
     }
 
-    let isMounted = true;
-    async function checkAdminAuth() {
-      try {
-        setVerifying(true);
-        await api.get<{ ok: boolean }>('/api/auth/check-admin', { getToken });
-
-        if (isMounted) {
-          setAuthorized(true);
-          setErrorMsg(null);
-        }
-      } catch (err: unknown) {
-        if (isMounted) {
-          setAuthorized(false);
-          if (err instanceof ApiError && (err.status === 403 || err.status === 401)) {
-            setErrorMsg(`El correo (${user?.email}) no cuenta con permisos de administrador.`);
-          } else {
-            setErrorMsg(err instanceof ApiError ? err.message : 'No se pudo verificar el rol de administrador.');
-          }
-        }
-      } finally {
-        if (isMounted) {
-          setVerifying(false);
-        }
-      }
-    }
-
     checkAdminAuth();
-
-    return () => {
-      isMounted = false;
-    };
   }, [user, ready, pathname, router, getToken]);
 
   if (!ready || verifying) {
@@ -86,20 +80,30 @@ export function AdminGuard({ children }: AdminGuardProps) {
       <div className="min-h-screen flex items-center justify-center bg-surface p-4">
         <div className="card max-w-md w-full text-center p-8 border border-red-200 shadow-lg">
           <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
-            🚫
+            {isServerError ? '⚠️' : '🚫'}
           </div>
-          <h2 className="text-xl font-bold text-text-primary mb-2">Acceso Restringido</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-2">
+            {isServerError ? 'Error de Conexión' : 'Acceso Restringido'}
+          </h2>
           <p className="text-sm text-text-muted mb-6">
             {errorMsg || `Tu cuenta (${user.email}) no tiene permisos para acceder al panel de administración.`}
           </p>
           <div className="flex flex-col gap-3">
+            {isServerError && (
+              <button
+                onClick={() => checkAdminAuth()}
+                className="btn btn-primary w-full"
+              >
+                🔄 Reintentar verificación
+              </button>
+            )}
             <button
               onClick={async () => {
                 const auth = getFirebaseAuth();
                 if (auth) await signOut(auth);
                 router.push('/admin/signin');
               }}
-              className="btn btn-primary w-full"
+              className={isServerError ? "btn btn-outline w-full" : "btn btn-primary w-full"}
             >
               Cerrar sesión e ingresar con otra cuenta
             </button>
