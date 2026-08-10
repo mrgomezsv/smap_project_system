@@ -10,15 +10,21 @@ import { ForbiddenException } from '@nestjs/common';
  * Ejemplo: ADMIN_EMAILS="admin@kidsfun.com,karen@gmail.com"
  */
 
+const DEFAULT_ADMIN_EMAILS = [
+  'mrgomez.dev@outlook.com',
+  'kidsfun.developer@gmail.com',
+  'karenhenriquez911@gmail.com',
+];
+
 function parseAllowlist(): Set<string> {
   const raw = (process.env.ADMIN_EMAILS ?? '').trim();
-  if (!raw) return new Set();
-  return new Set(
-    raw
-      .split(',')
-      .map((s) => s.trim().toLowerCase())
-      .filter(Boolean),
-  );
+  const list = raw
+    ? raw
+        .split(',')
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean)
+    : DEFAULT_ADMIN_EMAILS;
+  return new Set(list);
 }
 
 /**
