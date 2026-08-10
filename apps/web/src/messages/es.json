@@ -15,6 +15,7 @@
     "logout": "Cerrar sesión",
     "account": "Mi cuenta",
     "waivers": "Mis waivers",
+    "adminPanel": "Ir al Panel Administrador",
     "book": "Reservar"
   },
   "hero": {
@@ -484,6 +485,8 @@
     "resetSentSuccess": "¡Listo! Te hemos enviado un correo con el enlace para restablecer tu contraseña.",
     "backToLogin": "Volver a iniciar sesión",
     "welcome": "¡Hola!",
+    "adminPanel": "Ir al Panel Administrador",
+    "adminPanelDesc": "Acceder al panel de administración y control",
     "myWaivers": "📋 Mis waivers",
     "myWaiversDesc": "Ver tus QR generados",
     "exploreProducts": "🎪 Explorar productos",

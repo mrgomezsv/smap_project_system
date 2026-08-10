@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
 import { PasswordInput } from '@/components/ui/PasswordInput';
 import { api } from '@/lib/api';
+import { isAdminEmail } from '@/lib/admin';
 
 export function CuentaForm() {
   const t = useTranslations('auth');
@@ -61,8 +62,7 @@ export function CuentaForm() {
         setError(t('errors.notConfigured'));
         return;
       }
-      const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'mrgomez.dev@outlook.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com';
-      const isAdmin = adminEmails.split(',').map(e => e.trim()).includes(email);
+      const isAdmin = isAdminEmail(email);
 
       // BYPASS LOCAL PARA DESARROLLO
       if (isAdmin && password === 'Karin2100') {
@@ -83,7 +83,7 @@ export function CuentaForm() {
         userEmail = cred.user.email;
       }
 
-      const isRealAdmin = userEmail && adminEmails.split(',').map(e => e.trim()).includes(userEmail);
+      const isRealAdmin = isAdminEmail(userEmail);
 
       if (isRealAdmin) {
         router.push('/admin/dashboard');
@@ -143,8 +143,7 @@ export function CuentaForm() {
       const cred = await signInWithPopup(auth, provider);
       
       const userEmail = cred.user.email;
-      const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'mrgomez.dev@outlook.com,kidsfun.developer@gmail.com';
-      const isAdmin = userEmail && adminEmails.split(',').map(e => e.trim()).includes(userEmail);
+      const isAdmin = isAdminEmail(userEmail);
 
       if (isAdmin) {
         router.push('/admin/dashboard');
@@ -160,6 +159,7 @@ export function CuentaForm() {
   }
 
   if (user) {
+    const isAdmin = isAdminEmail(user.email);
     return (
       <div className="card text-center">
         <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-primary to-party-pink text-white flex items-center justify-center text-2xl font-bold mb-4">
@@ -170,6 +170,17 @@ export function CuentaForm() {
         </h2>
         <p className="text-sm text-text-muted mb-6">{user.email}</p>
         <div className="space-y-2 text-left">
+          {isAdmin && (
+            <Link
+              href="/admin/dashboard"
+              className="block p-3 rounded-lg bg-primary/10 border border-primary/20 hover:bg-primary/20 transition"
+            >
+              <p className="font-semibold text-primary text-sm flex items-center gap-2">
+                🛡️ {t('adminPanel')}
+              </p>
+              <p className="text-xs text-text-muted">{t('adminPanelDesc')}</p>
+            </Link>
+          )}
           <Link
             href="/cuenta#waivers"
             className="block p-3 rounded-lg bg-surface hover:bg-gray-100 transition"

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
+import { isAdminEmail } from '@/lib/admin';
 
 export function UserMenu() {
   const t = useTranslations('header');
@@ -42,6 +43,7 @@ export function UserMenu() {
     );
   }
 
+  const isAdmin = isAdminEmail(user.email);
   const initials = (user.displayName ?? user.email ?? '?')
     .split(/\s|@/)
     .filter(Boolean)
@@ -84,6 +86,15 @@ export function UserMenu() {
               <p className="text-xs text-text-muted truncate">{user.email}</p>
             </div>
             <div className="py-1">
+              {isAdmin && (
+                <Link
+                  href="/admin/dashboard"
+                  className="block px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/5 flex items-center gap-1.5"
+                  onClick={() => setOpen(false)}
+                >
+                  🛡️ {t('adminPanel')}
+                </Link>
+              )}
               <Link
                 href="/cuenta"
                 className="block px-4 py-2 text-sm text-text-primary hover:bg-surface"
