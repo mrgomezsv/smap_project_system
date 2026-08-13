@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { DataTable, type Column } from '@/components/admin/DataTable';
 import { VirtualList } from '@/components/ui/VirtualList';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
 import { CATEGORY_LABELS, type Product } from '@/lib/types';
 
@@ -12,8 +13,10 @@ type ViewMode = 'table' | 'kanban';
 
 export function ProductosList() {
   const tPh = useTranslations('placeholders');
+  const { getToken } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('kanban');
@@ -37,6 +40,23 @@ export function ProductosList() {
       cancelled = true;
     };
   }, []);
+
+  async function handleDelete(product: Product) {
+    const confirmMessage = `¿Estás seguro de que deseas eliminar el producto "${product.title}"? Esta acción no se puede deshacer.`;
+    if (!window.confirm(confirmMessage)) return;
+
+    setDeletingId(product.id);
+    setError(null);
+
+    try {
+      await api.delete(`/api/products/${product.id}`, { getToken });
+      setProducts((prev) => prev.filter((p) => p.id !== product.id));
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Error al eliminar el producto.');
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   const filtered = useMemo(
     () =>
@@ -210,6 +230,15 @@ export function ProductosList() {
                         >
                           ✏️
                         </a>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(p)}
+                          disabled={deletingId === p.id}
+                          className="p-1 text-text-muted hover:text-danger rounded disabled:opacity-50 transition-colors"
+                          title="Borrar producto"
+                        >
+                          {deletingId === p.id ? '⏳' : '🗑️'}
+                        </button>
                       </div>
                     </div>
                   ))
@@ -223,7 +252,7 @@ export function ProductosList() {
         <div>
           {useVirtual ? (
             <div className="card p-0 overflow-hidden">
-              <div className="grid grid-cols-[2fr_1fr_140px_80px] gap-0 bg-surface border-b border-border text-xs font-semibold text-text-muted uppercase tracking-wider px-4 py-3">
+              <div className="grid grid-cols-[2fr_1fr_140px_100px] gap-0 bg-surface border-b border-border text-xs font-semibold text-text-muted uppercase tracking-wider px-4 py-3">
                 <div>Producto</div>
                 <div>Categoría</div>
                 <div>Estado</div>
@@ -233,7 +262,7 @@ export function ProductosList() {
                 items={filtered}
                 rowHeight={64}
                 renderRow={(p) => (
-                  <div className="grid grid-cols-[2fr_1fr_140px_80px] gap-0 items-center px-4 border-b border-border h-16 hover:bg-surface transition">
+                  <div className="grid grid-cols-[2fr_1fr_140px_100px] gap-0 items-center px-4 border-b border-border h-16 hover:bg-surface transition">
                     {columns.map((c) => (
                       <div key={c.key} className={c.align === 'right' ? 'text-right' : ''}>
                         {c.render ? c.render(p) : null}
@@ -255,6 +284,15 @@ export function ProductosList() {
                       >
                         ✏️
                       </a>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(p)}
+                        disabled={deletingId === p.id}
+                        className="text-text-muted hover:text-danger p-1 disabled:opacity-50 transition-colors"
+                        title="Borrar producto"
+                      >
+                        {deletingId === p.id ? '⏳' : '🗑️'}
+                      </button>
                     </div>
                   </div>
                 )}
@@ -285,6 +323,15 @@ export function ProductosList() {
                   >
                     ✏️
                   </a>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(p)}
+                    disabled={deletingId === p.id}
+                    className="text-text-muted hover:text-danger p-1 disabled:opacity-50 transition-colors"
+                    title="Borrar producto"
+                  >
+                    {deletingId === p.id ? '⏳' : '🗑️'}
+                  </button>
                 </div>
               )}
             />
