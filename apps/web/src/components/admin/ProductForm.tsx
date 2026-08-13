@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
 import { CATEGORY_LABELS, type Category, type Product } from '@/lib/types';
 
@@ -54,6 +55,7 @@ const EMPTY: FormData = {
 
 export function ProductForm({ initial, mode }: ProductFormProps) {
   const router = useRouter();
+  const { getToken } = useAuth();
   const tPh = useTranslations('placeholders');
   const [data, setData] = useState<FormData>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
@@ -109,9 +111,9 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
 
     try {
       if (mode === 'create') {
-        await api.post('/api/products', payload);
+        await api.post('/api/products', payload, { getToken });
       } else if (initial) {
-        await api.patch(`/api/products/${initial.id}`, payload);
+        await api.patch(`/api/products/${initial.id}`, payload, { getToken });
       }
       router.push('/productos');
       router.refresh();

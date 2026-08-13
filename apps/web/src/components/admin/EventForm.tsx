@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
 import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
 
@@ -35,6 +36,7 @@ const EMPTY: FormData = {
 
 export function EventForm({ initial, mode }: EventFormProps) {
   const router = useRouter();
+  const { getToken } = useAuth();
   const tPh = useTranslations('placeholders');
   const [data, setData] = useState<FormData>(EMPTY);
   const [saving, setSaving] = useState(false);
@@ -77,9 +79,9 @@ export function EventForm({ initial, mode }: EventFormProps) {
 
     try {
       if (mode === 'create') {
-        await api.post('/api/events', payload);
+        await api.post('/api/events', payload, { getToken });
       } else if (initial) {
-        await api.patch(`/api/events/${initial.id}`, payload);
+        await api.patch(`/api/events/${initial.id}`, payload, { getToken });
       }
       router.push('/admin/eventos');
       router.refresh();
