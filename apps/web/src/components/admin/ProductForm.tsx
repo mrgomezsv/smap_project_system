@@ -115,7 +115,7 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
       } else if (initial) {
         await api.patch(`/api/products/${initial.id}`, payload, { getToken });
       }
-      router.push('/productos');
+      router.push('/admin/productos');
       router.refresh();
     } catch (e) {
       setErrorMsg(e instanceof ApiError ? e.message : 'Error al guardar el producto');
