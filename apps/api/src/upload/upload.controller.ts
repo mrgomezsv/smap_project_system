@@ -28,16 +28,23 @@ export class UploadController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: (req, file, cb) => {
-          const uploadDir = process.env.UPLOAD_DIR || 'media';
-          const slug = (req.body?.slug as string) || '';
-          const sub = slug ? join(uploadDir, 'product_images', slug) : uploadDir;
-          if (!existsSync(sub)) {
-            mkdirSync(sub, { recursive: true });
+          try {
+            const rawUploadDir = process.env.UPLOAD_DIR || 'media';
+            const uploadDir = rawUploadDir.startsWith('/')
+              ? rawUploadDir
+              : join(process.cwd(), rawUploadDir);
+            const slug = (req.body?.slug as string) || '';
+            const sub = slug ? join(uploadDir, 'product_images', slug) : uploadDir;
+            if (!existsSync(sub)) {
+              mkdirSync(sub, { recursive: true });
+            }
+            cb(null, sub);
+          } catch (e) {
+            cb(e as Error, '');
           }
-          cb(null, sub);
         },
         filename: (req, file, cb) => {
-          const ext = extname(file.originalname);
+          const ext = extname(file.originalname || '') || '.jpg';
           const random = randomBytes(4).toString('hex');
           const slug = (req.body?.slug as string) || 'img';
           const safeSlug = slug.toLowerCase().replace(/[^a-z0-9]/g, '_');

@@ -32,6 +32,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
         `${request.method} ${request.url} - ${exception.message}`,
         exception.stack,
       );
+    } else {
+      this.logger.error(
+        `${request.method} ${request.url} - Unknown error`,
+        String(exception),
+      );
     }
 
     response.status(status).json({
