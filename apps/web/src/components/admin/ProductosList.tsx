@@ -16,7 +16,7 @@ export function ProductosList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
-  const [viewMode, setViewMode] = useState<ViewMode>('table');
+  const [viewMode, setViewMode] = useState<ViewMode>('kanban');
 
   useEffect(() => {
     let cancelled = false;
