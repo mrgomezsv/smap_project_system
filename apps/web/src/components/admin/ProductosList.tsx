@@ -39,7 +39,10 @@ export function ProductosList() {
   }, []);
 
   const filtered = useMemo(
-    () => products.filter((p) => p.title.toLowerCase().includes(search.toLowerCase())),
+    () =>
+      products
+        .filter((p) => p.title.toLowerCase().includes(search.toLowerCase()))
+        .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: 'base' })),
     [products, search],
   );
 

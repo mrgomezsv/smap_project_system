@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { getTranslations, getLocale } from 'next-intl/server';
 import { api } from '@/lib/api';
 import type { Product, ProductsListResponse } from '@/lib/types';
-import { type Category } from '@/lib/types';
+import { CATEGORY_LABELS, type Category } from '@/lib/types';
 import { ProductCard } from '@/components/public/ProductCard';
 
 interface SearchParams {
@@ -60,19 +60,38 @@ export default async function ProductosPage({
     // Obtener productos filtrados
     data = await api.get<ProductsListResponse>(`/api/products?${query.toString()}`);
 
-    // Obtener todas las categorías que tienen al menos 1 producto publicado
+    // Obtener todos los productos publicados para dinamizar las categorías activas
     const allPublicRes = await api.get<ProductsListResponse>(
       `/api/products?publicated=true&take=1000&lang=${locale}`
     );
-    activeCategoryKeys = new Set(allPublicRes.items.map((p) => p.category));
+    
+    // Obtener la lista única de claves de categoría que tienen al menos un producto publicado
+    const uniqueActiveCategories = Array.from(new Set(allPublicRes.items.map((p) => p.category)));
+
+    // Construir la lista de categorías visibles combinando ALL_CATEGORIES y cualquier otra categoría existente
+    activeCategoryKeys = new Set(uniqueActiveCategories);
   } catch (e) {
     console.error('Error cargando productos:', e);
   }
 
-  // Filtrar para mostrar solo las categorías con productos asignados
-  const visibleCategories = ALL_CATEGORIES.filter((cat) =>
-    activeCategoryKeys.has(cat.key)
-  );
+  // Mapeo dinámico para garantizar que todas las categorías presentes en BD se muestren
+  const visibleCategoriesMap = new Map<string, { key: Category; emoji: string }>();
+
+  // 1. Agregar las configuradas en ALL_CATEGORIES que estén activas
+  ALL_CATEGORIES.forEach((cat) => {
+    if (activeCategoryKeys.has(cat.key)) {
+      visibleCategoriesMap.set(cat.key, cat);
+    }
+  });
+
+  // 2. Si hay categorías en BD que no están en ALL_CATEGORIES, agregarlas con emoji por defecto
+  activeCategoryKeys.forEach((catKey) => {
+    if (!visibleCategoriesMap.has(catKey)) {
+      visibleCategoriesMap.set(catKey, { key: catKey as Category, emoji: '🎈' });
+    }
+  });
+
+  const visibleCategories = Array.from(visibleCategoriesMap.values());
 
   return (
     <div className="bg-surface min-h-screen">
@@ -135,7 +154,7 @@ export default async function ProductosPage({
               }`}
             >
               <span className="mr-1.5">{cat.emoji}</span>
-              {tCategories(cat.key)}
+              {tCategories.has(cat.key) ? tCategories(cat.key) : (cat.key in CATEGORY_LABELS ? CATEGORY_LABELS[cat.key as keyof typeof CATEGORY_LABELS] : cat.key)}
             </Link>
           ))}
         </div>
