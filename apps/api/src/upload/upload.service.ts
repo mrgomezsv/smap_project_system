@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
+import { join, extname } from 'path';
 import { diskStorage } from 'multer';
 import { randomBytes } from 'crypto';
-import { extname } from 'path';
 
 /**
  * Servicio de upload de archivos.
@@ -51,6 +50,44 @@ export class UploadService {
 
   getMaxSize(): number {
     return this.maxSize;
+  }
+
+  /**
+   * Guarda un archivo recibido por FileInterceptor en memoria (buffer) directamente en disco.
+   */
+  saveProductImage(file: Express.Multer.File, slug?: string) {
+    const rawUploadDir = process.env.UPLOAD_DIR || 'media';
+    const uploadDir = rawUploadDir.startsWith('/')
+      ? rawUploadDir
+      : join(process.cwd(), rawUploadDir);
+
+    const safeSlug = (slug || 'img').toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const targetDir = slug ? join(uploadDir, 'product_images', safeSlug) : uploadDir;
+
+    if (!existsSync(targetDir)) {
+      mkdirSync(targetDir, { recursive: true });
+    }
+
+    const ext = extname(file.originalname || '') || '.jpg';
+    const random = randomBytes(4).toString('hex');
+    const filename = `${safeSlug}_${random}${ext}`;
+    const absolutePath = join(targetDir, filename);
+
+    if (file.buffer) {
+      writeFileSync(absolutePath, file.buffer);
+    } else if (file.path && existsSync(file.path)) {
+      writeFileSync(absolutePath, readFileSync(file.path));
+    } else {
+      throw new Error('No file content received');
+    }
+
+    const relativePath = this.toRelativePath(absolutePath, uploadDir);
+    return {
+      path: relativePath,
+      size: file.size,
+      mimetype: file.mimetype,
+      slug: slug || null,
+    };
   }
 
   /**

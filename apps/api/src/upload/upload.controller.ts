@@ -26,31 +26,6 @@ export class UploadController {
   @Post('product-image')
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: diskStorage({
-        destination: (req, file, cb) => {
-          try {
-            const rawUploadDir = process.env.UPLOAD_DIR || 'media';
-            const uploadDir = rawUploadDir.startsWith('/')
-              ? rawUploadDir
-              : join(process.cwd(), rawUploadDir);
-            const slug = (req.body?.slug as string) || '';
-            const sub = slug ? join(uploadDir, 'product_images', slug) : uploadDir;
-            if (!existsSync(sub)) {
-              mkdirSync(sub, { recursive: true });
-            }
-            cb(null, sub);
-          } catch (e) {
-            cb(e as Error, '');
-          }
-        },
-        filename: (req, file, cb) => {
-          const ext = extname(file.originalname || '') || '.jpg';
-          const random = randomBytes(4).toString('hex');
-          const slug = (req.body?.slug as string) || 'img';
-          const safeSlug = slug.toLowerCase().replace(/[^a-z0-9]/g, '_');
-          cb(null, `${safeSlug}_${random}${ext}`);
-        },
-      }),
       limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
       fileFilter: (req, file, cb) => {
         if (!file.mimetype?.startsWith('image/')) {
@@ -68,12 +43,6 @@ export class UploadController {
     if (!file) {
       throw new BadRequestException('Archivo requerido');
     }
-    const relativePath = this.uploadService.toRelativePath(file.path);
-    return {
-      path: relativePath,
-      size: file.size,
-      mimetype: file.mimetype,
-      slug: slug || null,
-    };
+    return this.uploadService.saveProductImage(file, slug);
   }
 }
