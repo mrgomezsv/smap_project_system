@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { FirebaseError } from 'firebase/app';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -9,10 +10,19 @@ import { PasswordInput } from '@/components/ui/PasswordInput';
 
 export function LoginForm() {
   const tPh = useTranslations('placeholders');
-  const [email, setEmail] = useState('');
+  const searchParams = useSearchParams();
+  const emailParam = searchParams.get('email') ?? '';
+
+  const [email, setEmail] = useState(emailParam);
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (emailParam) {
+      setEmail(emailParam);
+    }
+  }, [emailParam]);
 
   const configured = isFirebaseConfigured();
 

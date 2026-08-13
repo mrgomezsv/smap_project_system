@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Link from 'next/link';
 import { LoginForm } from '@/components/admin/LoginForm';
 
@@ -65,7 +66,9 @@ export default function SigninPage() {
             <p className="text-sm text-text-muted mb-6">
               Usa tu cuenta de Google o email corporativo.
             </p>
-            <LoginForm />
+            <Suspense fallback={<div className="h-48 animate-pulse bg-gray-100 rounded-xl" />}>
+              <LoginForm />
+            </Suspense>
           </div>
           <p className="text-xs text-text-muted text-center mt-6">
             <Link href="/" className="hover:text-primary">

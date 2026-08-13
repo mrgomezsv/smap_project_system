@@ -22,22 +22,11 @@ export function CuentaForm() {
   const t = useTranslations('auth');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get('next') ?? '/';
 
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-
-  // Estados para modal de restablecimiento de contraseña
-  const [showResetModal, setShowResetModal] = useState(false);
-  const [resetEmail, setResetEmail] = useState('');
-  const [resetLoading, setResetLoading] = useState(false);
-  const [resetError, setResetError] = useState<string | null>(null);
-  const [resetSuccess, setResetSuccess] = useState(false);
 
   useEffect(() => {
     if (!isFirebaseConfigured()) return;
@@ -45,9 +34,6 @@ export function CuentaForm() {
     if (!auth) return;
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u);
-      if (u) {
-        setName(u.displayName ?? '');
-      }
     });
     return unsub;
   }, []);
@@ -56,77 +42,23 @@ export function CuentaForm() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    try {
-      const auth = getFirebaseAuth();
-      if (!auth) {
-        setError(t('errors.notConfigured'));
-        return;
-      }
-      const isAdmin = isAdminEmail(email);
 
-      // BYPASS LOCAL PARA DESARROLLO
-      if (isAdmin && password === 'Karin2100') {
-        router.push('/admin/dashboard');
-        router.refresh();
-        setLoading(false);
-        return;
-      }
-
-      let userEmail: string | null = null;
-      if (mode === 'signin') {
-        const cred = await signInWithEmailAndPassword(auth, email, password);
-        userEmail = cred.user.email;
-      } else {
-        const { createUserWithEmailAndPassword, updateProfile } = await import('firebase/auth');
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        if (name) await updateProfile(cred.user, { displayName: name });
-        userEmail = cred.user.email;
-      }
-
-      const isRealAdmin = isAdminEmail(userEmail);
-
-      if (isRealAdmin) {
-        router.push('/admin/dashboard');
-      } else {
-        // If next is root, we keep them in /cuenta so they see their user panel
-        router.push(next === '/' ? '/cuenta' : next);
-      }
-      router.refresh();
-    } catch (e) {
-      console.error("Firebase Auth Error:", e);
-      const code = (e as { code?: string }).code ?? '';
-      const messages: Record<string, string> = {
-        'auth/invalid-credential': t('errors.invalidCredential'),
-        'auth/email-already-in-use': t('errors.emailInUse'),
-        'auth/weak-password': t('errors.weakPassword'),
-      };
-      setError(messages[code] ?? t('errors.generic'));
-    } finally {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setError('Por favor ingresa tu correo electrónico.');
       setLoading(false);
+      return;
     }
-  }
 
-  async function handleResetPassword(e: React.FormEvent) {
-    e.preventDefault();
-    setResetError(null);
-    setResetSuccess(false);
-    setResetLoading(true);
-    try {
-      try {
-        const locale = typeof window !== 'undefined' ? (document.documentElement.lang || 'es') : 'es';
-        await api.post('/api/auth/request-password-reset', { email: resetEmail, lang: locale });
-      } catch {
-        const auth = getFirebaseAuth();
-        if (auth) {
-          await sendPasswordResetEmail(auth, resetEmail);
-        }
-      }
-      setResetSuccess(true);
-    } catch (e) {
-      console.error('Password reset error:', e);
-      setResetError(t('errors.generic'));
-    } finally {
-      setResetLoading(false);
+    const isAdmin = isAdminEmail(trimmedEmail);
+
+    if (isAdmin) {
+      const nextPath = encodeURIComponent('/admin/dashboard');
+      const emailParam = encodeURIComponent(trimmedEmail);
+      router.push(`/admin/signin?email=${emailParam}&next=${nextPath}`);
+    } else {
+      setError('Si eres cliente, por favor utiliza el botón "Continuar con Google" para ingresar.');
+      setLoading(false);
     }
   }
 
@@ -148,7 +80,7 @@ export function CuentaForm() {
       if (isAdmin) {
         router.push('/admin/dashboard');
       } else {
-        router.push(next === '/' ? '/cuenta' : next);
+        router.push('/cuenta');
       }
       router.refresh();
     } catch {
@@ -262,18 +194,6 @@ export function CuentaForm() {
       </div>
 
       <form onSubmit={handleEmailAuth} className="space-y-4">
-        {mode === 'signup' && (
-          <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">{t('name')}</label>
-            <input
-              type="text"
-              className="input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              autoComplete="name"
-            />
-          </div>
-        )}
         <div>
           <label className="block text-sm font-medium text-text-primary mb-1.5">{t('email')}</label>
           <input
@@ -283,32 +203,7 @@ export function CuentaForm() {
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-          />
-        </div>
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-sm font-medium text-text-primary">{t('password')}</label>
-            {mode === 'signin' && (
-              <button
-                type="button"
-                onClick={() => {
-                  setResetEmail(email);
-                  setResetError(null);
-                  setResetSuccess(false);
-                  setShowResetModal(true);
-                }}
-                className="text-xs font-semibold text-primary hover:underline"
-              >
-                {t('forgotPassword')}
-              </button>
-            )}
-          </div>
-          <PasswordInput
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
-            autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+            placeholder="ejemplo@correo.com"
           />
         </div>
         <button
@@ -316,114 +211,10 @@ export function CuentaForm() {
           disabled={loading}
           className="btn btn-primary w-full py-3"
         >
-          {loading ? t('processing') : mode === 'signin' ? t('signinButton') : t('signupButton')}
+          {loading ? t('processing') : 'Ingresar'}
         </button>
       </form>
 
-      <p className="text-center text-sm text-text-muted">
-        {mode === 'signin' ? (
-          <>
-            {t('noAccount')}{' '}
-            <button
-              type="button"
-              onClick={() => setMode('signup')}
-              className="text-primary font-semibold hover:underline"
-            >
-              {t('register')}
-            </button>
-          </>
-        ) : (
-          <>
-            {t('hasAccount')}{' '}
-            <button
-              type="button"
-              onClick={() => setMode('signin')}
-              className="text-primary font-semibold hover:underline"
-            >
-              {t('login')}
-            </button>
-          </>
-        )}
-      </p>
-
-      {/* Modal de Restablecimiento de Contraseña */}
-      {showResetModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-border relative">
-            <button
-              type="button"
-              onClick={() => setShowResetModal(false)}
-              className="absolute top-4 right-4 text-text-muted hover:text-text-primary text-xl font-bold"
-            >
-              ✕
-            </button>
-            <div className="text-center">
-              <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 text-primary flex items-center justify-center text-2xl mb-2">
-                🔑
-              </div>
-              <h3 className="text-xl font-heading font-extrabold text-text-primary">
-                {t('forgotModalTitle')}
-              </h3>
-              <p className="text-xs text-text-muted mt-1">
-                {t('forgotModalDesc')}
-              </p>
-            </div>
-
-            {resetSuccess ? (
-              <div className="space-y-4">
-                <div className="p-3 bg-success/10 border border-success/30 text-success text-sm rounded-lg text-center font-medium">
-                  {t('resetSentSuccess')}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowResetModal(false)}
-                  className="btn btn-primary w-full py-2.5 text-xs font-semibold"
-                >
-                  {t('backToLogin')}
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleResetPassword} className="space-y-4">
-                {resetError && (
-                  <div className="p-3 bg-danger/10 border border-danger/30 text-danger text-xs rounded-lg">
-                    ⚠ {resetError}
-                  </div>
-                )}
-                <div>
-                  <label className="block text-xs font-semibold text-text-primary mb-1">
-                    {t('email')}
-                  </label>
-                  <input
-                    type="email"
-                    className="input"
-                    value={resetEmail}
-                    onChange={(e) => setResetEmail(e.target.value)}
-                    required
-                    placeholder="ejemplo@correo.com"
-                    autoComplete="email"
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowResetModal(false)}
-                    className="btn btn-outline flex-1 py-2.5 text-xs"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={resetLoading}
-                    className="btn btn-primary flex-1 py-2.5 text-xs font-semibold"
-                  >
-                    {resetLoading ? t('processing') : t('sendResetLink')}
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
