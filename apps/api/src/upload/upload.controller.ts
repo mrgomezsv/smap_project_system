@@ -22,6 +22,7 @@ export class UploadController {
   @Post('product-image')
   @UseInterceptors(
     FileInterceptor('file', {
+      limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
       fileFilter: (req, file, cb) => {
         if (!file.mimetype.startsWith('image/')) {
           cb(new BadRequestException('Solo se permiten imágenes'), false);
@@ -38,8 +39,9 @@ export class UploadController {
     if (!file) {
       throw new BadRequestException('Archivo requerido');
     }
+    const relativePath = this.uploadService.toRelativePath(file.path);
     return {
-      path: this.uploadService.toRelativePath(file.path),
+      path: relativePath,
       size: file.size,
       mimetype: file.mimetype,
       slug: slug || null,
