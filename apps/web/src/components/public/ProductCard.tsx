@@ -34,9 +34,6 @@ export function ProductCard({ product }: ProductCardProps) {
             🎪
           </div>
         )}
-        <span className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-soft z-10">
-          {tCategories(product.category as Category)}
-        </span>
         {product.publicated && (
           <span className="absolute top-3 right-3 bg-success/95 text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-soft z-10">
             {tProduct('available')}
