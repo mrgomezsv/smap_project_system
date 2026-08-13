@@ -7,6 +7,10 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { existsSync, mkdirSync } from 'fs';
+import { join, extname } from 'path';
+import { randomBytes } from 'crypto';
 import { UploadService } from './upload.service';
 
 @Controller('api/upload')
@@ -22,9 +26,27 @@ export class UploadController {
   @Post('product-image')
   @UseInterceptors(
     FileInterceptor('file', {
+      storage: diskStorage({
+        destination: (req, file, cb) => {
+          const uploadDir = process.env.UPLOAD_DIR || 'media';
+          const slug = (req.body?.slug as string) || '';
+          const sub = slug ? join(uploadDir, 'product_images', slug) : uploadDir;
+          if (!existsSync(sub)) {
+            mkdirSync(sub, { recursive: true });
+          }
+          cb(null, sub);
+        },
+        filename: (req, file, cb) => {
+          const ext = extname(file.originalname);
+          const random = randomBytes(4).toString('hex');
+          const slug = (req.body?.slug as string) || 'img';
+          const safeSlug = slug.toLowerCase().replace(/[^a-z0-9]/g, '_');
+          cb(null, `${safeSlug}_${random}${ext}`);
+        },
+      }),
       limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
       fileFilter: (req, file, cb) => {
-        if (!file.mimetype.startsWith('image/')) {
+        if (!file.mimetype?.startsWith('image/')) {
           cb(new BadRequestException('Solo se permiten imágenes'), false);
           return;
         }
