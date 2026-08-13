@@ -66,12 +66,15 @@ export default async function ProductosPage({
     );
     
     // Obtener la lista única de claves de categoría que tienen al menos un producto publicado
-    const uniqueActiveCategories = Array.from(new Set(allPublicRes.items.map((p) => p.category)));
+    const uniqueActiveCategories = Array.from(
+      new Set(allPublicRes.items.length > 0 ? allPublicRes.items.map((p) => p.category) : data.items.map((p) => p.category))
+    );
 
     // Construir la lista de categorías visibles combinando ALL_CATEGORIES y cualquier otra categoría existente
     activeCategoryKeys = new Set(uniqueActiveCategories);
   } catch (e) {
     console.error('Error cargando productos:', e);
+    activeCategoryKeys = new Set(data.items.map((p) => p.category));
   }
 
   // Mapeo dinámico para garantizar que todas las categorías presentes en BD se muestren
