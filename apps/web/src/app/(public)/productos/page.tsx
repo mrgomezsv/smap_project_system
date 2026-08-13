@@ -62,7 +62,7 @@ export default async function ProductosPage({
 
     // Obtener todos los productos publicados para dinamizar las categorías activas
     const allPublicRes = await api.get<ProductsListResponse>(
-      `/api/products?publicated=true&take=1000&lang=${locale}`
+      `/api/products?publicated=true&take=100&lang=${locale}`
     );
     
     // Obtener la lista única de claves de categoría que tienen al menos un producto publicado
