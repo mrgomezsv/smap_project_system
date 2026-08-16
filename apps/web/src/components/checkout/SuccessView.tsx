@@ -28,12 +28,8 @@ export function SuccessView({ qrCode }: SuccessViewProps) {
 
     async function load() {
       try {
-        // QR visual (cliente, sin auth)
-        const url = await QRCode.toDataURL(qrCode, {
-          errorCorrectionLevel: 'M',
-          margin: 1,
-          width: 320,
-        });
+        // QR visual con el logo/favicon incrustado desde la API
+        const url = `${PUBLIC_API_URL}/api/v2/waiver/qr-image/${qrCode}`;
         if (cancelled) return;
         setQrDataUrl(url);
 

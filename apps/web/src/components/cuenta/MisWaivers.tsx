@@ -37,11 +37,7 @@ export function MisWaivers() {
 
       const imgs: Record<string, string> = {};
       for (const w of list) {
-        imgs[w.qrCode] = await QRCode.toDataURL(w.qrCode, {
-          errorCorrectionLevel: 'M',
-          margin: 1,
-          width: 144,
-        });
+        imgs[w.qrCode] = `${PUBLIC_API_URL}/api/v2/waiver/qr-image/${w.qrCode}`;
       }
       setQrImages(imgs);
       setState('ready');
