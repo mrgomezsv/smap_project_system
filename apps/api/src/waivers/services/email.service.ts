@@ -193,13 +193,13 @@ export class EmailService {
     const privacyBlock = `
       <div style="margin-top:32px; padding:20px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px;">
         <h3 style="margin:0 0 8px 0; font-size:15px; color:#0f172a;">
-          📜 ${isEn ? 'Privacy Policy (Bilingual)' : 'Política de Privacidad (Bilingüe)'}
+          📜 ${isEn ? 'Safety Rules & Liability Terms' : 'Reglas de Seguridad y Exención de Responsabilidad'}
         </h3>
         <p style="margin:0 0 14px 0; font-size:12px; color:#64748b;">
           ${
             isEn
-              ? 'For your reference, you will find the privacy policy in both Spanish and English below.'
-              : 'Para su referencia, encontrará la política de privacidad en español y en inglés a continuación.'
+              ? 'For your reference, you will find the safety rules and liability terms in both Spanish and English below.'
+              : 'Para su referencia, encontrará las reglas de seguridad y la exención de responsabilidad en español y en inglés a continuación.'
           }
         </p>
 

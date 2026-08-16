@@ -2,75 +2,48 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { QrService } from './qr.service';
 
-export const DEFAULT_WAIVER_TEXT = `August 04, 2024
-POLÍTICA DE PRIVACIDAD
+export const DEFAULT_WAIVER_TEXT = `REGLAS DE SEGURIDAD Y RESPONSABILIDADES PARA INFLATABLES
 
-El presente Política de Privacidad establece los términos en que Kidsfun y Fiestas Infantiles usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Esta compañía está comprometida con la seguridad de los datos de sus usuarios. Cuando le pedimos llenar los campos de información personal con la cual usted pueda ser identificado, lo hacemos asegurando que sólo se empleará de acuerdo con los términos de este documento. Sin embargo esta Política de Privacidad puede cambiar con el tiempo o ser actualizada por lo que le recomendamos y enfatizamos revisar continuamente esta página para asegurarse que está de acuerdo con dichos cambios.
+1) No consumir alimentos, bebidas o chicles dentro ni cerca del Inflable. Esto evita riesgo de asfixia y mantiene el equipo limpio.
+2) Calzado, anteojos, joyas y objetos punzantes DEBEN retirarse antes de ingresar al inflable para evitar lesiones.
+3) NO usar pintura facial, confeti ni serpentinas en aerosol (Silly String) cerca del equipo.
+4) Solo 1 persona a la vez en la parte superior de resbaladeros acuáticos (2 en carril doble), máximo 6 niños en el brincolín.
+5) Queda estrictamente prohibido escalar, colgarse o sentarse en las paredes o bordes del inflable.
+6) Se requiere supervisión constante de un Adulto responsable (18+) en todo momento durante el uso del equipo.
+7) No permitir empujones, piruetas, volteletas, giros peligrosos ni juegos bruscos dentro del equipo.
+8) No ingresar mascotas, juguetes ni objetos afilados al inflable en ningún momento.
+9) No permitir que nadie salte en el escalón de seguridad frontal ya que es peligroso.
+10) Si el soplador/motor se apaga, asegúrese de que todos los usuarios bajen con calma.
+11) REGLA MÁS IMPORTANTE: NO permitir que los niños jueguen en el inflable sin supervisión de un Adulto.
 
-Información que es recogida
-
-Nuestro sitio web podrá recoger información personal por ejemplo: Nombre,  información de contacto como  su dirección de correo electrónica e información demográfica. Así mismo cuando sea necesario podrá ser requerida información específica para procesar algún pedido o realizar una entrega o facturación.
-
-Uso de la información recogida
-
-Nuestro sitio web emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para mantener un registro de usuarios, de pedidos en caso que aplique, y mejorar nuestros productos y servicios.  Es posible que sean enviados correos electrónicos periódicamente a través de nuestro sitio con ofertas especiales, nuevos productos y otra información publicitaria que consideremos relevante para usted o que pueda brindarle algún beneficio, estos correos electrónicos serán enviados a la dirección que usted proporcione y podrán ser cancelados en cualquier momento.
-
-Kidsfun y Fiestas Infantiles está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos los sistemas más avanzados y los actualizamos constantemente para asegurarnos que no exista ningún acceso no autorizado.
-
-Cookies
-
-Una cookie se refiere a un fichero que es enviado con la finalidad de solicitar permiso para almacenarse en su ordenador, al aceptar dicho fichero se crea y la cookie sirve entonces para tener información respecto al tráfico web, y también facilita las futuras visitas a una web recurrente. Otra función que tienen las cookies es que con ellas las web pueden reconocerte individualmente y por tanto brindarte el mejor servicio personalizado de su web.
-
-Nuestro sitio web emplea las cookies para poder identificar las páginas que son visitadas y su frecuencia. Esta información es empleada únicamente para análisis estadístico y después la información se elimina de forma permanente. Usted puede eliminar las cookies en cualquier momento desde su ordenador. Sin embargo las cookies ayudan a proporcionar un mejor servicio de los sitios web, no dan acceso a información de su ordenador ni de usted, a menos de que usted así lo quiera y la proporcione directamente noticias . Usted puede aceptar o negar el uso de cookies, sin embargo la mayoría de los navegadores aceptan cookies automáticamente pues sirve para tener un mejor servicio web. También usted puede cambiar la configuración de su ordenador para rechazar las cookies. Si se declinan es posible que no pueda utilizar algunos de nuestros servicios. 
-
-Enlaces a Terceros
-
-Este sitio web pudiera contener enlaces a otros sitios que pudieran ser de su interés. Una vez que usted de clic en estos enlaces y abandone nuestra página, ya no tenemos control sobre al sitio al que es redirigido y por lo tanto no somos responsables de los términos o privacidad ni de la protección de sus datos en esos otros sitios terceros. Dichos sitios están sujetos a sus propias políticas de privacidad por lo cual es recomendable que los consulte para confirmar que usted está de acuerdo con estas.  
-
-Control de su información personal
-
-En cualquier momento usted puede restringir la recopilación o el uso de la información personal que se proporciona a nuestro sitio web. Cada vez que se le solicita rellenar un formulario, como el de alta de usuario, puede marcar o desmarcar la opción de recibir información por correo electrónico. En caso de que haya marcado la opción de recibir nuestro boletín o publicidad usted puede cancelarla en cualquier momento.
-
-Esta compañía no venderá, cederá ni distribuirá la información personal que es recopilada sin su consentimiento, salvo que sea requerida por un juez con una orden judicial.
-
-Kidsfun y Fiestas Infantiles Se reserva el derecho de cambiar los términos de la presente Política de Privacidad en cualquier momento.`;
+EXENCIÓN DE RESPONSABILIDAD CIVIL Y ACEPTACIÓN
+1) El cliente / titular declara que ha leído, comprendido y aceptado todas las reglas de seguridad anteriores.
+2) El equipo se recibe en buenas condiciones y debe ser utilizado adecuadamente.
+3) El cliente acuerda garantizar que todos los usuarios y tutores lean y comprendan las reglas de seguridad.
+4) El titular exonera a Kidsfun y Fiestas Infantiles de toda responsabilidad civil, daños o reclamos derivados del uso del equipo o falta de supervisión adulta durante el evento.`;
 
 /**
- * Traducción al inglés del texto legal por defecto.
+ * Traducción al inglés del texto legal por defecto de exención de responsabilidad.
  * Se incluye en el PDF y el email para que el cliente tenga ambas versiones.
  */
-export const DEFAULT_WAIVER_TEXT_EN = `August 04, 2024
-PRIVACY POLICY
+export const DEFAULT_WAIVER_TEXT_EN = `SAFETY RULES & RESPONSIBILITIES FOR INFLATABLES
 
-This Privacy Policy establishes the terms under which Kidsfun y Fiestas Infantiles uses and protects the information provided by its users when using its website. This company is committed to the security of its users' data. When we ask you to fill in personal information fields by which you may be identified, we do so ensuring that it will only be used in accordance with the terms of this document. However, this Privacy Policy may change over time or be updated, so we recommend and emphasize that you continuously review this page to ensure that you agree with such changes.
+1) No food, drink or chewing gum on or around the Inflatable. This avoids choking risk and keeps unit clean.
+2) Shoes, glasses, jewelry, and badges MUST be removed before using the inflatable to avoid injury.
+3) NO face paints, party poppers, colored streamers or SILLY STRING to be used on or near the Inflatable.
+4) Only 1 rider allowed at top of water slide at a time (2 for double lane), max 6 riders per bounce house.
+5) Climbing, hanging or sitting on inflatable walls is dangerous and strictly prohibited.
+6) A responsible Adult (18+) must supervise the inflatable at all times.
+7) Ensure children are not pushing, colliding, fighting or behaving in a manner likely to cause distress.
+8) No pets, toys or sharp instruments on the inflatable at any time.
+9) Do not allow anyone to bounce on the front safety step as this is dangerous.
+10) If blower stops, ensure users get off calmly. Check fuses and power before contacting support.
+11) MOST IMPORTANT RULE: DO NOT let children play on the inflatable without Adult supervision.
 
-Information Collected
-
-Our website may collect personal information such as: Name, contact information like your email address, and demographic information. Likewise, when necessary, specific information may be required to process an order or to make a delivery or billing.
-
-Use of Collected Information
-
-Our website uses the information in order to provide the best possible service, particularly to maintain a record of users, of orders where applicable, and to improve our products and services. Periodic emails may be sent through our site with special offers, new products, and other advertising information that we consider relevant to you or that may provide you with some benefit. These emails will be sent to the address you provide and may be canceled at any time.
-
-Kidsfun y Fiestas Infantiles is highly committed to fulfilling its commitment to keeping your information secure. We use the most advanced systems and constantly update them to ensure that no unauthorized access occurs.
-
-Cookies
-
-A cookie refers to a file that is sent with the purpose of requesting permission to be stored on your computer. By accepting this file, the cookie is created and then serves to obtain information regarding web traffic, and also facilitates future visits to a recurring website. Another function of cookies is that with them, websites can recognize you individually and therefore provide you with the best personalized service on their website.
-
-Our website uses cookies to identify the pages that are visited and their frequency. This information is used solely for statistical analysis and the information is then permanently deleted. You can delete cookies at any time from your computer. However, cookies help provide a better service on websites; they do not give access to information from your computer or about you, unless you so wish and directly provide it. You may accept or decline the use of cookies, however most browsers automatically accept cookies since they serve to provide a better web service. You may also change your computer's settings to reject cookies. If declined, you may not be able to use some of our services.
-
-Third-Party Links
-
-This website may contain links to other sites that may be of interest to you. Once you click on these links and leave our page, we no longer have control over the site to which you are redirected and therefore we are not responsible for the terms, privacy, or protection of your data on those other third-party sites. Such sites are subject to their own privacy policies, so it is recommended that you consult them to confirm that you agree with them.
-
-Control of Your Personal Information
-
-At any time you may restrict the collection or use of the personal information provided to our website. Each time you are asked to fill in a form, such as the user registration form, you can check or uncheck the option to receive information by email. If you have checked the option to receive our newsletter or advertising, you may cancel it at any time.
-
-This company will not sell, transfer, or distribute the personal information that is collected without your consent, unless required by a judge with a court order.
-
-Kidsfun y Fiestas Infantiles reserves the right to change the terms of this Privacy Policy at any time.`;
+LIABILITY DISCLAIMER & ACCEPTANCE
+1) Customer agrees to ensure all users and guardians read and understand all safety rules.
+2) Equipment received in good condition and must be operated in accordance with safety instructions.
+3) Lessee holds company (Kidsfun y Fiestas Infantiles) harmless from any claims, suits, damages or liabilities from equipment use or lack of adult supervision.`;
 
 /**
  * Interface con los datos del waiver para generar el PDF.
