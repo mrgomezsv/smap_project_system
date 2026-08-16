@@ -26,7 +26,7 @@ export class UploadController {
   @Post('product-image')
   @UseInterceptors(
     FileInterceptor('file', {
-      limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+      limits: { fileSize: 25 * 1024 * 1024 }, // 25MB
       fileFilter: (req, file, cb) => {
         if (!file.mimetype?.startsWith('image/')) {
           cb(new BadRequestException('Solo se permiten imágenes'), false);

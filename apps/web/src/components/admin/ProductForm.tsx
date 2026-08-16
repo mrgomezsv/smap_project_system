@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
+import { compressImage } from '@/lib/image-compress';
 import { CATEGORY_LABELS, type Category, type Product } from '@/lib/types';
 
 interface ProductFormProps {
@@ -125,12 +126,15 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
       const newImagePaths: string[] = [];
 
       for (let i = 0; i < files.length; i++) {
-        const file = files[i];
+        const rawFile = files[i];
+        // Comprimir imagen si excede el tamaño/resolución ideal para web
+        const file = await compressImage(rawFile);
         const formData = new FormData();
         formData.append('file', file);
 
         const res = await api.post<{ path: string }>('/api/upload/product-image', formData, {
           getToken,
+          timeoutMs: 30_000,
         });
         if (res?.path) {
           // Extraer nombre de archivo si viene la ruta completa o usar res.path

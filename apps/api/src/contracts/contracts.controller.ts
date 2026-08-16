@@ -178,7 +178,7 @@ export class ContractsController {
   @Post(':id/documents')
   @UseInterceptors(
     FileInterceptor('file', {
-      limits: { fileSize: 10 * 1024 * 1024 },
+      limits: { fileSize: 25 * 1024 * 1024 }, // 25MB
     }),
   )
   async uploadDocument(
