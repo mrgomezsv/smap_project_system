@@ -107,6 +107,31 @@ export class WaiversController {
   }
 
   /**
+   * GET /api/v2/waiver/qr-image/:qr - Obtener la imagen PNG del QR con el favicon incrustado en el centro.
+   */
+  @Public()
+  @Get('qr-image/:qr')
+  async getQrImage(
+    @Param('qr') qr: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    const webUrl =
+      process.env.PUBLIC_WEB_URL ||
+      process.env.SITE_URL ||
+      process.env.NEXT_PUBLIC_WEB_URL ||
+      'https://kidsfunyfiestasinfantiles.com';
+    const qrTargetUrl = `${webUrl}/waiver/verify/${qr}`;
+    const pngBuffer = await this.waiversService.getQrBuffer(qrTargetUrl);
+
+    res.set({
+      'Content-Type': 'image/png',
+      'Cache-Control': 'public, max-age=86400',
+      'Content-Length': pngBuffer.length.toString(),
+    });
+    res.send(pngBuffer);
+  }
+
+  /**
    * POST /api/v2/waiver/resend-email - Reenviar waiver por correo
    */
   @Post('resend-email')

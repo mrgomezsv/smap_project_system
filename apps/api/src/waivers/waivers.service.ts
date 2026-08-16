@@ -409,6 +409,13 @@ export class WaiversService {
     return { count: result.count, success: true };
   }
 
+  /**
+   * Genera el buffer PNG del QR con el logo/favicon incrustado en el centro.
+   */
+  async getQrBuffer(qrTargetUrl: string): Promise<Buffer> {
+    return this.pdfService['qrService'].toBuffer(qrTargetUrl);
+  }
+
   // === HELPERS ===
 
   private isExpired(expiresAt: Date): boolean {
