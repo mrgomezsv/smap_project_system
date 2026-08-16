@@ -2,48 +2,69 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { QrService } from './qr.service';
 
-export const DEFAULT_WAIVER_TEXT = `REGLAS DE SEGURIDAD Y RESPONSABILIDADES PARA INFLATABLES
+export const DEFAULT_WAIVER_TEXT = `REGLAS DE SEGURIDAD Y RESPONSABILIDADES PARA INFLABLES
 
-1) No consumir alimentos, bebidas o chicles dentro ni cerca del Inflable. Esto evita riesgo de asfixia y mantiene el equipo limpio.
-2) Calzado, anteojos, joyas y objetos punzantes DEBEN retirarse antes de ingresar al inflable para evitar lesiones.
-3) NO usar pintura facial, confeti ni serpentinas en aerosol (Silly String) cerca del equipo.
-4) Solo 1 persona a la vez en la parte superior de resbaladeros acuáticos (2 en carril doble), máximo 6 niños en el brincolín.
-5) Queda estrictamente prohibido escalar, colgarse o sentarse en las paredes o bordes del inflable.
-6) Se requiere supervisión constante de un Adulto responsable (18+) en todo momento durante el uso del equipo.
-7) No permitir empujones, piruetas, volteletas, giros peligrosos ni juegos bruscos dentro del equipo.
-8) No ingresar mascotas, juguetes ni objetos afilados al inflable en ningún momento.
-9) No permitir que nadie salte en el escalón de seguridad frontal ya que es peligroso.
-10) Si el soplador/motor se apaga, asegúrese de que todos los usuarios bajen con calma.
-11) REGLA MÁS IMPORTANTE: NO permitir que los niños jueguen en el inflable sin supervisión de un Adulto.
+Es responsabilidad de la persona u organización que alquila este equipo inflable garantizar que se tomen todas las precauciones posibles para evitar lesiones a personas o daños al inflable. Asegúrese de cumplir con las siguientes instrucciones de seguridad:
 
-EXENCIÓN DE RESPONSABILIDAD CIVIL Y ACEPTACIÓN
-1) El cliente / titular declara que ha leído, comprendido y aceptado todas las reglas de seguridad anteriores.
-2) El equipo se recibe en buenas condiciones y debe ser utilizado adecuadamente.
-3) El cliente acuerda garantizar que todos los usuarios y tutores lean y comprendan las reglas de seguridad.
-4) El titular exonera a Kidsfun y Fiestas Infantiles de toda responsabilidad civil, daños o reclamos derivados del uso del equipo o falta de supervisión adulta durante el evento.`;
+1) No consumir alimentos, bebidas o chicles dentro ni cerca del Inflable. Esto evita riesgos de asfixia y mantiene limpia la unidad. (Si el inflable se recoge sucio, el arrendatario incurrirá en una tarifa de limpieza).
+2) Calzado, anteojos, joyas y placas/insignias DEBEN retirarse antes de usar el inflable para evitar lesiones a personas y daños al equipo.
+3) NO utilizar pintura facial, confeti, serpentinas ni serpentinas en aerosol (Silly String) cerca del inflable (estos productos causan daños irreparables al inflable).
+4) Solo 1 persona a la vez en la parte superior del resbaladero acuático (2 para deslicetes de doble carril), máximo 6 usuarios por brincolín o unidad combo.
+5) La empresa (Tehuacan Promotions y Kidsfun y Fiestas Infantiles) no se hace responsable por daños a líneas/servicios subterráneos (eléctricos, plomería, riego, etc.). Es responsabilidad del cliente indicar dónde instalar el inflable y tener marcadas las líneas subterráneas previamente.
+6) Escalada, colgarse o sentarse en las paredes del inflable es peligroso y está estrictamente prohibido.
+7) Un Adulto responsable debe supervisar el inflable en todo momento.
+8) Asegúrese de no sobrecargar el inflable; limite el número de usuarios según la edad y tamaño de los niños. Evite que niños grandes y pequeños jueguen al mismo tiempo.
+9) Asegúrese de que los niños no se empujen, colisionen, peleen ni actúen de manera que pueda lesionar o causar malestar a otros.
+10) No ingresar mascotas, juguetes ni objetos punzantes al inflable en ningún momento.
+11) No permitir que nadie salte en el escalón de seguridad frontal, ya que es peligroso.
+12) No permitir que nadie esté sobre el equipo durante el proceso de inflado o desinflado (es DANGEROUS).
+13) Asegúrese de que los niños no intenten hacer piruetas/volteretas, que vistan adecuadamente y que sus bolsillos estén completamente vacíos.
+14) En caso de que el soplador deje de funcionar, asegúrese de que todos los usuarios bajen de inmediato y con calma. Verifique los fusibles y asegúrese de que el tubo de inflado no se haya soltado. Si se sobrecalienta o pierde fuerza, apáguelo en la toma de corriente, espere 1 o 2 minutos y vuelva a encenderlo. Si no reinicia, infórmenos de inmediato.
+15) LA REGLA MÁS IMPORTANTE: NO permita que los niños jueguen en el inflable sin supervisión de un Adulto.
 
-/**
- * Traducción al inglés del texto legal por defecto de exención de responsabilidad.
- * Se incluye en el PDF y el email para que el cliente tenga ambas versiones.
- */
+EXENCIÓN DE RESPONSABILIDAD CIVIL Y TÉRMINOS
+
+1) El equipo arrendado se recibe en buenas condiciones y será devuelto en el mismo estado (exceptuando el desgaste ordinario por uso).
+2) El cliente acuerda el derecho de la empresa a ingresar a sus instalaciones en cualquier momento para reinterpretar o reposesionar dicho equipo.
+3) El cliente acuerda reembolsar a (Tehuacan Promotions y Kidsfun y Fiestas Infantiles) por honorarios de abogados (no menos del 50% de las sumas adeudadas), costos judiciales y gastos incurridos para hacer cumplir este contrato.
+4) El cliente se compromete a no prestar, subarrendar ni trasladar el equipo a otra ubicación sin autorización previa.
+5) El cliente se compromete a pagar en su totalidad el costo de reemplazo, incluida la mano de obra, por todos los daños causados al equipo de alquiler.
+6) Si el equipo inflable se pierde, es robado o se daña sin posibilidad de reparación, el arrendatario acepta pagar hasta $3,000.00 USD (Tres mil dólares 00/100).
+7) El cliente se compromete a garantizar que todos los usuarios (y tutores) lean y comprendan todas las reglas.
+8) NO EXISTEN GARANTÍAS DE COMERCIABILIDAD NI IDONEIDAD EXPRESAS NI IMPLÍCITAS. La persona u organización que alquila este equipo a (Tehuacan Promotions y Kidsfun y Fiestas Infantiles) responderá por cualquier daño o lesión ocurrida por cualquier motivo.
+9) El arrendatario reconoce que el uso del equipo conlleva riesgos conocidos y desconocidos (lesiones físicas, caídas, parálisis o fallecimiento), exonerando e indemnizando totalmente a (Tehuacan Promotions y Kidsfun y Fiestas Infantiles) de cualquier demanda o reclamo derivado de la posesión, uso o devolución del equipo.`;
+
 export const DEFAULT_WAIVER_TEXT_EN = `SAFETY RULES & RESPONSIBILITIES FOR INFLATABLES
 
-1) No food, drink or chewing gum on or around the Inflatable. This avoids choking risk and keeps unit clean.
-2) Shoes, glasses, jewelry, and badges MUST be removed before using the inflatable to avoid injury.
-3) NO face paints, party poppers, colored streamers or SILLY STRING to be used on or near the Inflatable.
-4) Only 1 rider allowed at top of water slide at a time (2 for double lane), max 6 riders per bounce house.
-5) Climbing, hanging or sitting on inflatable walls is dangerous and strictly prohibited.
-6) A responsible Adult (18+) must supervise the inflatable at all times.
-7) Ensure children are not pushing, colliding, fighting or behaving in a manner likely to cause distress.
-8) No pets, toys or sharp instruments on the inflatable at any time.
-9) Do not allow anyone to bounce on the front safety step as this is dangerous.
-10) If blower stops, ensure users get off calmly. Check fuses and power before contacting support.
-11) MOST IMPORTANT RULE: DO NOT let children play on the inflatable without Adult supervision.
+It is the responsibility of the person/s or organization hiring this inflatable equipment to ensure that all possible precautions are taken to avoid injury to people or damage to the inflatable. Please ensure the following safety instructions are followed:
+
+1) No food, drink or chewing gum on or around the Inflatable. This will avoid a choking risk and keep the unit clean. (Please note if the Inflatable is collected in a dirty condition then the person hiring it will incur a cleaning charge).
+2) Shoes, glasses, jewelry, and badges MUST be removed before using the inflatable to avoid injury to peoples using the equipment and harm to the Inflatable.
+3) NO face paints, party poppers, colored streamers or SILLY STRING to be used either on or near the Inflatable. (Please note these products will cause damage to the Inflatable that cannot be repaired).
+4) Only 1 rider allowed at the top of water slide at a time, or 2 riders for double lane slides, 6 riders per bounce house or combo unit.
+5) (Tehuacan Promotions and Kidsfun y Fiestas Infantiles) not responsible for striking or damaging any underground utility lines/devices (included but not limited to: electrical, plumbing, sprinkler, etc.). It is lessee’s responsibility to tell Rental Company where inflatable is to be set up and have any underground utility lines marked prior too.
+6) Climbing, hanging or sitting on walls is dangerous and must not be allowed.
+7) A responsible Adult must supervise the inflatable at all times.
+8) Always ensure that the Inflatable is not overcrowded, and limit numbers according to the age and size of children using it. Try to avoid large and small children from using it at the same time.
+9) Ensure Children are not pushing, colliding, fighting or behaving in a manner likely to injure or cause distress to others.
+10) No pets, toys or sharp instruments on the inflatable at any time.
+11) Do not allow anyone to bounce on the front safety step as this is dangerous.
+12) Do not allow anyone to be on the inflatable equipment during inflation or deflation as this is DANGEROUS.
+13) Please ensure that Children are not attempting somersaults and are clothed appropriately and that nothing can fall out of their pockets.
+14) In the event that the blower stops working, please ensure all users get off the inflatable immediately and calmly. Check the fuses and make sure the blower tube or deflation tube has not come undone or something has not blown onto and is obstructing the blower. In the event that it overheats, or loses power, switch the blower off at the mains, then switch it back on again 1 or 2 minutes later, and it should restart. If it does not, inform us immediately.
+15) THE MOST IMPORTANT RULE: DO NOT let children play on the inflatable without Adult supervision. Adult supervision is necessary to enforce these rules for safe operation of the Inflatable.
 
 LIABILITY DISCLAIMER & ACCEPTANCE
-1) Customer agrees to ensure all users and guardians read and understand all safety rules.
-2) Equipment received in good condition and must be operated in accordance with safety instructions.
-3) Lessee holds company (Kidsfun y Fiestas Infantiles) harmless from any claims, suits, damages or liabilities from equipment use or lack of adult supervision.`;
+
+1) This rental equipment has been received in good condition and will be returned in the same condition (ordinary wear and accepted).
+2) Customer agrees to company right to enter premises of customer at any time to repossess said equipment.
+3) Customer agrees to reimburse (Tehuacan Promotions and Kidsfun y Fiestas Infantiles) for all attorney fees, an amount not less than 50% of all sums due, court cost and expenses incurred by Rental Company to enforce collection or to preserve or enforce rights under this contract.
+4) Customer agrees not to loan, sublet or otherwise depose of equipment or use it at any other location.
+5) Customer agrees to pay in full the replacement cost, including labor, for all damages to rental equipment.
+6) If the inflatable equipment is lost, stolen, or damaged beyond repair the renter agrees to pay up to $3000.00 (Three thousand dollars and 0 cents).
+7) Customer agrees to ensure that all users (and users’ guardians) of the rental go over and read all rules.
+8) THERE ARE NO WARRANTIES OF MERCHANTABILITY OR FITNESS EITHER EXPRESSED OR IMPLIED. The person/s or organization renting this Equipment from (Tehuacan Promotions and Kidsfun y Fiestas Infantiles) will be held responsible and liable for any and all damage or injury occurring for any reason whatsoever. I have read the above agreement and fully understand and accept the conditions as above. I am aware that while in my care I am fully responsible for the inflatable and will pay for any loss or damages that may occur.
+9) Lessee understands and acknowledges that play on an amusement device entails both known and unknown risks including, but not limited to, physical injury from falling, slipping, crashing or colliding, emotional injury, paralysis, distress, damage or death to any participant. Lessee agrees to indemnify and hold (Tehuacan Promotions and Kidsfun y Fiestas Infantiles) harmless from any and all claims, actions, suits, proceedings, costs, expenses, fees, damages and liabilities, including, but not limited to, reasonable attorney’s fees and costs, arising by reason of injury, damage, or death to persons or property, in connection with or resulting from the use of the leased equipment. This includes, but is not limited to, the manufacture, selection, delivery, possession, use, operation, or return of the equipment. Lessee hereby releases and holds harmless (Tehuacan Promotions and Kidsfun y Fiestas Infantiles) from injuries or damages incurred as a result of the use of the leased equipment. (Tehuacan Promotions and Kidsfun y Fiestas Infantiles) cannot, under any circumstances, be held liable for injuries as a result of inappropriate use, God, nature, or other conditions beyond its control or knowledge. Lessee also agrees to indemnify and hold harmless (Tehuacan Promotions and Kidsfun y Fiestas Infantiles) from any loss, damage, theft or destruction of the equipment during the term of the lease and any extensions thereof.`;
 
 /**
  * Interface con los datos del waiver para generar el PDF.
