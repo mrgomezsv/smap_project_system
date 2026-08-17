@@ -26,14 +26,30 @@ export class GoogleDriveService {
         ? credPathRelative
         : join(process.cwd(), credPathRelative);
 
+      let credentials: any;
       if (!existsSync(credPath)) {
-        this.logger.warn(
-          `Archivo de credenciales de Google no encontrado en ${credPath}. Fallback a almacenamiento local.`,
-        );
-        return;
+        if (process.env.FIREBASE_CREDENTIALS_BASE64) {
+          try {
+            const decoded = Buffer.from(
+              process.env.FIREBASE_CREDENTIALS_BASE64,
+              'base64',
+            ).toString('utf-8');
+            credentials = JSON.parse(decoded);
+          } catch (e) {
+            this.logger.error(
+              `Error al decodificar FIREBASE_CREDENTIALS_BASE64 en GoogleDriveService: ${(e as Error).message}`,
+            );
+            return;
+          }
+        } else {
+          this.logger.warn(
+            `Archivo de credenciales de Google no encontrado en ${credPath}. Fallback a almacenamiento local.`,
+          );
+          return;
+        }
+      } else {
+        credentials = JSON.parse(readFileSync(credPath, 'utf8'));
       }
-
-      const credentials = JSON.parse(readFileSync(credPath, 'utf8'));
 
       const auth = new google.auth.GoogleAuth({
         credentials,

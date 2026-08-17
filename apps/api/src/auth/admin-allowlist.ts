@@ -16,6 +16,7 @@ const DEFAULT_ADMIN_EMAILS = [
   'mrgomez.dev@gmail.com',
   'kidsfun.developer@gmail.com',
   'karenhenriquez911@gmail.com',
+  'dev@local',
 ];
 
 function parseAllowlist(): Set<string> {
