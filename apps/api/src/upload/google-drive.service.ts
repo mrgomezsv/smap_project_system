@@ -8,10 +8,11 @@ import { Readable } from 'stream';
 export class GoogleDriveService {
   private readonly logger = new Logger(GoogleDriveService.name);
   private drive: ReturnType<typeof google.drive> | null = null;
-  private readonly folderId: string;
+  private readonly parentFolderId: string;
+  private projectFolderId: string | null = null;
 
   constructor() {
-    this.folderId =
+    this.parentFolderId =
       process.env.GOOGLE_DRIVE_FOLDER_ID || '1_5uQEdZB83g8rPnVglKjK0L9RN3Gk8Qo';
     this.initDrive();
   }
@@ -41,7 +42,7 @@ export class GoogleDriveService {
 
       this.drive = google.drive({ version: 'v3', auth });
       this.logger.log(
-        `Google Drive Service inicializado con folder: ${this.folderId}`,
+        `Google Drive Service inicializado (Carpeta raíz: ${this.parentFolderId})`,
       );
     } catch (e) {
       this.logger.error(
@@ -51,7 +52,70 @@ export class GoogleDriveService {
   }
 
   /**
-   * Sube un archivo a la carpeta de Google Drive y configura permisos de lectura pública.
+   * Obtiene o crea automáticamente la subcarpeta (ej: 'kidsfun') dentro de ProyectosDocker
+   */
+  async getOrCreateProjectFolder(folderName = 'kidsfun'): Promise<string> {
+    if (this.projectFolderId) {
+      return this.projectFolderId;
+    }
+
+    if (!this.drive) {
+      return this.parentFolderId;
+    }
+
+    try {
+      // Buscar si ya existe la carpeta 'kidsfun' dentro de ProyectosDocker
+      const searchRes = await this.drive.files.list({
+        q: `'${this.parentFolderId}' in parents and name = '${folderName}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+        fields: 'files(id, name)',
+      });
+
+      if (searchRes.data.files && searchRes.data.files.length > 0) {
+        const foundId = searchRes.data.files[0].id!;
+        this.projectFolderId = foundId;
+        this.logger.log(`Subcarpeta '${folderName}' encontrada (ID: ${foundId})`);
+        return foundId;
+      }
+
+      // Si no existe, crear la subcarpeta 'kidsfun'
+      this.logger.log(
+        `Subcarpeta '${folderName}' no encontrada en ProyectosDocker. Creándola...`,
+      );
+      const createRes = await this.drive.files.create({
+        requestBody: {
+          name: folderName,
+          mimeType: 'application/vnd.google-apps.folder',
+          parents: [this.parentFolderId],
+        },
+        fields: 'id',
+      });
+
+      const newFolderId = createRes.data.id!;
+      this.projectFolderId = newFolderId;
+
+      // Asignar permisos de lectura a la carpeta creada
+      await this.drive.permissions.create({
+        fileId: newFolderId,
+        requestBody: {
+          role: 'reader',
+          type: 'anyone',
+        },
+      });
+
+      this.logger.log(
+        `Subcarpeta '${folderName}' creada exitosamente en ProyectosDocker (ID: ${newFolderId})`,
+      );
+      return newFolderId;
+    } catch (e) {
+      this.logger.error(
+        `Error al buscar/crear subcarpeta '${folderName}': ${(e as Error).message}. Se usará la carpeta raíz.`,
+      );
+      return this.parentFolderId;
+    }
+  }
+
+  /**
+   * Sube un archivo dentro de ProyectosDocker/kidsfun/ y configura permisos de lectura pública.
    */
   async uploadFile(
     fileBuffer: Buffer,
@@ -66,6 +130,9 @@ export class GoogleDriveService {
     }
 
     try {
+      // Obtener o crear la subcarpeta 'kidsfun' dentro de ProyectosDocker
+      const targetFolderId = await this.getOrCreateProjectFolder('kidsfun');
+
       const bufferStream = new Readable();
       bufferStream.push(fileBuffer);
       bufferStream.push(null);
@@ -73,7 +140,7 @@ export class GoogleDriveService {
       const response = await this.drive.files.create({
         requestBody: {
           name: filename,
-          parents: [this.folderId],
+          parents: [targetFolderId],
         },
         media: {
           mimeType,
@@ -85,7 +152,7 @@ export class GoogleDriveService {
       const fileId = response.data.id;
       if (!fileId) return null;
 
-      // Asignar permisos de lectura pública para poder incrustar la imagen en el sitio web
+      // Asignar permisos de lectura pública para poder mostrar la imagen en la web
       await this.drive.permissions.create({
         fileId,
         requestBody: {
