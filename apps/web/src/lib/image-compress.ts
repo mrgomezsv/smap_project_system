@@ -15,14 +15,19 @@ export async function compressImage(
   options: CompressOptions = {}
 ): Promise<File> {
   const {
-    maxWidth = 1920,
-    maxHeight = 1920,
-    quality = 0.85,
-    maxSizeBytes = 1 * 1024 * 1024, // 1MB: archivos menores no se comprimen
+    maxWidth = 2048,
+    maxHeight = 2048,
+    quality = 0.82,
+    maxSizeBytes = 800 * 1024, // 800KB: archivos menores no se comprimen
   } = options;
 
+  const isImage =
+    file.type.startsWith('image/') ||
+    file.type === 'application/octet-stream' ||
+    /\.(jpg|jpeg|png|webp|heic|heif|avif|bmp)$/i.test(file.name);
+
   // Si no es imagen o su tamaño ya es pequeño, devolver original
-  if (!file.type.startsWith('image/') || file.size <= maxSizeBytes) {
+  if (!isImage || file.size <= maxSizeBytes) {
     return file;
   }
 

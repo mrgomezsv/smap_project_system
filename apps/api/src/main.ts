@@ -5,8 +5,13 @@ import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { BigIntInterceptor } from './common/interceptors/bigint.interceptor';
 
+import { json, urlencoded } from 'express';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ limit: '50mb', extended: true }));
 
   // CORS
   const origins = (process.env.CORS_ORIGINS ?? 'http://localhost:3000')

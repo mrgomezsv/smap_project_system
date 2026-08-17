@@ -28,8 +28,19 @@ export class UploadController {
     FileInterceptor('file', {
       limits: { fileSize: 25 * 1024 * 1024 }, // 25MB
       fileFilter: (req, file, cb) => {
-        if (!file.mimetype?.startsWith('image/')) {
-          cb(new BadRequestException('Solo se permiten imágenes'), false);
+        const isImageMime =
+          file.mimetype?.startsWith('image/') ||
+          file.mimetype === 'application/octet-stream';
+        const isImageExt = /\.(jpg|jpeg|png|webp|gif|heic|heif|bmp|tiff|avif)$/i.test(
+          file.originalname || '',
+        );
+        if (!isImageMime && !isImageExt) {
+          cb(
+            new BadRequestException(
+              'Solo se permiten imágenes (JPG, PNG, WebP, HEIC)',
+            ),
+            false,
+          );
           return;
         }
         cb(null, true);
