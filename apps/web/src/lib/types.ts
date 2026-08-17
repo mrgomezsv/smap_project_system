@@ -17,7 +17,8 @@ export type Category =
   | 'maquina_espuma'
   | 'game_trailer'
   | 'robots_led'
-  | 'shots_carts';
+  | 'shots_carts'
+  | 'obstacle_course';
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   option1: 'Brincolines',
@@ -34,6 +35,7 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   game_trailer: 'Game Trailer',
   robots_led: 'Robots LED',
   shots_carts: 'Shots Carts',
+  obstacle_course: 'Obstacle Course',
 };
 
 export interface Product {

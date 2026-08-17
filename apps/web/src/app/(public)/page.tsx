@@ -25,6 +25,7 @@ const ALL_FEATURED_CATEGORIES: Array<{ key: Category; emoji: string; bg: string 
   { key: 'game_trailer', emoji: '🎮', bg: 'from-primary/20 to-warning/20' },
   { key: 'robots_led', emoji: '🤖', bg: 'from-brand-yellow/20 to-primary/20' },
   { key: 'shots_carts', emoji: '🍹', bg: 'from-party-pink/20 to-warning/20' },
+  { key: 'obstacle_course', emoji: '🏃', bg: 'from-warning/20 to-success/20' },
 ];
 
 export default async function HomePage() {

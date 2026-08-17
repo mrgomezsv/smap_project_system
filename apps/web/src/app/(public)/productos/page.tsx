@@ -31,6 +31,7 @@ const ALL_CATEGORIES: Array<{ key: Category; emoji: string }> = [
   { key: 'game_trailer', emoji: '🎮' },
   { key: 'robots_led', emoji: '🤖' },
   { key: 'shots_carts', emoji: '🍹' },
+  { key: 'obstacle_course', emoji: '🏃' },
 ];
 
 export default async function ProductosPage({

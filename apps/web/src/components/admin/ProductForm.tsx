@@ -28,6 +28,7 @@ const CATEGORIES: Category[] = [
   'game_trailer',
   'robots_led',
   'shots_carts',
+  'obstacle_course',
 ];
 
 interface FormData {
