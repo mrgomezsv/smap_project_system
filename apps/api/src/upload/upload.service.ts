@@ -62,7 +62,9 @@ export class UploadService {
       : join(process.cwd(), rawUploadDir);
 
     const safeSlug = (slug || 'img').toLowerCase().replace(/[^a-z0-9]/g, '_');
-    const targetDir = slug ? join(uploadDir, 'product_images', safeSlug) : uploadDir;
+    const targetDir = slug
+      ? join(uploadDir, 'product_images', safeSlug)
+      : uploadDir;
 
     if (!existsSync(targetDir)) {
       mkdirSync(targetDir, { recursive: true });

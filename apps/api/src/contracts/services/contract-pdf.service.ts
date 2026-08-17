@@ -135,24 +135,106 @@ export class ContractPdfService {
     const col2X = margin + 105;
     const col3X = col2X + 162;
 
-    page1.drawLine({ start: { x: col2X, y: tableTopY }, end: { x: col2X, y: tableTopY - tableH }, thickness: 0.8, color: black });
-    page1.drawLine({ start: { x: col3X, y: tableTopY }, end: { x: col3X, y: tableTopY - tableH }, thickness: 0.8, color: black });
+    page1.drawLine({
+      start: { x: col2X, y: tableTopY },
+      end: { x: col2X, y: tableTopY - tableH },
+      thickness: 0.8,
+      color: black,
+    });
+    page1.drawLine({
+      start: { x: col3X, y: tableTopY },
+      end: { x: col3X, y: tableTopY - tableH },
+      thickness: 0.8,
+      color: black,
+    });
 
     // Textos Azules de Tabla
-    page1.drawText('Name:', { x: margin + 4, y: tableTopY - 13, size: 10, font: times, color: blueLabel });
-    page1.drawText(sanitizePdfText(data.clientName), { x: col2X + 4, y: tableTopY - 13, size: 10, font: times, color: black });
-    page1.drawText('Date:', { x: col3X + 4, y: tableTopY - 13, size: 10, font: times, color: blueLabel });
-    page1.drawText(formattedDate, { x: col3X + 110, y: tableTopY - 13, size: 10, font: times, color: black });
+    page1.drawText('Name:', {
+      x: margin + 4,
+      y: tableTopY - 13,
+      size: 10,
+      font: times,
+      color: blueLabel,
+    });
+    page1.drawText(sanitizePdfText(data.clientName), {
+      x: col2X + 4,
+      y: tableTopY - 13,
+      size: 10,
+      font: times,
+      color: black,
+    });
+    page1.drawText('Date:', {
+      x: col3X + 4,
+      y: tableTopY - 13,
+      size: 10,
+      font: times,
+      color: blueLabel,
+    });
+    page1.drawText(formattedDate, {
+      x: col3X + 110,
+      y: tableTopY - 13,
+      size: 10,
+      font: times,
+      color: black,
+    });
 
-    page1.drawText('Phone Home', { x: margin + 4, y: tableTopY - 31, size: 10, font: times, color: blueLabel });
-    page1.drawText(sanitizePdfText(data.clientPhone) || '', { x: col2X + 4, y: tableTopY - 31, size: 10, font: times, color: black });
-    page1.drawText('Address:', { x: col3X + 4, y: tableTopY - 31, size: 10, font: times, color: blueLabel });
-    page1.drawText(sanitizePdfText(data.clientAddress), { x: col3X + 110, y: tableTopY - 31, size: 9, font: times, color: black });
+    page1.drawText('Phone Home', {
+      x: margin + 4,
+      y: tableTopY - 31,
+      size: 10,
+      font: times,
+      color: blueLabel,
+    });
+    page1.drawText(sanitizePdfText(data.clientPhone) || '', {
+      x: col2X + 4,
+      y: tableTopY - 31,
+      size: 10,
+      font: times,
+      color: black,
+    });
+    page1.drawText('Address:', {
+      x: col3X + 4,
+      y: tableTopY - 31,
+      size: 10,
+      font: times,
+      color: blueLabel,
+    });
+    page1.drawText(sanitizePdfText(data.clientAddress), {
+      x: col3X + 110,
+      y: tableTopY - 31,
+      size: 9,
+      font: times,
+      color: black,
+    });
 
-    page1.drawText('Phone Cell.', { x: margin + 4, y: tableTopY - 49, size: 10, font: times, color: blueLabel });
-    page1.drawText(sanitizePdfText(data.clientPhone) || '', { x: col2X + 4, y: tableTopY - 49, size: 10, font: times, color: black });
-    page1.drawText('City, State, Zip', { x: col3X + 4, y: tableTopY - 49, size: 10, font: times, color: blueLabel });
-    page1.drawText(sanitizePdfText(data.clientCityStateZip) || '', { x: col3X + 110, y: tableTopY - 49, size: 9, font: times, color: black });
+    page1.drawText('Phone Cell.', {
+      x: margin + 4,
+      y: tableTopY - 49,
+      size: 10,
+      font: times,
+      color: blueLabel,
+    });
+    page1.drawText(sanitizePdfText(data.clientPhone) || '', {
+      x: col2X + 4,
+      y: tableTopY - 49,
+      size: 10,
+      font: times,
+      color: black,
+    });
+    page1.drawText('City, State, Zip', {
+      x: col3X + 4,
+      y: tableTopY - 49,
+      size: 10,
+      font: times,
+      color: blueLabel,
+    });
+    page1.drawText(sanitizePdfText(data.clientCityStateZip) || '', {
+      x: col3X + 110,
+      y: tableTopY - 49,
+      size: 9,
+      font: times,
+      color: black,
+    });
 
     y -= tableH + 28;
 
@@ -216,7 +298,13 @@ export class ContractPdfService {
 
     for (const rule of safetyRules) {
       if (rule === '5_RULE') {
-        page1.drawText('5) ', { x: margin, y, size: 9, font: timesBold, color: black });
+        page1.drawText('5) ', {
+          x: margin,
+          y,
+          size: 9,
+          font: timesBold,
+          color: black,
+        });
         const hlW = drawHighlightedText(
           page1,
           '(Tehuacan Promotions and Kidsfun y Fiestas Infantiles )',
@@ -229,12 +317,29 @@ export class ContractPdfService {
         );
         const restRule5 =
           ' not responsible for striking or damaging any underground utility lines/devices (included but not limited to: electrical, plumbing, sprinkler, etc.). It is lessee’s responsibility to tell Rental Company where inflatable is to be set up and have any underground utility lines marked prior too.';
-        const r5Lines = this.wrapText(restRule5, contentWidth - hlW - 14, times, 9);
+        const r5Lines = this.wrapText(
+          restRule5,
+          contentWidth - hlW - 14,
+          times,
+          9,
+        );
         if (r5Lines.length > 0) {
-          page1.drawText(r5Lines[0], { x: margin + 12 + hlW + 2, y, size: 9, font: times, color: black });
+          page1.drawText(r5Lines[0], {
+            x: margin + 12 + hlW + 2,
+            y,
+            size: 9,
+            font: times,
+            color: black,
+          });
           y -= 11;
           for (let k = 1; k < r5Lines.length; k++) {
-            page1.drawText(r5Lines[k], { x: margin, y, size: 9, font: times, color: black });
+            page1.drawText(r5Lines[k], {
+              x: margin,
+              y,
+              size: 9,
+              font: times,
+              color: black,
+            });
             y -= 11;
           }
         }
@@ -278,7 +383,9 @@ export class ContractPdfService {
       }
     }
 
-    const signedStr = data.signatureImage ? sanitizePdfText(data.clientName) : '______________________________';
+    const signedStr = data.signatureImage
+      ? sanitizePdfText(data.clientName)
+      : '______________________________';
     page1.drawText(`X ${signedStr} SIGN HERE AFTER READING RULES`, {
       x: margin,
       y,
@@ -315,22 +422,67 @@ export class ContractPdfService {
     y2 -= 20;
 
     // Cláusula 1
-    const c1 = '1) This rental equipment has been received in good condition and will be returned in the same condition (ordinary wear and accepted)';
-    for (const l of this.wrapText(c1, contentWidth, times, 11)) { page2.drawText(l, { x: margin, y: y2, size: 11, font: times, color: black }); y2 -= 13.5; }
+    const c1 =
+      '1) This rental equipment has been received in good condition and will be returned in the same condition (ordinary wear and accepted)';
+    for (const l of this.wrapText(c1, contentWidth, times, 11)) {
+      page2.drawText(l, {
+        x: margin,
+        y: y2,
+        size: 11,
+        font: times,
+        color: black,
+      });
+      y2 -= 13.5;
+    }
     y2 -= 6;
 
     // Cláusula 2
-    const c2 = '2) Customer agrees to company right to enter premises of customer at any time to repossess said equipment.';
-    for (const l of this.wrapText(c2, contentWidth, times, 11)) { page2.drawText(l, { x: margin, y: y2, size: 11, font: times, color: black }); y2 -= 13.5; }
+    const c2 =
+      '2) Customer agrees to company right to enter premises of customer at any time to repossess said equipment.';
+    for (const l of this.wrapText(c2, contentWidth, times, 11)) {
+      page2.drawText(l, {
+        x: margin,
+        y: y2,
+        size: 11,
+        font: times,
+        color: black,
+      });
+      y2 -= 13.5;
+    }
     y2 -= 6;
 
     // Cláusula 3 (Con resaltado amarillo en el nombre de empresa)
-    page2.drawText('3) Customer agrees to reimburse ', { x: margin, y: y2, size: 11, font: times, color: black });
-    const c3HlW = drawHighlightedText(page2, '(TehuacanPromotions and Kidsfun y Fiestas Infantiles)', margin + 155, y2, 11, times, black, yellowBg);
-    const c3Rest = ' for all attorney fees, an amount not less than 50% of all sums due, court cost and expenses incurred by Rental Company to enforce collection or to preserve or enforce rights under this contract.';
+    page2.drawText('3) Customer agrees to reimburse ', {
+      x: margin,
+      y: y2,
+      size: 11,
+      font: times,
+      color: black,
+    });
+    const c3HlW = drawHighlightedText(
+      page2,
+      '(TehuacanPromotions and Kidsfun y Fiestas Infantiles)',
+      margin + 155,
+      y2,
+      11,
+      times,
+      black,
+      yellowBg,
+    );
+    const c3Rest =
+      ' for all attorney fees, an amount not less than 50% of all sums due, court cost and expenses incurred by Rental Company to enforce collection or to preserve or enforce rights under this contract.';
     const c3Lines = this.wrapText(c3Rest, contentWidth, times, 11);
     y2 -= 13.5;
-    for (const l of c3Lines) { page2.drawText(l, { x: margin, y: y2, size: 11, font: times, color: black }); y2 -= 13.5; }
+    for (const l of c3Lines) {
+      page2.drawText(l, {
+        x: margin,
+        y: y2,
+        size: 11,
+        font: times,
+        color: black,
+      });
+      y2 -= 13.5;
+    }
     y2 -= 6;
 
     // Cláusulas 4 a 7
@@ -341,16 +493,47 @@ export class ContractPdfService {
       '7) Customer agrees to ensure that all users (and users’ guardians) of the rental go over and read all rules.',
     ];
     for (const rule of c4_7) {
-      for (const l of this.wrapText(rule, contentWidth, times, 11)) { page2.drawText(l, { x: margin, y: y2, size: 11, font: times, color: black }); y2 -= 13.5; }
+      for (const l of this.wrapText(rule, contentWidth, times, 11)) {
+        page2.drawText(l, {
+          x: margin,
+          y: y2,
+          size: 11,
+          font: times,
+          color: black,
+        });
+        y2 -= 13.5;
+      }
       y2 -= 6;
     }
 
     // Cláusula 8 (Bold con resalta amarillo)
-    page2.drawText('8) THERE ARE NO WARRANTIES OF MERCHANTABILITY OR FITNESS EITHER EXPRESSED OR IMPLIED. The person/s or organization renting this Equipment from ', { x: margin, y: y2, size: 10, font: timesBold, color: black });
+    page2.drawText(
+      '8) THERE ARE NO WARRANTIES OF MERCHANTABILITY OR FITNESS EITHER EXPRESSED OR IMPLIED. The person/s or organization renting this Equipment from ',
+      { x: margin, y: y2, size: 10, font: timesBold, color: black },
+    );
     y2 -= 13.5;
-    drawHighlightedText(page2, '(TehuacanPromotions and Kidsfun y Fiestas Infantiles)', margin, y2, 10, timesBold, black, yellowBg);
-    const c8Rest = ' will be held responsible and liable for any and all damage or injury occurring for any reason whatsoever. I have read the above agreement and fully understand and accept the conditions as above. I am aware that while in my care I am fully responsible for the inflatable and will pay for any loss or damages that may occur.';
-    for (const l of this.wrapText(c8Rest, contentWidth, timesBold, 10)) { page2.drawText(l, { x: margin, y: y2, size: 10, font: timesBold, color: black }); y2 -= 13.5; }
+    drawHighlightedText(
+      page2,
+      '(TehuacanPromotions and Kidsfun y Fiestas Infantiles)',
+      margin,
+      y2,
+      10,
+      timesBold,
+      black,
+      yellowBg,
+    );
+    const c8Rest =
+      ' will be held responsible and liable for any and all damage or injury occurring for any reason whatsoever. I have read the above agreement and fully understand and accept the conditions as above. I am aware that while in my care I am fully responsible for the inflatable and will pay for any loss or damages that may occur.';
+    for (const l of this.wrapText(c8Rest, contentWidth, timesBold, 10)) {
+      page2.drawText(l, {
+        x: margin,
+        y: y2,
+        size: 10,
+        font: timesBold,
+        color: black,
+      });
+      y2 -= 13.5;
+    }
     y2 -= 8;
 
     // Cláusula 9 (Con resaltados amarillo y rojo exactos)
@@ -362,25 +545,106 @@ export class ContractPdfService {
       ' from any loss, damage, theft or destruction of the equipment during the term of the lease and any extensions thereof.',
     ];
 
-    for (const l of this.wrapText(c9Lines[0], contentWidth, timesBold, 9.5)) { page2.drawText(l, { x: margin, y: y2, size: 9.5, font: timesBold, color: black }); y2 -= 12; }
-    
+    for (const l of this.wrapText(c9Lines[0], contentWidth, timesBold, 9.5)) {
+      page2.drawText(l, {
+        x: margin,
+        y: y2,
+        size: 9.5,
+        font: timesBold,
+        color: black,
+      });
+      y2 -= 12;
+    }
+
     // Resaltado ROJO "hold" y AMARILLO "(TehuacanPromotions...)"
     let curX = margin;
-    curX += drawHighlightedText(page2, 'hold ', curX, y2, 9.5, timesBold, white, redBg);
-    curX += drawHighlightedText(page2, '(TehuacanPromotions and Kidsfun y Fiestas Infantiles) ', curX, y2, 9.5, timesBold, black, yellowBg);
-    drawHighlightedText(page2, 'harmless', curX, y2, 9.5, timesBold, white, redBg);
+    curX += drawHighlightedText(
+      page2,
+      'hold ',
+      curX,
+      y2,
+      9.5,
+      timesBold,
+      white,
+      redBg,
+    );
+    curX += drawHighlightedText(
+      page2,
+      '(TehuacanPromotions and Kidsfun y Fiestas Infantiles) ',
+      curX,
+      y2,
+      9.5,
+      timesBold,
+      black,
+      yellowBg,
+    );
+    drawHighlightedText(
+      page2,
+      'harmless',
+      curX,
+      y2,
+      9.5,
+      timesBold,
+      white,
+      redBg,
+    );
     y2 -= 12;
 
-    for (const l of this.wrapText(c9Lines[1], contentWidth, timesBold, 9.5)) { page2.drawText(l, { x: margin, y: y2, size: 9.5, font: timesBold, color: black }); y2 -= 12; }
-    drawHighlightedText(page2, '(TehuacanPromotions and Kidsfun y Fiestas Infantiles)', margin, y2, 9.5, timesBold, black, yellowBg);
+    for (const l of this.wrapText(c9Lines[1], contentWidth, timesBold, 9.5)) {
+      page2.drawText(l, {
+        x: margin,
+        y: y2,
+        size: 9.5,
+        font: timesBold,
+        color: black,
+      });
+      y2 -= 12;
+    }
+    drawHighlightedText(
+      page2,
+      '(TehuacanPromotions and Kidsfun y Fiestas Infantiles)',
+      margin,
+      y2,
+      9.5,
+      timesBold,
+      black,
+      yellowBg,
+    );
     y2 -= 12;
 
-    for (const l of this.wrapText(c9Lines[3], contentWidth, timesBold, 9.5)) { page2.drawText(l, { x: margin, y: y2, size: 9.5, font: timesBold, color: black }); y2 -= 12; }
-    drawHighlightedText(page2, '(TehuacanPromotions and Kidsfun y Fiestas Infantiles)', margin, y2, 9.5, timesBold, black, yellowBg);
+    for (const l of this.wrapText(c9Lines[3], contentWidth, timesBold, 9.5)) {
+      page2.drawText(l, {
+        x: margin,
+        y: y2,
+        size: 9.5,
+        font: timesBold,
+        color: black,
+      });
+      y2 -= 12;
+    }
+    drawHighlightedText(
+      page2,
+      '(TehuacanPromotions and Kidsfun y Fiestas Infantiles)',
+      margin,
+      y2,
+      9.5,
+      timesBold,
+      black,
+      yellowBg,
+    );
     y2 -= 14;
 
     // Sección de Iniciales y Firma con Resaltado Amarillo en Initial
-    drawHighlightedText(page2, '______ Initial', margin, y2, 11, timesBold, black, yellowBg);
+    drawHighlightedText(
+      page2,
+      '______ Initial',
+      margin,
+      y2,
+      11,
+      timesBold,
+      black,
+      yellowBg,
+    );
     y2 -= 25;
 
     if (data.signatureImage) {
@@ -458,33 +722,160 @@ export class ContractPdfService {
     const cCol2 = margin + 90;
     const cCol3 = margin + 270;
 
-    page3.drawLine({ start: { x: cCol2, y: chkTableY }, end: { x: cCol2, y: chkTableY - chkTableH }, thickness: 0.8, color: black });
-    page3.drawLine({ start: { x: cCol3, y: chkTableY }, end: { x: cCol3, y: chkTableY - chkTableH }, thickness: 0.8, color: black });
+    page3.drawLine({
+      start: { x: cCol2, y: chkTableY },
+      end: { x: cCol2, y: chkTableY - chkTableH },
+      thickness: 0.8,
+      color: black,
+    });
+    page3.drawLine({
+      start: { x: cCol3, y: chkTableY },
+      end: { x: cCol3, y: chkTableY - chkTableH },
+      thickness: 0.8,
+      color: black,
+    });
 
     // Textos Azules de la Tabla de Checklist
-    page3.drawText('Name:', { x: margin + 4, y: chkTableY - 14, size: 9.5, font: times, color: blueLabel });
-    page3.drawText(sanitizePdfText(data.clientName), { x: cCol2 + 4, y: chkTableY - 14, size: 9.5, font: times, color: black });
-    page3.drawText('Driver’s License #:', { x: cCol3 + 4, y: chkTableY - 14, size: 9.5, font: times, color: blueLabel });
-    page3.drawText(sanitizePdfText(data.driverLicense) || '', { x: cCol3 + 105, y: chkTableY - 14, size: 9.5, font: times, color: black });
+    page3.drawText('Name:', {
+      x: margin + 4,
+      y: chkTableY - 14,
+      size: 9.5,
+      font: times,
+      color: blueLabel,
+    });
+    page3.drawText(sanitizePdfText(data.clientName), {
+      x: cCol2 + 4,
+      y: chkTableY - 14,
+      size: 9.5,
+      font: times,
+      color: black,
+    });
+    page3.drawText('Driver’s License #:', {
+      x: cCol3 + 4,
+      y: chkTableY - 14,
+      size: 9.5,
+      font: times,
+      color: blueLabel,
+    });
+    page3.drawText(sanitizePdfText(data.driverLicense) || '', {
+      x: cCol3 + 105,
+      y: chkTableY - 14,
+      size: 9.5,
+      font: times,
+      color: black,
+    });
 
-    page3.drawText('Start Time:', { x: margin + 4, y: chkTableY - 34, size: 9.5, font: times, color: blueLabel });
-    page3.drawText(sanitizePdfText(data.startTime) || '', { x: cCol2 + 4, y: chkTableY - 34, size: 9.5, font: times, color: black });
-    page3.drawText('End Time:', { x: cCol3 + 4, y: chkTableY - 34, size: 9.5, font: times, color: blueLabel });
-    page3.drawText(sanitizePdfText(data.endTime) || '', { x: cCol3 + 105, y: chkTableY - 34, size: 9.5, font: times, color: black });
+    page3.drawText('Start Time:', {
+      x: margin + 4,
+      y: chkTableY - 34,
+      size: 9.5,
+      font: times,
+      color: blueLabel,
+    });
+    page3.drawText(sanitizePdfText(data.startTime) || '', {
+      x: cCol2 + 4,
+      y: chkTableY - 34,
+      size: 9.5,
+      font: times,
+      color: black,
+    });
+    page3.drawText('End Time:', {
+      x: cCol3 + 4,
+      y: chkTableY - 34,
+      size: 9.5,
+      font: times,
+      color: blueLabel,
+    });
+    page3.drawText(sanitizePdfText(data.endTime) || '', {
+      x: cCol3 + 105,
+      y: chkTableY - 34,
+      size: 9.5,
+      font: times,
+      color: black,
+    });
 
-    page3.drawText('Equipment', { x: margin + 4, y: chkTableY - 54, size: 9.5, font: times, color: blueLabel });
-    page3.drawText('O Bounce House O Wet –Dry Slide O Concession Machines O Other', { x: cCol2 + 4, y: chkTableY - 54, size: 8.5, font: times, color: blueLabel });
-    page3.drawText('Ground Type:', { x: cCol3 + 4, y: chkTableY - 54, size: 9.5, font: times, color: blueLabel });
-    page3.drawText('O Grass O Concrete O Dirt O Other', { x: cCol3 + 80, y: chkTableY - 54, size: 8.5, font: times, color: blueLabel });
+    page3.drawText('Equipment', {
+      x: margin + 4,
+      y: chkTableY - 54,
+      size: 9.5,
+      font: times,
+      color: blueLabel,
+    });
+    page3.drawText(
+      'O Bounce House O Wet –Dry Slide O Concession Machines O Other',
+      {
+        x: cCol2 + 4,
+        y: chkTableY - 54,
+        size: 8.5,
+        font: times,
+        color: blueLabel,
+      },
+    );
+    page3.drawText('Ground Type:', {
+      x: cCol3 + 4,
+      y: chkTableY - 54,
+      size: 9.5,
+      font: times,
+      color: blueLabel,
+    });
+    page3.drawText('O Grass O Concrete O Dirt O Other', {
+      x: cCol3 + 80,
+      y: chkTableY - 54,
+      size: 8.5,
+      font: times,
+      color: blueLabel,
+    });
 
-    page3.drawText('Make:', { x: margin + 4, y: chkTableY - 74, size: 9.5, font: times, color: blueLabel });
-    page3.drawText('Model:               Plate#', { x: cCol2 + 4, y: chkTableY - 74, size: 9, font: times, color: blueLabel });
-    page3.drawText('CC#: TYPE: EXP:', { x: cCol3 + 4, y: chkTableY - 74, size: 9, font: times, color: blueLabel });
+    page3.drawText('Make:', {
+      x: margin + 4,
+      y: chkTableY - 74,
+      size: 9.5,
+      font: times,
+      color: blueLabel,
+    });
+    page3.drawText('Model:               Plate#', {
+      x: cCol2 + 4,
+      y: chkTableY - 74,
+      size: 9,
+      font: times,
+      color: blueLabel,
+    });
+    page3.drawText('CC#: TYPE: EXP:', {
+      x: cCol3 + 4,
+      y: chkTableY - 74,
+      size: 9,
+      font: times,
+      color: blueLabel,
+    });
 
-    page3.drawText('Signature:', { x: margin + 4, y: chkTableY - 94, size: 9.5, font: times, color: blueLabel });
-    page3.drawText(sanitizePdfText(data.clientName) + ' (Digital Signed)', { x: cCol2 + 4, y: chkTableY - 94, size: 9, font: times, color: black });
-    page3.drawText('Date:', { x: cCol3 + 4, y: chkTableY - 94, size: 9.5, font: times, color: blueLabel });
-    page3.drawText(signedDate, { x: cCol3 + 80, y: chkTableY - 94, size: 9, font: times, color: black });
+    page3.drawText('Signature:', {
+      x: margin + 4,
+      y: chkTableY - 94,
+      size: 9.5,
+      font: times,
+      color: blueLabel,
+    });
+    page3.drawText(sanitizePdfText(data.clientName) + ' (Digital Signed)', {
+      x: cCol2 + 4,
+      y: chkTableY - 94,
+      size: 9,
+      font: times,
+      color: black,
+    });
+    page3.drawText('Date:', {
+      x: cCol3 + 4,
+      y: chkTableY - 94,
+      size: 9.5,
+      font: times,
+      color: blueLabel,
+    });
+    page3.drawText(signedDate, {
+      x: cCol3 + 80,
+      y: chkTableY - 94,
+      size: 9,
+      font: times,
+      color: black,
+    });
 
     y3 -= chkTableH + 30;
 
@@ -584,7 +975,8 @@ export class ContractPdfService {
     const page4 = doc.addPage([pageWidth, pageHeight]);
     let y4 = pageHeight - margin - 20;
 
-    const lastItem = '• I have received written instruction on the safe operation of inflatable and agree to follow all safety rules. ____';
+    const lastItem =
+      '• I have received written instruction on the safe operation of inflatable and agree to follow all safety rules. ____';
     const lastLines = this.wrapText(lastItem, contentWidth, times, 14);
     for (const l of lastLines) {
       const lw = times.widthOfTextAtSize(l, 14);
