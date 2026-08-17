@@ -40,6 +40,16 @@ interface MemoryCacheEntry {
   expiresAt: number;
 }
 
+function bigIntReplacer(_key: string, value: unknown): unknown {
+  if (typeof value === 'bigint') {
+    return value <= BigInt(Number.MAX_SAFE_INTEGER) &&
+      value >= BigInt(Number.MIN_SAFE_INTEGER)
+      ? Number(value)
+      : value.toString();
+  }
+  return value;
+}
+
 /**
  * Cache interceptor con Redis (distribuido) + fallback en memoria.
  *
@@ -130,9 +140,20 @@ export class CacheInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(async (value) => {
+        // No cachear respuestas vacías para evitar congelar la pantalla en "0 productos"
+        if (
+          value &&
+          typeof value === 'object' &&
+          'items' in value &&
+          Array.isArray(value.items) &&
+          value.items.length === 0
+        ) {
+          return;
+        }
+
         // Guardar en Redis
         if (this.redis.isEnabled()) {
-          await this.redis.set(key, JSON.stringify(value), ttl);
+          await this.redis.set(key, JSON.stringify(value, bigIntReplacer), ttl);
         } else {
           // Fallback memoria
           this.memoryStore.set(key, {
