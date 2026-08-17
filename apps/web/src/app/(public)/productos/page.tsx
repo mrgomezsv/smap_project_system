@@ -5,6 +5,9 @@ import type { Product, ProductsListResponse } from '@/lib/types';
 import { CATEGORY_LABELS, type Category } from '@/lib/types';
 import { ProductCard } from '@/components/public/ProductCard';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface SearchParams {
   category?: string;
   search?: string;

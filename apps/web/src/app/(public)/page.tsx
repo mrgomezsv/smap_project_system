@@ -5,6 +5,9 @@ import { api } from '@/lib/api';
 import type { Product } from '@/lib/types';
 import { type Category } from '@/lib/types';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const HERO_IMG = '/media/product_images/barbie_bounce_house/barbie_bounce_house_01.jpeg';
 
 const ALL_FEATURED_CATEGORIES: Array<{ key: Category; emoji: string; bg: string }> = [

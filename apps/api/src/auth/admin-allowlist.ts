@@ -12,6 +12,8 @@ import { ForbiddenException } from '@nestjs/common';
 
 const DEFAULT_ADMIN_EMAILS = [
   'mrgomez.dev@outlook.com',
+  'mrgomez.dev@outlcok.com',
+  'mrgomez.dev@gmail.com',
   'kidsfun.developer@gmail.com',
   'karenhenriquez911@gmail.com',
 ];
