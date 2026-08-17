@@ -25,10 +25,24 @@ export class FirebaseService implements OnModuleInit {
       : path.join(process.cwd(), credentialsPath);
 
     if (!fs.existsSync(absolutePath)) {
-      // Fallback: buscar desde la raíz del monorepo si process.cwd() es apps/api
       const rootPath = path.join(process.cwd(), '../../', credentialsPath);
       if (fs.existsSync(rootPath)) {
         absolutePath = rootPath;
+      } else if (process.env.FIREBASE_CREDENTIALS_BASE64) {
+        try {
+          const dir = path.dirname(absolutePath);
+          if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+          const decoded = Buffer.from(
+            process.env.FIREBASE_CREDENTIALS_BASE64,
+            'base64',
+          ).toString('utf-8');
+          fs.writeFileSync(absolutePath, decoded, 'utf-8');
+          this.logger.log(`Credenciales creadas dinámicamente en ${absolutePath}`);
+        } catch (e) {
+          this.logger.error(
+            `Error al decodificar FIREBASE_CREDENTIALS_BASE64: ${(e as Error).message}`,
+          );
+        }
       } else {
         this.logger.warn(
           `Firebase no inicializado: archivo de credenciales no existe en ${absolutePath}`,

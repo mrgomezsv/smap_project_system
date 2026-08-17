@@ -16,7 +16,7 @@ RUN pnpm install --frozen-lockfile
 # 4. Copiar código fuente de api y esquema de prisma
 COPY apps/api/src ./apps/api/src
 COPY apps/api/prisma ./apps/api/prisma
-COPY apps/api/credentials ./apps/api/credentials
+RUN mkdir -p apps/api/credentials
 COPY apps/api/tsconfig*.json ./apps/api/
 COPY apps/api/nest-cli.json ./apps/api/
 
@@ -38,8 +38,7 @@ COPY --from=base /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=base /app/apps/api/dist ./apps/api/dist
 COPY --from=base /app/apps/api/package.json ./apps/api/package.json
 COPY --from=base /app/apps/api/prisma ./apps/api/prisma
-COPY --from=base /app/apps/api/credentials ./apps/api/credentials
-RUN mkdir -p media apps/api/media
+RUN mkdir -p apps/api/credentials media apps/api/media
 COPY --from=base /app/apps/api/src/assets ./apps/api/dist/assets
 
 EXPOSE 3001
