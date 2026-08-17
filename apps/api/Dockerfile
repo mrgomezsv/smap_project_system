@@ -22,6 +22,7 @@ COPY apps/api/nest-cli.json ./apps/api/
 
 # 5. Generar cliente de Prisma y construir la aplicación NestJS
 WORKDIR /app/apps/api
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN pnpm prisma generate
 RUN pnpm build
 
@@ -38,8 +39,7 @@ COPY --from=base /app/apps/api/dist ./apps/api/dist
 COPY --from=base /app/apps/api/package.json ./apps/api/package.json
 COPY --from=base /app/apps/api/prisma ./apps/api/prisma
 COPY --from=base /app/apps/api/credentials ./apps/api/credentials
-COPY media ./media
-COPY media ./apps/api/media
+RUN mkdir -p media apps/api/media
 COPY --from=base /app/apps/api/src/assets ./apps/api/dist/assets
 
 EXPOSE 3001

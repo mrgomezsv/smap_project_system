@@ -12,8 +12,7 @@ RUN pnpm install --frozen-lockfile
 
 COPY apps/web/src ./apps/web/src
 COPY apps/web/public ./apps/web/public
-COPY media ./media
-COPY media ./apps/web/public/media
+RUN mkdir -p media apps/web/public/media
 COPY apps/web/tsconfig*.json ./apps/web/
 COPY apps/web/next.config.* ./apps/web/
 COPY apps/web/tailwind.config.* ./apps/web/
