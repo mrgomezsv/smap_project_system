@@ -91,7 +91,7 @@ WHERE LOWER(TRIM(latest.client_email)) NOT IN ('', 'anonymous@firebase.local', '
 
 UPDATE t_app_client c
 JOIN auth_user u
-  ON LOWER(TRIM(u.email)) = c.email
+  ON LOWER(TRIM(u.email)) COLLATE utf8mb4_unicode_ci = c.email
   AND u.email IS NOT NULL
   AND TRIM(u.email) <> ''
 SET c.user_id = u.id
@@ -115,7 +115,7 @@ LEFT JOIN (
   ) latest_match
     ON c2.id = latest_match.max_id
 ) latest
-  ON latest.email_norm = c.email
+  ON latest.email_norm COLLATE utf8mb4_unicode_ci = c.email
 SET
   c.phone          = COALESCE(NULLIF(c.phone, ''), latest.phone),
   c.address        = COALESCE(NULLIF(c.address, ''), latest.address),
@@ -124,7 +124,7 @@ SET
 
 UPDATE t_app_rental_contract rc
 JOIN t_app_client c
-  ON LOWER(TRIM(c.email)) = LOWER(TRIM(rc.client_email))
+  ON LOWER(TRIM(c.email)) = LOWER(TRIM(rc.client_email)) COLLATE utf8mb4_unicode_ci
 SET rc.client_id = c.id
 WHERE rc.client_id IS NULL
   AND rc.client_email IS NOT NULL
