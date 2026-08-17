@@ -11,6 +11,7 @@ const sections = [
     links: [
       { href: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
       { href: '/admin/productos', label: 'Productos', icon: '🎪' },
+      { href: '/admin/categorias', label: 'Categorías', icon: '🏷️' },
       { href: '/admin/eventos', label: 'Eventos', icon: '🎉' },
     ],
   },

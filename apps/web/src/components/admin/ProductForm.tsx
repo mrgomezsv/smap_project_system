@@ -6,30 +6,12 @@ import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
 import { compressImage } from '@/lib/image-compress';
-import { CATEGORY_LABELS, type Category, type Product } from '@/lib/types';
+import { CATEGORY_LABELS, type Category, type CategoryItem, type Product } from '@/lib/types';
 
 interface ProductFormProps {
   initial?: Product;
   mode: 'create' | 'edit';
 }
-
-const CATEGORIES: Category[] = [
-  'option1',
-  'option2',
-  'option3',
-  'option4',
-  'option5',
-  'option6',
-  'option7',
-  'toros_mecanicos',
-  'trenes_electricos',
-  'kiddie_ride',
-  'maquina_espuma',
-  'game_trailer',
-  'robots_led',
-  'shots_carts',
-  'obstacle_course',
-];
 
 interface FormData {
   title: string;
@@ -72,10 +54,25 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
   const { getToken } = useAuth();
   const tPh = useTranslations('placeholders');
   const [data, setData] = useState<FormData>(EMPTY);
+  const [categoriesList, setCategoriesList] = useState<CategoryItem[]>([]);
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const cats = await api.get<CategoryItem[]>('/api/categories');
+        if (cats && cats.length > 0) {
+          setCategoriesList(cats);
+        }
+      } catch (e) {
+        console.error('Error al cargar categorías dinámicas:', e);
+      }
+    }
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     if (initial) {
@@ -349,11 +346,17 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
               value={data.category}
               onChange={(e) => update('category', e.target.value as Category)}
             >
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {CATEGORY_LABELS[c]}
-                </option>
-              ))}
+              {categoriesList.length > 0
+                ? categoriesList.map((c) => (
+                    <option key={c.id} value={c.slug}>
+                      {c.emoji} {c.nameEs}
+                    </option>
+                  ))
+                : Object.entries(CATEGORY_LABELS).map(([slug, label]) => (
+                    <option key={slug} value={slug}>
+                      {label}
+                    </option>
+                  ))}
             </select>
           </div>
           <div>

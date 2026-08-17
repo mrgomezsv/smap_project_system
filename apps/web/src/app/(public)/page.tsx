@@ -36,19 +36,41 @@ export default async function HomePage() {
   const locale = await getLocale();
 
   let products: Product[] = [];
-  let activeCategoriesSet: Set<string> = new Set();
+  let dbFeaturedCategories: Array<{ key: string; name: string; emoji: string; bg: string }> = [];
 
   try {
-    const res = await api.get<{ items: Product[] }>(`/api/products?take=100&publicated=true&lang=${locale}`);
-    products = res.items;
-    activeCategoriesSet = new Set(products.map((p) => p.category));
+    const [resProd, resCat] = await Promise.all([
+      api.get<{ items: Product[] }>(`/api/products?take=100&publicated=true&lang=${locale}`),
+      api.get<Array<{ id: number; slug: string; name: string; emoji: string; color: string }>>(`/api/categories?lang=${locale}`).catch(() => []),
+    ]);
+
+    products = resProd.items;
+    const activeCategoriesSet = new Set(products.map((p) => p.category));
+
+    if (resCat && resCat.length > 0) {
+      dbFeaturedCategories = resCat
+        .filter((c) => activeCategoriesSet.has(c.slug))
+        .map((c) => ({
+          key: c.slug,
+          name: c.name,
+          emoji: c.emoji,
+          bg: c.color || 'from-primary/20 to-party-pink/20',
+        }));
+    }
   } catch (e) {
-    console.error('Error cargando productos:', e);
+    console.error('Error cargando productos/categorías:', e);
   }
 
-  const activeFeaturedCategories = ALL_FEATURED_CATEGORIES.filter((cat) =>
-    activeCategoriesSet.has(cat.key)
-  );
+  const activeFeaturedCategories = dbFeaturedCategories.length > 0
+    ? dbFeaturedCategories
+    : ALL_FEATURED_CATEGORIES.filter((cat) =>
+        new Set(products.map((p) => p.category)).has(cat.key)
+      ).map((cat) => ({
+        key: cat.key,
+        name: tCategories.has(cat.key) ? tCategories(cat.key) : cat.key,
+        emoji: cat.emoji,
+        bg: cat.bg,
+      }));
 
   return (
     <>
@@ -152,7 +174,7 @@ export default async function HomePage() {
                   {cat.emoji}
                 </div>
                 <p className="font-heading font-bold text-text-primary text-sm">
-                  {tCategories(cat.key)}
+                  {cat.name}
                 </p>
               </Link>
             ))}

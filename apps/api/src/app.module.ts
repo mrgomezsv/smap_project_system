@@ -18,6 +18,7 @@ import { ClientsModule } from './clients/clients.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { MetricsModule } from './metrics/metrics.module';
 
+import { CategoriesModule } from './categories/categories.module';
 import { RedisModule } from './redis/redis.module';
 import { MediaController } from './media/media.controller';
 
@@ -26,6 +27,7 @@ import { MediaController } from './media/media.controller';
     PrismaModule,
     AuthModule,
     ProductsModule,
+    CategoriesModule,
     EventsModule,
     LikesModule,
     CommentsModule,

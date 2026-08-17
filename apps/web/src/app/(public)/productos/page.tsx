@@ -50,7 +50,7 @@ export default async function ProductosPage({
   const isBookPrompt = searchParams.prompt === 'book';
 
   let data: ProductsListResponse = { items: [], total: 0, skip, take };
-  let activeCategoryKeys: Set<string> = new Set();
+  let dbCategories: Array<{ key: string; name: string; emoji: string }> = [];
 
   try {
     const query = new URLSearchParams();
@@ -61,44 +61,31 @@ export default async function ProductosPage({
     query.set('take', String(take));
     query.set('lang', locale);
 
-    // Obtener productos filtrados
-    data = await api.get<ProductsListResponse>(`/api/products?${query.toString()}`);
+    const [productsRes, categoriesRes] = await Promise.all([
+      api.get<ProductsListResponse>(`/api/products?${query.toString()}`),
+      api.get<Array<{ id: number; slug: string; name: string; emoji: string }>>(`/api/categories?lang=${locale}`).catch(() => []),
+    ]);
 
-    // Obtener todos los productos publicados para dinamizar las categorías activas
-    const allPublicRes = await api.get<ProductsListResponse>(
-      `/api/products?publicated=true&take=100&lang=${locale}`
-    );
-    
-    // Obtener la lista única de claves de categoría que tienen al menos un producto publicado
-    const uniqueActiveCategories = Array.from(
-      new Set(allPublicRes.items.length > 0 ? allPublicRes.items.map((p) => p.category) : data.items.map((p) => p.category))
-    );
-
-    // Construir la lista de categorías visibles combinando ALL_CATEGORIES y cualquier otra categoría existente
-    activeCategoryKeys = new Set(uniqueActiveCategories);
+    data = productsRes;
+    if (categoriesRes && categoriesRes.length > 0) {
+      dbCategories = categoriesRes.map((c) => ({
+        key: c.slug,
+        name: c.name,
+        emoji: c.emoji,
+      }));
+    }
   } catch (e) {
     console.error('Error cargando productos:', e);
-    activeCategoryKeys = new Set(data.items.map((p) => p.category));
   }
 
-  // Mapeo dinámico para garantizar que todas las categorías presentes en BD se muestren
-  const visibleCategoriesMap = new Map<string, { key: Category; emoji: string }>();
-
-  // 1. Agregar las configuradas en ALL_CATEGORIES que estén activas
-  ALL_CATEGORIES.forEach((cat) => {
-    if (activeCategoryKeys.has(cat.key)) {
-      visibleCategoriesMap.set(cat.key, cat);
-    }
-  });
-
-  // 2. Si hay categorías en BD que no están en ALL_CATEGORIES, agregarlas con emoji por defecto
-  activeCategoryKeys.forEach((catKey) => {
-    if (!visibleCategoriesMap.has(catKey)) {
-      visibleCategoriesMap.set(catKey, { key: catKey as Category, emoji: '🎈' });
-    }
-  });
-
-  const visibleCategories = Array.from(visibleCategoriesMap.values());
+  // Si se obtuvieron categorías de la BD, usarlas; de lo contrario fallback a ALL_CATEGORIES
+  const visibleCategories = dbCategories.length > 0
+    ? dbCategories
+    : ALL_CATEGORIES.map((c) => ({
+        key: c.key,
+        name: tCategories.has(c.key) ? tCategories(c.key) : (c.key in CATEGORY_LABELS ? CATEGORY_LABELS[c.key as keyof typeof CATEGORY_LABELS] : c.key),
+        emoji: c.emoji,
+      }));
 
   return (
     <div className="bg-surface min-h-screen">
@@ -161,7 +148,7 @@ export default async function ProductosPage({
               }`}
             >
               <span className="mr-1.5">{cat.emoji}</span>
-              {tCategories.has(cat.key) ? tCategories(cat.key) : (cat.key in CATEGORY_LABELS ? CATEGORY_LABELS[cat.key as keyof typeof CATEGORY_LABELS] : cat.key)}
+              {cat.name}
             </Link>
           ))}
         </div>

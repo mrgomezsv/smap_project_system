@@ -6,7 +6,7 @@ import { DataTable, type Column } from '@/components/admin/DataTable';
 import { VirtualList } from '@/components/ui/VirtualList';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
-import { CATEGORY_LABELS, type Product } from '@/lib/types';
+import { CATEGORY_LABELS, type CategoryItem, type Product } from '@/lib/types';
 
 const VIRTUAL_THRESHOLD = 100;
 type ViewMode = 'table' | 'kanban';
@@ -15,6 +15,7 @@ export function ProductosList() {
   const tPh = useTranslations('placeholders');
   const { getToken } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
+  const [categoryMap, setCategoryMap] = useState<Record<string, { name: string; emoji: string }>>({});
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -25,8 +26,20 @@ export function ProductosList() {
     let cancelled = false;
     async function load() {
       try {
-        const res = await api.get<{ items: Product[] }>('/api/products?take=100');
-        if (!cancelled) setProducts(res.items);
+        const [resProd, resCat] = await Promise.all([
+          api.get<{ items: Product[] }>('/api/products?take=100'),
+          api.get<CategoryItem[]>('/api/categories').catch(() => []),
+        ]);
+        if (!cancelled) {
+          setProducts(resProd.items);
+          if (resCat && resCat.length > 0) {
+            const map: Record<string, { name: string; emoji: string }> = {};
+            resCat.forEach((c) => {
+              map[c.slug] = { name: c.nameEs, emoji: c.emoji };
+            });
+            setCategoryMap(map);
+          }
+        }
       } catch (e) {
         if (!cancelled) {
           setError(e instanceof ApiError ? e.message : 'Error al cargar productos');
@@ -69,12 +82,15 @@ export function ProductosList() {
   // Agrupar por categorías para la vista Kanban
   const kanbanColumns = useMemo(() => {
     const categories = Array.from(new Set(products.map((p) => p.category)));
-    return categories.map((cat) => ({
-      category: cat,
-      label: CATEGORY_LABELS[cat] ?? cat,
-      items: filtered.filter((p) => p.category === cat),
-    }));
-  }, [products, filtered]);
+    return categories.map((cat) => {
+      const dynamicCat = categoryMap[cat];
+      return {
+        category: cat,
+        label: dynamicCat ? `${dynamicCat.emoji} ${dynamicCat.name}` : (CATEGORY_LABELS[cat] ?? cat),
+        items: filtered.filter((p) => p.category === cat),
+      };
+    });
+  }, [products, filtered, categoryMap]);
 
   const useVirtual = filtered.length > VIRTUAL_THRESHOLD;
 
@@ -100,9 +116,14 @@ export function ProductosList() {
     {
       key: 'category',
       label: 'Categoría',
-      render: (p) => (
-        <span className="text-text-muted">{CATEGORY_LABELS[p.category] ?? p.category}</span>
-      ),
+      render: (p) => {
+        const dynamicCat = categoryMap[p.category];
+        return (
+          <span className="text-text-muted">
+            {dynamicCat ? `${dynamicCat.emoji} ${dynamicCat.name}` : (CATEGORY_LABELS[p.category] ?? p.category)}
+          </span>
+        );
+      },
     },
     {
       key: 'publicated',

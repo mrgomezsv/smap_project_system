@@ -3,24 +3,22 @@
  * Reflejan los modelos Prisma del apps/api/prisma/schema.prisma
  */
 
-export type Category =
-  | 'option1' // Brincolines / Bounce Houses
-  | 'option2' // Juegos Eléctricos / Electric Games
-  | 'option3' // Mobiliario / Furniture
-  | 'option4' // Máquinas de Concesión / Concession Machines
-  | 'option5' // Juegos Competitivos / Competitive Games
-  | 'option6' // Equipos en Alquiler / Equipment Rental
-  | 'option7' // Juegos de Agua / Water Fun
-  | 'toros_mecanicos'
-  | 'trenes_electricos'
-  | 'kiddie_ride'
-  | 'maquina_espuma'
-  | 'game_trailer'
-  | 'robots_led'
-  | 'shots_carts'
-  | 'obstacle_course';
+export type Category = string;
 
-export const CATEGORY_LABELS: Record<Category, string> = {
+export interface CategoryItem {
+  id: number;
+  slug: string;
+  name: string;
+  nameEs: string;
+  nameEn: string | null;
+  emoji: string;
+  color: string;
+  position: number;
+  isActive: boolean;
+  productCount?: number;
+}
+
+export const CATEGORY_LABELS: Record<string, string> = {
   option1: 'Brincolines',
   option2: 'Juegos Eléctricos',
   option3: 'Mobiliario',
