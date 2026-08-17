@@ -43,9 +43,6 @@ services:
   # Backend API (NestJS + Prisma)
   api:
     image: mrgomezdev/kidsfun-api:latest
-    build:
-      context: .
-      dockerfile: apps/api/Dockerfile
     restart: always
     environment:
       NODE_ENV: production
@@ -74,9 +71,6 @@ services:
   # Frontend Web (Next.js SSR)
   web:
     image: mrgomezdev/kidsfun-web:latest
-    build:
-      context: .
-      dockerfile: apps/web/Dockerfile
     restart: always
     environment:
       NODE_ENV: production
@@ -88,22 +82,18 @@ services:
     depends_on:
       - api
     ports:
-      - "8080:3000" # Conectado al proxy Nginx del puerto 8080
+      - "8080:3000"
     networks:
       - kidsfun-net
 
 volumes:
   db_data:
-    external: true
     name: proyecto_kidsfun_db_data
   redis_data:
-    external: true
     name: proyecto_kidsfun_redis_data
   media_data:
-    external: true
     name: proyecto_kidsfun_media_data
   contract_data:
-    external: true
     name: proyecto_kidsfun_contract_data
 
 networks:

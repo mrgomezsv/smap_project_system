@@ -37,12 +37,26 @@ echo "📤 [4/4] Subiendo imagen de Web (${VERSION} y latest) a Docker Hub..."
 docker push ${WEB_IMAGE}
 docker push ${WEB_IMAGE_LATEST}
 
+# 5. Opcional: Disparar Webhook de Portainer si está configurado en las variables de entorno
+if [ -n "$PORTAINER_WEBHOOK_URL" ]; then
+  echo ""
+  echo "⚡ [Opcional] Disparando Webhook de Portainer para auto-despliegue..."
+  curl -X POST "$PORTAINER_WEBHOOK_URL" || echo "⚠️ No se pudo notificar al Webhook de Portainer. Por favor realiza el redeploy manual."
+fi
+
 echo ""
 echo "=========================================================================="
 echo "🎉 ¡PROCESO COMPLETADO EXITOSAMENTE!"
 echo "   - API publicada: ${API_IMAGE}"
 echo "   - WEB publicada: ${WEB_IMAGE}"
 echo ""
+echo "🔒 NOTA SOBRE LA BASE DE DATOS (DB):"
+echo "   Este script NO toca ni modifica el contenedor de MariaDB (DB)."
+echo "   Los datos de la DB residen seguros en el volumen 'proyecto_kidsfun_db_data'."
+echo ""
 echo "👉 Siguiente paso en Portainer:"
-echo "   Ve a tu Stack en Portainer y haz clic en 'Update the stack' / 'Redeploy'."
+echo "   1. En Portainer, ve a tu Stack y presiona 'Update the stack' / 'Redeploy'."
+echo "      (Docker solo actualizará 'api' y 'web', manteniendo 'db' corriendo sin interrupciones)."
+echo "   2. O en Containers/Services, actualiza/recrea únicamente 'api' y 'web'."
 echo "=========================================================================="
+

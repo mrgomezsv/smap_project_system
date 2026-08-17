@@ -45,4 +45,4 @@ COPY --from=base /app/apps/api/src/assets ./apps/api/dist/assets
 EXPOSE 3001
 
 WORKDIR /app/apps/api
-CMD ["sh", "-c", "npx prisma migrate resolve --applied 20260809120000_clients_unified_g1 || true; npx prisma migrate deploy && node dist/main.js"]
+CMD ["sh", "-c", "npx prisma migrate resolve --applied 20260809120000_clients_unified_g1 || true; npx prisma migrate resolve --applied 20260808162300_check_constraints_e1 || true; npx prisma migrate resolve --applied 20260808163000_event_partners_enum_d5 || true; npx prisma migrate deploy && node dist/main.js"]
