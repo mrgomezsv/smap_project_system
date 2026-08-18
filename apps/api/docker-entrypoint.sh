@@ -1,7 +1,8 @@
 #!/bin/sh
 set -e
 
-echo "🔄 Ejecutando parches SQL de migraciones si faltan columnas..."
+echo "🔄 Ejecutando parches SQL de migraciones si faltan tablas o columnas..."
+npx prisma db execute --file ./prisma/migrations/20260809120000_clients_unified_g1/migration.sql --schema ./prisma/schema.prisma || true
 npx prisma db execute --file ./prisma/migrations/20260809130000_contracts_crm_phase1/migration.sql --schema ./prisma/schema.prisma || true
 npx prisma db execute --file ./prisma/migrations/20260809140000_add_contract_safety_checklist_and_signature_image/migration.sql --schema ./prisma/schema.prisma || true
 npx prisma db execute --file ./prisma/migrations/20260816213000_add_category_table/migration.sql --schema ./prisma/schema.prisma || true
