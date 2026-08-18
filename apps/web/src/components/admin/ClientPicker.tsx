@@ -56,12 +56,6 @@ export function ClientPicker({ value, onChange, disabled }: ClientPickerProps) {
     };
   }, []);
 
-  useEffect(() => {
-    if (value.clientId) {
-      setOpen(false);
-    }
-  }, [value.clientId]);
-
   function setModeManual() {
     onChange(EMPTY_CLIENT_FORM);
     setSearch('');
@@ -73,12 +67,12 @@ export function ClientPicker({ value, onChange, disabled }: ClientPickerProps) {
   function pickClient(c: Client) {
     onChange({
       clientId: c.id,
-      clientName: c.name ?? value.clientName,
-      clientEmail: c.email ?? value.clientEmail,
-      clientPhone: c.phone ?? value.clientPhone,
-      clientAddress: c.address ?? value.clientAddress,
-      clientCityStateZip: c.cityStateZip ?? value.clientCityStateZip,
-      driverLicense: c.driverLicense ?? value.driverLicense,
+      clientName: c.name || value.clientName,
+      clientEmail: c.email || value.clientEmail,
+      clientPhone: c.phone || value.clientPhone || '',
+      clientAddress: c.address || value.clientAddress || '',
+      clientCityStateZip: c.cityStateZip || value.clientCityStateZip || '',
+      driverLicense: c.driverLicense || value.driverLicense || '',
     });
     setOpen(false);
     setSearch('');
@@ -107,7 +101,7 @@ export function ClientPicker({ value, onChange, disabled }: ClientPickerProps) {
       } finally {
         setLoading(false);
       }
-    }, 250);
+    }, 200);
   }
 
   function handleSearchInput(next: string) {
@@ -120,28 +114,37 @@ export function ClientPicker({ value, onChange, disabled }: ClientPickerProps) {
   return (
     <div className="space-y-2" ref={wrapperRef}>
       <div className="flex items-center justify-between gap-3 flex-wrap">
-        <label className="block font-semibold">Cliente</label>
+        <label className="block font-semibold text-text-primary text-sm">
+          🔍 Buscar Cliente Registrado (Google / Cuenta) o Crear Nuevo
+        </label>
         {selected ? (
           <button
             type="button"
             onClick={setModeManual}
             disabled={disabled}
-            className="text-xs text-primary hover:underline"
+            className="text-xs text-primary hover:underline font-medium"
           >
-            ↩ Volver a cliente nuevo / manual
+            ↩ Desvincular cliente / ingresar manualmente
           </button>
         ) : null}
       </div>
 
       {selected ? (
-        <div className="p-3 rounded-xl border border-primary/30 bg-primary/5 text-sm space-y-1">
-          <div className="font-semibold text-text-primary">{value.clientName || 'Cliente seleccionado'}</div>
-          <div className="text-text-muted">{value.clientEmail}</div>
+        <div className="p-3 rounded-xl border border-success/40 bg-success/5 text-sm space-y-1">
+          <div className="flex items-center justify-between">
+            <div className="font-bold text-text-primary">
+              ✓ Cliente Seleccionado: {value.clientName || 'Sin Nombre'}
+            </div>
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-success/20 text-success border border-success/30">
+              Cliente #{value.clientId}
+            </span>
+          </div>
+          <div className="text-text-muted text-xs">Email: {value.clientEmail || '—'}</div>
           {value.clientPhone ? (
-            <div className="text-text-muted">📞 {value.clientPhone}</div>
+            <div className="text-text-muted text-xs">Teléfono: {value.clientPhone}</div>
           ) : null}
-          <div className="text-xs text-primary font-medium">
-            ID cliente: <span className="font-mono">#{value.clientId}</span>
+          <div className="text-[11px] text-text-muted italic pt-1">
+            Los datos conocidos han sido cargados. Puedes modificar o agregar cualquier dato faltante en los campos inferiores.
           </div>
         </div>
       ) : (
@@ -152,28 +155,28 @@ export function ClientPicker({ value, onChange, disabled }: ClientPickerProps) {
             onChange={(e) => handleSearchInput(e.target.value)}
             onFocus={() => {
               if (results.length > 0) setOpen(true);
+              else runQuery(search);
             }}
             disabled={disabled}
-            placeholder="Buscar cliente por nombre, email o teléfono…"
+            placeholder="Escribe para buscar por nombre, correo electrónico o teléfono..."
             className="input w-full"
             autoComplete="off"
           />
           {open ? (
-            <div className="absolute z-20 left-0 right-0 mt-1 max-h-72 overflow-y-auto rounded-xl border border-border bg-white shadow-large">
+            <div className="absolute z-30 left-0 right-0 mt-1 max-h-72 overflow-y-auto rounded-xl border border-border bg-white shadow-2xl">
               {loading ? (
-                <div className="p-3 text-sm text-text-muted">Buscando clientes…</div>
+                <div className="p-3 text-sm text-text-muted text-center">Buscando clientes...</div>
               ) : error ? (
                 <div className="p-3 text-sm text-danger">⚠ {error}</div>
               ) : results.length === 0 ? (
-                <div className="p-3 text-sm text-text-muted">
-                  Sin resultados. Completa los datos abajo para crear un cliente nuevo.
+                <div className="p-3 text-sm text-text-muted text-center">
+                  No se encontraron clientes registrados con ese criterio. Puedes llenar los campos manualmente abajo.
                 </div>
               ) : (
                 <ul className="divide-y divide-border">
                   {results.map((c, idx) => {
                     const contractsCount = c._count?.rentalContracts ?? 0;
-                    const isFirebase = !!c.userId;
-                    const isManual = c.source === 'manual';
+                    const isGoogleUser = !!c.userId;
                     return (
                       <li key={c.id}>
                         <button
@@ -181,32 +184,29 @@ export function ClientPicker({ value, onChange, disabled }: ClientPickerProps) {
                           onClick={() => pickClient(c)}
                           onMouseEnter={() => setHighlight(idx)}
                           className={[
-                            'w-full text-left px-3 py-2 text-sm transition',
-                            highlight === idx ? 'bg-primary/5' : 'hover:bg-surface-elevated',
+                            'w-full text-left px-3.5 py-2.5 text-sm transition flex items-center justify-between gap-3',
+                            highlight === idx ? 'bg-primary/10' : 'hover:bg-surface-elevated',
                           ].join(' ')}
                         >
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="font-semibold text-text-primary">{c.name}</div>
-                            <div className="flex items-center gap-1 shrink-0">
-                              {isFirebase ? (
-                                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-info/10 text-info border border-info/30">
-                                  Firebase
+                          <div>
+                            <div className="font-semibold text-text-primary flex items-center gap-2">
+                              {c.name}
+                              {isGoogleUser ? (
+                                <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-info/10 text-info border border-info/30">
+                                  Cuenta Google / Firebase
                                 </span>
-                              ) : null}
-                              {isManual ? (
-                                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-text-muted/10 text-text-muted border border-border">
-                                  Manual
+                              ) : (
+                                <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-text-muted/10 text-text-muted border border-border">
+                                  Cliente Registrado
                                 </span>
-                              ) : null}
-                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/30">
-                                {contractsCount} contrato{contractsCount === 1 ? '' : 's'}
-                              </span>
+                              )}
                             </div>
+                            <div className="text-xs text-text-muted">{c.email}</div>
+                            {c.phone ? <div className="text-xs text-text-muted">📞 {c.phone}</div> : null}
                           </div>
-                          <div className="text-xs text-text-muted truncate">{c.email}</div>
-                          <div className="text-xs text-text-muted truncate">
-                            {c.phone ? `📞 ${c.phone}` : '—'}
-                          </div>
+                          <span className="text-[11px] font-medium text-primary shrink-0">
+                            {contractsCount} contrato{contractsCount === 1 ? '' : 's'} →
+                          </span>
                         </button>
                       </li>
                     );
@@ -217,9 +217,6 @@ export function ClientPicker({ value, onChange, disabled }: ClientPickerProps) {
           ) : null}
         </div>
       )}
-      <p className="text-[11px] text-text-muted">
-        Selecciona un cliente existente para autocompletar sus datos, o captura uno nuevo abajo.
-      </p>
     </div>
   );
 }

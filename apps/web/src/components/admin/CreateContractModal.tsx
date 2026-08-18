@@ -5,6 +5,7 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
 import type { ContractCreateResponse } from '@/lib/types';
 import { ClientPicker, EMPTY_CLIENT_FORM, type ClientFormState } from '@/components/admin/ClientPicker';
+import { EquipmentPicker } from '@/components/admin/EquipmentPicker';
 
 interface CreateContractModalProps {
   isOpen: boolean;
@@ -70,6 +71,14 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
     setFormData((prev) => ({ ...prev, [key]: value }));
   }
 
+  function handleEquipmentChange(equipment: string, suggestedPrice?: number) {
+    setFormData((prev) => ({
+      ...prev,
+      equipment,
+      price: suggestedPrice !== undefined ? String(suggestedPrice) : prev.price,
+    }));
+  }
+
   const priceNum = Number(formData.price || 0);
   const depositNum = formData.hasDeposit ? Number(formData.deposit || 0) : 0;
   const balanceDue = Math.max(0, priceNum - depositNum);
@@ -77,25 +86,45 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (loading) return;
-    setLoading(true);
+
     setErrorMsg(null);
 
+    // Explicit JS Validation
     const client = formData.client;
+    if (!client.clientName.trim()) {
+      setErrorMsg('Por favor ingresa el Nombre del Cliente.');
+      return;
+    }
+    if (!client.clientEmail.trim() || !client.clientEmail.includes('@')) {
+      setErrorMsg('Por favor ingresa un Correo Electrónico válido para el cliente.');
+      return;
+    }
+    if (!client.clientAddress.trim()) {
+      setErrorMsg('Por favor ingresa la Dirección de Entrega.');
+      return;
+    }
+    if (!formData.equipment.trim()) {
+      setErrorMsg('Por favor selecciona o ingresa el Equipo / Inflable Contratado.');
+      return;
+    }
+
+    setLoading(true);
+
     const payload: Record<string, unknown> = {
-      clientName: client.clientName,
-      clientEmail: client.clientEmail,
-      clientPhone: client.clientPhone || undefined,
-      clientAddress: client.clientAddress,
-      clientCityStateZip: client.clientCityStateZip || undefined,
-      driverLicense: client.driverLicense || undefined,
+      clientName: client.clientName.trim(),
+      clientEmail: client.clientEmail.trim().toLowerCase(),
+      clientPhone: client.clientPhone.trim() || undefined,
+      clientAddress: client.clientAddress.trim(),
+      clientCityStateZip: client.clientCityStateZip.trim() || undefined,
+      driverLicense: client.driverLicense.trim() || undefined,
       eventDate: formData.eventDate || undefined,
       startTime: formData.startTime,
       endTime: formData.endTime,
-      equipment: formData.equipment,
+      equipment: formData.equipment.trim(),
       groundType: formData.groundType,
       price: formData.price ? Number(formData.price) : undefined,
       deposit: formData.hasDeposit && formData.deposit ? Number(formData.deposit) : 0,
-      notes: formData.notes || undefined,
+      notes: formData.notes.trim() || undefined,
     };
     if (client.clientId) {
       payload.clientId = client.clientId;
@@ -109,7 +138,7 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
       if (err instanceof ApiError) {
         setErrorMsg(err.message);
       } else {
-        setErrorMsg('Error al crear el contrato.');
+        setErrorMsg('Error al crear el contrato. Revisa la conexión con la API.');
       }
     } finally {
       setLoading(false);
@@ -131,12 +160,12 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
           📝 Crear y Enviar Contrato de Renta
         </h2>
         <p className="text-sm text-text-muted mb-6">
-          Ingresa la información acordada en la llamada para enviar el contrato por correo al cliente.
+          Genera y envía el contrato de alquiler por correo electrónico al cliente para firma digital.
         </p>
 
         {errorMsg ? (
           <div className="mb-4 p-3 rounded-xl bg-danger/10 border border-danger/30 text-danger text-sm font-medium">
-            {errorMsg}
+            ⚠ {errorMsg}
           </div>
         ) : null}
 
@@ -151,7 +180,7 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
             <p className="text-sm text-text-muted">
               {result.emailSent
                 ? 'Le enviamos un correo al cliente con el botón para firmar. También puedes copiar el enlace directo a continuación:'
-                : 'Comparte manualmente el enlace de firma con el cliente. Revisa la configuración SMTP si el problema persiste.'}
+                : 'Comparte manualmente el enlace de firma con el cliente:'}
             </p>
             <div className="p-3 bg-surface-elevated border border-border rounded-xl font-mono text-xs break-all select-all">
               {result.signUrl}
@@ -172,7 +201,7 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4 text-sm">
+          <form onSubmit={handleSubmit} noValidate className="space-y-4 text-sm">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
                 <ClientPicker value={formData.client} onChange={setClient} disabled={loading} />
@@ -182,7 +211,6 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
                 <label className="block font-semibold mb-1">Nombre del Cliente *</label>
                 <input
                   type="text"
-                  required
                   value={formData.client.clientName}
                   onChange={(e) => setClient({ ...formData.client, clientName: e.target.value })}
                   placeholder="Ej. John Doe"
@@ -194,7 +222,6 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
                 <label className="block font-semibold mb-1">Correo Electrónico *</label>
                 <input
                   type="email"
-                  required
                   value={formData.client.clientEmail}
                   onChange={(e) => setClient({ ...formData.client, clientEmail: e.target.value })}
                   placeholder="cliente@email.com"
@@ -228,10 +255,9 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
                 <label className="block font-semibold mb-1">Dirección de Entrega *</label>
                 <input
                   type="text"
-                  required
                   value={formData.client.clientAddress}
                   onChange={(e) => setClient({ ...formData.client, clientAddress: e.target.value })}
-                  placeholder="Street Address"
+                  placeholder="Street Address, Apt, Suite"
                   className="input w-full"
                 />
               </div>
@@ -288,14 +314,10 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
               </div>
 
               <div className="md:col-span-2">
-                <label className="block font-semibold mb-1">Equipo / Inflable Contratado *</label>
-                <input
-                  type="text"
-                  required
+                <EquipmentPicker
                   value={formData.equipment}
-                  onChange={(e) => setField('equipment', e.target.value)}
-                  placeholder="Ej. Barbie Bounce House & Cotton Candy Machine"
-                  className="input w-full"
+                  onChange={handleEquipmentChange}
+                  disabled={loading}
                 />
               </div>
 
@@ -370,9 +392,15 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
               <button
                 type="submit"
                 disabled={loading}
-                className="btn btn-primary px-6"
+                className="btn btn-primary px-6 flex items-center gap-2"
               >
-                {loading ? 'Creando…' : '📩 Crear y Enviar Contrato'}
+                {loading ? (
+                  <>
+                    <span className="animate-spin text-sm">⏳</span> Enviando contrato...
+                  </>
+                ) : (
+                  '📩 Crear y Enviar Contrato'
+                )}
               </button>
             </div>
           </form>
