@@ -54,7 +54,7 @@ services:
       RESEND_FROM_EMAIL: "Kidsfun <waiver@kidsfunyfiestasinfantiles.com>"
       CORS_ORIGINS: "https://kidsfunyfiestasinfantiles.com,https://www.kidsfunyfiestasinfantiles.com,http://localhost:3000"
       ADMIN_EMAILS: "mrgomez.dev@outlook.com,mrgomez.dev@outlcok.com,mrgomez.dev@gmail.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com"
-      FIREBASE_CREDENTIALS_PATH: "credentials/smap-kf-firebase-adminsdk-xqq0l-4790d70941.json"
+      FIREBASE_CREDENTIALS_PATH: "credentials/smap-kf-firebase-adminsdk-xqq0l-42c4ee6425.json"
       FIREBASE_PROJECT_ID: "smap-kf"
       CONTRACT_STORAGE_DIR: "/app/apps/api/private/contracts"
     volumes:
