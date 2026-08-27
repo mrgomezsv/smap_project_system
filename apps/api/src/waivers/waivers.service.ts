@@ -393,8 +393,9 @@ export class WaiversService {
 
   /**
    * Elimina uno o más waivers por ID/bigint.
-   * Aprovecha el onDelete: Cascade de las FKs para borrar relatives y scans
-   * automáticamente con una sola operación.
+   * Borra en orden los registros hijos (relatives y scans) antes de borrar
+   * el waiver principal para evitar fallos de Foreign Key constraint (1451 / P2003)
+   * en bases de datos sin CASCADE a nivel de tabla.
    */
   async deleteMany(ids: (string | number)[]) {
     if (!ids || ids.length === 0) {
@@ -403,6 +404,13 @@ export class WaiversService {
       );
     }
     const numericIds = ids.map((id) => BigInt(id));
+
+    await this.prisma.waiverDataV2.deleteMany({
+      where: { waiverQrId: { in: numericIds } },
+    });
+    await this.prisma.waiverScanV2.deleteMany({
+      where: { waiverQrId: { in: numericIds } },
+    });
     const result = await this.prisma.waiverQRV2.deleteMany({
       where: { id: { in: numericIds } },
     });
