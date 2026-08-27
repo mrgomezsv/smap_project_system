@@ -7,6 +7,7 @@ import { api, API_BASE_URL, ApiError } from '@/lib/api';
 import { getFirebaseAuth } from '@/lib/firebase';
 import type { Waiver } from '@/lib/types';
 import { WaiverWhatsAppModal } from './WaiverWhatsAppModal';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
 type Tab = 'active' | 'inactive' | 'all';
 type Scope = 'mine' | 'global';
@@ -35,6 +36,10 @@ export function WaiversTabs() {
 
   // Modal WhatsApp
   const [selectedWaiverForWa, setSelectedWaiverForWa] = useState<Waiver | null>(null);
+
+  // Modal Confirmación Eliminar
+  const [waiversToDelete, setWaiversToDelete] = useState<Waiver[] | null>(null);
+  const [deletingWaivers, setDeletingWaivers] = useState(false);
 
   // Estado envío de email
   const [sendingEmailQr, setSendingEmailQr] = useState<string | null>(null);
@@ -137,18 +142,16 @@ export function WaiversTabs() {
     inactive: waivers.filter((w) => w.status === 'INACTIVE').length,
   };
 
+  const handleDeleteWaiver = (toDelete: Waiver[]) => {
+    if (toDelete.length === 0) return;
+    setWaiversToDelete(toDelete);
+  };
 
-
-  const handleDeleteWaiver = async (waiversToDelete: Waiver[]) => {
-    if (waiversToDelete.length === 0) return;
-    const confirmMsg = waiversToDelete.length === 1
-      ? `¿Estás seguro de que deseas borrar el waiver con QR ${waiversToDelete[0].qrCode}?`
-      : `¿Estás seguro de que deseas borrar ${waiversToDelete.length} waivers seleccionados?`;
-
-    if (!window.confirm(confirmMsg)) return;
+  const executeDeleteWaivers = async () => {
+    if (!waiversToDelete || waiversToDelete.length === 0) return;
 
     try {
-      setLoading(true);
+      setDeletingWaivers(true);
       const auth = getFirebaseAuth();
       const token = auth?.currentUser ? await auth.currentUser.getIdToken() : null;
 
@@ -158,14 +161,16 @@ export function WaiversTabs() {
       setWaivers((prev) => prev.filter((w) => !ids.includes(String(w.id))));
       setNotification({
         type: 'success',
-        message: waiversToDelete.length === 1
-          ? 'Waiver eliminado exitosamente.'
-          : `${waiversToDelete.length} waivers eliminados exitosamente.`,
+        message:
+          waiversToDelete.length === 1
+            ? 'Waiver eliminado exitosamente.'
+            : `${waiversToDelete.length} waivers eliminados exitosamente.`,
       });
+      setWaiversToDelete(null);
     } catch (e: any) {
       setNotification({ type: 'error', message: e.message || 'Error al eliminar los waivers.' });
     } finally {
-      setLoading(false);
+      setDeletingWaivers(false);
     }
   };
 
@@ -175,6 +180,22 @@ export function WaiversTabs() {
         isOpen={!!selectedWaiverForWa}
         onClose={() => setSelectedWaiverForWa(null)}
         waiver={selectedWaiverForWa}
+      />
+
+      <ConfirmModal
+        isOpen={Boolean(waiversToDelete && waiversToDelete.length > 0)}
+        title={waiversToDelete?.length === 1 ? 'Eliminar waiver' : 'Eliminar waivers'}
+        message={
+          waiversToDelete?.length === 1
+            ? `¿Estás seguro de que deseas borrar el waiver con QR ${waiversToDelete[0].qrCode}?`
+            : `¿Estás seguro de que deseas borrar ${waiversToDelete?.length} waivers seleccionados?`
+        }
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        isDanger={true}
+        loading={deletingWaivers}
+        onConfirm={executeDeleteWaivers}
+        onClose={() => setWaiversToDelete(null)}
       />
 
       {notification && (
