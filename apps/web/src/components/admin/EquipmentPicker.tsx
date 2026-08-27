@@ -47,14 +47,7 @@ export function EquipmentPicker({ value, onChange, disabled }: EquipmentPickerPr
     const selectedProducts = products.filter((p) => nextIds.includes(p.id));
     const titles = selectedProducts.map((p) => p.title).join(' + ');
 
-    let totalPrice = 0;
-    for (const p of selectedProducts) {
-      if (p.price != null && Number.isFinite(Number(p.price))) {
-        totalPrice += Number(p.price);
-      }
-    }
-
-    onChange(titles, totalPrice > 0 ? totalPrice : undefined);
+    onChange(titles);
   }
 
   const filteredProducts = products.filter((p) =>
@@ -67,14 +60,14 @@ export function EquipmentPicker({ value, onChange, disabled }: EquipmentPickerPr
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="block font-semibold text-text-primary text-sm">
+        <label className="block font-semibold text-text-primary text-xs sm:text-sm">
           Equipo / Inflable Contratado *
         </label>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           disabled={disabled}
-          className="text-xs text-primary font-medium hover:underline flex items-center gap-1"
+          className="text-xs text-primary font-semibold hover:underline flex items-center gap-1"
         >
           {isOpen ? '▲ Ocultar catálogo' : '🎪 Seleccionar de catálogo'}
         </button>
@@ -82,14 +75,14 @@ export function EquipmentPicker({ value, onChange, disabled }: EquipmentPickerPr
 
       {/* Selected tags */}
       {selectedProducts.length > 0 ? (
-        <div className="flex flex-wrap gap-1.5 p-2 bg-primary/5 border border-primary/20 rounded-xl">
+        <div className="flex flex-wrap gap-1.5 p-2.5 bg-primary/5 border border-primary/20 rounded-xl">
           {selectedProducts.map((p) => (
             <span
               key={p.id}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-xs font-semibold border border-primary/30"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-xs font-semibold border border-primary/30"
             >
-              🏰 {p.title}
-              {p.price ? <span className="opacity-75">(${Number(p.price).toFixed(2)})</span> : null}
+              <span>🏰</span>
+              <span>{p.title}</span>
               <button
                 type="button"
                 onClick={() => toggleProduct(p)}
@@ -105,7 +98,7 @@ export function EquipmentPicker({ value, onChange, disabled }: EquipmentPickerPr
 
       {/* Dropdown catalog */}
       {isOpen ? (
-        <div className="p-3 bg-surface-elevated border border-border rounded-xl space-y-3 shadow-md max-h-72 overflow-y-auto">
+        <div className="p-3 bg-surface-elevated border border-border rounded-xl space-y-3 shadow-md max-h-72 overflow-y-auto scrollbar-thin">
           <input
             type="text"
             placeholder="Buscar por nombre o categoría…"
@@ -115,9 +108,11 @@ export function EquipmentPicker({ value, onChange, disabled }: EquipmentPickerPr
           />
 
           {loading ? (
-            <div className="text-center py-4 text-xs text-text-muted">Cargando productos…</div>
+            <div className="text-center py-4 text-xs text-text-muted flex items-center justify-center gap-2">
+              <span className="animate-spin">⏳</span> Cargando productos…
+            </div>
           ) : error ? (
-            <div className="text-xs text-danger p-2">⚠ {error}</div>
+            <div className="text-xs text-danger p-2">⚠️ {error}</div>
           ) : filteredProducts.length === 0 ? (
             <div className="text-center py-4 text-xs text-text-muted">No hay productos coincidentes.</div>
           ) : (
@@ -128,9 +123,9 @@ export function EquipmentPicker({ value, onChange, disabled }: EquipmentPickerPr
                   <label
                     key={p.id}
                     className={[
-                      'flex items-center gap-2.5 p-2 rounded-lg border text-xs cursor-pointer transition select-none',
+                      'flex items-center gap-2.5 p-2.5 rounded-xl border text-xs cursor-pointer transition select-none',
                       isSelected
-                        ? 'bg-primary/10 border-primary text-primary font-semibold'
+                        ? 'bg-primary/10 border-primary text-primary font-semibold shadow-sm'
                         : 'bg-white border-border hover:bg-surface text-text-primary',
                     ].join(' ')}
                   >
@@ -141,14 +136,11 @@ export function EquipmentPicker({ value, onChange, disabled }: EquipmentPickerPr
                       className="w-4 h-4 text-primary rounded border-border focus:ring-primary shrink-0"
                     />
                     <div className="truncate flex-1">
-                      <div className="truncate font-medium">{p.title}</div>
-                      <div className="text-[10px] text-text-muted truncate">
+                      <div className="truncate font-semibold">{p.title}</div>
+                      <div className="text-[11px] text-text-muted truncate">
                         {p.category} {p.dimensions ? `· ${p.dimensions}` : ''}
                       </div>
                     </div>
-                    {p.price ? (
-                      <span className="font-bold text-xs shrink-0">${Number(p.price).toFixed(2)}</span>
-                    ) : null}
                   </label>
                 );
               })}
