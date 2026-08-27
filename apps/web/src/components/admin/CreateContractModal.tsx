@@ -53,6 +53,87 @@ const GROUND_OPTIONS = [
   { value: 'Dirt', label: 'Tierra', icon: '🏜️' },
 ];
 
+function CustomTimePicker({
+  label,
+  value,
+  onChange,
+  disabled,
+}: {
+  label: string;
+  value: string;
+  onChange: (val: string) => void;
+  disabled?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [open]);
+
+  return (
+    <div className="relative space-y-1" ref={containerRef}>
+      <label className="block text-xs font-semibold text-text-primary">{label}</label>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => setOpen(!open)}
+        className={[
+          'input w-full text-sm flex items-center justify-between font-medium transition text-left cursor-pointer',
+          open ? 'ring-2 ring-primary border-primary' : '',
+        ].join(' ')}
+      >
+        <span className="flex items-center gap-2">
+          <span>🕒</span>
+          <span className="font-semibold text-text-primary">{value || 'Seleccionar hora'}</span>
+        </span>
+        <span className={`text-[10px] text-text-muted transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>
+          ▼
+        </span>
+      </button>
+
+      {open && (
+        <div className="absolute z-40 left-0 right-0 mt-1 p-2 bg-white rounded-xl border border-border shadow-2xl max-h-56 overflow-y-auto scrollbar-thin animate-fade-in">
+          <div className="grid grid-cols-2 gap-1.5">
+            {TIME_OPTIONS.map((t) => {
+              const isSelected = value === t;
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => {
+                    onChange(t);
+                    setOpen(false);
+                  }}
+                  className={[
+                    'px-2.5 py-2 text-xs font-semibold rounded-lg transition text-center flex items-center justify-center gap-1',
+                    isSelected
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'bg-surface hover:bg-surface-elevated text-text-primary hover:text-primary border border-border/60 hover:border-primary/40',
+                  ].join(' ')}
+                >
+                  {isSelected ? '✓ ' : ''}
+                  {t}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContractModalProps) {
   const { getToken } = useAuth();
   const [formData, setFormData] = useState<ContractFormState>(EMPTY_CONTRACT_FORM);
@@ -369,37 +450,21 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold mb-1 text-text-primary">
-                        Hora de Inicio
-                      </label>
-                      <select
+                      <CustomTimePicker
+                        label="Hora de Inicio"
                         value={formData.startTime}
-                        onChange={(e) => setField('startTime', e.target.value)}
-                        className="input w-full text-sm"
-                      >
-                        {TIME_OPTIONS.map((t) => (
-                          <option key={t} value={t}>
-                            {t}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(val) => setField('startTime', val)}
+                        disabled={loading}
+                      />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold mb-1 text-text-primary">
-                        Hora de Finalización
-                      </label>
-                      <select
+                      <CustomTimePicker
+                        label="Hora de Finalización"
                         value={formData.endTime}
-                        onChange={(e) => setField('endTime', e.target.value)}
-                        className="input w-full text-sm"
-                      >
-                        {TIME_OPTIONS.map((t) => (
-                          <option key={t} value={t}>
-                            {t}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(val) => setField('endTime', val)}
+                        disabled={loading}
+                      />
                     </div>
 
                     <div className="sm:col-span-2">
