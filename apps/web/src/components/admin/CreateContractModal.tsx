@@ -46,11 +46,11 @@ const TIME_OPTIONS = [
 ];
 
 const GROUND_OPTIONS = [
-  { value: 'Grass', label: '🌱 Césped / Grass' },
-  { value: 'Concrete', label: '🧱 Concreto / Pavimento' },
-  { value: 'Turf', label: '🌿 Césped Artificial / Turf' },
-  { value: 'Indoor', label: '🏠 Interior / Indoor Gym' },
-  { value: 'Dirt', label: '🏜️ Tierra / Dirt' },
+  { value: 'Grass', label: 'Césped', icon: '🌱' },
+  { value: 'Concrete', label: 'Concreto', icon: '🧱' },
+  { value: 'Turf', label: 'Césped Artif.', icon: '🌿' },
+  { value: 'Indoor', label: 'Interior / Gym', icon: '🏠' },
+  { value: 'Dirt', label: 'Tierra', icon: '🏜️' },
 ];
 
 export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContractModalProps) {
@@ -341,21 +341,31 @@ export function CreateContractModal({ isOpen, onClose, onSuccess }: CreateContra
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold mb-1 text-text-primary">
+                    <div className="sm:col-span-2 space-y-1.5">
+                      <label className="block text-xs font-semibold text-text-primary">
                         Tipo de Superficie / Terreno
                       </label>
-                      <select
-                        value={formData.groundType}
-                        onChange={(e) => setField('groundType', e.target.value)}
-                        className="input w-full text-sm"
-                      >
-                        {GROUND_OPTIONS.map((g) => (
-                          <option key={g.value} value={g.value}>
-                            {g.label}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+                        {GROUND_OPTIONS.map((g) => {
+                          const isSelected = formData.groundType === g.value;
+                          return (
+                            <button
+                              key={g.value}
+                              type="button"
+                              onClick={() => setField('groundType', g.value)}
+                              className={[
+                                'flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border text-xs font-semibold transition select-none',
+                                isSelected
+                                  ? 'bg-primary text-white border-primary shadow-sm ring-2 ring-primary/20 scale-[1.01]'
+                                  : 'bg-white text-text-primary border-border hover:bg-surface-elevated hover:border-primary/40',
+                              ].join(' ')}
+                            >
+                              <span className="text-base">{g.icon}</span>
+                              <span className="truncate">{g.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
 
                     <div>
