@@ -110,8 +110,16 @@ export class EventsService {
       .map((e) => e.partners)
       .filter((p): p is string => Boolean(p && p.trim()));
 
-    const defaults = ['partner1', 'partner2', 'partner3', 'Kidsfun', 'Tecun Productions'];
-    return Array.from(new Set([...defaults, ...dbOrganizers]));
+    const normalize = (val: string) => {
+      if (val === 'partner1' || val.toLowerCase() === 'kidsfun') return 'Kidsfun';
+      if (val === 'partner2' || val.toLowerCase() === 'tecun productions') return 'Tecun Productions';
+      if (val === 'partner3' || val.toLowerCase() === 'otros') return 'Otros';
+      return val;
+    };
+
+    const defaults = ['Kidsfun', 'Tecun Productions', 'Otros'];
+    const normalized = dbOrganizers.map(normalize);
+    return Array.from(new Set([...defaults, ...normalized]));
   }
 
   async remove(id: number) {

@@ -187,18 +187,23 @@ export interface WaiverResponse {
 
 export type EventPartner = 'partner1' | 'partner2' | 'partner3' | string;
 
-export const PARTNER_LABELS: Record<string, { label: string; color: string }> = {
-  partner1: { label: 'Kidsfun', color: 'bg-primary' },
-  partner2: { label: 'Tecun Productions', color: 'bg-info' },
-  partner3: { label: 'Otros', color: 'bg-text-muted' },
-  Kidsfun: { label: 'Kidsfun', color: 'bg-primary' },
-  'Tecun Productions': { label: 'Tecun Productions', color: 'bg-info' },
+export const PARTNER_LABELS: Record<string, { label: string; color: string; emoji: string }> = {
+  partner1: { label: 'Kidsfun', color: 'bg-primary', emoji: '🎪' },
+  partner2: { label: 'Tecun Productions', color: 'bg-info', emoji: '🎬' },
+  partner3: { label: 'Otros', color: 'bg-text-muted', emoji: '🎭' },
+  Kidsfun: { label: 'Kidsfun', color: 'bg-primary', emoji: '🎪' },
+  'Tecun Productions': { label: 'Tecun Productions', color: 'bg-info', emoji: '🎬' },
+  Otros: { label: 'Otros', color: 'bg-text-muted', emoji: '🎭' },
 };
 
-export function getPartnerDisplay(partnerKey?: string | null): { label: string; color: string } {
-  if (!partnerKey) return { label: 'Kidsfun', color: 'bg-primary' };
+export function getPartnerDisplay(partnerKey?: string | null): { label: string; color: string; emoji: string } {
+  if (!partnerKey) return { label: 'Kidsfun', color: 'bg-primary', emoji: '🎪' };
   if (PARTNER_LABELS[partnerKey]) return PARTNER_LABELS[partnerKey];
-  return { label: partnerKey, color: 'bg-primary-600' };
+  const lower = partnerKey.toLowerCase();
+  if (lower === 'partner1' || lower === 'kidsfun') return { label: 'Kidsfun', color: 'bg-primary', emoji: '🎪' };
+  if (lower === 'partner2' || lower === 'tecun productions') return { label: 'Tecun Productions', color: 'bg-info', emoji: '🎬' };
+  if (lower === 'partner3' || lower === 'otros') return { label: 'Otros', color: 'bg-text-muted', emoji: '🎭' };
+  return { label: partnerKey, color: 'bg-primary-600', emoji: '⭐' };
 }
 
 export interface Event {

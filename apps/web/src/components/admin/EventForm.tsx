@@ -30,12 +30,20 @@ const EMPTY: FormData = {
   location: '',
   startDatetime: '',
   ticketPrice: '0',
-  partners: 'partner1',
+  partners: 'Kidsfun',
   published: false,
   image: '',
 };
 
-const DEFAULT_ORGANIZERS = ['partner1', 'partner2', 'partner3'];
+const DEFAULT_ORGANIZERS = ['Kidsfun', 'Tecun Productions', 'Otros'];
+
+function normalizePartnerName(val: string): string {
+  if (!val) return 'Kidsfun';
+  if (val === 'partner1' || val.toLowerCase() === 'kidsfun') return 'Kidsfun';
+  if (val === 'partner2' || val.toLowerCase() === 'tecun productions') return 'Tecun Productions';
+  if (val === 'partner3' || val.toLowerCase() === 'otros') return 'Otros';
+  return val;
+}
 
 function getEventImageUrl(imgPath: string): string {
   if (!imgPath) return '';
@@ -50,9 +58,11 @@ export function EventForm({ initial, mode }: EventFormProps) {
   const { getToken } = useAuth();
   const tPh = useTranslations('placeholders');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const organizerDropdownRef = useRef<HTMLDivElement | null>(null);
 
   const [data, setData] = useState<FormData>(EMPTY);
   const [organizersList, setOrganizersList] = useState<string[]>(DEFAULT_ORGANIZERS);
+  const [isOrganizerDropdownOpen, setIsOrganizerDropdownOpen] = useState(false);
   const [showNewOrganizer, setShowNewOrganizer] = useState(false);
   const [newOrganizerName, setNewOrganizerName] = useState('');
   const [saving, setSaving] = useState(false);
@@ -61,12 +71,29 @@ export function EventForm({ initial, mode }: EventFormProps) {
   const [showManualInput, setShowManualInput] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  // Click outside listener para cerrar el dropdown de organizadores
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        organizerDropdownRef.current &&
+        !organizerDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOrganizerDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   useEffect(() => {
     async function fetchOrganizers() {
       try {
         const orgs = await api.get<string[]>('/api/events/organizers');
         if (orgs && orgs.length > 0) {
-          setOrganizersList((prev) => Array.from(new Set([...prev, ...orgs])));
+          const normalized = orgs.map(normalizePartnerName);
+          setOrganizersList((prev) => Array.from(new Set([...prev, ...normalized])));
         }
       } catch (e) {
         console.error('Error al cargar organizadores:', e);
@@ -77,7 +104,7 @@ export function EventForm({ initial, mode }: EventFormProps) {
 
   useEffect(() => {
     if (initial) {
-      const initialPartner = initial.partners || 'partner1';
+      const initialPartner = normalizePartnerName(initial.partners || 'Kidsfun');
       setData({
         title: initial.title,
         description: initial.description,
@@ -112,6 +139,7 @@ export function EventForm({ initial, mode }: EventFormProps) {
     update('partners', trimmed);
     setNewOrganizerName('');
     setShowNewOrganizer(false);
+    setIsOrganizerDropdownOpen(false);
   }
 
   async function processAndUploadFile(file: File) {
@@ -121,7 +149,6 @@ export function EventForm({ initial, mode }: EventFormProps) {
     setErrorMsg(null);
 
     try {
-      // Comprimir la imagen antes de subir para evitar 413 y acelerar la carga
       const compressed = await compressImage(file, {
         maxWidth: 1920,
         maxHeight: 1080,
@@ -223,6 +250,7 @@ export function EventForm({ initial, mode }: EventFormProps) {
   }
 
   const hasImage = Boolean(data.image && !data.image.includes('default_event'));
+  const currentPartnerDisplay = getPartnerDisplay(data.partners);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -298,8 +326,8 @@ export function EventForm({ initial, mode }: EventFormProps) {
             />
           </div>
 
-          {/* ORGANIZADOR DINÁMICO */}
-          <div>
+          {/* ORGANIZADOR PERSONALIZADO Y OPTIMIZADO PARA MÓVIL */}
+          <div className="relative" ref={organizerDropdownRef}>
             <div className="flex items-center justify-between mb-1.5">
               <label className="block text-sm font-medium text-text-primary">
                 Organizador
@@ -307,8 +335,11 @@ export function EventForm({ initial, mode }: EventFormProps) {
               {!showNewOrganizer && (
                 <button
                   type="button"
-                  onClick={() => setShowNewOrganizer(true)}
-                  className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
+                  onClick={() => {
+                    setShowNewOrganizer(true);
+                    setIsOrganizerDropdownOpen(false);
+                  }}
+                  className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1 py-0.5"
                 >
                   <span>➕</span> Nuevo organizador
                 </button>
@@ -316,11 +347,23 @@ export function EventForm({ initial, mode }: EventFormProps) {
             </div>
 
             {showNewOrganizer ? (
-              <div className="p-3 bg-surface-elevated rounded-xl border border-primary/40 space-y-2 animate-in fade-in duration-200">
-                <label className="block text-xs font-bold text-text-primary">
-                  Nombre del nuevo organizador
-                </label>
-                <div className="flex gap-2">
+              <div className="p-3 bg-surface-elevated rounded-xl border-2 border-primary/40 space-y-2.5 shadow-sm animate-in fade-in duration-200">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-text-primary">
+                    Agregar nuevo organizador
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowNewOrganizer(false);
+                      setNewOrganizerName('');
+                    }}
+                    className="text-xs text-text-muted hover:text-danger"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     className="input text-sm flex-1"
@@ -335,57 +378,93 @@ export function EventForm({ initial, mode }: EventFormProps) {
                     }}
                     autoFocus
                   />
-                  <button
-                    type="button"
-                    onClick={handleAddNewOrganizer}
-                    disabled={!newOrganizerName.trim()}
-                    className="btn btn-primary text-xs px-3 py-1.5"
-                  >
-                    Guardar
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowNewOrganizer(false);
-                      setNewOrganizerName('');
-                    }}
-                    className="btn btn-ghost text-xs px-2.5 py-1.5"
-                  >
-                    Cancelar
-                  </button>
+                  <div className="flex gap-2 justify-end">
+                    <button
+                      type="button"
+                      onClick={handleAddNewOrganizer}
+                      disabled={!newOrganizerName.trim()}
+                      className="btn btn-primary text-xs px-4 py-2 flex-1 sm:flex-initial"
+                    >
+                      Guardar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowNewOrganizer(false);
+                        setNewOrganizerName('');
+                      }}
+                      className="btn btn-ghost text-xs px-3 py-2"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
-              <div className="flex gap-2">
-                <select
-                  className="input flex-1"
-                  value={data.partners}
-                  onChange={(e) => {
-                    if (e.target.value === '__NEW__') {
-                      setShowNewOrganizer(true);
-                    } else {
-                      update('partners', e.target.value as EventPartner);
-                    }
-                  }}
-                >
-                  {organizersList.map((orgKey) => {
-                    const display = getPartnerDisplay(orgKey);
-                    return (
-                      <option key={orgKey} value={orgKey}>
-                        {display.label}
-                      </option>
-                    );
-                  })}
-                  <option value="__NEW__">✨ + Agregar otro organizador...</option>
-                </select>
+              <div className="relative">
+                {/* Botón selector que emula input nativo con diseño uniforme */}
                 <button
                   type="button"
-                  onClick={() => setShowNewOrganizer(true)}
-                  className="btn btn-ghost border border-border text-xs px-3 hover:bg-surface-elevated shrink-0"
-                  title="Crear nuevo organizador"
+                  onClick={() => setIsOrganizerDropdownOpen(!isOrganizerDropdownOpen)}
+                  className="input w-full flex items-center justify-between text-left cursor-pointer bg-white dark:bg-surface py-2.5 px-3.5 focus:outline-hidden focus:ring-2 focus:ring-primary/20"
                 >
-                  ➕
+                  <span className="flex items-center gap-2 text-text-primary text-sm font-medium truncate">
+                    <span>{currentPartnerDisplay.emoji}</span>
+                    <span>{currentPartnerDisplay.label}</span>
+                  </span>
+                  <span className={`text-xs text-text-muted transition-transform duration-200 ${isOrganizerDropdownOpen ? 'rotate-180' : ''}`}>
+                    ▼
+                  </span>
                 </button>
+
+                {/* Dropdown Menu estilizado */}
+                {isOrganizerDropdownOpen && (
+                  <div className="absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-surface border border-border rounded-xl shadow-large z-50 overflow-hidden py-1.5 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="max-h-60 overflow-y-auto divide-y divide-border/50">
+                      {organizersList.map((orgKey) => {
+                        const display = getPartnerDisplay(orgKey);
+                        const isSelected = normalizePartnerName(data.partners) === normalizePartnerName(orgKey);
+                        return (
+                          <button
+                            key={orgKey}
+                            type="button"
+                            onClick={() => {
+                              update('partners', orgKey);
+                              setIsOrganizerDropdownOpen(false);
+                            }}
+                            className={`w-full flex items-center justify-between px-3.5 py-2.5 text-left text-sm transition-colors ${
+                              isSelected
+                                ? 'bg-primary/10 text-primary font-bold'
+                                : 'text-text-primary hover:bg-surface-elevated active:bg-primary/5'
+                            }`}
+                          >
+                            <span className="flex items-center gap-2.5 truncate">
+                              <span className="text-base">{display.emoji}</span>
+                              <span className="truncate">{display.label}</span>
+                            </span>
+                            {isSelected && (
+                              <span className="text-primary font-extrabold text-sm ml-2">✓</span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="p-2 border-t border-border bg-surface-elevated/50">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowNewOrganizer(true);
+                          setIsOrganizerDropdownOpen(false);
+                        }}
+                        className="w-full btn btn-ghost border border-dashed border-primary/40 text-primary hover:bg-primary/10 text-xs py-2 px-3 flex items-center justify-center gap-1.5 font-semibold rounded-lg"
+                      >
+                        <span>✨</span>
+                        <span>+ Agregar nuevo organizador...</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
