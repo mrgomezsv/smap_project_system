@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { api, ApiError } from '@/lib/api';
-import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
+import { getPartnerDisplay, type Event } from '@/lib/types';
 
 // ISR: revalidar cada 5 minutos
 export const revalidate = 300;
@@ -69,8 +69,7 @@ export default async function EventoDetallePage({ params }: PageProps) {
   }
 
   const date = formatEventDate(event.startDatetime);
-  const partnerKey = event.partners as EventPartner;
-  const partner = PARTNER_LABELS[partnerKey] ?? PARTNER_LABELS.partner3;
+  const partner = getPartnerDisplay(event.partners);
   const hasImage = Boolean(event.image && !event.image.includes('default_event'));
   const imageUrl = event.image
     ? event.image.startsWith('http://') || event.image.startsWith('https://') || event.image.startsWith('/')

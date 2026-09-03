@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { DataTable, type Column } from '@/components/admin/DataTable';
 import { api, ApiError } from '@/lib/api';
-import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
+import { getPartnerDisplay, type Event } from '@/lib/types';
 import { useAuth } from '@/components/auth/AuthProvider';
 
 export default function AdminEventosPage() {
@@ -64,7 +64,7 @@ export default function AdminEventosPage() {
       label: 'Organiza',
       render: (e) => (
         <span className="text-text-muted">
-          {PARTNER_LABELS[e.partners as EventPartner]?.label ?? e.partners}
+          {getPartnerDisplay(e.partners).label}
         </span>
       ),
     },

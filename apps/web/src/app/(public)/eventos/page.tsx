@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { getTranslations, getLocale } from 'next-intl/server';
 import { api } from '@/lib/api';
-import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
+import { getPartnerDisplay, type Event } from '@/lib/types';
 
 function formatDate(iso: string, locale: string): { day: string; month: string; full: string } {
   const d = new Date(iso);
@@ -62,7 +62,7 @@ export default async function EventosPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((event) => {
               const date = formatDate(event.startDatetime, locale);
-              const partner = PARTNER_LABELS[event.partners as EventPartner] ?? PARTNER_LABELS.partner3;
+              const partner = getPartnerDisplay(event.partners);
               const hasImage = Boolean(event.image && !event.image.includes('default_event'));
               const imageUrl = event.image
                 ? event.image.startsWith('http://') || event.image.startsWith('https://') || event.image.startsWith('/')

@@ -37,6 +37,13 @@ export class EventsController {
 
   @Public()
   @Cache(60)
+  @Get('organizers')
+  organizers() {
+    return this.eventsService.getOrganizers();
+  }
+
+  @Public()
+  @Cache(60)
   @Get(':id')
   detail(@Param('id') id: string) {
     return this.eventsService.findOne(Number(id));

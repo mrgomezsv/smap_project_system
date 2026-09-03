@@ -185,13 +185,21 @@ export interface WaiverResponse {
   isValid: boolean;
 }
 
-export type EventPartner = 'partner1' | 'partner2' | 'partner3';
+export type EventPartner = 'partner1' | 'partner2' | 'partner3' | string;
 
-export const PARTNER_LABELS: Record<EventPartner, { label: string; color: string }> = {
+export const PARTNER_LABELS: Record<string, { label: string; color: string }> = {
   partner1: { label: 'Kidsfun', color: 'bg-primary' },
   partner2: { label: 'Tecun Productions', color: 'bg-info' },
   partner3: { label: 'Otros', color: 'bg-text-muted' },
+  Kidsfun: { label: 'Kidsfun', color: 'bg-primary' },
+  'Tecun Productions': { label: 'Tecun Productions', color: 'bg-info' },
 };
+
+export function getPartnerDisplay(partnerKey?: string | null): { label: string; color: string } {
+  if (!partnerKey) return { label: 'Kidsfun', color: 'bg-primary' };
+  if (PARTNER_LABELS[partnerKey]) return PARTNER_LABELS[partnerKey];
+  return { label: partnerKey, color: 'bg-primary-600' };
+}
 
 export interface Event {
   id: number;

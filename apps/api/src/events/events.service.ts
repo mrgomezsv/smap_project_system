@@ -101,6 +101,19 @@ export class EventsService {
     });
   }
 
+  async getOrganizers() {
+    const events = await this.prisma.event.findMany({
+      select: { partners: true },
+      distinct: ['partners'],
+    });
+    const dbOrganizers = events
+      .map((e) => e.partners)
+      .filter((p): p is string => Boolean(p && p.trim()));
+
+    const defaults = ['partner1', 'partner2', 'partner3', 'Kidsfun', 'Tecun Productions'];
+    return Array.from(new Set([...defaults, ...dbOrganizers]));
+  }
+
   async remove(id: number) {
     await this.findOne(id);
     return this.prisma.event.delete({

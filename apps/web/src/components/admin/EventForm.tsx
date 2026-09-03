@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
 import { compressImage } from '@/lib/image-compress';
-import { PARTNER_LABELS, type Event, type EventPartner } from '@/lib/types';
+import { getPartnerDisplay, type Event, type EventPartner } from '@/lib/types';
 
 interface EventFormProps {
   initial?: Event;
@@ -35,6 +35,8 @@ const EMPTY: FormData = {
   image: '',
 };
 
+const DEFAULT_ORGANIZERS = ['partner1', 'partner2', 'partner3'];
+
 function getEventImageUrl(imgPath: string): string {
   if (!imgPath) return '';
   if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) return imgPath;
@@ -50,6 +52,9 @@ export function EventForm({ initial, mode }: EventFormProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [data, setData] = useState<FormData>(EMPTY);
+  const [organizersList, setOrganizersList] = useState<string[]>(DEFAULT_ORGANIZERS);
+  const [showNewOrganizer, setShowNewOrganizer] = useState(false);
+  const [newOrganizerName, setNewOrganizerName] = useState('');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -57,22 +62,56 @@ export function EventForm({ initial, mode }: EventFormProps) {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
+    async function fetchOrganizers() {
+      try {
+        const orgs = await api.get<string[]>('/api/events/organizers');
+        if (orgs && orgs.length > 0) {
+          setOrganizersList((prev) => Array.from(new Set([...prev, ...orgs])));
+        }
+      } catch (e) {
+        console.error('Error al cargar organizadores:', e);
+      }
+    }
+    fetchOrganizers();
+  }, []);
+
+  useEffect(() => {
     if (initial) {
+      const initialPartner = initial.partners || 'partner1';
       setData({
         title: initial.title,
         description: initial.description,
         location: initial.location,
         startDatetime: initial.startDatetime ? initial.startDatetime.slice(0, 16) : '',
         ticketPrice: initial.ticketPrice.toString(),
-        partners: (initial.partners as EventPartner) || 'partner1',
+        partners: initialPartner,
         published: initial.published,
         image: initial.image ?? '',
+      });
+
+      setOrganizersList((prev) => {
+        if (!prev.includes(initialPartner)) {
+          return [...prev, initialPartner];
+        }
+        return prev;
       });
     }
   }, [initial]);
 
   function update<K extends keyof FormData>(key: K, value: FormData[K]) {
     setData((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function handleAddNewOrganizer() {
+    const trimmed = newOrganizerName.trim();
+    if (!trimmed) return;
+
+    if (!organizersList.includes(trimmed)) {
+      setOrganizersList((prev) => [...prev, trimmed]);
+    }
+    update('partners', trimmed);
+    setNewOrganizerName('');
+    setShowNewOrganizer(false);
   }
 
   async function processAndUploadFile(file: File) {
@@ -258,19 +297,97 @@ export function EventForm({ initial, mode }: EventFormProps) {
               onChange={(e) => update('ticketPrice', e.target.value)}
             />
           </div>
+
+          {/* ORGANIZADOR DINÁMICO */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">Organizador</label>
-            <select
-              className="input"
-              value={data.partners}
-              onChange={(e) => update('partners', e.target.value as EventPartner)}
-            >
-              {Object.entries(PARTNER_LABELS).map(([k, v]) => (
-                <option key={k} value={k}>
-                  {v.label}
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm font-medium text-text-primary">
+                Organizador
+              </label>
+              {!showNewOrganizer && (
+                <button
+                  type="button"
+                  onClick={() => setShowNewOrganizer(true)}
+                  className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
+                >
+                  <span>➕</span> Nuevo organizador
+                </button>
+              )}
+            </div>
+
+            {showNewOrganizer ? (
+              <div className="p-3 bg-surface-elevated rounded-xl border border-primary/40 space-y-2 animate-in fade-in duration-200">
+                <label className="block text-xs font-bold text-text-primary">
+                  Nombre del nuevo organizador
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    className="input text-sm flex-1"
+                    placeholder="Ej. Fiesta Park, Magic Shows..."
+                    value={newOrganizerName}
+                    onChange={(e) => setNewOrganizerName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddNewOrganizer();
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddNewOrganizer}
+                    disabled={!newOrganizerName.trim()}
+                    className="btn btn-primary text-xs px-3 py-1.5"
+                  >
+                    Guardar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowNewOrganizer(false);
+                      setNewOrganizerName('');
+                    }}
+                    className="btn btn-ghost text-xs px-2.5 py-1.5"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <select
+                  className="input flex-1"
+                  value={data.partners}
+                  onChange={(e) => {
+                    if (e.target.value === '__NEW__') {
+                      setShowNewOrganizer(true);
+                    } else {
+                      update('partners', e.target.value as EventPartner);
+                    }
+                  }}
+                >
+                  {organizersList.map((orgKey) => {
+                    const display = getPartnerDisplay(orgKey);
+                    return (
+                      <option key={orgKey} value={orgKey}>
+                        {display.label}
+                      </option>
+                    );
+                  })}
+                  <option value="__NEW__">✨ + Agregar otro organizador...</option>
+                </select>
+                <button
+                  type="button"
+                  onClick={() => setShowNewOrganizer(true)}
+                  className="btn btn-ghost border border-border text-xs px-3 hover:bg-surface-elevated shrink-0"
+                  title="Crear nuevo organizador"
+                >
+                  ➕
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
