@@ -63,16 +63,21 @@ export default async function EventosPage() {
             {events.map((event) => {
               const date = formatDate(event.startDatetime, locale);
               const partner = PARTNER_LABELS[event.partners as EventPartner] ?? PARTNER_LABELS.partner3;
-              const hasImage = event.image && !event.image.includes('default_event');
+              const hasImage = Boolean(event.image && !event.image.includes('default_event'));
+              const imageUrl = event.image
+                ? event.image.startsWith('http://') || event.image.startsWith('https://') || event.image.startsWith('/')
+                  ? event.image
+                  : `/media/${event.image}`
+                : '';
               return (
                 <article
                   key={event.id}
                   className="group card hover:shadow-large hover:-translate-y-1 transition-all overflow-hidden p-0"
                 >
                   <div className="aspect-[16/9] bg-gradient-to-br from-brand-yellow/30 to-party-pink/30 overflow-hidden relative">
-                    {hasImage ? (
+                    {hasImage && imageUrl ? (
                       <img
-                        src={`/media/${event.image}`}
+                        src={imageUrl}
                         alt={event.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />

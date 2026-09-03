@@ -71,7 +71,12 @@ export default async function EventoDetallePage({ params }: PageProps) {
   const date = formatEventDate(event.startDatetime);
   const partnerKey = event.partners as EventPartner;
   const partner = PARTNER_LABELS[partnerKey] ?? PARTNER_LABELS.partner3;
-  const hasImage = event.image && !event.image.includes('default_event');
+  const hasImage = Boolean(event.image && !event.image.includes('default_event'));
+  const imageUrl = event.image
+    ? event.image.startsWith('http://') || event.image.startsWith('https://') || event.image.startsWith('/')
+      ? event.image
+      : `/media/${event.image}`
+    : '';
   const eventIsPast = new Date(event.startDatetime) < new Date();
 
   return (
@@ -94,9 +99,9 @@ export default async function EventoDetallePage({ params }: PageProps) {
           {/* ===== IMAGEN PRINCIPAL ===== */}
           <div className="lg:col-span-2">
             <div className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-gradient-to-br from-brand-yellow/30 to-party-pink/30 shadow-medium">
-              {hasImage ? (
+              {hasImage && imageUrl ? (
                 <img
-                  src={`/media/${event.image}`}
+                  src={imageUrl}
                   alt={event.title}
                   className="w-full h-full object-cover"
                 />

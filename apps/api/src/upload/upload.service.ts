@@ -118,6 +118,75 @@ export class UploadService {
     };
   }
 
+  /**
+   * Guarda una imagen de evento localmente en event_images/ y opcionalmente en Google Drive.
+   */
+  async saveEventImage(file: Express.Multer.File, title?: string) {
+    const rawUploadDir = process.env.UPLOAD_DIR || 'media';
+    const uploadDir = rawUploadDir.startsWith('/')
+      ? rawUploadDir
+      : join(process.cwd(), rawUploadDir);
+
+    const safeTitle = (title || 'evento')
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '_')
+      .replace(/_+/g, '_')
+      .slice(0, 40);
+    const targetDir = join(uploadDir, 'event_images');
+
+    if (!existsSync(targetDir)) {
+      mkdirSync(targetDir, { recursive: true });
+    }
+
+    const ext = extname(file.originalname || '') || '.jpg';
+    const random = randomBytes(4).toString('hex');
+    const filename = `${safeTitle}_${random}${ext}`;
+    const absolutePath = join(targetDir, filename);
+
+    let buffer: Buffer;
+    if (file.buffer) {
+      buffer = file.buffer;
+      writeFileSync(absolutePath, buffer);
+    } else if (file.path && existsSync(file.path)) {
+      buffer = readFileSync(file.path);
+      writeFileSync(absolutePath, buffer);
+    } else {
+      throw new Error('No file content received');
+    }
+
+    const relativePath = this.toRelativePath(absolutePath, uploadDir);
+
+    // Intentar subida a Google Drive
+    let driveUrl: string | null = null;
+    try {
+      const mimeType = file.mimetype || 'image/jpeg';
+      const driveRes = await this.googleDriveService.uploadFile(
+        buffer,
+        filename,
+        mimeType,
+      );
+      if (driveRes) {
+        driveUrl = driveRes.webViewLink;
+        this.logger.log(
+          `Imagen de evento ${filename} subida exitosamente a Google Drive: ${driveUrl}`,
+        );
+      }
+    } catch (e) {
+      this.logger.warn(
+        `No se pudo subir a Google Drive, manteniendo path local: ${(e as Error).message}`,
+      );
+    }
+
+    return {
+      path: relativePath,
+      filename: relativePath,
+      localPath: relativePath,
+      driveUrl: driveUrl || null,
+      size: file.size,
+      mimetype: file.mimetype,
+    };
+  }
+
   toRelativePath(absolutePath: string, baseDir?: string): string {
     const base = baseDir || this.uploadDir;
     return absolutePath.replace(base + '/', '').replace(base + '\\', '');

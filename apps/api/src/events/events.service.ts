@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { QueryEventDto } from './dto/query-event.dto';
+import { CreateEventDto } from './dto/create-event.dto';
+import { UpdateEventDto } from './dto/update-event.dto';
 
 @Injectable()
 export class EventsService {
@@ -46,5 +48,63 @@ export class EventsService {
       throw new NotFoundException(`Evento #${id} no encontrado`);
     }
     return event;
+  }
+
+  async create(dto: CreateEventDto, organizerId?: number) {
+    const slug = dto.title
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 200);
+
+    const safeSlug = `${slug}-${Date.now().toString(36)}`;
+
+    let orgId = organizerId;
+    if (!orgId) {
+      const firstUser = await this.prisma.user.findFirst({ select: { id: true } });
+      orgId = firstUser?.id ?? 1;
+    }
+
+    return this.prisma.event.create({
+      data: {
+        title: dto.title,
+        description: dto.description,
+        location: dto.location,
+        startDatetime: new Date(dto.startDatetime),
+        ticketPrice: dto.ticketPrice ?? 0,
+        partners: dto.partners ?? 'partner1',
+        published: dto.published ?? false,
+        image: dto.image || null,
+        slug: safeSlug,
+        organizerId: orgId,
+      },
+    });
+  }
+
+  async update(id: number, dto: UpdateEventDto) {
+    await this.findOne(id);
+    const data: Record<string, unknown> = {};
+
+    if (dto.title !== undefined) data.title = dto.title;
+    if (dto.description !== undefined) data.description = dto.description;
+    if (dto.location !== undefined) data.location = dto.location;
+    if (dto.startDatetime !== undefined) data.startDatetime = new Date(dto.startDatetime);
+    if (dto.ticketPrice !== undefined) data.ticketPrice = dto.ticketPrice;
+    if (dto.partners !== undefined) data.partners = dto.partners;
+    if (dto.published !== undefined) data.published = dto.published;
+    if (dto.image !== undefined) data.image = dto.image;
+
+    return this.prisma.event.update({
+      where: { id: BigInt(id) },
+      data,
+    });
+  }
+
+  async remove(id: number) {
+    await this.findOne(id);
+    return this.prisma.event.delete({
+      where: { id: BigInt(id) },
+    });
   }
 }
