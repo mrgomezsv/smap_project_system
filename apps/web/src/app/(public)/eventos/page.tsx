@@ -26,7 +26,7 @@ export default async function EventosPage() {
   const locale = await getLocale();
   let events: Event[] = [];
   try {
-    const res = await api.get<{ items: Event[] }>('/api/events?take=20');
+    const res = await api.get<{ items: Event[] }>('/api/events?take=20&published=true');
     events = res.items;
   } catch (e) {
     console.error('Error cargando eventos:', e);

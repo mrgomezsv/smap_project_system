@@ -15,6 +15,7 @@ export default function AdminEventosPage() {
   const [error, setError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Event | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [togglingId, setTogglingId] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -35,6 +36,26 @@ export default function AdminEventosPage() {
       cancelled = true;
     };
   }, []);
+
+  async function handleTogglePublished(event: Event) {
+    setTogglingId(event.id);
+    try {
+      await api.patch<Event>(
+        `/api/events/${event.id}`,
+        { published: !event.published },
+        { getToken },
+      );
+      setEvents((prev) =>
+        prev.map((item) =>
+          item.id === event.id ? { ...item, published: !event.published } : item,
+        ),
+      );
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : 'Error al cambiar estado del evento');
+    } finally {
+      setTogglingId(null);
+    }
+  }
 
   async function handleDelete() {
     if (!deleteTarget) return;
@@ -98,17 +119,22 @@ export default function AdminEventosPage() {
     {
       key: 'published',
       label: 'Estado',
-      render: (e) =>
-        e.published ? (
-          <span className="inline-flex items-center gap-1 bg-success/10 text-success text-xs font-semibold px-2 py-1 rounded-full">
-            <span className="w-1.5 h-1.5 bg-success rounded-full" />
-            Publicado
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 bg-gray-100 text-text-muted text-xs font-semibold px-2 py-1 rounded-full">
-            Borrador
-          </span>
-        ),
+      render: (e) => (
+        <button
+          type="button"
+          onClick={() => handleTogglePublished(e)}
+          disabled={togglingId === e.id}
+          className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full transition cursor-pointer ${
+            e.published
+              ? 'bg-success/10 text-success hover:bg-success/20'
+              : 'bg-gray-100 dark:bg-surface-elevated text-text-muted hover:bg-gray-200'
+          }`}
+          title={e.published ? 'Clic para cambiar a Borrador (Ocultar)' : 'Clic para Publicar en la web'}
+        >
+          <span className={`w-1.5 h-1.5 rounded-full ${e.published ? 'bg-success' : 'bg-text-muted'}`} />
+          {togglingId === e.id ? 'Guardando…' : e.published ? 'Publicado' : 'Borrador'}
+        </button>
+      ),
     },
   ];
 

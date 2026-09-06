@@ -15,6 +15,9 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   try {
     const event = await api.get<Event>(`/api/events/${params.id}`);
+    if (!event.published) {
+      return { title: 'Evento no encontrado' };
+    }
     const description =
       event.description?.slice(0, 160) ?? `Evento: ${event.title} en ${event.location}`;
     return {
@@ -66,6 +69,10 @@ export default async function EventoDetallePage({ params }: PageProps) {
       notFound();
     }
     throw e;
+  }
+
+  if (!event.published) {
+    notFound();
   }
 
   const date = formatEventDate(event.startDatetime);
