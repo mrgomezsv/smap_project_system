@@ -1,0 +1,21 @@
+-- Baseline migration.
+-- Captures the existing state of the 16 Prisma-managed tables as they exist
+-- in production today (schema preserved from Django legacy).
+--
+-- This migration is INTENTIONALLY EMPTY because:
+--   1. The current schema.prisma already matches the live DB.
+--   2. We will NOT apply any CREATE/ALTER on existing tables in this commit.
+--   3. Subsequent migrations will be additive (CREATE INDEX, ADD COLUMN, etc.)
+--      and will go through the safety protocol (PROTOCOLO_SEGURIDAD_BD.md).
+--
+-- Run on production via:
+--   pnpm prisma migrate deploy
+--
+-- This file is the "marker" that tells Prisma: "the DB is at this migration".
+--
+-- DO NOT add CREATE TABLE or ALTER TABLE statements here unless you have:
+--   1. Backed up the DB
+--   2. Run scripts/validate_pre.sh and validate_post.sh
+--   3. Confirmed the user's approval
+
+SELECT 1;

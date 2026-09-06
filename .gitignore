@@ -145,6 +145,7 @@ firebase_web_config.js
 # Local Development & Backups
 .env.local
 *.sql
+!apps/api/prisma/migrations/**/*.sql
 *.sql.gz
 media_backup/
 militar
