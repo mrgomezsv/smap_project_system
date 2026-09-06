@@ -112,7 +112,7 @@ export default async function EventosPage() {
                       <div>
                         <p className="text-xs text-text-muted">{t('from')}</p>
                         <p className="text-2xl font-extrabold text-primary">
-                          ${event.ticketPrice.toFixed(2)}
+                          ${Number(event.ticketPrice || 0).toFixed(2)}
                         </p>
                       </div>
                       <Link href={`/eventos/${event.id}`} className="btn btn-primary">

@@ -153,7 +153,7 @@ export default async function EventoDetallePage({ params }: PageProps) {
                   )}
                   {key === 'ticket' && (
                     <p className="font-extrabold text-primary text-lg mt-1">
-                      ${event.ticketPrice.toFixed(2)}
+                      ${Number(event.ticketPrice || 0).toFixed(2)}
                     </p>
                   )}
                 </div>
@@ -194,7 +194,7 @@ export default async function EventoDetallePage({ params }: PageProps) {
                 <div className="flex items-baseline justify-between">
                   <span className="text-sm text-text-muted">{t('pricePerTicket')}</span>
                   <span className="text-3xl font-extrabold text-primary">
-                    ${event.ticketPrice.toFixed(2)}
+                    ${Number(event.ticketPrice || 0).toFixed(2)}
                   </span>
                 </div>
 

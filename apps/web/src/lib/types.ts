@@ -213,7 +213,7 @@ export interface Event {
   image: string | null;
   location: string;
   startDatetime: string;
-  ticketPrice: number;
+  ticketPrice: number | string;
   published: boolean;
   partners: EventPartner | string;
   slug: string | null;

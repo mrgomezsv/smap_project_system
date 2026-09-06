@@ -72,7 +72,11 @@ export default function AdminEventosPage() {
       key: 'ticketPrice',
       label: 'Entrada',
       align: 'right',
-      render: (e) => <span className="font-semibold text-text-primary">${e.ticketPrice.toFixed(2)}</span>,
+      render: (e) => (
+        <span className="font-semibold text-text-primary">
+          ${Number(e.ticketPrice || 0).toFixed(2)}
+        </span>
+      ),
     },
     {
       key: 'published',
