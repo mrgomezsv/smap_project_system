@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { DataTable, type Column } from '@/components/admin/DataTable';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { api, ApiError } from '@/lib/api';
 import { getPartnerDisplay, type Event } from '@/lib/types';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -12,6 +13,8 @@ export default function AdminEventosPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Event | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -32,6 +35,20 @@ export default function AdminEventosPage() {
       cancelled = true;
     };
   }, []);
+
+  async function handleDelete() {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      await api.delete(`/api/events/${deleteTarget.id}`, { getToken });
+      setEvents((prev) => prev.filter((item) => item.id !== deleteTarget.id));
+      setDeleteTarget(null);
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : 'Error al eliminar el evento');
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   const columns: Column<Event>[] = [
     {
@@ -125,7 +142,7 @@ export default function AdminEventosPage() {
             <div className="flex items-center justify-end gap-1">
               <Link
                 href={`/eventos/${e.id}`}
-                className="text-text-muted hover:text-primary p-1"
+                className="text-text-muted hover:text-primary p-1.5 rounded-lg hover:bg-surface-elevated transition"
                 title="Ver público"
                 target="_blank"
               >
@@ -133,15 +150,35 @@ export default function AdminEventosPage() {
               </Link>
               <Link
                 href={`/admin/eventos/${e.id}/editar`}
-                className="text-text-muted hover:text-primary p-1"
+                className="text-text-muted hover:text-primary p-1.5 rounded-lg hover:bg-surface-elevated transition"
                 title="Editar"
               >
                 ✏️
               </Link>
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(e)}
+                className="text-text-muted hover:text-danger p-1.5 rounded-lg hover:bg-danger/10 transition"
+                title="Eliminar evento"
+              >
+                🗑️
+              </button>
             </div>
           )}
         />
       )}
+
+      <ConfirmModal
+        isOpen={Boolean(deleteTarget)}
+        title="Eliminar evento"
+        message={`¿Estás seguro de que deseas eliminar permanentemente el evento "${deleteTarget?.title}"? Esta acción no se puede deshacer.`}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        isDanger={true}
+        loading={deleting}
+        onConfirm={handleDelete}
+        onClose={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }
