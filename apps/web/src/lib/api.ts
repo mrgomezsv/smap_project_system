@@ -102,10 +102,23 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   if (!res.ok) {
     const data = isJson ? await res.json() : await res.text();
     let message: string;
-    if (isJson && (data as any)?.message) {
-      message = Array.isArray((data as any).message)
-        ? (data as any).message.join(', ')
-        : String((data as any).message);
+    if (data && typeof data === 'object') {
+      const obj = data as Record<string, any>;
+      if (obj.message) {
+        message = Array.isArray(obj.message) ? obj.message.join(', ') : String(obj.message);
+      } else if (obj.error) {
+        if (typeof obj.error === 'object' && obj.error !== null && obj.error.message) {
+          message = Array.isArray(obj.error.message)
+            ? obj.error.message.join(', ')
+            : String(obj.error.message);
+        } else if (typeof obj.error === 'string') {
+          message = obj.error;
+        } else {
+          message = `HTTP ${res.status}`;
+        }
+      } else {
+        message = `HTTP ${res.status}`;
+      }
     } else if (typeof data === 'string' && data.trim().startsWith('<')) {
       message = `Error del servidor (${res.status} ${res.statusText || 'Bad Gateway'})`;
     } else {
@@ -159,10 +172,27 @@ async function download(path: string, options: DownloadOptions = {}): Promise<Bl
     const contentType = res.headers.get('content-type') ?? '';
     const isJson = contentType.includes('application/json');
     const data = isJson ? await res.json() : await res.text();
-    const message =
-      (isJson && (data as any)?.message) ||
-      (typeof data === 'string' ? data : `HTTP ${res.status}`);
-    const errorMsg = Array.isArray(message) ? message.join(', ') : String(message);
+    let errorMsg: string;
+    if (data && typeof data === 'object') {
+      const obj = data as Record<string, any>;
+      if (obj.message) {
+        errorMsg = Array.isArray(obj.message) ? obj.message.join(', ') : String(obj.message);
+      } else if (obj.error) {
+        if (typeof obj.error === 'object' && obj.error !== null && obj.error.message) {
+          errorMsg = Array.isArray(obj.error.message)
+            ? obj.error.message.join(', ')
+            : String(obj.error.message);
+        } else if (typeof obj.error === 'string') {
+          errorMsg = obj.error;
+        } else {
+          errorMsg = `HTTP ${res.status}`;
+        }
+      } else {
+        errorMsg = `HTTP ${res.status}`;
+      }
+    } else {
+      errorMsg = typeof data === 'string' ? data : `HTTP ${res.status}`;
+    }
     throw new ApiError(errorMsg, res.status, data);
   }
 
