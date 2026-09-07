@@ -372,22 +372,27 @@ export function ProductForm({ initial, mode }: ProductFormProps) {
             {errors.price && <p className="mt-1 text-xs text-danger">{errors.price}</p>}
           </div>
         </div>
-        <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
+        <div className="flex items-center justify-between p-3 bg-surface rounded-lg border border-border">
           <div>
             <p className="font-medium text-text-primary">Publicado</p>
             <p className="text-xs text-text-muted">Visible en el sitio público</p>
           </div>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              checked={data.publicated}
-              onChange={(e) => update('publicated', e.target.checked)}
+          <button
+            type="button"
+            role="switch"
+            aria-checked={data.publicated}
+            onClick={() => update('publicated', !data.publicated)}
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+              data.publicated ? 'bg-success' : 'bg-gray-300 dark:bg-gray-600'
+            }`}
+            title={data.publicated ? 'Publicado (clic para ocultar)' : 'Borrador (clic para publicar)'}
+          >
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                data.publicated ? 'translate-x-5' : 'translate-x-0'
+              }`}
             />
-            <div className="w-11 h-6 bg-gray-200 peer-checked:bg-success rounded-full transition relative">
-              <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform peer-checked:translate-x-5" />
-            </div>
-          </label>
+          </button>
         </div>
       </div>
 

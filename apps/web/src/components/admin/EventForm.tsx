@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { api, ApiError } from '@/lib/api';
 import { compressImage } from '@/lib/image-compress';
 import { getPartnerDisplay, type Event, type EventPartner } from '@/lib/types';
@@ -67,6 +68,8 @@ export function EventForm({ initial, mode }: EventFormProps) {
   const [newOrganizerName, setNewOrganizerName] = useState('');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [showManualInput, setShowManualInput] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -110,9 +113,12 @@ export function EventForm({ initial, mode }: EventFormProps) {
         description: initial.description,
         location: initial.location,
         startDatetime: initial.startDatetime ? initial.startDatetime.slice(0, 16) : '',
-        ticketPrice: initial.ticketPrice.toString(),
+        ticketPrice:
+          initial.ticketPrice !== undefined && initial.ticketPrice !== null
+            ? initial.ticketPrice.toString()
+            : '0',
         partners: initialPartner,
-        published: initial.published,
+        published: Boolean(initial.published),
         image: initial.image ?? '',
       });
 
@@ -124,6 +130,23 @@ export function EventForm({ initial, mode }: EventFormProps) {
       });
     }
   }, [initial]);
+
+  async function handleDelete() {
+    if (!initial) return;
+    setDeleting(true);
+    setErrorMsg(null);
+    try {
+      await api.delete(`/api/events/${initial.id}`, { getToken });
+      setShowDeleteModal(false);
+      router.push('/admin/eventos');
+      router.refresh();
+    } catch (e) {
+      setErrorMsg(e instanceof ApiError ? e.message : 'Error al eliminar el evento');
+      setShowDeleteModal(false);
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   function update<K extends keyof FormData>(key: K, value: FormData[K]) {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -592,38 +615,69 @@ export function EventForm({ initial, mode }: EventFormProps) {
           )}
         </div>
 
-        <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
+        <div className="flex items-center justify-between p-3 bg-surface rounded-lg border border-border">
           <div>
             <p className="font-medium text-text-primary">Publicado</p>
             <p className="text-xs text-text-muted">Visible en el sitio público</p>
           </div>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              checked={data.published}
-              onChange={(e) => update('published', e.target.checked)}
+          <button
+            type="button"
+            role="switch"
+            aria-checked={data.published}
+            onClick={() => update('published', !data.published)}
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+              data.published ? 'bg-success' : 'bg-gray-300 dark:bg-gray-600'
+            }`}
+            title={data.published ? 'Publicado (clic para ocultar)' : 'Borrador (clic para publicar)'}
+          >
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                data.published ? 'translate-x-5' : 'translate-x-0'
+              }`}
             />
-            <div className="w-11 h-6 bg-gray-200 peer-checked:bg-success rounded-full transition relative">
-              <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform peer-checked:translate-x-5" />
-            </div>
-          </label>
+          </button>
         </div>
       </div>
 
-      <div className="flex justify-end gap-2">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="btn btn-ghost"
-          disabled={saving || uploading}
-        >
-          Cancelar
-        </button>
-        <button type="submit" className="btn btn-primary px-6" disabled={saving || uploading}>
-          {saving ? 'Guardando…' : mode === 'create' ? 'Crear evento' : 'Guardar cambios'}
-        </button>
+      <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
+        {mode === 'edit' && initial ? (
+          <button
+            type="button"
+            onClick={() => setShowDeleteModal(true)}
+            className="text-danger hover:bg-danger/10 border border-danger/20 text-sm font-semibold px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2"
+            disabled={saving || uploading || deleting}
+          >
+            🗑️ Eliminar evento
+          </button>
+        ) : (
+          <div />
+        )}
+        <div className="flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="btn btn-ghost"
+            disabled={saving || uploading || deleting}
+          >
+            Cancelar
+          </button>
+          <button type="submit" className="btn btn-primary px-6" disabled={saving || uploading || deleting}>
+            {saving ? 'Guardando…' : mode === 'create' ? 'Crear evento' : 'Guardar cambios'}
+          </button>
+        </div>
       </div>
+
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        title="Eliminar evento"
+        message={`¿Estás seguro de que deseas eliminar permanentemente el evento "${data.title || initial?.title}"? Esta acción no se puede deshacer.`}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        isDanger={true}
+        loading={deleting}
+        onConfirm={handleDelete}
+        onClose={() => setShowDeleteModal(false)}
+      />
     </form>
   );
 }

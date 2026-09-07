@@ -39,15 +39,19 @@ export default function AdminEventosPage() {
 
   async function handleTogglePublished(event: Event) {
     setTogglingId(event.id);
+    setError(null);
     try {
-      await api.patch<Event>(
+      const nextPublished = !Boolean(event.published);
+      const updated = await api.patch<Event>(
         `/api/events/${event.id}`,
-        { published: !event.published },
+        { published: nextPublished },
         { getToken },
       );
       setEvents((prev) =>
         prev.map((item) =>
-          item.id === event.id ? { ...item, published: !event.published } : item,
+          Number(item.id) === Number(event.id)
+            ? { ...item, published: updated ? Boolean(updated.published) : nextPublished }
+            : item,
         ),
       );
     } catch (e) {
@@ -60,9 +64,10 @@ export default function AdminEventosPage() {
   async function handleDelete() {
     if (!deleteTarget) return;
     setDeleting(true);
+    setError(null);
     try {
       await api.delete(`/api/events/${deleteTarget.id}`, { getToken });
-      setEvents((prev) => prev.filter((item) => item.id !== deleteTarget.id));
+      setEvents((prev) => prev.filter((item) => Number(item.id) !== Number(deleteTarget.id)));
       setDeleteTarget(null);
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'Error al eliminar el evento');
@@ -122,7 +127,10 @@ export default function AdminEventosPage() {
       render: (e) => (
         <button
           type="button"
-          onClick={() => handleTogglePublished(e)}
+          onClick={(ev) => {
+            ev.stopPropagation();
+            handleTogglePublished(e);
+          }}
           disabled={togglingId === e.id}
           className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full transition cursor-pointer ${
             e.published
@@ -183,7 +191,10 @@ export default function AdminEventosPage() {
               </Link>
               <button
                 type="button"
-                onClick={() => setDeleteTarget(e)}
+                onClick={(ev) => {
+                  ev.stopPropagation();
+                  setDeleteTarget(e);
+                }}
                 className="text-text-muted hover:text-danger p-1.5 rounded-lg hover:bg-danger/10 transition"
                 title="Eliminar evento"
               >
