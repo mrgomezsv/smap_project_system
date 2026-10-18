@@ -8,12 +8,17 @@ import { Readable } from 'stream';
 export class GoogleDriveService {
   private readonly logger = new Logger(GoogleDriveService.name);
   private drive: ReturnType<typeof google.drive> | null = null;
-  private readonly parentFolderId: string;
+  private readonly parentFolderId: string | null;
   private projectFolderId: string | null = null;
 
   constructor() {
-    this.parentFolderId =
-      process.env.GOOGLE_DRIVE_FOLDER_ID || '1_5uQEdZB83g8rPnVglKjK0L9RN3Gk8Qo';
+    this.parentFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID?.trim() || null;
+    if (!this.parentFolderId) {
+      this.logger.warn(
+        'GOOGLE_DRIVE_FOLDER_ID no configurado: las imágenes se guardan solo en local.',
+      );
+      return;
+    }
     this.initDrive();
   }
 
@@ -75,8 +80,8 @@ export class GoogleDriveService {
       return this.projectFolderId;
     }
 
-    if (!this.drive) {
-      return this.parentFolderId;
+    if (!this.drive || !this.parentFolderId) {
+      return this.parentFolderId ?? '';
     }
 
     try {
