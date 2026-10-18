@@ -18,7 +18,9 @@ npx prisma migrate resolve --applied 20260816213000_add_category_table || true
 npx prisma migrate resolve --applied 20260906210000_drop_chk_event_partners_enum || true
 
 echo "🔄 Ejecutando prisma migrate deploy..."
-npx prisma migrate deploy || true
+# Sin "|| true": si una migración falla, el contenedor no arranca con un
+# esquema inconsistente (set -e detiene el script y Docker lo reporta).
+npx prisma migrate deploy
 
 echo "🚀 Iniciando servidor NestJS..."
 exec node dist/main.js
