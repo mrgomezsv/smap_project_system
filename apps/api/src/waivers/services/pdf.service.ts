@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { QrService } from './qr.service';
 import { BUSINESS_TIMEZONE } from '../../common/timezone';
+import { getPublicWebUrl } from '../../common/web-url';
 
 export const DEFAULT_WAIVER_TEXT = `REGLAS DE SEGURIDAD Y RESPONSABILIDADES PARA INFLABLES
 
@@ -169,13 +170,7 @@ export class PdfService {
     }
 
     // === HEADER: Logo - Título - QR (3 columnas) ===
-    const webUrl =
-      process.env.PUBLIC_WEB_URL ||
-      process.env.SITE_URL ||
-      process.env.NEXT_PUBLIC_WEB_URL ||
-      (process.env.NODE_ENV === 'production'
-        ? 'https://kidsfunyfiestasinfantiles.com'
-        : 'http://localhost:3000');
+    const webUrl = getPublicWebUrl();
     const qrTargetUrl = `${webUrl}/waiver/verify/${data.qrCode}`;
     const qrImage = await this.qrService.toBuffer(qrTargetUrl);
     const qrPic = await doc.embedPng(qrImage);

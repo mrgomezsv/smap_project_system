@@ -26,6 +26,7 @@ import {
   extensionForMime,
 } from './services/contract-storage.service';
 import * as crypto from 'crypto';
+import { getPublicWebUrl } from '../common/web-url';
 
 export const CONTRACT_TOKEN_TTL_DAYS = 7;
 export const CONTRACT_PUBLIC_SAFETY_ITEMS = [
@@ -297,14 +298,7 @@ export class ContractsService {
       );
     }
 
-    const webBaseUrl =
-      process.env.PUBLIC_WEB_URL ||
-      process.env.SITE_URL ||
-      process.env.NEXT_PUBLIC_WEB_URL ||
-      (process.env.NODE_ENV === 'production'
-        ? 'https://kidsfunyfiestasinfantiles.com'
-        : 'http://localhost:3000');
-    const signUrl = `${webBaseUrl}/contrato/firmar/${token}`;
+    const signUrl = `${getPublicWebUrl()}/contrato/firmar/${token}`;
 
     let emailSent = false;
     try {
@@ -819,11 +813,7 @@ export class ContractsService {
       },
     });
 
-    const webBaseUrl =
-      process.env.PUBLIC_WEB_URL ||
-      process.env.SITE_URL ||
-      'http://localhost:3000';
-    const signUrl = `${webBaseUrl}/contrato/firmar/${renewed.token}`;
+    const signUrl = `${getPublicWebUrl()}/contrato/firmar/${renewed.token}`;
 
     const { subject, html } = this.emailService.getContractInviteEmailTemplate({
       clientName: renewed.clientName,

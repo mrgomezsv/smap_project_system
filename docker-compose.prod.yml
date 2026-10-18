@@ -60,6 +60,7 @@ services:
       # Sin credenciales válidas la API rechaza todas las rutas protegidas.
       FIREBASE_CREDENTIALS_BASE64: ${FIREBASE_CREDENTIALS_BASE64:-}
       CONTRACT_STORAGE_DIR: "/app/apps/api/private/contracts"
+      PUBLIC_WEB_URL: "https://kidsfunyfiestasinfantiles.com"
     volumes:
       - media_data:/app/apps/api/media
       - contract_data:/app/apps/api/private/contracts
