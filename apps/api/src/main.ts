@@ -10,6 +10,22 @@ import { json, urlencoded } from 'express';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Cabeceras de seguridad básicas (equivalente mínimo a helmet)
+  app.getHttpAdapter().getInstance().disable('x-powered-by');
+  app.use(
+    (
+      _req: unknown,
+      res: { setHeader(name: string, value: string): void },
+      next: () => void,
+    ) => {
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('X-Frame-Options', 'DENY');
+      res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+      res.setHeader('Cross-Origin-Resource-Policy', 'same-site');
+      next();
+    },
+  );
+
   // Los archivos van por multipart (multer); el JSON más grande es la firma
   // en base64 del contrato, que cabe holgadamente en 10 MB.
   app.use(json({ limit: '10mb' }));
