@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { api, ApiError } from '@/lib/api';
 import { getFirebaseAuth } from '@/lib/firebase';
 
-type Segment = 'all' | 'event-attendees' | 'product-buyer';
+type Segment = 'all' | 'event-attendees';
 
 export function PushForm() {
   const tPh = useTranslations('placeholders');
@@ -70,7 +70,6 @@ export function PushForm() {
           >
             <option value="all">Todos los usuarios</option>
             <option value="event-attendees">Asistentes a eventos</option>
-            <option value="product-buyer">Compradores de productos</option>
           </select>
           <p className="text-xs text-text-muted mt-1">
             Define a quién le llegará la notificación.

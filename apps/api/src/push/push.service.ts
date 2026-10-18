@@ -1,6 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { getMessaging, Message } from 'firebase-admin/messaging';
 import { FirebaseService } from '../auth/firebase.service';
+import { PrismaService } from '../prisma/prisma.service';
+
+export type PushSegment = 'all' | 'event-attendees';
+
+/** Errores de FCM que indican un token que ya no sirve. */
+const INVALID_TOKEN_CODES = new Set([
+  'messaging/registration-token-not-registered',
+  'messaging/invalid-registration-token',
+  'messaging/invalid-argument',
+]);
 
 /**
  * Servicio para envío de Push Notifications vía Firebase Cloud Messaging.
@@ -12,7 +22,68 @@ import { FirebaseService } from '../auth/firebase.service';
 export class PushService {
   private readonly logger = new Logger(PushService.name);
 
-  constructor(private readonly firebaseService: FirebaseService) {}
+  constructor(
+    private readonly firebaseService: FirebaseService,
+    private readonly prisma: PrismaService,
+  ) {}
+
+  /**
+   * Envía una notificación a todos los tokens activos del segmento.
+   * - all: todos los dispositivos registrados
+   * - event-attendees: usuarios que han generado al menos un waiver
+   * Desactiva los tokens que FCM reporta como inválidos.
+   */
+  async sendToSegment(
+    segment: PushSegment,
+    title: string,
+    body: string,
+  ): Promise<{ count: number; failed: number; total: number }> {
+    let userFilter: { userId?: { in: string[] } } = {};
+    if (segment === 'event-attendees') {
+      const owners = await this.prisma.waiverQRV2.findMany({
+        select: { userId: true },
+        distinct: ['userId'],
+      });
+      userFilter = { userId: { in: owners.map((o) => o.userId) } };
+    }
+    const rows = await this.prisma.pushToken.findMany({
+      where: { isActive: true, ...userFilter },
+      select: { token: true },
+    });
+    const tokens = rows.map((r) => r.token);
+    if (tokens.length === 0) return { count: 0, failed: 0, total: 0 };
+
+    if (!this.firebaseService.isInitialized()) {
+      this.logger.debug(`[DEV MODE] Push no enviado a ${tokens.length} tokens`);
+      return { count: 0, failed: 0, total: tokens.length };
+    }
+
+    let success = 0;
+    const invalid: string[] = [];
+    for (let i = 0; i < tokens.length; i += 500) {
+      const batch = tokens.slice(i, i + 500);
+      const res = await getMessaging().sendEachForMulticast({
+        tokens: batch,
+        notification: { title, body },
+      });
+      success += res.successCount;
+      res.responses.forEach((r, idx) => {
+        if (!r.success && r.error && INVALID_TOKEN_CODES.has(r.error.code)) {
+          invalid.push(batch[idx]);
+        }
+      });
+    }
+    if (invalid.length > 0) {
+      await this.prisma.pushToken.updateMany({
+        where: { token: { in: invalid } },
+        data: { isActive: false },
+      });
+    }
+    this.logger.log(
+      `Push "${title}" (${segment}): ${success}/${tokens.length} enviados`,
+    );
+    return { count: success, failed: tokens.length - success, total: tokens.length };
+  }
 
   async sendToToken(
     token: string,
