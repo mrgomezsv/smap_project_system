@@ -12,12 +12,13 @@ import { ForbiddenException } from '@nestjs/common';
 
 const DEFAULT_ADMIN_EMAILS = [
   'mrgomez.dev@outlook.com',
-  'mrgomez.dev@outlcok.com',
   'mrgomez.dev@gmail.com',
   'kidsfun.developer@gmail.com',
   'karenhenriquez911@gmail.com',
-  'dev@local',
 ];
+
+/** Usuario sintético del modo dev (solo existe fuera de producción). */
+const DEV_ADMIN_EMAIL = 'dev@local';
 
 function parseAllowlist(): Set<string> {
   const raw = (process.env.ADMIN_EMAILS ?? '').trim();
@@ -26,7 +27,8 @@ function parseAllowlist(): Set<string> {
         .split(',')
         .map((s) => s.trim().toLowerCase())
         .filter(Boolean)
-    : DEFAULT_ADMIN_EMAILS;
+    : [...DEFAULT_ADMIN_EMAILS];
+  if (process.env.NODE_ENV !== 'production') list.push(DEV_ADMIN_EMAIL);
   return new Set(list);
 }
 
