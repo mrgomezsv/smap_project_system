@@ -21,6 +21,7 @@ export async function PublicHeader() {
     { href: '/', key: 'home' as const },
     { href: '/productos', key: 'products' as const },
     { href: '/eventos', key: 'events' as const },
+    { href: '/galeria', key: 'gallery' as const },
     { href: '/sobre-nosotros', key: 'about' as const },
     { href: '/contacto', key: 'contact' as const },
   ];

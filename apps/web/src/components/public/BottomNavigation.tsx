@@ -12,6 +12,7 @@ export function BottomNavigation() {
     { href: '/', label: t('home'), icon: '🏠' },
     { href: '/productos', label: t('products'), icon: '🎪' },
     { href: '/eventos', label: t('events'), icon: '🎟️' },
+    { href: '/galeria', label: t('gallery'), icon: '📸' },
     { href: '/contacto', label: t('contact'), icon: '📞' },
     { href: '/cuenta', label: t('account'), icon: '👤' },
   ];
