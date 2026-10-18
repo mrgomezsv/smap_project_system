@@ -5,10 +5,10 @@ services:
     image: mrgomezdev/kidsfun-db:latest
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: smap_kf
       MYSQL_USER: mrgomez
-      MYSQL_PASSWORD: Karin2100
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
     networks:
@@ -19,11 +19,11 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=mysql://mrgomez:Karin2100@db:3306/smap_kf
+      - DATABASE_URL=mysql://mrgomez:${DB_PASSWORD}@db:3306/smap_kf
       - DB_ENGINE=django.db.backends.mysql
       - DB_NAME=smap_kf
       - DB_USER=mrgomez
-      - DB_PASSWORD=Karin2100
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=db
       - DB_PORT=3306
       - DJANGO_SECRET_KEY=django-insecure-prod-key-change-me

@@ -25,7 +25,7 @@ if [ -z "$CONTAINER_DB" ]; then
 fi
 
 echo "📦 Generando volcado de datos desde el contenedor: $CONTAINER_DB..."
-docker exec $CONTAINER_DB mysqldump -u mrgomez -pKarin2100 smap_kf > dump.sql
+docker exec $CONTAINER_DB mysqldump -u mrgomez -p${DB_PASSWORD} smap_kf > dump.sql
 
 # 2. Construir y subir imagen de la DB
 echo "🏗️ Construyendo imagen de la base de datos ($DB_IMAGE) para Linux amd64..."
