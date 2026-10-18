@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { BUSINESS_TIMEZONE } from '../../common/timezone';
 
 function sanitizePdfText(text: string | null | undefined): string {
   if (!text) return '';
@@ -73,7 +74,9 @@ export class ContractPdfService {
       : 'N/A';
 
     const signedDate = data.signedAt
-      ? new Date(data.signedAt).toLocaleDateString('en-US')
+      ? new Date(data.signedAt).toLocaleDateString('en-US', {
+          timeZone: BUSINESS_TIMEZONE,
+        })
       : '________________________';
 
     // Helper para dibujar texto con fondo resaltado

@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { Resend } from 'resend';
 import { DEFAULT_WAIVER_TEXT, DEFAULT_WAIVER_TEXT_EN } from './pdf.service';
+import { BUSINESS_TIMEZONE } from '../../common/timezone';
 
 export interface EmailAttachment {
   filename: string;
@@ -173,6 +174,7 @@ export class EmailService {
     const formattedDate = (data.createdAt || new Date()).toLocaleDateString(
       isEn ? 'en-US' : 'es-ES',
       {
+        timeZone: BUSINESS_TIMEZONE,
         day: '2-digit',
         month: 'long',
         year: 'numeric',

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { QrService } from './qr.service';
+import { BUSINESS_TIMEZONE } from '../../common/timezone';
 
 export const DEFAULT_WAIVER_TEXT = `REGLAS DE SEGURIDAD Y RESPONSABILIDADES PARA INFLABLES
 
@@ -270,6 +271,7 @@ export class PdfService {
     y -= 25;
 
     const fechaStr = data.createdAt.toLocaleString('es-ES', {
+      timeZone: BUSINESS_TIMEZONE,
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -287,6 +289,7 @@ export class PdfService {
 
     if (data.expiresAt) {
       const expStr = new Date(data.expiresAt).toLocaleString('es-ES', {
+        timeZone: BUSINESS_TIMEZONE,
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
@@ -540,7 +543,7 @@ export class PdfService {
 
     // === FOOTER ===
     page.drawText(
-      `${t.footer}${data.createdAt.toLocaleString(isEn ? 'en-US' : 'es-ES')}.`,
+      `${t.footer}${data.createdAt.toLocaleString(isEn ? 'en-US' : 'es-ES', { timeZone: BUSINESS_TIMEZONE })}.`,
       {
         x: margin,
         y: margin,

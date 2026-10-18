@@ -12,6 +12,7 @@ import { FirebaseService } from './firebase.service';
 import { EmailService } from '../waivers/services/email.service';
 import { assertAdmin } from './admin-allowlist';
 import { Public } from './decorators/public.decorator';
+import { BUSINESS_TIMEZONE } from '../common/timezone';
 
 @Controller('api/auth')
 export class AuthController {
@@ -92,7 +93,9 @@ export class AuthController {
           ? new Date(u.metadata.creationTime).toISOString().split('T')[0]
           : 'N/A',
         lastLogin: u.metadata.lastSignInTime
-          ? new Date(u.metadata.lastSignInTime).toLocaleString('es-ES')
+          ? new Date(u.metadata.lastSignInTime).toLocaleString('es-ES', {
+              timeZone: BUSINESS_TIMEZONE,
+            })
           : 'Sin registros',
         photoUrl: u.photoURL,
         disabled: u.disabled,
