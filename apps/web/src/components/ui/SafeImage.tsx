@@ -12,8 +12,20 @@ interface SafeImageProps extends Omit<ImageProps, 'src' | 'alt' | 'onError'> {
 /**
  * Wrapper de next/image con fallback en caso de error de carga.
  * Por defecto aplica `loading="lazy"` (Next.js lo hace built-in).
+ *
+ * Las imágenes subidas (/media/...) se cargan sin el optimizador de Next:
+ * el optimizador solo ve los archivos que había en public/ al arrancar el
+ * contenedor web, así que las fotos subidas después respondían 400
+ * ("isn't a valid image") hasta reiniciarlo. Nginx/API las sirven directo.
  */
-export function SafeImage({ src, alt, fallback, className, ...rest }: SafeImageProps) {
+export function SafeImage({
+  src,
+  alt,
+  fallback,
+  className,
+  unoptimized,
+  ...rest
+}: SafeImageProps) {
   const [error, setError] = useState(false);
 
   if (error || !src) {
@@ -38,6 +50,7 @@ export function SafeImage({ src, alt, fallback, className, ...rest }: SafeImageP
       className={className}
       onError={() => setError(true)}
       loading="lazy"
+      unoptimized={unoptimized ?? src.startsWith('/media/')}
       {...rest}
     />
   );
