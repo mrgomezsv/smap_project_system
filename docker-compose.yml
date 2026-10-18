@@ -19,8 +19,8 @@ services:
     environment:
       MYSQL_DATABASE: smap_kf
       MYSQL_USER: mrgomez
-      MYSQL_PASSWORD: Karin2100
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Definir DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Definir DB_ROOT_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
     ports:
@@ -50,7 +50,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-      DATABASE_URL: "mysql://mrgomez:Karin2100@db:3306/smap_kf"
+      DATABASE_URL: "mysql://mrgomez:${DB_PASSWORD}@db:3306/smap_kf"
       REDIS_URL: "redis://redis:6379"
       CACHE_ENABLED: "true"
       RESEND_API_KEY: ${RESEND_API_KEY}
