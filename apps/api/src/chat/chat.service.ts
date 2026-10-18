@@ -1,5 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+
+/** Quién realiza la acción: los no-admin solo acceden a su propio room. */
+export interface ChatActor {
+  userId: number;
+  isAdmin: boolean;
+}
 
 @Injectable()
 export class ChatService {
@@ -13,7 +23,7 @@ export class ChatService {
       include: {
         user: { select: { id: true, username: true, email: true } },
         messages: { orderBy: { timestamp: 'desc' }, take: 1 },
-        _count: { select: { messages: true } },
+        _count: { select: { messages: { where: { isRead: false } } } },
       },
     });
   }
@@ -21,6 +31,7 @@ export class ChatService {
   async getRoom(
     roomId: number,
     opts: { take?: number; skip?: number; cursor?: number } = {},
+    actor?: ChatActor,
   ) {
     const take = Math.min(opts.take ?? 50, 100);
     const room = await this.prisma.chatRoom.findUnique({
@@ -37,6 +48,7 @@ export class ChatService {
     });
     if (!room)
       throw new NotFoundException(`Chat room #${roomId} no encontrado`);
+    this.assertCanAccess(room.userId, actor);
     // Invertir para que se devuelvan en orden cronológico ascendente
     if (room.messages) {
       room.messages = room.messages.reverse();
@@ -44,7 +56,13 @@ export class ChatService {
     return room;
   }
 
+  /** Devuelve el room activo del usuario o crea uno nuevo. */
   async createRoom(userId: number) {
+    const existing = await this.prisma.chatRoom.findFirst({
+      where: { userId, isActive: true },
+      orderBy: { lastMessageAt: 'desc' },
+    });
+    if (existing) return existing;
     return this.prisma.chatRoom.create({
       data: { userId, isActive: true },
     });
@@ -52,27 +70,40 @@ export class ChatService {
 
   // === Chat Messages ===
 
-  async sendMessage(roomId: number, senderId: number, content: string) {
+  async sendMessage(
+    roomId: number,
+    senderId: number,
+    content: string,
+    actor?: ChatActor,
+  ) {
     const room = await this.prisma.chatRoom.findUnique({
       where: { id: roomId },
     });
     if (!room)
       throw new NotFoundException(`Chat room #${roomId} no encontrado`);
+    this.assertCanAccess(room.userId, actor);
 
-    const message = await this.prisma.chatMessage.create({
-      data: { chatRoomId: roomId, senderId, content },
-    });
-
-    // Actualizar lastMessageAt del room
-    await this.prisma.chatRoom.update({
-      where: { id: roomId },
-      data: { lastMessageAt: new Date() },
-    });
+    const [message] = await this.prisma.$transaction([
+      this.prisma.chatMessage.create({
+        data: { chatRoomId: roomId, senderId, content },
+      }),
+      this.prisma.chatRoom.update({
+        where: { id: roomId },
+        data: { lastMessageAt: new Date() },
+      }),
+    ]);
 
     return message;
   }
 
-  async markAsRead(messageId: number) {
+  async markAsRead(messageId: number, actor?: ChatActor) {
+    const message = await this.prisma.chatMessage.findUnique({
+      where: { id: messageId },
+      include: { chatRoom: { select: { userId: true } } },
+    });
+    if (!message)
+      throw new NotFoundException(`Mensaje #${messageId} no encontrado`);
+    this.assertCanAccess(message.chatRoom.userId, actor);
     return this.prisma.chatMessage.update({
       where: { id: messageId },
       data: { isRead: true },
@@ -99,5 +130,12 @@ export class ChatService {
       where: { id: adminId },
       data: { isActive },
     });
+  }
+
+  private assertCanAccess(roomOwnerId: number, actor?: ChatActor) {
+    if (!actor || actor.isAdmin) return;
+    if (actor.userId !== roomOwnerId) {
+      throw new ForbiddenException('No tienes acceso a esta conversación');
+    }
   }
 }
