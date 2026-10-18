@@ -1,6 +1,14 @@
 import { Controller, Get, Post, Param, Query, Body, Res } from '@nestjs/common';
 import type { Response } from 'express';
-import { IsString, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsArray,
+  ArrayNotEmpty,
+  ArrayMaxSize,
+  Matches,
+} from 'class-validator';
+import { Transform } from 'class-transformer';
 
 import { WaiversService } from './waivers.service';
 import { CreateWaiverDto } from './dto/create-waiver.dto';
@@ -9,6 +17,17 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
 import { assertAdmin } from '../auth/admin-allowlist';
 import { getPublicWebUrl } from '../common/web-url';
+
+class DeleteWaiversDto {
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMaxSize(500)
+  @Matches(/^\d+$/, { each: true, message: 'Cada id debe ser numérico' })
+  @Transform(({ value }) =>
+    Array.isArray(value) ? value.map((v) => String(v)) : value,
+  )
+  ids!: string[];
+}
 
 class ValidateWaiverDto {
   @IsString()
@@ -152,9 +171,9 @@ export class WaiversController {
    * POST /api/v2/waiver/delete-batch - Eliminar waivers por IDs (admin only).
    */
   @Post('delete-batch')
-  deleteBatch(@Body('ids') ids: string[], @CurrentUser() user: AuthUser) {
+  deleteBatch(@Body() dto: DeleteWaiversDto, @CurrentUser() user: AuthUser) {
     assertAdmin(user);
-    return this.waiversService.deleteMany(ids);
+    return this.waiversService.deleteMany(dto.ids);
   }
 
   /**

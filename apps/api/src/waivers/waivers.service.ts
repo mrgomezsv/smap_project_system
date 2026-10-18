@@ -402,16 +402,22 @@ export class WaiversService {
         'Debes proporcionar al menos un ID para eliminar',
       );
     }
+    if (ids.some((id) => !/^\d+$/.test(String(id)))) {
+      throw new BadRequestException('Los IDs deben ser numéricos');
+    }
     const numericIds = ids.map((id) => BigInt(id));
 
-    await this.prisma.waiverDataV2.deleteMany({
-      where: { waiverQrId: { in: numericIds } },
-    });
-    await this.prisma.waiverScanV2.deleteMany({
-      where: { waiverQrId: { in: numericIds } },
-    });
-    const result = await this.prisma.waiverQRV2.deleteMany({
-      where: { id: { in: numericIds } },
+    // Todo o nada: si falla un paso no quedan waivers sin familiares/scans
+    const result = await this.prisma.$transaction(async (tx) => {
+      await tx.waiverDataV2.deleteMany({
+        where: { waiverQrId: { in: numericIds } },
+      });
+      await tx.waiverScanV2.deleteMany({
+        where: { waiverQrId: { in: numericIds } },
+      });
+      return tx.waiverQRV2.deleteMany({
+        where: { id: { in: numericIds } },
+      });
     });
     return { count: result.count, success: true };
   }

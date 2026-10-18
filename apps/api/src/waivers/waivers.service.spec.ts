@@ -28,6 +28,7 @@ describe('WaiversService', () => {
     waiverDocument: {
       findFirst: jest.fn(),
     },
+    $transaction: jest.fn(),
   };
   const mockPdf = {
     generateWaiverPdf: jest.fn().mockResolvedValue(new Uint8Array([1, 2, 3])),
@@ -50,6 +51,7 @@ describe('WaiversService', () => {
     }).compile();
     service = module.get(WaiversService);
     jest.clearAllMocks();
+    mockPrisma.$transaction.mockImplementation((fn: any) => fn(mockPrisma));
     mockPrisma.waiverQRV2.update.mockResolvedValue({});
     mockPrisma.waiverQRV2.deleteMany.mockResolvedValue({ count: 0 });
     mockPrisma.waiverDataV2.deleteMany.mockResolvedValue({ count: 0 });
@@ -299,6 +301,13 @@ describe('WaiversService', () => {
       await expect(service.deleteMany(undefined as any)).rejects.toThrow(
         'al menos un ID',
       );
+    });
+
+    it('lanza BadRequestException si algún id no es numérico', async () => {
+      await expect(service.deleteMany(['1', 'abc'])).rejects.toThrow(
+        'numéricos',
+      );
+      expect(mockPrisma.waiverQRV2.deleteMany).not.toHaveBeenCalled();
     });
 
     it('borra relatives, scans y waivers en orden', async () => {
