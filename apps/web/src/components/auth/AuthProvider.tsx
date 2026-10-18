@@ -2,8 +2,10 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
   ReactNode,
@@ -62,7 +64,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    * Devuelve un token válido. Si el token está a menos de 60s de expirar,
    * pide uno nuevo (force refresh).
    */
-  async function getToken(): Promise<string | null> {
+  // Memoizado: referencia estable para usarlo en dependencias de efectos
+  const getToken = useCallback(async (): Promise<string | null> => {
     if (!user) return null;
     try {
       // getIdToken() acepta forceRefresh. Sin argumento, usa cache si está vivo.
@@ -79,10 +82,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       return user.getIdToken();
     }
-  }
+  }, [user]);
+
+  const value = useMemo(() => ({ user, ready, getToken }), [user, ready, getToken]);
 
   return (
-    <AuthContext.Provider value={{ user, ready, getToken }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
