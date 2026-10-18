@@ -5,7 +5,8 @@
     "events": "Events",
     "about": "About us",
     "contact": "Contact",
-    "account": "Account"
+    "account": "Account",
+    "gallery": "Gallery"
   },
   "header": {
     "tagline": "Kids Parties",
@@ -33,9 +34,18 @@
     "howItWorks": "How it works",
     "howItWorksSubtitle": "Booking is very easy. In 3 steps your party will be ready.",
     "howItWorksSteps": {
-      "1": { "title": "Explore the catalog", "description": "Browse our variety of bounce houses, games and services. Find the perfect fit for your event." },
-      "2": { "title": "Book and sign the waiver", "description": "Select a date, fill out the digital form and get your access QR instantly." },
-      "3": { "title": "Have fun!", "description": "The day arrives, show your QR and enjoy. We take care of everything." }
+      "1": {
+        "title": "Explore the catalog",
+        "description": "Browse our variety of bounce houses, games and services. Find the perfect fit for your event."
+      },
+      "2": {
+        "title": "Book and sign the waiver",
+        "description": "Select a date, fill out the digital form and get your access QR instantly."
+      },
+      "3": {
+        "title": "Have fun!",
+        "description": "The day arrives, show your QR and enjoy. We take care of everything."
+      }
     },
     "noProducts": "No products published yet.",
     "viewAll": "View all",
@@ -523,5 +533,27 @@
     "viewDetail": "View detail",
     "pdfHint": "The PDF opens in a new tab",
     "authRequired": "Sign in to view your waivers."
+  },
+  "gallery": {
+    "badge": "Real parties",
+    "title": "Party gallery",
+    "subtitle": "This is what our parties look like: real photos from events we have served.",
+    "empty": "We will publish photos from our parties very soon.",
+    "photos": "{count, plural, one {# photo} other {# photos}}",
+    "viewAlbum": "View album",
+    "back": "Back to gallery",
+    "share": "Share",
+    "shareTitle": "Share this album",
+    "copyLink": "Copy link",
+    "copied": "Link copied!",
+    "featuredProducts": "Equipment we used at this party",
+    "homeTitle": "Recent parties",
+    "homeSubtitle": "See our bounce houses and games in action",
+    "viewAll": "View gallery",
+    "inAction": "See it at our parties",
+    "close": "Close",
+    "prev": "Previous",
+    "next": "Next",
+    "book": "Want a party like this? Book here"
   }
 }

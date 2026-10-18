@@ -5,7 +5,8 @@
     "events": "Eventos",
     "about": "Nosotros",
     "contact": "Contacto",
-    "account": "Cuenta"
+    "account": "Cuenta",
+    "gallery": "Galería"
   },
   "header": {
     "tagline": "Fiestas Infantiles",
@@ -33,9 +34,18 @@
     "howItWorks": "Cómo funciona",
     "howItWorksSubtitle": "Reservar es muy fácil. En 3 pasos tu fiesta estará lista.",
     "howItWorksSteps": {
-      "1": { "title": "Explora el catálogo", "description": "Revisa nuestra variedad de brincolines, juegos y servicios. Encuentra lo perfecto para tu evento." },
-      "2": { "title": "Reserva y firma el waiver", "description": "Selecciona fecha, completa el formulario digital y obtén tu QR de acceso al instante." },
-      "3": { "title": "¡A divertirse!", "description": "Llega el día, muestra tu QR y disfruta. Nosotros nos encargamos de todo." }
+      "1": {
+        "title": "Explora el catálogo",
+        "description": "Revisa nuestra variedad de brincolines, juegos y servicios. Encuentra lo perfecto para tu evento."
+      },
+      "2": {
+        "title": "Reserva y firma el waiver",
+        "description": "Selecciona fecha, completa el formulario digital y obtén tu QR de acceso al instante."
+      },
+      "3": {
+        "title": "¡A divertirse!",
+        "description": "Llega el día, muestra tu QR y disfruta. Nosotros nos encargamos de todo."
+      }
     },
     "noProducts": "Aún no hay productos publicados.",
     "viewAll": "Ver todos",
@@ -523,5 +533,27 @@
     "viewDetail": "Ver detalle",
     "pdfHint": "El PDF se abre en una pestaña nueva",
     "authRequired": "Inicia sesión para ver tus waivers."
+  },
+  "gallery": {
+    "badge": "Fiestas reales",
+    "title": "Galería de fiestas",
+    "subtitle": "Así se viven nuestras fiestas: fotos reales de eventos que hemos atendido.",
+    "empty": "Muy pronto publicaremos fotos de nuestras fiestas.",
+    "photos": "{count, plural, one {# foto} other {# fotos}}",
+    "viewAlbum": "Ver álbum",
+    "back": "Volver a la galería",
+    "share": "Compartir",
+    "shareTitle": "Comparte este álbum",
+    "copyLink": "Copiar enlace",
+    "copied": "¡Enlace copiado!",
+    "featuredProducts": "Equipos que usamos en esta fiesta",
+    "homeTitle": "Fiestas recientes",
+    "homeSubtitle": "Mira nuestros brincolines y juegos en acción",
+    "viewAll": "Ver galería",
+    "inAction": "Así se ve en nuestras fiestas",
+    "close": "Cerrar",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "book": "¿Quieres una fiesta así? Reserva aquí"
   }
 }

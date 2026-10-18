@@ -378,3 +378,60 @@ export interface ClientsListResponse {
   skip: number;
   take: number;
 }
+
+// ============================================================
+// Galería de fiestas
+// ============================================================
+
+export interface GalleryPhoto {
+  id: number;
+  /** Ruta relativa en /media (ej. gallery/fiesta_1a2b3c4d.webp) */
+  path: string;
+  caption: string | null;
+  width: number | null;
+  height: number | null;
+}
+
+export interface GalleryAlbumSummary {
+  id: number;
+  slug: string;
+  title: string;
+  description?: string | null;
+  eventDate: string | null;
+  location?: string | null;
+  published?: boolean;
+  createdAt?: string;
+  photoCount: number;
+  cover: GalleryPhoto | null;
+  preview: GalleryPhoto[];
+}
+
+export interface GalleryAlbum {
+  id: number;
+  slug: string;
+  title: string;
+  description: string | null;
+  eventDate: string | null;
+  location: string | null;
+  published: boolean;
+  coverPhotoId: number | null;
+  createdAt: string;
+  updatedAt: string;
+  cover: GalleryPhoto | null;
+  photos: GalleryPhoto[];
+  products: Array<{ id: number; title: string; img: string }>;
+}
+
+/**
+ * La fecha del álbum se guarda como DATE (medianoche UTC): se formatea en UTC
+ * para que no se corra al día anterior en zonas horarias negativas.
+ */
+export function formatAlbumDate(iso: string | null, locale: string): string | null {
+  if (!iso) return null;
+  return new Date(iso).toLocaleDateString(locale === 'en' ? 'en-US' : 'es-ES', {
+    timeZone: 'UTC',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
