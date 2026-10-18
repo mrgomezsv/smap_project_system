@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { api, ApiError } from '@/lib/api';
 
@@ -29,6 +29,9 @@ export function ContactForm() {
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  // Anti-spam: momento en que se mostró el formulario y campo trampa oculto
+  const startedAt = useRef(Date.now());
+  const [website, setWebsite] = useState('');
 
   function update<K extends keyof FormData>(key: K, value: FormData[K]) {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -58,9 +61,14 @@ export function ContactForm() {
     setSubmitting(true);
     setErrorMsg(null);
     try {
-      await api.post('/api/web-messages', data);
+      await api.post('/api/web-messages', {
+        ...data,
+        website,
+        formStartedAt: startedAt.current,
+      });
       setSent(true);
       setData(EMPTY);
+      startedAt.current = Date.now();
     } catch (e) {
       setErrorMsg(e instanceof ApiError ? e.message : tCommon('error'));
     } finally {
@@ -91,6 +99,20 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="card space-y-4">
+      {/* Campo trampa: invisible para personas, los bots lo llenan */}
+      <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+        <label>
+          Website
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+          />
+        </label>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-text-primary mb-1.5">
