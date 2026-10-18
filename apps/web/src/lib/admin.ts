@@ -1,3 +1,8 @@
+/**
+ * Solo como pista de UI ANTES de iniciar sesión (redirigir al login de admin).
+ * Con sesión activa, usar useIsAdmin()/checkIsAdmin(): la API es la fuente
+ * de verdad de los permisos.
+ */
 const DEFAULT_ADMIN_EMAILS = [
   'mrgomez.dev@outlook.com',
   'mrgomez.dev@gmail.com',

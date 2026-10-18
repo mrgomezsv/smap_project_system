@@ -17,6 +17,7 @@ import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
 import { PasswordInput } from '@/components/ui/PasswordInput';
 import { api } from '@/lib/api';
 import { isAdminEmail } from '@/lib/admin';
+import { checkIsAdmin, useIsAdmin } from './useIsAdmin';
 
 export function CuentaForm() {
   const t = useTranslations('auth');
@@ -27,6 +28,7 @@ export function CuentaForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const isAdminUser = useIsAdmin();
 
   useEffect(() => {
     if (!isFirebaseConfigured()) return;
@@ -74,8 +76,8 @@ export function CuentaForm() {
       const provider = new GoogleAuthProvider();
       const cred = await signInWithPopup(auth, provider);
       
-      const userEmail = cred.user.email;
-      const isAdmin = isAdminEmail(userEmail);
+      // La API decide quién es admin (allowlist + email verificado)
+      const isAdmin = await checkIsAdmin(await cred.user.getIdToken());
 
       if (isAdmin) {
         router.push('/admin/dashboard');
@@ -91,7 +93,7 @@ export function CuentaForm() {
   }
 
   if (user) {
-    const isAdmin = isAdminEmail(user.email);
+    const isAdmin = isAdminUser;
     return (
       <div className="card text-center">
         <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-primary to-party-pink text-white flex items-center justify-center text-2xl font-bold mb-4">

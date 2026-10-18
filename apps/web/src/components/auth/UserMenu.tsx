@@ -5,13 +5,14 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
-import { isAdminEmail } from '@/lib/admin';
+import { useIsAdmin } from './useIsAdmin';
 
 export function UserMenu() {
   const t = useTranslations('header');
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState(false);
+  const isAdmin = useIsAdmin();
 
   useEffect(() => {
     if (!isFirebaseConfigured()) {
@@ -43,7 +44,7 @@ export function UserMenu() {
     );
   }
 
-  const isAdmin = isAdminEmail(user.email);
+
   const initials = (user.displayName ?? user.email ?? '?')
     .split(/\s|@/)
     .filter(Boolean)
