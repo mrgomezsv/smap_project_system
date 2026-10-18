@@ -218,3 +218,6 @@ Thumbs.db
 # Variables de producción (nunca versionar)
 .env.production
 .env.*.local
+
+# Variables reales del stack de Portainer (nunca versionar)
+portainer.env
