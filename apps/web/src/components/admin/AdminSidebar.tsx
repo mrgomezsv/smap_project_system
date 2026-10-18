@@ -35,12 +35,6 @@ const sections = [
       { href: '/admin/usuarios', label: 'Usuarios App', icon: '👥' },
     ],
   },
-  {
-    title: 'Sistema',
-    links: [
-      { href: '/admin/sudo', label: 'Sudo Admin', icon: '⚙️' },
-    ],
-  },
 ];
 
 interface AdminSidebarProps {
