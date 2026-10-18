@@ -23,9 +23,7 @@ export class MediaController {
     }
 
     if (!mediaPath || mediaPath.split(/[\\/]+/).includes('..')) {
-      throw new NotFoundException(
-        `No media path specified (rawUrl: ${rawUrl})`,
-      );
+      throw new NotFoundException('Archivo no encontrado');
     }
 
     const roots = [
@@ -54,8 +52,6 @@ export class MediaController {
       }
     }
 
-    throw new NotFoundException(
-      `Media file "${mediaPath}" not found. Checked: ${possiblePaths.join(' | ')}`,
-    );
+    throw new NotFoundException('Archivo no encontrado');
   }
 }
