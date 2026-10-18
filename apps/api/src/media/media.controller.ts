@@ -48,7 +48,14 @@ export class MediaController {
     for (const filePath of possiblePaths) {
       if (existsSync(filePath)) {
         res.setHeader('X-Content-Type-Options', 'nosniff');
-        return res.sendFile(filePath);
+        // Las subidas llevan sufijo aleatorio (foto_1a2b3c4d.webp): su contenido
+        // nunca cambia, así que el navegador puede guardarlas un año. El resto
+        // (imágenes históricas con nombre fijo) se cachea 7 días.
+        const uniqueName = /_[0-9a-f]{8}(_thumb)?\.[a-z0-9]+$/i.test(filePath);
+        return res.sendFile(filePath, {
+          maxAge: uniqueName ? '365d' : '7d',
+          immutable: uniqueName,
+        });
       }
     }
 
