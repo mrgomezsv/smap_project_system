@@ -15,9 +15,20 @@ import { CreateWaiverDto } from './dto/create-waiver.dto';
 import { Public } from '../auth/decorators/public.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
-import { assertAdmin } from '../auth/admin-allowlist';
+import { assertAdmin, isAdminUser } from '../auth/admin-allowlist';
 import { getPublicWebUrl } from '../common/web-url';
 import { RateLimit } from '../common/rate-limit.guard';
+
+function maskEmail(email: string): string {
+  const [local, domain] = email.split('@');
+  if (!domain) return '***';
+  return `${local.slice(0, 2)}***@${domain}`;
+}
+
+function maskPhone(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  return digits.length > 4 ? `***${digits.slice(-4)}` : '***';
+}
 
 class DeleteWaiversDto {
   @IsArray()
@@ -183,8 +194,8 @@ export class WaiversController {
    */
   @Public()
   @Get('verify/:qr')
-  verifyByQr(@Param('qr') qr: string) {
-    return this.waiversService.findByQr(qr);
+  verifyByQr(@Param('qr') qr: string, @CurrentUser() user?: AuthUser) {
+    return this.publicView(qr, user);
   }
 
   /**
@@ -193,7 +204,28 @@ export class WaiversController {
    */
   @Public()
   @Get(':qr')
-  findByQr(@Param('qr') qr: string) {
-    return this.waiversService.findByQr(qr);
+  findByQr(@Param('qr') qr: string, @CurrentUser() user?: AuthUser) {
+    return this.publicView(qr, user);
+  }
+
+  /**
+   * Vista pública del waiver: el dueño y los admins ven todo; cualquier otra
+   * persona con el QR ve el email y teléfono enmascarados.
+   */
+  private async publicView(qr: string, user?: AuthUser) {
+    const result = await this.waiversService.findByQr(qr);
+    const isOwner = !!user && user.uid === result.waiver.userId;
+    if (isOwner || isAdminUser(user)) return result;
+    return {
+      ...result,
+      waiver: {
+        ...result.waiver,
+        userId: undefined,
+        userEmail: maskEmail(result.waiver.userEmail),
+        userPhone: result.waiver.userPhone
+          ? maskPhone(result.waiver.userPhone)
+          : null,
+      },
+    };
   }
 }

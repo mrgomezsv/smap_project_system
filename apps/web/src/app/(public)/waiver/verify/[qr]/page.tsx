@@ -3,12 +3,15 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { api, PUBLIC_API_URL } from '@/lib/api';
+import { useAuth } from '@/components/auth/AuthProvider';
 import type { Waiver } from '@/lib/types';
 import Link from 'next/link';
 
 export default function VerifyWaiverPage() {
   const params = useParams();
   const qr = (params?.qr as string)?.toUpperCase();
+  // Con sesión (dueño o staff admin) la API devuelve los datos sin enmascarar
+  const { ready, getToken } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [waiver, setWaiver] = useState<Waiver | null>(null);
@@ -16,13 +19,16 @@ export default function VerifyWaiverPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!qr) return;
+    if (!qr || !ready) return;
 
     async function checkWaiver() {
       try {
         setLoading(true);
         setError(null);
-        const res = await api.get<{ waiver: Waiver; isValid: boolean }>(`/api/v2/waiver/verify/${qr}`);
+        const res = await api.get<{ waiver: Waiver; isValid: boolean }>(
+          `/api/v2/waiver/verify/${qr}`,
+          { getToken },
+        );
         setWaiver(res.waiver);
         setIsValid(res.isValid);
       } catch (err: any) {
@@ -33,7 +39,8 @@ export default function VerifyWaiverPage() {
     }
 
     checkWaiver();
-  }, [qr]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qr, ready]);
 
   if (loading) {
     return (
