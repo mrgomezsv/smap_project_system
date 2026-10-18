@@ -6,7 +6,7 @@ import {
   SetMetadata,
 } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { mergeMap, tap } from 'rxjs/operators';
 import { Reflector } from '@nestjs/core';
 import { RedisService } from '../../redis/redis.service';
 
@@ -60,7 +60,12 @@ function bigIntReplacer(_key: string, value: unknown): unknown {
  */
 @Injectable()
 export class CacheInterceptor implements NestInterceptor {
-  private readonly memoryStore = new Map<string, MemoryCacheEntry>();
+  // Estático: compartido por todas las instancias (una por módulo) para que
+  // la invalidación cruzada (p.ej. categorías → productos) funcione sin Redis.
+  private static readonly memoryStore = new Map<string, MemoryCacheEntry>();
+  private get memoryStore() {
+    return CacheInterceptor.memoryStore;
+  }
 
   constructor(
     private readonly reflector: Reflector,
@@ -72,41 +77,35 @@ export class CacheInterceptor implements NestInterceptor {
     next: CallHandler,
   ): Promise<Observable<unknown>> {
     const handler = context.getHandler();
-    const skip = this.reflector.get<boolean>(SKIP_CACHE_METADATA, handler);
-    if (skip) return next.handle();
-
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
 
-    // Invalidación: aplicar en POST/PATCH/DELETE si tiene @CacheInvalidate
+    // Invalidación: en POST/PATCH/DELETE con @CacheInvalidate. Se evalúa antes
+    // que @SkipCache (las mutaciones llevan ambos decoradores) y se espera a que
+    // termine antes de responder, para que el siguiente GET no lea datos viejos.
     const invalidatePatterns = this.reflector.get<string[]>(
       CACHE_INVALIDATE_METADATA,
       handler,
     );
     if (invalidatePatterns && req.method !== 'GET') {
-      // Aplicar después de que el handler ejecute exitosamente
-      return new Observable((subscriber) => {
-        next.handle().subscribe({
-          next: (value) => {
-            // Solo invalidar en éxito (status 2xx)
-            if (res.statusCode < 400) {
-              const prefix = this.getKeyPrefix(req);
-              const fullPatterns = invalidatePatterns.map((p) =>
-                p.startsWith('cache:') ? p : `${prefix}${p}`,
-              );
-              // Ejecutar en paralelo, no bloqueamos la respuesta
-              Promise.all([
-                ...fullPatterns.map((p) => this.redis.delByPattern(p)),
-                ...fullPatterns.map((p) => this.delMemoryByPattern(p)),
-              ]).catch(() => {});
-            }
-            subscriber.next(value);
-          },
-          error: (err) => subscriber.error(err),
-          complete: () => subscriber.complete(),
-        });
-      });
+      return next.handle().pipe(
+        mergeMap(async (value) => {
+          if (res.statusCode < 400) {
+            const fullPatterns = invalidatePatterns.map((p) =>
+              p.startsWith('cache:') ? p : `cache:${p}`,
+            );
+            await Promise.all([
+              ...fullPatterns.map((p) => this.redis.delByPattern(p)),
+              ...fullPatterns.map((p) => this.delMemoryByPattern(p)),
+            ]).catch(() => {});
+          }
+          return value;
+        }),
+      );
     }
+
+    const skip = this.reflector.get<boolean>(SKIP_CACHE_METADATA, handler);
+    if (skip) return next.handle();
 
     const ttl = this.reflector.get<number>(CACHE_TTL_METADATA, handler);
     if (!ttl || req.method !== 'GET') return next.handle();
@@ -175,19 +174,17 @@ export class CacheInterceptor implements NestInterceptor {
     return `cache:${url}::user=${userId}`;
   }
 
-  private getKeyPrefix(req: { originalUrl?: string; url?: string }): string {
-    const url = req.originalUrl ?? req.url ?? 'unknown';
-    // Devuelve el prefijo hasta el primer '?' (inclusive) para usar con pattern matching
-    return `cache:${url.split('?')[0]}*`;
-  }
-
   private delMemoryByPattern(prefix: string): Promise<void> {
     // En memoria, simplemente limpiamos todo (no eficiente pero funcional)
     // Solo se ejecuta si Redis está caído
     if (!prefix.includes('*')) {
       this.memoryStore.delete(prefix);
     } else {
-      const regex = new RegExp('^' + prefix.replace(/\*/g, '.*') + '$');
+      const escaped = prefix
+        .split('*')
+        .map((s) => s.replace(/[.+?^${}()|[\]\\]/g, '\\$&'))
+        .join('.*');
+      const regex = new RegExp('^' + escaped);
       for (const k of this.memoryStore.keys()) {
         if (regex.test(k)) this.memoryStore.delete(k);
       }
