@@ -126,9 +126,25 @@ docker compose up --build
 ```
 
 Servicios:
-- `db` — MariaDB 10.6
+- `db` — MariaDB 10.6 (solo en `127.0.0.1:3309`)
+- `redis` — Redis 7 con contraseña (solo en `127.0.0.1:6379`)
 - `api` — NestJS en puerto 3001
 - `web` — Next.js en puerto 3000
+
+### Variables obligatorias
+
+El compose ya no incluye secretos. Defínelas en un archivo `.env` junto al
+compose (no versionado; ver `env.example`) o como variables del stack en Portainer:
+
+| Variable | Uso |
+|---|---|
+| `DB_PASSWORD` / `DB_ROOT_PASSWORD` | Contraseñas de MariaDB |
+| `REDIS_PASSWORD` | Contraseña de Redis |
+| `FIREBASE_CREDENTIALS_BASE64` | Service account de Firebase en base64 |
+| `RESEND_API_KEY` | Envío de correos |
+
+> Sin credenciales de Firebase válidas, la API en producción responde **503**
+> en todas las rutas protegidas (fail-closed) en lugar de dejarlas abiertas.
 
 ---
 
