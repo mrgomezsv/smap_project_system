@@ -214,3 +214,7 @@ apps/api/prisma/migrations/dev.db*
 # OS
 .DS_Store
 Thumbs.db
+
+# Variables de producción (nunca versionar)
+.env.production
+.env.*.local
