@@ -12,9 +12,17 @@ import { AuthUser } from './decorators/current-user.decorator';
  * - Crea el User si no existe
  * - Devuelve el user con su ID de BD para uso en queries
  */
+/** Tiempo que se reutiliza el mapeo uid → usuario sin volver a la BD. */
+const CACHE_TTL_MS = 5 * 60 * 1000;
+const CACHE_MAX = 2000;
+
 @Injectable()
 export class UserMappingService {
   private readonly logger = new Logger(UserMappingService.name);
+  private readonly cache = new Map<
+    string,
+    { user: Omit<AuthUser, 'token'>; expiresAt: number }
+  >();
 
   constructor(
     private readonly prisma: PrismaService,
@@ -29,6 +37,15 @@ export class UserMappingService {
     token: string;
   }): Promise<AuthUser> {
     const emailVerified = payload.emailVerified === true;
+
+    // Cache por request: evita 3-4 queries (find/update user + upsert client)
+    // en cada petición autenticada. La clave incluye email y verificación
+    // para refrescar si cambian en Firebase.
+    const cacheKey = `${payload.uid}|${payload.email ?? ''}|${emailVerified}`;
+    const hit = this.cache.get(cacheKey);
+    if (hit && hit.expiresAt > Date.now()) {
+      return { ...hit.user, token: payload.token };
+    }
     const username = payload.email || payload.uid;
     const rawEmail = payload.email || `${payload.uid}@firebase.local`;
     const name =
@@ -81,13 +98,18 @@ export class UserMappingService {
       }
     }
 
-    return {
+    const result: Omit<AuthUser, 'token'> = {
       uid: payload.uid,
       email,
       name,
       emailVerified,
       userId: user.id,
-      token: payload.token,
     };
+    if (this.cache.size >= CACHE_MAX) {
+      const oldest = this.cache.keys().next().value;
+      if (oldest !== undefined) this.cache.delete(oldest);
+    }
+    this.cache.set(cacheKey, { user: result, expiresAt: Date.now() + CACHE_TTL_MS });
+    return { ...result, token: payload.token };
   }
 }
