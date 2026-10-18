@@ -1,8 +1,15 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { detectImageExtension } from './image-type';
 import { optimizeImage, thumbName } from './image-optimizer';
-import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
-import { join } from 'path';
+import {
+  existsSync,
+  mkdirSync,
+  writeFileSync,
+  readFileSync,
+  unlinkSync,
+} from 'fs';
+import { join, resolve, sep } from 'path';
+import sharp from 'sharp';
 import { randomBytes } from 'crypto';
 import { GoogleDriveService } from './google-drive.service';
 
@@ -192,6 +199,62 @@ export class UploadService {
       );
     }
     return buffer;
+  }
+
+  /**
+   * Guarda una foto de la galería en media/gallery/ (optimizada + miniatura)
+   * y devuelve su ruta relativa y dimensiones (para armar el collage).
+   */
+  async saveGalleryImage(file: Express.Multer.File, albumSlug: string) {
+    const uploadDir = this.resolveUploadDir();
+    const targetDir = join(uploadDir, 'gallery');
+    if (!existsSync(targetDir)) {
+      mkdirSync(targetDir, { recursive: true });
+    }
+    const safeSlug =
+      albumSlug
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '')
+        .slice(0, 40) || 'album';
+    const { buffer, absolutePath } = await this.writeOptimized(
+      this.readValidatedImage(file),
+      targetDir,
+      `${safeSlug}_${randomBytes(4).toString('hex')}`,
+    );
+    let width: number | null = null;
+    let height: number | null = null;
+    try {
+      const meta = await sharp(buffer).metadata();
+      width = meta.width ?? null;
+      height = meta.height ?? null;
+    } catch {
+      // formato no soportado por sharp (p.ej. HEIC): sin dimensiones
+    }
+    return {
+      path: this.toRelativePath(absolutePath, uploadDir).replace(/\\/g, '/'),
+      width,
+      height,
+    };
+  }
+
+  /** Borra un archivo de /media y su miniatura (ignora si no existen). */
+  deleteMedia(relativePath: string): void {
+    const root = resolve(this.resolveUploadDir());
+    const target = resolve(root, relativePath);
+    if (!target.startsWith(root + sep)) return; // fuera de /media: no tocar
+    for (const p of [target, thumbName(target)]) {
+      try {
+        if (existsSync(p)) unlinkSync(p);
+      } catch (e) {
+        this.logger.warn(`No se pudo borrar ${p}: ${(e as Error).message}`);
+      }
+    }
+  }
+
+  private resolveUploadDir(): string {
+    const raw = process.env.UPLOAD_DIR || 'media';
+    return raw.startsWith('/') ? raw : join(process.cwd(), raw);
   }
 
   toRelativePath(absolutePath: string, baseDir?: string): string {
