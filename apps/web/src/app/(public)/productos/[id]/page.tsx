@@ -8,6 +8,8 @@ import { type Category } from '@/lib/types';
 import { ProductGallery } from '@/components/public/ProductGallery';
 import { ProductLikeButton } from '@/components/public/ProductLikeButton';
 import { ProductCommentsSection } from '@/components/public/ProductCommentsSection';
+import { AlbumCard } from '@/components/gallery/AlbumCard';
+import { formatAlbumDate, type GalleryAlbumSummary } from '@/lib/types';
 
 interface PageProps {
   params: { id: string };
@@ -54,6 +56,11 @@ export default async function ProductoDetallePage({ params }: PageProps) {
     }
     throw e;
   }
+
+  const tGallery = await getTranslations('gallery');
+  const albums = await api
+    .get<GalleryAlbumSummary[]>(`/api/gallery/product/${product.id}`)
+    .catch(() => [] as GalleryAlbumSummary[]);
 
   const gallery: string[] = [product.img, product.img1, product.img2, product.img3, product.img4, product.img5]
     .filter((img) => img && !img.includes('default_product_image'));
@@ -194,6 +201,25 @@ export default async function ProductoDetallePage({ params }: PageProps) {
             </p>
           </div>
         </div>
+
+        {/* Fotos reales del producto en fiestas (galería) */}
+        {albums.length > 0 && (
+          <section className="mt-12">
+            <h2 className="text-2xl font-heading font-bold text-text-primary mb-6">
+              📸 {tGallery('inAction')}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {albums.map((album) => (
+                <AlbumCard
+                  key={album.id}
+                  album={album}
+                  dateLabel={formatAlbumDate(album.eventDate, locale)}
+                  photosLabel={tGallery('photos', { count: album.photoCount })}
+                />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Sección interactiva de Comentarios */}
         <ProductCommentsSection

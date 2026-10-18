@@ -4,6 +4,8 @@ import { ProductCard } from '@/components/public/ProductCard';
 import { api } from '@/lib/api';
 import type { Product } from '@/lib/types';
 import { type Category } from '@/lib/types';
+import { formatAlbumDate, type GalleryAlbumSummary } from '@/lib/types';
+import { AlbumCard } from '@/components/gallery/AlbumCard';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -35,14 +37,18 @@ export default async function HomePage() {
   const tProduct = await getTranslations('product');
   const locale = await getLocale();
 
+  const tGallery = await getTranslations('gallery');
   let products: Product[] = [];
+  let recentAlbums: GalleryAlbumSummary[] = [];
   let dbFeaturedCategories: Array<{ key: string; name: string; emoji: string; bg: string }> = [];
 
   try {
-    const [resProd, resCat] = await Promise.all([
+    const [resProd, resCat, resGallery] = await Promise.all([
       api.get<{ items: Product[] }>(`/api/products?take=100&publicated=true&lang=${locale}`),
       api.get<Array<{ id: number; slug: string; name: string; emoji: string; color: string }>>(`/api/categories?lang=${locale}`).catch(() => []),
+      api.get<{ items: GalleryAlbumSummary[] }>('/api/gallery?take=3').catch(() => ({ items: [] })),
     ]);
+    recentAlbums = resGallery.items;
 
     products = resProd.items;
     const activeCategoriesSet = new Set(products.map((p) => p.category));
@@ -224,6 +230,41 @@ export default async function HomePage() {
           )}
         </div>
       </section>
+
+      {/* ===== FIESTAS RECIENTES (GALERÍA) ===== */}
+      {recentAlbums.length > 0 && (
+        <section className="py-20 bg-surface-elevated">
+          <div className="container">
+            <div className="flex items-end justify-between mb-12">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-heading font-bold text-text-primary">
+                  📸 {tGallery('homeTitle')}
+                </h2>
+                <p className="mt-3 text-text-muted text-lg">{tGallery('homeSubtitle')}</p>
+              </div>
+              <Link
+                href="/galeria"
+                className="hidden sm:inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all"
+              >
+                {tGallery('viewAll')} →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {recentAlbums.map((album) => (
+                <AlbumCard
+                  key={album.id}
+                  album={album}
+                  dateLabel={formatAlbumDate(album.eventDate, locale)}
+                  photosLabel={tGallery('photos', { count: album.photoCount })}
+                />
+              ))}
+            </div>
+            <Link href="/galeria" className="sm:hidden btn btn-outline w-full mt-6 text-center">
+              {tGallery('viewAll')}
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* ===== CÓMO FUNCIONA ===== */}
       <section className="py-20 bg-gradient-to-br from-primary to-primary-700 text-white">
