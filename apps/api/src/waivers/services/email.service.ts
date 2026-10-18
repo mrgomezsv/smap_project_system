@@ -136,6 +136,17 @@ export class EmailService {
     createdAt?: Date;
   }): { subject: string; html: string } {
     const isEn = data.lang === 'en';
+    // Los datos vienen del usuario: se escapan antes de insertarlos en el HTML
+    data = {
+      ...data,
+      userName: this.escapeHtml(data.userName ?? ''),
+      userEmail: data.userEmail ? this.escapeHtml(data.userEmail) : undefined,
+      userPhone: data.userPhone ? this.escapeHtml(data.userPhone) : undefined,
+      relatives: data.relatives?.map((r) => ({
+        ...r,
+        name: this.escapeHtml(r.name ?? ''),
+      })),
+    };
 
     const subject = isEn
       ? `🎉 Your Kidsfun Waiver Code: ${data.qrCode}`
@@ -305,12 +316,8 @@ export class EmailService {
   }
 
   /**
-   * Escapa caracteres HTML para evitar inyección cuando se inserta
-   * texto de políticas de privacidad (con caracteres como &, <, >, ") en HTML.
-   */
-  /**
-   * Escapa caracteres HTML para evitar inyección cuando se inserta
-   * texto de políticas de privacidad (con caracteres como &, <, >, ") en HTML.
+   * Escapa caracteres HTML para evitar inyección al insertar texto
+   * (datos del usuario, políticas de privacidad) en las plantillas.
    */
   private escapeHtml(input: string): string {
     return input
@@ -403,6 +410,13 @@ export class EmailService {
     eventDate?: string | null;
   }): { subject: string; html: string } {
     const subject = `📄 Action Required: Sign Your Kidsfun Rental Agreement - ${data.clientName}`;
+    data = {
+      ...data,
+      clientName: this.escapeHtml(data.clientName ?? ''),
+      equipment: this.escapeHtml(data.equipment ?? ''),
+      eventDate: data.eventDate ? this.escapeHtml(data.eventDate) : null,
+      signUrl: encodeURI(data.signUrl),
+    };
 
     const html = `
 <!DOCTYPE html>
@@ -471,6 +485,11 @@ export class EmailService {
     equipment: string;
   }): { subject: string; html: string } {
     const subject = `✅ Signed Copy: Kidsfun Rental Agreement - ${data.clientName}`;
+    data = {
+      ...data,
+      clientName: this.escapeHtml(data.clientName ?? ''),
+      equipment: this.escapeHtml(data.equipment ?? ''),
+    };
 
     const html = `
 <!DOCTYPE html>
