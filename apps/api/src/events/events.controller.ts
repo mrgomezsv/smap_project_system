@@ -14,6 +14,7 @@ import { QueryEventDto } from './dto/query-event.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Public } from '../auth/decorators/public.decorator';
+import { AdminOnly } from '../auth/admin.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
 import {
@@ -49,6 +50,7 @@ export class EventsController {
     return this.eventsService.findOne(Number(id));
   }
 
+  @AdminOnly()
   @SkipCache()
   @CacheInvalidate('/api/events*')
   @Post()
@@ -56,6 +58,7 @@ export class EventsController {
     return this.eventsService.create(dto, user?.userId);
   }
 
+  @AdminOnly()
   @SkipCache()
   @CacheInvalidate('/api/events*')
   @Patch(':id')
@@ -63,6 +66,7 @@ export class EventsController {
     return this.eventsService.update(Number(id), dto);
   }
 
+  @AdminOnly()
   @SkipCache()
   @CacheInvalidate('/api/events*')
   @Delete(':id')

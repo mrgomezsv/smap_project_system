@@ -14,6 +14,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { Public } from '../auth/decorators/public.decorator';
+import { AdminOnly } from '../auth/admin.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
 import {
@@ -52,6 +53,7 @@ export class ProductsController {
     return this.productsService.findOne(Number(id), lang);
   }
 
+  @AdminOnly()
   @SkipCache()
   @CacheInvalidate('/api/products*', '/api/v2/waiver*')
   @Post()
@@ -59,6 +61,7 @@ export class ProductsController {
     return this.productsService.create(dto, user.userId!);
   }
 
+  @AdminOnly()
   @SkipCache()
   @CacheInvalidate('/api/products*')
   @Patch(':id')
@@ -66,6 +69,7 @@ export class ProductsController {
     return this.productsService.update(Number(id), dto);
   }
 
+  @AdminOnly()
   @SkipCache()
   @CacheInvalidate('/api/products*')
   @Delete(':id')

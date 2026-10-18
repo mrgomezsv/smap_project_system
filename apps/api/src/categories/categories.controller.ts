@@ -14,6 +14,7 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Public } from '../auth/decorators/public.decorator';
+import { AdminOnly } from '../auth/admin.guard';
 import {
   CacheInterceptor,
   Cache,
@@ -22,6 +23,7 @@ import {
 } from '../common/interceptors/cache.interceptor';
 
 @Controller('api/categories')
+@AdminOnly()
 @UseInterceptors(CacheInterceptor)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
