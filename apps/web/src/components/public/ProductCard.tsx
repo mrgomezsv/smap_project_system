@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 import type { Product } from '@/lib/types';
 import { type Category } from '@/lib/types';
 import { SafeImage } from '@/components/ui/SafeImage';
+import { mediaUrl, thumbUrl } from '@/lib/media';
 import { ProductLikeButton } from '@/components/public/ProductLikeButton';
 
 interface ProductCardProps {
@@ -22,7 +23,8 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative">
         {hasRealImage ? (
           <SafeImage
-            src={`/media/${product.img}`}
+            src={thumbUrl(product.img)}
+            fallbackSrc={mediaUrl(product.img)}
             alt={product.title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

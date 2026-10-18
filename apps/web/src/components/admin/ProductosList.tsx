@@ -7,6 +7,7 @@ import { VirtualList } from '@/components/ui/VirtualList';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
 import { CATEGORY_LABELS, type CategoryItem, type Product } from '@/lib/types';
+import { fallbackToOriginal, thumbUrl } from '@/lib/media';
 
 const VIRTUAL_THRESHOLD = 100;
 type ViewMode = 'table' | 'kanban';
@@ -102,7 +103,12 @@ export function ProductosList() {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden shrink-0">
             {p.img && !p.img.includes('default') ? (
-              <img src={`/media/${p.img}`} alt={p.title} className="w-full h-full object-cover" />
+              <img
+                src={thumbUrl(p.img)}
+                onError={(e) => fallbackToOriginal(e, p.img)}
+                alt={p.title}
+                className="w-full h-full object-cover"
+              />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-lg">🎪</div>
             )}
@@ -214,7 +220,12 @@ export function ProductosList() {
                     >
                       <div className="aspect-[16/9] rounded-lg bg-gray-100 overflow-hidden mb-2 relative">
                         {p.img && !p.img.includes('default') ? (
-                          <img src={`/media/${p.img}`} alt={p.title} className="w-full h-full object-cover" />
+                          <img
+                            src={thumbUrl(p.img)}
+                            onError={(e) => fallbackToOriginal(e, p.img)}
+                            alt={p.title}
+                            className="w-full h-full object-cover"
+                          />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-2xl">🎪</div>
                         )}

@@ -7,6 +7,8 @@ interface SafeImageProps extends Omit<ImageProps, 'src' | 'alt' | 'onError'> {
   src: string;
   alt: string;
   fallback?: React.ReactNode;
+  /** Imagen alternativa si `src` falla (p.ej. la original si no hay miniatura). */
+  fallbackSrc?: string;
 }
 
 /**
@@ -22,13 +24,16 @@ export function SafeImage({
   src,
   alt,
   fallback,
+  fallbackSrc,
   className,
   unoptimized,
   ...rest
 }: SafeImageProps) {
   const [error, setError] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState(src);
+  if (currentSrc !== src && currentSrc !== fallbackSrc) setCurrentSrc(src);
 
-  if (error || !src) {
+  if (error || !currentSrc) {
     return (
       <div
         className={[
@@ -45,12 +50,15 @@ export function SafeImage({
 
   return (
     <Image
-      src={src}
+      src={currentSrc}
       alt={alt}
       className={className}
-      onError={() => setError(true)}
+      onError={() => {
+        if (fallbackSrc && currentSrc !== fallbackSrc) setCurrentSrc(fallbackSrc);
+        else setError(true);
+      }}
       loading="lazy"
-      unoptimized={unoptimized ?? src.startsWith('/media/')}
+      unoptimized={unoptimized ?? currentSrc.startsWith('/media/')}
       {...rest}
     />
   );
