@@ -6,7 +6,9 @@ import {
   Delete,
   Param,
   Body,
+  Logger,
 } from '@nestjs/common';
+import { detectContactSpam } from './spam-filter';
 import { ContactMessagesService } from './contact-messages.service';
 import { Public } from '../auth/decorators/public.decorator';
 import { AdminOnly } from '../auth/admin.guard';
@@ -19,6 +21,7 @@ import {
   IsArray,
   ArrayNotEmpty,
   IsInt,
+  IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -46,6 +49,18 @@ class CreateContactDto {
   @IsNotEmpty()
   @MaxLength(5000)
   reason!: string;
+
+  /** Campo trampa anti-bots (oculto en el formulario web). */
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  website?: string;
+
+  /** Momento (epoch ms) en que se mostró el formulario. */
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  formStartedAt?: number;
 }
 
 class DeleteManyDto {
@@ -59,13 +74,22 @@ class DeleteManyDto {
 @Controller('api/web-messages')
 @AdminOnly()
 export class ContactMessagesController {
+  private readonly logger = new Logger(ContactMessagesController.name);
+
   constructor(private readonly service: ContactMessagesService) {}
 
   @Public()
   @RateLimit({ limit: 5, windowSec: 600 })
   @Post()
-  create(@Body() dto: CreateContactDto) {
-    return this.service.create(dto);
+  async create(@Body() dto: CreateContactDto) {
+    const spamReason = detectContactSpam(dto);
+    if (spamReason) {
+      // Respuesta de éxito falsa: el bot no se entera y no ajusta su ataque
+      this.logger.warn(`Mensaje de contacto descartado (${spamReason})`);
+      return { ok: true };
+    }
+    const { website: _w, formStartedAt: _f, ...data } = dto;
+    return this.service.create(data);
   }
 
   @Get()
