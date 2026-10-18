@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  ForbiddenException,
+} from '@nestjs/common';
+import { isAdminEmail } from '../auth/admin-allowlist';
 import { LikesService } from './likes.service';
 import { Public } from '../auth/decorators/public.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -27,7 +35,12 @@ export class LikesController {
   userHasFavorite(
     @Param('userId') userId: string,
     @Param('productId') productId: string,
+    @CurrentUser() user: AuthUser,
   ) {
+    const isAdmin = user.emailVerified && isAdminEmail(user.email);
+    if (!isAdmin && Number(userId) !== user.userId) {
+      throw new ForbiddenException('Solo puedes consultar tus propios favoritos');
+    }
     return this.likesService.userHasFavorite(Number(userId), Number(productId));
   }
 
