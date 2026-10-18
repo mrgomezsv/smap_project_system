@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Injectable,
   Logger,
+  ServiceUnavailableException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -17,8 +18,9 @@ import { AuthUser } from './decorators/current-user.decorator';
  *
  * Comportamiento:
  * - Si la ruta está marcada con @Public(), pasa sin auth
- * - Si Firebase NO está inicializado (sin credenciales), permite pasar
- *   con un AuthUser "anónimo" para no bloquear el desarrollo
+ * - Si Firebase NO está inicializado (sin credenciales):
+ *     - En desarrollo permite pasar con un AuthUser "anónimo"
+ *     - En producción rechaza la petición (fail-closed)
  * - Si Firebase está inicializado y la ruta no es pública:
  *     - Lee Authorization: Bearer <token>
  *     - Verifica con Firebase Admin
@@ -51,6 +53,14 @@ export class FirebaseAuthGuard implements CanActivate {
     // creamos/obtenemos un User "dev-anonymous" en BD para tener userId
     // real y poder usar endpoints que lo requieren
     if (!this.firebaseService.isInitialized()) {
+      if (process.env.NODE_ENV === 'production') {
+        this.logger.error(
+          'Firebase no inicializado en producción: petición rechazada',
+        );
+        throw new ServiceUnavailableException(
+          'Autenticación no disponible temporalmente',
+        );
+      }
       this.logger.debug(
         'Firebase no inicializado - usando user dev (modo dev)',
       );
