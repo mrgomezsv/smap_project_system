@@ -78,7 +78,9 @@ export class UploadService {
     }
 
     return {
-      path: driveUrl || relativePath,
+      // El frontend siempre sirve desde /media: si se devolviera la URL de
+      // Drive, el formulario guardaría solo su ID y la foto no cargaría.
+      path: relativePath,
       localPath: relativePath,
       driveUrl: driveUrl || null,
       size: file.size,
