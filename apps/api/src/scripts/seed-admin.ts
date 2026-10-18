@@ -6,7 +6,11 @@ import * as path from 'path';
 
 async function seedAdmin() {
   const email = process.env.ADMIN_SEED_EMAIL || 'mrgomez.dev@gmail.com';
-  const password = process.env.ADMIN_SEED_PASSWORD || 'Karin2100';
+  const password = process.env.ADMIN_SEED_PASSWORD;
+  if (!password) {
+    console.error('❌ Define ADMIN_SEED_PASSWORD para ejecutar el seed.');
+    process.exit(1);
+  }
 
   console.log(
     `🚀 Iniciando creación/sincronización de superusuario admin: ${email}`,
