@@ -31,5 +31,14 @@ if ! npx prisma migrate deploy; then
   echo "⚠️ Continuando el arranque (MIGRATIONS_STRICT no está activo)."
 fi
 
+# Optimiza en segundo plano las imágenes que aún no tienen miniatura
+# (las subidas nuevas ya llegan optimizadas). No bloquea el arranque ni lo
+# detiene si falla. Desactivar con OPTIMIZE_IMAGES_ON_START=false.
+if [ "${OPTIMIZE_IMAGES_ON_START:-true}" != "false" ]; then
+  echo "🖼️  Optimizando imágenes pendientes en segundo plano..."
+  ( nice -n 10 node dist/scripts/optimize-existing-images.js --apply 2>&1 \
+      | sed 's/^/[imagenes] /' ) &
+fi
+
 echo "🚀 Iniciando servidor NestJS..."
 exec node dist/main.js

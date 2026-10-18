@@ -62,6 +62,7 @@ services:
       CONTRACT_STORAGE_DIR: "/app/apps/api/private/contracts"
       PUBLIC_WEB_URL: "https://kidsfunyfiestasinfantiles.com"
       MIGRATIONS_STRICT: ${MIGRATIONS_STRICT:-false}
+      OPTIMIZE_IMAGES_ON_START: ${OPTIMIZE_IMAGES_ON_START:-true}
       GOOGLE_DRIVE_FOLDER_ID: "${GOOGLE_DRIVE_FOLDER_ID:-1_5uQEdZB83g8rPnVglKjK0L9RN3Gk8Qo}"
     volumes:
       - media_data:/app/apps/api/media
