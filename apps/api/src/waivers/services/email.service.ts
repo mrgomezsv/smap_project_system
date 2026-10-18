@@ -25,13 +25,7 @@ export class EmailService {
   private readonly fromEmail: string;
 
   constructor() {
-    const defaultKey = Buffer.from(
-      'cmVfRHpSN2lVa0FfTlNISzMxM0RnWTVXS1VQS0w0N3FRbVEz',
-      'base64',
-    ).toString('utf-8');
-    const envKey = process.env.RESEND_API_KEY;
-    const resendApiKey =
-      !envKey || envKey.includes('re_T7189Mev') ? defaultKey : envKey;
+    const resendApiKey = process.env.RESEND_API_KEY?.trim();
     this.fromEmail =
       process.env.RESEND_FROM_EMAIL ||
       process.env.SMTP_FROM_EMAIL ||
