@@ -46,6 +46,18 @@ function normalizePartnerName(val: string): string {
   return val;
 }
 
+/**
+ * Convierte la fecha guardada (ISO en UTC) al formato de <input type="datetime-local">
+ * en la hora local del navegador. Antes se cortaba el ISO en UTC, así que el
+ * formulario mostraba la hora 6 h adelantada y cada guardado movía el evento.
+ */
+function toLocalInputValue(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60_000);
+  return local.toISOString().slice(0, 16);
+}
+
 function getEventImageUrl(imgPath: string): string {
   if (!imgPath) return '';
   if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) return imgPath;
@@ -112,7 +124,7 @@ export function EventForm({ initial, mode }: EventFormProps) {
         title: initial.title,
         description: initial.description,
         location: initial.location,
-        startDatetime: initial.startDatetime ? initial.startDatetime.slice(0, 16) : '',
+        startDatetime: initial.startDatetime ? toLocalInputValue(initial.startDatetime) : '',
         ticketPrice:
           initial.ticketPrice !== undefined && initial.ticketPrice !== null
             ? initial.ticketPrice.toString()
