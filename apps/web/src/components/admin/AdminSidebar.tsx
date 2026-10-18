@@ -13,6 +13,7 @@ const sections = [
       { href: '/admin/productos', label: 'Productos', icon: '🎪' },
       { href: '/admin/categorias', label: 'Categorías', icon: '🏷️' },
       { href: '/admin/eventos', label: 'Eventos', icon: '🎉' },
+      { href: '/admin/galeria', label: 'Galería', icon: '📸' },
     ],
   },
   {
