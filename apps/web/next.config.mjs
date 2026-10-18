@@ -27,7 +27,9 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/:path*',
+        // Solo páginas y API: los assets con hash (/_next/static), imágenes
+        // optimizadas y /media deben poder cachearse en el navegador.
+        source: '/((?!_next/static|_next/image|media|favicon.ico).*)',
         headers: [
           {
             key: 'Cache-Control',
