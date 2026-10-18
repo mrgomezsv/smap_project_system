@@ -10,7 +10,7 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import type { AuthUser } from './decorators/current-user.decorator';
 import { FirebaseService } from './firebase.service';
 import { EmailService } from '../waivers/services/email.service';
-import { assertAdminEmail } from './admin-allowlist';
+import { assertAdmin } from './admin-allowlist';
 import { Public } from './decorators/public.decorator';
 
 @Controller('api/auth')
@@ -65,7 +65,7 @@ export class AuthController {
    */
   @Get('check-admin')
   checkAdmin(@CurrentUser() user: AuthUser) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return { ok: true, email: user.email };
   }
 
@@ -79,7 +79,7 @@ export class AuthController {
     @Query('maxResults') maxResults?: string,
     @Query('pageToken') pageToken?: string,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     const limit = maxResults ? parseInt(maxResults, 10) : 100;
     const result = await this.firebaseService.listUsers(limit, pageToken);
 

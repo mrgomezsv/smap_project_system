@@ -7,7 +7,7 @@ import { CreateWaiverDto } from './dto/create-waiver.dto';
 import { Public } from '../auth/decorators/public.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
-import { assertAdminEmail } from '../auth/admin-allowlist';
+import { assertAdmin } from '../auth/admin-allowlist';
 
 class ValidateWaiverDto {
   @IsString()
@@ -39,7 +39,7 @@ export class WaiversController {
     @Query('status') status?: string,
     @Query('search') search?: string,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.waiversService.findAll({
       take: take ? Math.min(parseInt(take, 10) || 50, 200) : 50,
       skip: skip ? parseInt(skip, 10) || 0 : 0,
@@ -72,7 +72,7 @@ export class WaiversController {
    */
   @Post('validate')
   validate(@Body() dto: ValidateWaiverDto, @CurrentUser() user: AuthUser) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     const scannedBy = user.email || user.uid;
     return this.waiversService.validate(dto.qrCode, scannedBy);
   }
@@ -82,7 +82,7 @@ export class WaiversController {
    */
   @Get('collaborator/scans')
   getScans(@CurrentUser() user: AuthUser) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     const email = user.email || user.uid;
     return this.waiversService.getCollaboratorScans(email);
   }
@@ -140,7 +140,7 @@ export class WaiversController {
     @Body('lang') lang: 'es' | 'en',
     @CurrentUser() user: AuthUser,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     const sent = await this.waiversService.resendWaiverEmail(
       qrCode,
       lang || 'es',
@@ -156,7 +156,7 @@ export class WaiversController {
    */
   @Post('delete-batch')
   deleteBatch(@Body('ids') ids: string[], @CurrentUser() user: AuthUser) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.waiversService.deleteMany(ids);
   }
 

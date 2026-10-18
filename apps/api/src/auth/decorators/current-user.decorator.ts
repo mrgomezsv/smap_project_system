@@ -13,6 +13,7 @@ export interface AuthUser {
   uid: string;
   email: string;
   name: string;
+  emailVerified: boolean; // email_verified del token de Firebase
   userId?: number; // ID en nuestra BD si se creó/recuperó
   token: string; // token original
 }

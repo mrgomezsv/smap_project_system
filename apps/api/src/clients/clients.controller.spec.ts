@@ -62,6 +62,7 @@ describe('ClientsController', () => {
       uid: 'fb-1',
       email: 'me@test.com',
       name: 'Me',
+      emailVerified: true,
       userId: 7,
       token: 'tok',
     };
@@ -90,6 +91,14 @@ describe('ClientsController', () => {
       expect(result).toEqual({ id: 22 });
     });
 
+    it('no hace fallback a email si no está verificado', async () => {
+      mockPrisma.client.findFirst.mockResolvedValueOnce(null);
+      await expect(
+        controller.me({ ...userByUserId, emailVerified: false }),
+      ).rejects.toThrow(NotFoundException);
+      expect(mockPrisma.client.findUnique).not.toHaveBeenCalled();
+    });
+
     it('lanza NotFound si no existe Client asociado', async () => {
       mockPrisma.client.findFirst.mockResolvedValueOnce(null);
       mockPrisma.client.findUnique.mockResolvedValueOnce(null);
@@ -105,6 +114,7 @@ describe('ClientsController', () => {
         uid: 'fb-1',
         email: 'me@test.com',
         name: 'Me',
+        emailVerified: true,
         userId: 7,
         token: 'tok',
       };

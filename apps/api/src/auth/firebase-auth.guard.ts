@@ -68,6 +68,7 @@ export class FirebaseAuthGuard implements CanActivate {
         uid: 'dev-anonymous',
         email: 'dev@local',
         name: 'Dev User',
+        emailVerified: true,
         token: '',
       });
       (request as Request & { user?: AuthUser }).user = devUser;
@@ -88,6 +89,7 @@ export class FirebaseAuthGuard implements CanActivate {
         name:
           decoded.name ||
           (decoded.email ? decoded.email.split('@')[0] : decoded.uid),
+        emailVerified: decoded.email_verified === true,
         token: idToken,
       });
       (request as Request & { user?: AuthUser }).user = authUser;

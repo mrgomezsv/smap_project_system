@@ -34,7 +34,7 @@ import {
 import { Public } from '../auth/decorators/public.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
-import { assertAdminEmail } from '../auth/admin-allowlist';
+import { assertAdmin } from '../auth/admin-allowlist';
 
 const SIGNER_IP_MAX = 45;
 const SIGNER_UA_MAX = 2000;
@@ -106,7 +106,7 @@ export class ContractsController {
     @CurrentUser() user: AuthUser,
     @Body() dto: CreateContractDto,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.contractsService.createContract(dto, user.userId ?? null);
   }
 
@@ -115,7 +115,7 @@ export class ContractsController {
     @CurrentUser() user: AuthUser,
     @Query() query: QueryContractsDto,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.contractsService.findAll(query);
   }
 
@@ -124,7 +124,7 @@ export class ContractsController {
     @CurrentUser() user: AuthUser,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.contractsService.findAdminDetail(id);
   }
 
@@ -134,7 +134,7 @@ export class ContractsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateContractDto,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.contractsService.updateContract(id, dto);
   }
 
@@ -144,7 +144,7 @@ export class ContractsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: CancelContractDto,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.contractsService.cancelContract(id, dto);
   }
 
@@ -153,7 +153,7 @@ export class ContractsController {
     @CurrentUser() user: AuthUser,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.contractsService.archiveContract(id);
   }
 
@@ -162,7 +162,7 @@ export class ContractsController {
     @CurrentUser() user: AuthUser,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.contractsService.resendInvite(id);
   }
 
@@ -171,7 +171,7 @@ export class ContractsController {
     @CurrentUser() user: AuthUser,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.contractsService.resendSigned(id);
   }
 
@@ -187,7 +187,7 @@ export class ContractsController {
     @UploadedFile() file: Express.Multer.File | undefined,
     @Body() dto: UploadContractDocumentDto,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     if (!file) {
       throw new BadRequestException('Archivo requerido');
     }
@@ -206,7 +206,7 @@ export class ContractsController {
     @Param('documentId') documentId: string,
     @Res() res: Response,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     const numericId = this.parseDocumentId(documentId);
     const result = await this.contractsService.downloadDocument(id, numericId);
     res.setHeader('Content-Type', result.mimeType);
@@ -224,7 +224,7 @@ export class ContractsController {
     @Param('documentId') documentId: string,
     @Body() dto: DeleteDocumentDto,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     const numericId = this.parseDocumentId(documentId);
     return this.contractsService.deleteDocument(
       id,
@@ -240,7 +240,7 @@ export class ContractsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: CreateContractPaymentDto,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.contractsService.addPayment(id, dto, user.userId ?? null);
   }
 
@@ -251,7 +251,7 @@ export class ContractsController {
     @Param('paymentId') paymentId: string,
     @Body() dto: DeletePaymentDto,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     const numericId = this.parsePaymentId(paymentId);
     return this.contractsService.deletePayment(
       id,
@@ -267,7 +267,7 @@ export class ContractsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: HardDeleteContractDto,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.contractsService.hardDeleteContract(
       id,
       dto.reason,

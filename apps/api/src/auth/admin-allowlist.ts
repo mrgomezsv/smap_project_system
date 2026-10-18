@@ -43,6 +43,19 @@ export function isAdminEmail(email: string | null | undefined): boolean {
 }
 
 /**
+ * Lanza 403 si el usuario no es admin o su email no está verificado.
+ * Sin la verificación, cualquiera podría registrar en Firebase un correo
+ * de la allowlist que aún no exista y obtener rol admin.
+ */
+export function assertAdmin(
+  user: { email?: string | null; emailVerified?: boolean } | null | undefined,
+): void {
+  if (!user || user.emailVerified !== true || !isAdminEmail(user.email)) {
+    throw new ForbiddenException('Se requiere rol de administrador');
+  }
+}
+
+/**
  * Versión que lanza 403 si el email no es admin.
  * Útil para guards o al inicio de un handler.
  */

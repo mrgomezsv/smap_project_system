@@ -25,8 +25,10 @@ export class UserMappingService {
     uid: string;
     email?: string;
     name?: string;
+    emailVerified?: boolean;
     token: string;
   }): Promise<AuthUser> {
+    const emailVerified = payload.emailVerified === true;
     const username = payload.email || payload.uid;
     const rawEmail = payload.email || `${payload.uid}@firebase.local`;
     const name =
@@ -61,7 +63,9 @@ export class UserMappingService {
 
     const email =
       user.email && user.email.trim() !== '' ? user.email : rawEmail;
-    if (email && email.trim() !== '') {
+    // Solo vinculamos el perfil de Client por email si está verificado:
+    // evita apropiarse del perfil de otra persona registrando su correo.
+    if (emailVerified && email && email.trim() !== '') {
       try {
         await this.clientsService.upsertFromAuth({
           email,
@@ -81,6 +85,7 @@ export class UserMappingService {
       uid: payload.uid,
       email,
       name,
+      emailVerified,
       userId: user.id,
       token: payload.token,
     };

@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
-import { assertAdminEmail } from '../auth/admin-allowlist';
+import { assertAdmin } from '../auth/admin-allowlist';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
 import { Public } from '../auth/decorators/public.decorator';
@@ -17,7 +17,7 @@ export class DashboardController {
 
   @Get('stats')
   async getStats(@CurrentUser() user: AuthUser) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.dashboardService.getStats();
   }
 
@@ -31,7 +31,7 @@ export class DashboardController {
    */
   @Get('db-stats')
   async getDbStats(@CurrentUser() user: AuthUser) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
 
     const prismaTables = [
       'auth_user',
@@ -109,7 +109,7 @@ export class DashboardController {
    */
   @Get('redis-stats')
   async getRedisStats(@CurrentUser() user: AuthUser) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     const stats = await this.redis.getStats();
     return {
       generated_at: new Date().toISOString(),
@@ -123,7 +123,7 @@ export class DashboardController {
    */
   @Get('slow-queries')
   async getSlowQueries(@CurrentUser() user: AuthUser) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     const top20 = await this.prisma.$queryRaw<
       Array<{ query_time: string; sql_text: string; start_time: Date }>
     >`

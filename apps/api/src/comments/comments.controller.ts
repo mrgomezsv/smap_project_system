@@ -14,7 +14,7 @@ import { CommentsService } from './comments.service';
 import { Public } from '../auth/decorators/public.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
-import { assertAdminEmail } from '../auth/admin-allowlist';
+import { assertAdmin } from '../auth/admin-allowlist';
 import {
   IsBoolean,
   IsIn,
@@ -100,7 +100,7 @@ export class CommentsController {
   // ==========================================
   @Get('all')
   findAll(@CurrentUser() user: AuthUser, @Query() query: QueryCommentsDto) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.commentsService.findAll(query);
   }
 
@@ -111,14 +111,14 @@ export class CommentsController {
     @Body() dto: UpdateCommentApprovalDto,
     @CurrentUser() user: AuthUser,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.commentsService.toggleApproval(id, dto.isApproved);
   }
 
   @CacheInvalidate('cache:/api/products*')
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: AuthUser) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.commentsService.remove(id);
   }
 }

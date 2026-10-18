@@ -19,7 +19,7 @@ import {
 } from './dto/clients.dto';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
-import { assertAdminEmail } from '../auth/admin-allowlist';
+import { assertAdmin } from '../auth/admin-allowlist';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Controller('api/v2/clients')
@@ -43,7 +43,7 @@ export class ClientsController {
 
   @Get()
   list(@CurrentUser() user: AuthUser, @Query() query: QueryClientsDto) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.clientsService.list(query);
   }
 
@@ -52,13 +52,13 @@ export class ClientsController {
     @CurrentUser() user: AuthUser,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.clientsService.findById(id);
   }
 
   @Post()
   create(@CurrentUser() user: AuthUser, @Body() dto: CreateClientDto) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.clientsService.create(dto);
   }
 
@@ -68,7 +68,7 @@ export class ClientsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateClientDto,
   ) {
-    assertAdminEmail(user.email);
+    assertAdmin(user);
     return this.clientsService.update(id, dto);
   }
 
@@ -79,7 +79,7 @@ export class ClientsController {
     let profile = user.userId
       ? await this.prisma.client.findFirst({ where: { userId: user.userId } })
       : null;
-    if (!profile && user.email) {
+    if (!profile && user.email && user.emailVerified) {
       profile = await this.prisma.client.findUnique({
         where: { email: user.email.toLowerCase() },
       });
