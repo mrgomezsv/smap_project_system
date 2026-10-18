@@ -10,8 +10,10 @@ import { json, urlencoded } from 'express';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.use(json({ limit: '50mb' }));
-  app.use(urlencoded({ limit: '50mb', extended: true }));
+  // Los archivos van por multipart (multer); el JSON más grande es la firma
+  // en base64 del contrato, que cabe holgadamente en 10 MB.
+  app.use(json({ limit: '10mb' }));
+  app.use(urlencoded({ limit: '10mb', extended: true }));
 
   // CORS
   const origins = (process.env.CORS_ORIGINS ?? 'http://localhost:3000')
