@@ -18,9 +18,18 @@ npx prisma migrate resolve --applied 20260816213000_add_category_table || true
 npx prisma migrate resolve --applied 20260906210000_drop_chk_event_partners_enum || true
 
 echo "🔄 Ejecutando prisma migrate deploy..."
-# Sin "|| true": si una migración falla, el contenedor no arranca con un
-# esquema inconsistente (set -e detiene el script y Docker lo reporta).
-npx prisma migrate deploy
+# Si una migración falla se avisa con claridad en los logs. Por defecto la API
+# arranca igual (como antes) para no tumbar producción; con
+# MIGRATIONS_STRICT=true el contenedor se detiene ante cualquier fallo.
+# Diagnóstico: npx prisma migrate status
+if ! npx prisma migrate deploy; then
+  echo "❌❌❌ FALLÓ 'prisma migrate deploy'. Revisa con: npx prisma migrate status"
+  if [ "$MIGRATIONS_STRICT" = "true" ]; then
+    echo "MIGRATIONS_STRICT=true: deteniendo el arranque."
+    exit 1
+  fi
+  echo "⚠️ Continuando el arranque (MIGRATIONS_STRICT no está activo)."
+fi
 
 echo "🚀 Iniciando servidor NestJS..."
 exec node dist/main.js
