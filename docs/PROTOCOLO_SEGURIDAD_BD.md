@@ -350,7 +350,7 @@ BACKUP_DIR=backups
 mkdir -p $BACKUP_DIR
 
 DB_CONTAINER="proyecto_kidsfun_db_data"
-MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-root_password}"
+MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:?Definir MYSQL_ROOT_PASSWORD}"
 
 DUMP_FILE="$BACKUP_DIR/smap_kf_backup_${TIMESTAMP}.sql.gz"
 

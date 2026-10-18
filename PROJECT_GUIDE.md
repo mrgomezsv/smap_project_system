@@ -145,7 +145,7 @@ Ejecuta en la terminal de tu proyecto:
 
 | Variable | Descripción |
 | :--- | :--- |
-| `DATABASE_URL` | String de conexión a MariaDB (`mysql://mrgomez:Karin2100@db:3306/smap_kf`) |
+| `DATABASE_URL` | String de conexión a MariaDB (`mysql://mrgomez:TU_CLAVE@db:3306/smap_kf`) |
 | `ADMIN_EMAILS` | Lista de correos autorizados para entrar a `/admin` |
 | `FIREBASE_CREDENTIALS_BASE64` | Credencial JSON del Service Account codificada en Base64 |
 | `GOOGLE_DRIVE_FOLDER_ID` | ID de la carpeta contenedora en Google Drive (`ProyectosDocker`) |

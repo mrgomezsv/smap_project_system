@@ -551,7 +551,7 @@ bash scripts/validate_post.sh post_algo
 # Restaurar backup completo
 gunzip -c backups/smap_kf_pre_algo_*.sql.gz | \
   docker exec -i proyecto_kidsfun-db-1 \
-  mysql -u root -proot_password smap_kf
+  mysql -u root -p"$DB_ROOT_PASSWORD" smap_kf
 ```
 
 ### 11.2 Mantenimiento
@@ -571,12 +571,12 @@ cd apps/api && pnpm prisma db push
 
 ```bash
 # Ver queries lentas (top 20)
-docker exec proyecto_kidsfun-db-1 mysql -u root -proot_password \
+docker exec proyecto_kidsfun-db-1 mysql -u root -p"$DB_ROOT_PASSWORD" \
   -e "SELECT start_time, user_host, query_time, sql_text 
       FROM mysql.slow_log ORDER BY start_time DESC LIMIT 20;"
 
 # EXPLAIN de una query
-docker exec proyecto_kidsfun-db-1 mysql -u mrgomez -pKarin2100 smap_kf \
+docker exec proyecto_kidsfun-db-1 mysql -u mrgomez -p"$DB_PASS" smap_kf \
   -e "EXPLAIN SELECT ... FROM ... WHERE ...;"
 
 # Estado de la BD (legacy)

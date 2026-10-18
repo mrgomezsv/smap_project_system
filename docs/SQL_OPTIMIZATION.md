@@ -231,7 +231,7 @@ Devuelve:
 
 ## 8. Herramientas
 
-- **mysql client:** `docker exec -it proyecto_kidsfun-db-1 mysql -u mrgomez -pKarin2100 smap_kf`
+- **mysql client:** `docker exec -it proyecto_kidsfun-db-1 mysql -u mrgomez -p"$DB_PASS" smap_kf`
 - **EXPLAIN:** anteponer `EXPLAIN` a cualquier SELECT.
 - **SHOW PROCESSLIST:** ver queries en ejecución (`docker exec ... mysql -e "SHOW PROCESSLIST"`).
 - **phpMyAdmin** (opcional): agregar a docker-compose si se requiere GUI.

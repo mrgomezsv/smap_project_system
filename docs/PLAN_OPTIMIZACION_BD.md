@@ -781,8 +781,8 @@ db:
   environment:
     MYSQL_DATABASE: smap_kf
     MYSQL_USER: mrgomez
-    MYSQL_PASSWORD: Karin2100
-    MYSQL_ROOT_PASSWORD: root_password
+    MYSQL_PASSWORD: TU_CLAVE
+    MYSQL_ROOT_PASSWORD: TU_CLAVE_ROOT
   volumes:
     - db_data:/var/lib/mysql
     - ./docker/mariadb/init:/docker-entrypoint-initdb.d:ro   # opcional: tune SQL
@@ -793,7 +793,7 @@ db:
 ### 6.2 Variables de entorno (connection pool)
 
 ```env
-DATABASE_URL="mysql://mrgomez:Karin2100@db:3306/smap_kf?connection_limit=10&pool_timeout=20&socket_timeout=30&connect_timeout=10"
+DATABASE_URL="mysql://mrgomez:TU_CLAVE@db:3306/smap_kf?connection_limit=10&pool_timeout=20&socket_timeout=30&connect_timeout=10"
 ```
 
 ### 6.3 Backup automatizado
