@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api, ApiError } from '@/lib/api';
+import { useAuth } from '@/components/auth/AuthProvider';
 import type { Product, ProductsListResponse } from '@/lib/types';
 
 interface EquipmentPickerProps {
@@ -11,6 +12,7 @@ interface EquipmentPickerProps {
 }
 
 export function EquipmentPicker({ value, onChange, disabled }: EquipmentPickerProps) {
+  const { getToken } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +25,9 @@ export function EquipmentPicker({ value, onChange, disabled }: EquipmentPickerPr
       try {
         setLoading(true);
         setError(null);
-        const res = await api.get<ProductsListResponse>('/api/products?take=100');
+        const res = await api.get<ProductsListResponse>('/api/products?take=100', {
+          getToken,
+        });
         setProducts(res.items || []);
       } catch (err) {
         setError(err instanceof ApiError ? err.message : 'No se pudieron cargar los productos.');

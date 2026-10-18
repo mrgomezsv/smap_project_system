@@ -27,7 +27,7 @@ export function ProductosList() {
     async function load() {
       try {
         const [resProd, resCat] = await Promise.all([
-          api.get<{ items: Product[] }>('/api/products?take=100'),
+          api.get<{ items: Product[] }>('/api/products?take=100', { getToken }),
           api.get<CategoryItem[]>('/api/categories').catch(() => []),
         ]);
         if (!cancelled) {

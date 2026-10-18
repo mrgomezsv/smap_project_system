@@ -42,6 +42,13 @@ export function isAdminEmail(email: string | null | undefined): boolean {
   return allowlist.has(email.toLowerCase());
 }
 
+/** true si el usuario es admin con email verificado (sin lanzar). */
+export function isAdminUser(
+  user: { email?: string | null; emailVerified?: boolean } | null | undefined,
+): boolean {
+  return !!user && user.emailVerified === true && isAdminEmail(user.email);
+}
+
 /**
  * Lanza 403 si el usuario no es admin o su email no está verificado.
  * Sin la verificación, cualquiera podría registrar en Firebase un correo
@@ -50,7 +57,7 @@ export function isAdminEmail(email: string | null | undefined): boolean {
 export function assertAdmin(
   user: { email?: string | null; emailVerified?: boolean } | null | undefined,
 ): void {
-  if (!user || user.emailVerified !== true || !isAdminEmail(user.email)) {
+  if (!isAdminUser(user)) {
     throw new ForbiddenException('Se requiere rol de administrador');
   }
 }

@@ -43,11 +43,14 @@ export class FirebaseAuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+    const request = context.switchToHttp().getRequest<Request>();
+
     if (isPublic) {
+      // Autenticación opcional: si la ruta pública trae token válido, se
+      // identifica al usuario (p.ej. para que un admin vea borradores).
+      await this.tryAttachUser(request);
       return true;
     }
-
-    const request = context.switchToHttp().getRequest<Request>();
 
     // Si Firebase no está inicializado (modo dev sin credenciales),
     // creamos/obtenemos un User "dev-anonymous" en BD para tener userId
@@ -82,21 +85,42 @@ export class FirebaseAuthGuard implements CanActivate {
 
     const idToken = authHeader.split(' ')[1];
     try {
-      const decoded = await this.firebaseService.verifyIdToken(idToken);
-      const authUser = await this.userMapping.getOrCreateFromFirebase({
-        uid: decoded.uid,
-        email: decoded.email,
-        name:
-          decoded.name ||
-          (decoded.email ? decoded.email.split('@')[0] : decoded.uid),
-        emailVerified: decoded.email_verified === true,
-        token: idToken,
-      });
-      (request as Request & { user?: AuthUser }).user = authUser;
+      (request as Request & { user?: AuthUser }).user =
+        await this.resolveUser(idToken);
       return true;
     } catch (error) {
       this.logger.warn(`Token inválido: ${(error as Error).message}`);
       throw new UnauthorizedException('Token inválido o expirado');
+    }
+  }
+
+  private async resolveUser(idToken: string): Promise<AuthUser> {
+    const decoded = await this.firebaseService.verifyIdToken(idToken);
+    return this.userMapping.getOrCreateFromFirebase({
+      uid: decoded.uid,
+      email: decoded.email,
+      name:
+        decoded.name ||
+        (decoded.email ? decoded.email.split('@')[0] : decoded.uid),
+      emailVerified: decoded.email_verified === true,
+      token: idToken,
+    });
+  }
+
+  private async tryAttachUser(request: Request): Promise<void> {
+    const authHeader = request.headers.authorization;
+    if (
+      !authHeader?.startsWith('Bearer ') ||
+      !this.firebaseService.isInitialized()
+    ) {
+      return;
+    }
+    try {
+      (request as Request & { user?: AuthUser }).user = await this.resolveUser(
+        authHeader.split(' ')[1],
+      );
+    } catch {
+      // Token inválido en ruta pública: se atiende como anónimo
     }
   }
 }

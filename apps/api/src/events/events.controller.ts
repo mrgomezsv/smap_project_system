@@ -15,6 +15,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Public } from '../auth/decorators/public.decorator';
 import { AdminOnly } from '../auth/admin.guard';
+import { isAdminUser } from '../auth/admin-allowlist';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
 import {
@@ -32,7 +33,9 @@ export class EventsController {
   @Public()
   @Cache(60)
   @Get()
-  list(@Query() query: QueryEventDto) {
+  list(@Query() query: QueryEventDto, @CurrentUser() user?: AuthUser) {
+    // Solo los admins pueden listar eventos no publicados
+    if (!isAdminUser(user)) query.published = true;
     return this.eventsService.findAll(query);
   }
 

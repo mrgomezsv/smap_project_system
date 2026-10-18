@@ -15,6 +15,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { Public } from '../auth/decorators/public.decorator';
 import { AdminOnly } from '../auth/admin.guard';
+import { isAdminUser } from '../auth/admin-allowlist';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
 import {
@@ -32,7 +33,9 @@ export class ProductsController {
   @Public()
   @Cache(60)
   @Get()
-  list(@Query() query: QueryProductDto) {
+  list(@Query() query: QueryProductDto, @CurrentUser() user?: AuthUser) {
+    // Solo los admins pueden listar productos no publicados
+    if (!isAdminUser(user)) query.publicated = true;
     return this.productsService.findAll(query);
   }
 
