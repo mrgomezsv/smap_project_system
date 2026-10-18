@@ -40,8 +40,6 @@ smap_project_system/
 ├── event_images/           # (gitignored)
 ├── logs/                   # (gitignored)
 ├── docker-compose.yml      # DB + API + Web
-├── Dockerfile.api
-├── Dockerfile.web
 ├── pnpm-workspace.yaml
 └── README.md               # ← este archivo
 ```
