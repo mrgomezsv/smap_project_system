@@ -12,8 +12,10 @@ import { existsSync, mkdirSync } from 'fs';
 import { join, extname } from 'path';
 import { randomBytes } from 'crypto';
 import { UploadService } from './upload.service';
+import { AdminOnly } from '../auth/admin.guard';
 
 @Controller('api/upload')
+@AdminOnly()
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
