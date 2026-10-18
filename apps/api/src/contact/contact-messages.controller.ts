@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { ContactMessagesService } from './contact-messages.service';
 import { Public } from '../auth/decorators/public.decorator';
+import { AdminOnly } from '../auth/admin.guard';
 import {
   IsString,
   IsNotEmpty,
@@ -55,6 +56,7 @@ class DeleteManyDto {
 }
 
 @Controller('api/web-messages')
+@AdminOnly()
 export class ContactMessagesController {
   constructor(private readonly service: ContactMessagesService) {}
 
