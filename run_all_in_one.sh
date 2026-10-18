@@ -30,8 +30,8 @@ cd "$PROJECT_DIR"
 DB_PORT_LOCAL=3307
 DB_NAME=smap_kf
 DB_USER=mrgomez
-DB_PASSWORD=Karin2100
-DB_ROOT_PASSWORD=root_password
+DB_PASSWORD="${DB_PASSWORD:?Exporta DB_PASSWORD}"
+DB_ROOT_PASSWORD="${DB_ROOT_PASSWORD:?Exporta DB_ROOT_PASSWORD}"
 
 DUMP_PATH="$PROJECT_DIR/backups/smap_kf_backup_20260719_003631.sql.gz"   # ruta por defecto del backup
 

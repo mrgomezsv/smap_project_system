@@ -18,7 +18,7 @@ set -e
 DB_CONTAINER="${DB_CONTAINER:-proyecto_kidsfun-db-1}"
 DB_NAME="${DB_NAME:-smap_kf}"
 DB_USER="${DB_USER:-mrgomez}"
-DB_PASS="${DB_PASS:-Karin2100}"
+DB_PASS="${DB_PASS:?Exporta DB_PASS con la contraseña de la BD}"
 
 LOG_PREFIX="[$(date '+%Y-%m-%d %H:%M:%S')] cron_expire_waivers"
 
