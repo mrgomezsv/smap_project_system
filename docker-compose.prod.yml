@@ -56,6 +56,9 @@ services:
       ADMIN_EMAILS: "mrgomez.dev@outlook.com,mrgomez.dev@gmail.com,kidsfun.developer@gmail.com,karenhenriquez911@gmail.com"
       FIREBASE_CREDENTIALS_PATH: "credentials/smap-kf-firebase-adminsdk-xqq0l-42c4ee6425.json"
       FIREBASE_PROJECT_ID: "smap-kf"
+      # JSON de la service account en base64 (alternativa a montar el archivo).
+      # Sin credenciales válidas la API rechaza todas las rutas protegidas.
+      FIREBASE_CREDENTIALS_BASE64: ${FIREBASE_CREDENTIALS_BASE64:-}
       CONTRACT_STORAGE_DIR: "/app/apps/api/private/contracts"
     volumes:
       - media_data:/app/apps/api/media
