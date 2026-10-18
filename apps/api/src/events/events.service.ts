@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { startOfDayInTimeZone } from '../common/timezone';
 import { QueryEventDto } from './dto/query-event.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -12,6 +13,11 @@ export class EventsService {
     const where: Record<string, unknown> = {};
     if (query.published !== undefined) where.published = query.published;
     if (query.partners) where.partners = query.partners;
+    if (query.upcoming) {
+      // Desde las 00:00 de hoy en El Salvador: los eventos de hoy siguen
+      // visibles todo el día y desaparecen al iniciar el día siguiente.
+      where.startDatetime = { gte: startOfDayInTimeZone(new Date()) };
+    }
     if (query.search) {
       const term = query.search.trim();
       if (term.length >= 3) {

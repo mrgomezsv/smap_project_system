@@ -21,6 +21,19 @@ export class QueryEventDto {
   @IsString()
   partners?: string;
 
+  /**
+   * Solo eventos de hoy en adelante (hora de El Salvador). El controlador lo
+   * fuerza para visitantes; un evento de hoy deja de mostrarse a las 00:00
+   * del día siguiente.
+   */
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => {
+    if (value === undefined || value === null || value === '') return undefined;
+    return value === 'true' || value === true || value === 1 || value === '1';
+  })
+  upcoming?: boolean;
+
   @IsOptional()
   @IsString()
   search?: string;

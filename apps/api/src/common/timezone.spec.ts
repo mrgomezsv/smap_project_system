@@ -1,4 +1,14 @@
-import { endOfDayInTimeZone } from './timezone';
+import { endOfDayInTimeZone, startOfDayInTimeZone } from './timezone';
+
+describe('startOfDayInTimeZone', () => {
+  it('inicia el día a las 00:00 de El Salvador (06:00 UTC)', () => {
+    // 18 oct 2026, 22:30 en El Salvador = 19 oct 04:30 UTC
+    const now = new Date('2026-10-19T04:30:00Z');
+    expect(startOfDayInTimeZone(now, 'America/El_Salvador').toISOString()).toBe(
+      '2026-10-18T06:00:00.000Z',
+    );
+  });
+});
 
 describe('endOfDayInTimeZone', () => {
   it('cierra el día a medianoche de El Salvador (05:59:59.999 UTC)', () => {

@@ -26,6 +26,26 @@ function wallClockMs(date: Date, timeZone: string): number {
   );
 }
 
+/** Instante UTC de una hora de pared del día calendario de `date` en `timeZone`. */
+function atLocalTime(
+  date: Date,
+  timeZone: string,
+  [h, m, s, ms]: [number, number, number, number],
+): Date {
+  const local = new Date(wallClockMs(date, timeZone));
+  const target = Date.UTC(
+    local.getUTCFullYear(),
+    local.getUTCMonth(),
+    local.getUTCDate(),
+    h,
+    m,
+    s,
+    ms,
+  );
+  const offset = wallClockMs(new Date(target), timeZone) - target;
+  return new Date(target - offset);
+}
+
 /**
  * Devuelve el instante (UTC) correspondiente a las 23:59:59.999 del día
  * calendario de `date` en la zona `timeZone`. Independiente de la zona
@@ -35,16 +55,13 @@ export function endOfDayInTimeZone(
   date: Date,
   timeZone: string = BUSINESS_TIMEZONE,
 ): Date {
-  const local = new Date(wallClockMs(date, timeZone));
-  const target = Date.UTC(
-    local.getUTCFullYear(),
-    local.getUTCMonth(),
-    local.getUTCDate(),
-    23,
-    59,
-    59,
-    999,
-  );
-  const offset = wallClockMs(new Date(target), timeZone) - target;
-  return new Date(target - offset);
+  return atLocalTime(date, timeZone, [23, 59, 59, 999]);
+}
+
+/** Instante (UTC) de las 00:00:00.000 del día calendario de `date` en `timeZone`. */
+export function startOfDayInTimeZone(
+  date: Date,
+  timeZone: string = BUSINESS_TIMEZONE,
+): Date {
+  return atLocalTime(date, timeZone, [0, 0, 0, 0]);
 }

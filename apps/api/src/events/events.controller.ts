@@ -34,8 +34,11 @@ export class EventsController {
   @Cache(60)
   @Get()
   list(@Query() query: QueryEventDto, @CurrentUser() user?: AuthUser) {
-    // Solo los admins pueden listar eventos no publicados
-    if (!isAdminUser(user)) query.published = true;
+    // Visitantes: solo eventos publicados y de hoy en adelante
+    if (!isAdminUser(user)) {
+      query.published = true;
+      query.upcoming = true;
+    }
     return this.eventsService.findAll(query);
   }
 
