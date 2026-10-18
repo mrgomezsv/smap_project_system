@@ -1,6 +1,13 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  ReactNode,
+} from 'react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase';
 
@@ -21,6 +28,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
+  const hadUser = useRef(false);
 
   useEffect(() => {
     if (!isFirebaseConfigured()) {
@@ -33,6 +41,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     const unsub = onAuthStateChanged(auth, (u) => {
+      // Al cerrar sesión se borran los datos del checkout (incluyen menores)
+      // para que no queden en un dispositivo compartido.
+      if (hadUser.current && !u) {
+        try {
+          localStorage.removeItem('kf_checkout_data');
+          sessionStorage.removeItem('checkout_intent');
+        } catch {
+          // almacenamiento no disponible
+        }
+      }
+      hadUser.current = !!u;
       setUser(u);
       setReady(true);
     });
