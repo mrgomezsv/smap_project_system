@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { api, ApiError } from '@/lib/api';
-import { signOut } from 'firebase/auth';
+import { sendEmailVerification, signOut } from 'firebase/auth';
 import { getFirebaseAuth } from '@/lib/firebase';
 
 interface AdminGuardProps {
@@ -19,6 +19,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
   const [isServerError, setIsServerError] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const checkAdminAuth = async () => {
     if (!user) return;
@@ -32,7 +33,11 @@ export function AdminGuard({ children }: AdminGuardProps) {
       setAuthorized(false);
       if (err instanceof ApiError && (err.status === 403 || err.status === 401)) {
         setIsServerError(false);
-        setErrorMsg(`El correo (${user?.email}) no cuenta con permisos de administrador.`);
+        setErrorMsg(
+          user?.emailVerified === false
+            ? `Tu correo (${user.email}) aún no está verificado. Verifícalo para acceder al panel.`
+            : `El correo (${user?.email}) no cuenta con permisos de administrador.`,
+        );
       } else {
         setIsServerError(true);
         const codeText = err instanceof ApiError ? `(Error ${err.status})` : '';
@@ -89,6 +94,20 @@ export function AdminGuard({ children }: AdminGuardProps) {
             {errorMsg || `Tu cuenta (${user.email}) no tiene permisos para acceder al panel de administración.`}
           </p>
           <div className="flex flex-col gap-3">
+            {!isServerError && user.emailVerified === false && (
+              <button
+                onClick={async () => {
+                  await sendEmailVerification(user);
+                  setVerificationSent(true);
+                }}
+                disabled={verificationSent}
+                className="btn btn-primary w-full"
+              >
+                {verificationSent
+                  ? '✉️ Correo de verificación enviado'
+                  : '✉️ Enviar correo de verificación'}
+              </button>
+            )}
             {isServerError && (
               <button
                 onClick={() => checkAdminAuth()}
