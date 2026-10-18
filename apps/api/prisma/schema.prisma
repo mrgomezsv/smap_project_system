@@ -73,9 +73,10 @@ model Product {
 
   user User @relation("ProductCreatedBy", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "t_app_product_product_user_id_b85feb0c_fk_auth_user_id")
 
-  images   ProductImage[]
-  likes    ProductLike[]
-  comments ProductComment[]
+  images        ProductImage[]
+  likes         ProductLike[]
+  comments      ProductComment[]
+  galleryAlbums GalleryAlbumProduct[]
 
   @@index([category], map: "idx_product_category")
   @@index([publicated], map: "idx_product_publicated")
@@ -556,4 +557,58 @@ model Category {
   @@index([position], map: "idx_category_position")
   @@index([isActive, position], map: "idx_category_active_position")
   @@map("t_app_category")
+}
+
+// ============================================================
+// Galería: álbumes de fiestas atendidas (mini blog con fotos)
+// ============================================================
+
+model GalleryAlbum {
+  id           Int       @id @default(autoincrement())
+  slug         String    @unique(map: "t_app_gallery_album_slug_key") @db.VarChar(160)
+  title        String    @db.VarChar(150)
+  description  String?   @db.Text
+  eventDate    DateTime? @map("event_date") @db.Date
+  location     String?   @db.VarChar(150)
+  /// Foto de portada (id de GalleryPhoto). Sin FK para evitar ciclo; si es null se usa la primera.
+  coverPhotoId Int?      @map("cover_photo_id")
+  published    Boolean   @default(false)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.DateTime(6)
+
+  photos   GalleryPhoto[]
+  products GalleryAlbumProduct[]
+
+  @@index([published, eventDate(sort: Desc)], map: "idx_gallery_album_pub_date")
+  @@map("t_app_gallery_album")
+}
+
+model GalleryPhoto {
+  id        Int      @id @default(autoincrement())
+  albumId   Int      @map("album_id")
+  /// Ruta relativa dentro de /media (ej. gallery/fiesta_1a2b3c4d.webp)
+  path      String   @db.VarChar(255)
+  caption   String?  @db.VarChar(255)
+  position  Int      @default(0)
+  width     Int?
+  height    Int?
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+
+  album GalleryAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_gallery_photo_album_fk")
+
+  @@index([albumId, position], map: "idx_gallery_photo_album_pos")
+  @@map("t_app_gallery_photo")
+}
+
+/// Productos que aparecen en el álbum ("así se ve en nuestras fiestas")
+model GalleryAlbumProduct {
+  albumId   Int    @map("album_id")
+  productId BigInt @map("product_id")
+
+  album   GalleryAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_gallery_ap_album_fk")
+  product Product      @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "t_app_gallery_ap_product_fk")
+
+  @@id([albumId, productId])
+  @@index([productId], map: "idx_gallery_ap_product")
+  @@map("t_app_gallery_album_product")
 }
