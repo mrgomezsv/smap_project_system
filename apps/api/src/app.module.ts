@@ -19,6 +19,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { MetricsModule } from './metrics/metrics.module';
 
 import { CategoriesModule } from './categories/categories.module';
+import { GalleryModule } from './gallery/gallery.module';
 import { RedisModule } from './redis/redis.module';
 import { MediaController } from './media/media.controller';
 
@@ -41,6 +42,7 @@ import { MediaController } from './media/media.controller';
     DashboardModule,
     MetricsModule,
     RedisModule,
+    GalleryModule,
   ],
   controllers: [AppController, MediaController],
   providers: [AppService],
