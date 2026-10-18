@@ -23,7 +23,7 @@ export class WaiversService {
   ) {}
 
   /**
-   * Genera un código QR único de 8 caracteres (equivalente al uuid4()[:8] de Django).
+   * Genera un código QR único de 8 caracteres hexadecimales.
    */
   private generateUniqueQr(): string {
     return crypto.randomBytes(8).toString('hex').substring(0, 8).toUpperCase();

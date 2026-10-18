@@ -8,7 +8,7 @@ import { Prisma } from '@prisma/client';
 
 /**
  * Limpia el texto del comentario eliminando caracteres de control no válidos.
- * Equivalente al clean_comment() del Django ProductComment.
+ * Se aplica antes de guardar cualquier comentario.
  */
 function sanitizeComment(text: string): string {
   return Array.from(text)

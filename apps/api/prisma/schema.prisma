@@ -1,5 +1,5 @@
 // This is your Prisma schema file.
-// Modelos equivalentes a los Django models de t_app_product/models.py
+// Los nombres de tablas (@@map) se conservan del esquema original de la BD.
 
 generator client {
   provider = "prisma-client-js"
@@ -172,7 +172,7 @@ model CommentReply {
 
 // ============================================================
 // Commit #28: Waiver V2 - Sistema QR
-// Equivalente a waiver_v2/models.py de Django
+// Waivers v2
 // ============================================================
 
 model WaiverQRV2 {

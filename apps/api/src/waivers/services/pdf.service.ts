@@ -85,7 +85,7 @@ export interface WaiverPdfData {
 
 /**
  * Servicio de generación de PDFs para waivers.
- * Equivalente al create_waiver_pdf_buffer() de Django/reportlab.
+ * Genera el PDF del waiver con pdf-lib.
  *
  * Layout: 3 columnas (Logo | Títulos | QR), tabla de familiares,
  * texto legal y sección de firmas.

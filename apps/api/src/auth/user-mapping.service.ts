@@ -5,8 +5,7 @@ import { AuthUser } from './decorators/current-user.decorator';
 
 /**
  * Servicio que mapea un usuario autenticado por Firebase (vía token)
- * a un usuario en nuestra BD MariaDB. Equivalente al get_or_create
- * del Django FirebaseAuthentication.
+ * a un usuario en nuestra BD MariaDB (get-or-create).
  *
  * - Usa email como username (fallback al UID si no hay email)
  * - Crea el User si no existe

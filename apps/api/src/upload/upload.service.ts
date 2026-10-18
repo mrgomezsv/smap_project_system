@@ -8,7 +8,7 @@ import { GoogleDriveService } from './google-drive.service';
 /**
  * Servicio de upload de archivos.
  * Guarda en MEDIA_DIR (default: ./media) preservando la estructura
- * product_images/<slug>/<slug>_<n>.<ext> similar a Django
+ * product_images/<slug>/<slug>_<n>.<ext>
  * y sincroniza opcionalmente con Google Drive.
  */
 @Injectable()

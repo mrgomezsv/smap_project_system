@@ -14,7 +14,7 @@ const INVALID_TOKEN_CODES = new Set([
 
 /**
  * Servicio para envío de Push Notifications vía Firebase Cloud Messaging.
- * Equivalente al send_push_notification() del Django.
+ * Envía a un token, a un topic o a un segmento de usuarios.
  *
  * Usa firebase-admin para enviar a un token específico de dispositivo.
  */
