@@ -28,7 +28,7 @@ export class TranslationService {
 
     // L2: BD
     try {
-      const sourceHash = this.hash(text);
+      const sourceHash = this.hash(text, targetLang);
       const cached = await this.prisma.translationCache.findUnique({
         where: { sourceHash },
       });
@@ -98,8 +98,12 @@ export class TranslationService {
     };
   }
 
-  private hash(text: string): string {
-    return createHash('sha256').update(text).digest('hex');
+  /**
+   * Clave única por (idioma, texto). La columna source_hash es UNIQUE, así que
+   * el idioma debe ir dentro del hash para poder cachear ambas traducciones.
+   */
+  private hash(text: string, targetLang: string): string {
+    return createHash('sha256').update(`${targetLang}:${text}`).digest('hex');
   }
 
   private setMemory(key: string, value: string): void {
@@ -116,7 +120,7 @@ export class TranslationService {
     targetLang: string,
     translatedText: string,
   ): Promise<void> {
-    const sourceHash = this.hash(sourceText);
+    const sourceHash = this.hash(sourceText, targetLang);
     try {
       await this.prisma.translationCache.upsert({
         where: { sourceHash },
