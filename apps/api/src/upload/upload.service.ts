@@ -1,7 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { detectImageExtension } from './image-type';
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
-import { join, extname } from 'path';
-import { diskStorage } from 'multer';
+import { join } from 'path';
 import { randomBytes } from 'crypto';
 import { GoogleDriveService } from './google-drive.service';
 
@@ -23,28 +23,6 @@ export class UploadService {
     if (!existsSync(this.uploadDir)) {
       mkdirSync(this.uploadDir, { recursive: true });
     }
-  }
-
-  getStorage() {
-    return diskStorage({
-      destination: (req, file, cb) => {
-        const slug = (req.body?.slug as string) || '';
-        const sub = slug
-          ? join(this.uploadDir, 'product_images', slug)
-          : this.uploadDir;
-        if (!existsSync(sub)) {
-          mkdirSync(sub, { recursive: true });
-        }
-        cb(null, sub);
-      },
-      filename: (req, file, cb) => {
-        const ext = extname(file.originalname);
-        const random = randomBytes(4).toString('hex');
-        const slug = (req.body?.slug as string) || 'img';
-        const safeSlug = slug.toLowerCase().replace(/[^a-z0-9]/g, '_');
-        cb(null, `${safeSlug}_${random}${ext}`);
-      },
-    });
   }
 
   getMaxSize(): number {
@@ -69,21 +47,12 @@ export class UploadService {
       mkdirSync(targetDir, { recursive: true });
     }
 
-    const ext = extname(file.originalname || '') || '.jpg';
+    const buffer = this.readValidatedImage(file);
+    const ext = detectImageExtension(buffer)!;
     const random = randomBytes(4).toString('hex');
     const filename = `${safeSlug}_${random}${ext}`;
     const absolutePath = join(targetDir, filename);
-
-    let buffer: Buffer;
-    if (file.buffer) {
-      buffer = file.buffer;
-      writeFileSync(absolutePath, buffer);
-    } else if (file.path && existsSync(file.path)) {
-      buffer = readFileSync(file.path);
-      writeFileSync(absolutePath, buffer);
-    } else {
-      throw new Error('No file content received');
-    }
+    writeFileSync(absolutePath, buffer);
 
     const relativePath = this.toRelativePath(absolutePath, uploadDir);
 
@@ -138,21 +107,12 @@ export class UploadService {
       mkdirSync(targetDir, { recursive: true });
     }
 
-    const ext = extname(file.originalname || '') || '.jpg';
+    const buffer = this.readValidatedImage(file);
+    const ext = detectImageExtension(buffer)!;
     const random = randomBytes(4).toString('hex');
     const filename = `${safeTitle}_${random}${ext}`;
     const absolutePath = join(targetDir, filename);
-
-    let buffer: Buffer;
-    if (file.buffer) {
-      buffer = file.buffer;
-      writeFileSync(absolutePath, buffer);
-    } else if (file.path && existsSync(file.path)) {
-      buffer = readFileSync(file.path);
-      writeFileSync(absolutePath, buffer);
-    } else {
-      throw new Error('No file content received');
-    }
+    writeFileSync(absolutePath, buffer);
 
     const relativePath = this.toRelativePath(absolutePath, uploadDir);
 
@@ -185,6 +145,27 @@ export class UploadService {
       size: file.size,
       mimetype: file.mimetype,
     };
+  }
+
+  /**
+   * Lee el contenido del archivo y verifica que sea una imagen real.
+   * La extensión final se deriva del contenido, no del nombre original.
+   */
+  private readValidatedImage(file: Express.Multer.File): Buffer {
+    let buffer: Buffer;
+    if (file.buffer) {
+      buffer = file.buffer;
+    } else if (file.path && existsSync(file.path)) {
+      buffer = readFileSync(file.path);
+    } else {
+      throw new BadRequestException('No se recibió contenido del archivo');
+    }
+    if (!detectImageExtension(buffer)) {
+      throw new BadRequestException(
+        'El archivo no es una imagen válida (JPG, PNG, WebP, GIF, HEIC, AVIF)',
+      );
+    }
+    return buffer;
   }
 
   toRelativePath(absolutePath: string, baseDir?: string): string {

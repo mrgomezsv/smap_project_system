@@ -49,6 +49,7 @@ export class MediaController {
 
     for (const filePath of possiblePaths) {
       if (existsSync(filePath)) {
+        res.setHeader('X-Content-Type-Options', 'nosniff');
         return res.sendFile(filePath);
       }
     }
