@@ -10,6 +10,7 @@ import { CreateWaiverDto, RelativeDto } from './dto/create-waiver.dto';
 import { PdfService } from './services/pdf.service';
 import { EmailService } from './services/email.service';
 import * as crypto from 'crypto';
+import { endOfDayInTimeZone } from '../common/timezone';
 
 @Injectable()
 export class WaiversService {
@@ -42,10 +43,8 @@ export class WaiversService {
     emailSent: boolean;
     pdfSize: number;
   }> {
-    // Calcular expiresAt = medianoche del día actual
-    const now = new Date();
-    const expiresAt = new Date(now);
-    expiresAt.setHours(23, 59, 59, 999);
+    // expiresAt = fin del día actual en hora de El Salvador (no del servidor)
+    const expiresAt = endOfDayInTimeZone(new Date());
 
     // Crear el waiver: reintenta QR si choca con constraint UNIQUE.
     // Aprovecha el índice UNIQUE existente en qr_code (más rápido que SELECT previo).
