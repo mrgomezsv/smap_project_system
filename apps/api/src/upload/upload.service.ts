@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { detectImageExtension } from './image-type';
+import { optimizeImage, thumbName } from './image-optimizer';
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { randomBytes } from 'crypto';
@@ -47,12 +48,11 @@ export class UploadService {
       mkdirSync(targetDir, { recursive: true });
     }
 
-    const buffer = this.readValidatedImage(file);
-    const ext = detectImageExtension(buffer)!;
-    const random = randomBytes(4).toString('hex');
-    const filename = `${safeSlug}_${random}${ext}`;
-    const absolutePath = join(targetDir, filename);
-    writeFileSync(absolutePath, buffer);
+    const { buffer, filename, absolutePath } = await this.writeOptimized(
+      this.readValidatedImage(file),
+      targetDir,
+      `${safeSlug}_${randomBytes(4).toString('hex')}`,
+    );
 
     const relativePath = this.toRelativePath(absolutePath, uploadDir);
 
@@ -107,12 +107,11 @@ export class UploadService {
       mkdirSync(targetDir, { recursive: true });
     }
 
-    const buffer = this.readValidatedImage(file);
-    const ext = detectImageExtension(buffer)!;
-    const random = randomBytes(4).toString('hex');
-    const filename = `${safeTitle}_${random}${ext}`;
-    const absolutePath = join(targetDir, filename);
-    writeFileSync(absolutePath, buffer);
+    const { buffer, filename, absolutePath } = await this.writeOptimized(
+      this.readValidatedImage(file),
+      targetDir,
+      `${safeTitle}_${randomBytes(4).toString('hex')}`,
+    );
 
     const relativePath = this.toRelativePath(absolutePath, uploadDir);
 
@@ -145,6 +144,31 @@ export class UploadService {
       size: file.size,
       mimetype: file.mimetype,
     };
+  }
+
+  /**
+   * Optimiza la imagen (WebP, máx. 1600 px) y guarda también su miniatura
+   * (<nombre>_thumb.webp, 600 px) para tarjetas y listados.
+   */
+  private async writeOptimized(
+    original: Buffer,
+    targetDir: string,
+    baseName: string,
+  ) {
+    const optimized = await optimizeImage(
+      original,
+      detectImageExtension(original)!,
+    );
+    const filename = `${baseName}${optimized.ext}`;
+    const absolutePath = join(targetDir, filename);
+    writeFileSync(absolutePath, optimized.main);
+    if (optimized.thumb) {
+      writeFileSync(join(targetDir, thumbName(filename)), optimized.thumb);
+    }
+    this.logger.log(
+      `Imagen ${filename}: ${Math.round(original.length / 1024)} KB → ${Math.round(optimized.main.length / 1024)} KB`,
+    );
+    return { buffer: optimized.main, filename, absolutePath };
   }
 
   /**
