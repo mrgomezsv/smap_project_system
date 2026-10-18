@@ -33,6 +33,11 @@ class AddAdminDto {
   email!: string;
 }
 
+class RoomForEmailDto {
+  @IsEmail()
+  email!: string;
+}
+
 class ToggleAdminDto {
   @IsInt()
   adminId!: number;
@@ -66,6 +71,13 @@ export class ChatController {
   @Post('rooms')
   createRoom(@CurrentUser() user: AuthUser) {
     return this.chatService.createRoom(user.userId!);
+  }
+
+  /** Admin: obtiene o crea el room de un usuario por su email. */
+  @AdminOnly()
+  @Post('rooms/for-email')
+  roomForEmail(@Body() dto: RoomForEmailDto) {
+    return this.chatService.roomForEmail(dto.email);
   }
 
   @Post('messages')

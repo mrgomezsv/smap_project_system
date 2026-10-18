@@ -68,6 +68,20 @@ export class ChatService {
     });
   }
 
+  /** Room del usuario con ese email (lo crea si no existe). */
+  async roomForEmail(email: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { email: email.trim().toLowerCase() },
+      select: { id: true },
+    });
+    if (!user) {
+      throw new NotFoundException(
+        'Ese usuario aún no ha iniciado sesión en la plataforma',
+      );
+    }
+    return this.createRoom(user.id);
+  }
+
   // === Chat Messages ===
 
   async sendMessage(
