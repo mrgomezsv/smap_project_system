@@ -2,13 +2,17 @@
  * Optimiza las imágenes que ya están en el servidor (subidas antes de que
  * existiera la optimización automática).
  *
- * Por cada imagen en UPLOAD_DIR (default ./media), recursivo:
+ * Se ejecuta solo al arrancar el contenedor (docker-entrypoint.sh). Una imagen
+ * con miniatura ya fue procesada (o subida con la optimización automática)
+ * y se salta sin leerla, así que los reinicios no repiten trabajo.
+ *
+ * Por cada imagen pendiente en UPLOAD_DIR (default ./media), recursivo:
  *  - Si pasa de 1600 px o se puede comprimir, la recomprime EN EL MISMO
  *    archivo y formato (mismo nombre → no hay que tocar la base de datos).
  *  - Genera su miniatura <nombre>_thumb.webp (600 px) si no existe.
  *  - Guarda el original en <UPLOAD_DIR>/_originales/ antes de modificarlo.
  *
- * Uso dentro del contenedor de la API (Portainer → api → Console):
+ * Uso manual dentro del contenedor de la API (Portainer → api → Console):
  *   node dist/scripts/optimize-existing-images.js           # simulación
  *   node dist/scripts/optimize-existing-images.js --apply   # aplica cambios
  */
@@ -58,6 +62,7 @@ async function main() {
   console.log(`📂 Carpeta: ${root} ${apply ? '(APLICANDO)' : '(simulación)'}`);
 
   let files = 0;
+  let skipped = 0;
   let optimized = 0;
   let thumbs = 0;
   let before = 0;
@@ -65,6 +70,11 @@ async function main() {
 
   for await (const file of walk(root)) {
     files++;
+    const thumbPath = file.replace(/\.[a-z0-9]+$/i, '') + '_thumb.webp';
+    if (await exists(thumbPath)) {
+      skipped++;
+      continue;
+    }
     const ext = extname(file).toLowerCase();
     const original = await fs.readFile(file);
     before += original.length;
@@ -96,17 +106,14 @@ async function main() {
         }
       }
 
-      const thumbPath = file.replace(/\.[a-z0-9]+$/i, '') + '_thumb.webp';
-      if (!(await exists(thumbPath))) {
-        thumbs++;
-        if (apply) {
-          const thumb = await sharp(finalBuf, { failOn: 'none' })
-            .rotate()
-            .resize(THUMB_SIDE, THUMB_SIDE, { fit: 'inside', withoutEnlargement: true })
-            .webp({ quality: 75 })
-            .toBuffer();
-          await fs.writeFile(thumbPath, thumb);
-        }
+      thumbs++;
+      if (apply) {
+        const thumb = await sharp(finalBuf, { failOn: 'none' })
+          .rotate()
+          .resize(THUMB_SIDE, THUMB_SIDE, { fit: 'inside', withoutEnlargement: true })
+          .webp({ quality: 75 })
+          .toBuffer();
+        await fs.writeFile(thumbPath, thumb);
       }
     } catch (e) {
       after += original.length;
@@ -116,9 +123,11 @@ async function main() {
 
   const mb = (n: number) => (n / 1024 / 1024).toFixed(1);
   console.log(
-    `\n${files} imágenes · ${optimized} optimizadas · ${thumbs} miniaturas ${apply ? 'creadas' : 'por crear'}`,
+    `\n${files} imágenes · ${skipped} ya optimizadas · ${optimized} recomprimidas · ${thumbs} miniaturas ${apply ? 'creadas' : 'por crear'}`,
   );
-  console.log(`Peso total: ${mb(before)} MB → ${mb(after)} MB`);
+  if (files > skipped) {
+    console.log(`Peso de las pendientes: ${mb(before)} MB → ${mb(after)} MB`);
+  }
   if (!apply) console.log('Ejecuta con --apply para guardar los cambios.');
   else console.log(`Originales respaldados en ${join(root, BACKUP_DIR)}`);
 }
