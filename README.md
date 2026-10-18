@@ -32,8 +32,7 @@ smap_project_system/
 │   └── web/                # Next.js frontend (puerto 3000)
 ├── packages/
 │   └── shared/             # Tipos compartidos (futuro)
-├── legacy/
-│   └── django/             # Código Django preservado como referencia
+
 ├── backups/                # Dumps de BD (gitignored)
 ├── media/                  # Archivos subidos (gitignored)
 ├── product_images/         # (gitignored)

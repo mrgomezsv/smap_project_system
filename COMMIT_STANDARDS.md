@@ -71,7 +71,7 @@ Co-authored-by: Nombre Apellido <email@dominio.com>
 
 Este estándar se mantiene durante toda la migración del backend Python/Django a **NestJS + Prisma** y del frontend Django templates a **Next.js 14** (rama `produccion2027`).
 
-- Los archivos Django se preservan en `legacy/django/` como referencia.
+- El código Django se eliminó del árbol; sigue disponible en el historial de git (y en la rama `main`).
 - La nueva estructura es un monorepo pnpm en `apps/api/` y `apps/web/`.
 - No se hace push al remoto durante la migración (todo local).
 - Cada commit sigue siendo atómico y enfocado a un único cambio lógico.

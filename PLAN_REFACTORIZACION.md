@@ -507,20 +507,19 @@ Definido en `apps/web/tailwind.config.ts` + `apps/web/app/globals.css`:
 
 ## 7. Plan de rollback (si algo falla)
 
-El código Django queda **intacto** en `legacy/django/`. Para volver al estado anterior:
+El código Django ya no está en `produccion2027`. Sigue disponible en la rama
+`main` y en el historial de git. Para volver al estado anterior:
 
 ```bash
-cd "/Users/mrgomez/Proyectos Mario/Kidsfun/smap_project_system"
-git stash                                # guarda cambios en curso
-git checkout main                        # vuelve a la rama estable
-./run_all_in_one.sh                      # arranca Django otra vez
+git stash          # guarda cambios en curso
+git checkout main  # vuelve a la rama estable con Django
 ```
 
-O desde Docker:
+Para recuperar un archivo concreto del código eliminado:
 
 ```bash
-docker compose down
-docker compose -f docker-compose.yml --profile legacy up -d
+git log --all -- 'legacy/django/<ruta>'          # ubicar el commit
+git show <commit>^:legacy/django/<ruta> > archivo  # restaurarlo
 ```
 
 ---
