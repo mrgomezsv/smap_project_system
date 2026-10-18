@@ -27,6 +27,16 @@ export class PushService {
     private readonly prisma: PrismaService,
   ) {}
 
+  /** Crea o reasigna un token FCM al usuario actual y lo marca activo. */
+  async registerToken(userId: string, token: string, platform: string) {
+    await this.prisma.pushToken.upsert({
+      where: { token },
+      create: { userId, token, platform },
+      update: { userId, platform, isActive: true, lastUsedAt: new Date() },
+    });
+    return { ok: true };
+  }
+
   /**
    * Envía una notificación a todos los tokens activos del segmento.
    * - all: todos los dispositivos registrados
