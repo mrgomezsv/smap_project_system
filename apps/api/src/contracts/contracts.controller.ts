@@ -35,6 +35,7 @@ import { Public } from '../auth/decorators/public.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
 import { assertAdmin } from '../auth/admin-allowlist';
+import { RateLimit } from '../common/rate-limit.guard';
 
 const SIGNER_IP_MAX = 45;
 const SIGNER_UA_MAX = 2000;
@@ -77,6 +78,7 @@ export class ContractsController {
   }
 
   @Public()
+  @RateLimit({ limit: 10, windowSec: 600 })
   @Post('public/:token/sign')
   async signContract(
     @Param('token') token: string,

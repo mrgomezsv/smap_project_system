@@ -12,6 +12,7 @@ import { FirebaseService } from './firebase.service';
 import { EmailService } from '../waivers/services/email.service';
 import { assertAdmin } from './admin-allowlist';
 import { Public } from './decorators/public.decorator';
+import { RateLimit } from '../common/rate-limit.guard';
 import { BUSINESS_TIMEZONE } from '../common/timezone';
 
 @Controller('api/auth')
@@ -26,6 +27,7 @@ export class AuthController {
    * y envía un correo HTML con la plantilla corporativa de Kidsfun vía Resend.
    */
   @Public()
+  @RateLimit({ limit: 5, windowSec: 900 })
   @Post('request-password-reset')
   async requestPasswordReset(
     @Body() body: { email: string; lang?: 'es' | 'en' },

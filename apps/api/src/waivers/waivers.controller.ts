@@ -17,6 +17,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
 import { assertAdmin } from '../auth/admin-allowlist';
 import { getPublicWebUrl } from '../common/web-url';
+import { RateLimit } from '../common/rate-limit.guard';
 
 class DeleteWaiversDto {
   @IsArray()
@@ -42,6 +43,7 @@ export class WaiversController {
   /**
    * POST /api/v2/waiver - Crear waiver con QR único + email + PDF
    */
+  @RateLimit({ limit: 10, windowSec: 600 })
   @Post()
   create(@Body() dto: CreateWaiverDto, @CurrentUser() user: AuthUser) {
     return this.waiversService.create(user.uid, dto);

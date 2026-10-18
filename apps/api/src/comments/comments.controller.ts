@@ -15,6 +15,7 @@ import { Public } from '../auth/decorators/public.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { AuthUser } from '../auth/decorators/current-user.decorator';
 import { assertAdmin } from '../auth/admin-allowlist';
+import { RateLimit } from '../common/rate-limit.guard';
 import {
   IsBoolean,
   IsIn,
@@ -84,6 +85,7 @@ export class CommentsController {
     return this.commentsService.findByProduct(productId);
   }
 
+  @RateLimit({ limit: 10, windowSec: 600 })
   @Post()
   create(@Body() dto: CreateCommentDto, @CurrentUser() user: AuthUser) {
     return this.commentsService.create(

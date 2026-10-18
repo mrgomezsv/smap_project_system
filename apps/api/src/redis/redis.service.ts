@@ -136,6 +136,25 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
+  /**
+   * Incrementa un contador y fija su TTL al crearlo.
+   * Devuelve null si Redis no está disponible (el llamador usa fallback).
+   */
+  async incrWithTtl(key: string, ttlSeconds: number): Promise<number | null> {
+    if (!this.enabled || !this.client) return null;
+    try {
+      const results = await this.client
+        .multi()
+        .incr(key)
+        .expire(key, ttlSeconds, 'NX')
+        .exec();
+      const value = results?.[0]?.[1];
+      return typeof value === 'number' ? value : null;
+    } catch {
+      return null;
+    }
+  }
+
   async del(...keys: string[]): Promise<void> {
     if (!this.enabled || !this.client || keys.length === 0) return;
     try {

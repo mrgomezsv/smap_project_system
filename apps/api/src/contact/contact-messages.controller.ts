@@ -10,6 +10,7 @@ import {
 import { ContactMessagesService } from './contact-messages.service';
 import { Public } from '../auth/decorators/public.decorator';
 import { AdminOnly } from '../auth/admin.guard';
+import { RateLimit } from '../common/rate-limit.guard';
 import {
   IsString,
   IsNotEmpty,
@@ -61,6 +62,7 @@ export class ContactMessagesController {
   constructor(private readonly service: ContactMessagesService) {}
 
   @Public()
+  @RateLimit({ limit: 5, windowSec: 600 })
   @Post()
   create(@Body() dto: CreateContactDto) {
     return this.service.create(dto);
